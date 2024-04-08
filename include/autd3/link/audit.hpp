@@ -74,7 +74,17 @@ class Audit final {
     return AUTDLinkAuditFpgaSilencerFixedCompletionStepsMode(_ptr, static_cast<uint32_t>(idx));
   }
 
-  [[nodiscard]] uint8_t debug_output_idx(const size_t idx) const { return AUTDLinkAuditFpgaDebugOutputIdx(_ptr, static_cast<uint32_t>(idx)); }
+  [[nodiscard]] std::array<uint8_t, 4> debug_types(const size_t idx) const {
+    std::array<uint8_t, 4> ty{};
+    AUTDLinkAuditFpgaDebugTypes(_ptr, static_cast<uint32_t>(idx), ty.data());
+    return ty;
+  }
+
+  [[nodiscard]] std::array<uint16_t, 4> debug_values(const size_t idx) const {
+    std::array<uint16_t, 4> value{};
+    AUTDLinkAuditFpgaDebugValues(_ptr, static_cast<uint32_t>(idx), value.data());
+    return value;
+  }
 
   void assert_thermal_sensor(const size_t idx) const { AUTDLinkAuditFpgaAssertThermalSensor(_ptr, static_cast<uint32_t>(idx)); }
 

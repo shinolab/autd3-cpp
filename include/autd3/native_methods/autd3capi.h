@@ -128,9 +128,9 @@ ResultI32 AUTDControllerGroup(ControllerPtr cnt,
 [[nodiscard]] DatagramPtr AUTDDatagramClear();
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramConfigureDebugOutputIdx(void* f,
-                                                void* context,
-                                                GeometryPtr geometry);
+DatagramPtr AUTDDatagramConfigureDebugSettings(void* f,
+                                               void* context,
+                                               GeometryPtr geometry);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramConfigureForceFan(void* f,
@@ -336,7 +336,9 @@ uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
 
 [[nodiscard]] bool AUTDLinkAuditFpgaSilencerFixedCompletionStepsMode(LinkPtr audit, uint32_t idx);
 
-[[nodiscard]] uint8_t AUTDLinkAuditFpgaDebugOutputIdx(LinkPtr audit, uint32_t idx);
+void AUTDLinkAuditFpgaDebugTypes(LinkPtr audit, uint32_t idx, uint8_t *ty);
+
+void AUTDLinkAuditFpgaDebugValues(LinkPtr audit, uint32_t idx, uint16_t *value);
 
 [[nodiscard]]
 uint32_t AUTDLinkAuditFpgaStmFrequencyDivision(LinkPtr audit,

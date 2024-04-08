@@ -146,6 +146,11 @@ struct ResultFocusSTM {
   void* err;
 };
 
+struct DebugSettings {
+  uint8_t ty[4];
+  uint16_t value[4];
+};
+
 extern "C" {
 
 [[nodiscard]] uint8_t AUTDEmitIntensityWithCorrectionAlpha(uint8_t value, double alpha);

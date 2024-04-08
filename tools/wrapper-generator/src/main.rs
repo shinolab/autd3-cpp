@@ -56,6 +56,7 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "FocusSTMPtr".to_string(),
             "ResultGainSTM".to_string(),
             "ResultFocusSTM".to_string(),
+            "DebugSettings".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![

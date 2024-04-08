@@ -10,14 +10,14 @@
 TEST(Internal, FirmwareInfo) {
   auto autd = create_controller();
 
-  ASSERT_EQ("v6.0.0", autd3::driver::FirmwareInfo::latest_version());
+  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareInfo::latest_version());
 
   {
     const auto infos = autd.firmware_infos();
     std::ranges::for_each(std::ranges::views::iota(0) | std::ranges::views::take(infos.size()), [&](auto i) {
       std::stringstream ss;
       ss << i;
-      ss << ": CPU = v6.0.0, FPGA = v6.0.0 [Emulator]";
+      ss << ": CPU = v6.1.0, FPGA = v6.1.0 [Emulator]";
       ASSERT_EQ(ss.str(), infos[i].info());
       std::stringstream ssf;
       ssf << infos[i];
@@ -34,14 +34,14 @@ TEST(Internal, FirmwareInfo) {
 TEST(Internal, FirmwareInfoAsync) {
   auto autd = create_controller();
 
-  ASSERT_EQ("v6.0.0", autd3::driver::FirmwareInfo::latest_version());
+  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareInfo::latest_version());
 
   {
     const auto infos = sync_wait(autd.firmware_infos_async());
     std::ranges::for_each(std::ranges::views::iota(0) | std::ranges::views::take(infos.size()), [&](auto i) {
       std::stringstream ss;
       ss << i;
-      ss << ": CPU = v6.0.0, FPGA = v6.0.0 [Emulator]";
+      ss << ": CPU = v6.1.0, FPGA = v6.1.0 [Emulator]";
       ASSERT_EQ(ss.str(), infos[i].info());
     });
   }

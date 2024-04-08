@@ -47,7 +47,7 @@ constexpr double pi = driver::pi;
 /**
  * @brief AUTD3 software version
  */
-static inline std::string version = "22.0.4";
+static inline std::string version = "22.1.0";
 
 using driver::AUTD3;
 using driver::geometry::deg;
@@ -71,12 +71,14 @@ using driver::ChangeGainSegment;
 using driver::ChangeGainSTMSegment;
 using driver::ChangeModulationSegment;
 using driver::Clear;
-using driver::ConfigureDebugOutputIdx;
+using driver::ConfigureDebugSettings;
 using driver::ConfigureForceFan;
 using driver::ConfigurePhaseFilter;
 using driver::ConfigureReadsFPGAState;
 using driver::ConfigureSilencer;
 using driver::ControlPoint;
+using driver::DebugType;
+using driver::DebugTypes;
 using driver::FocusSTM;
 using driver::GainSTM;
 using native_methods::GainSTMMode;
