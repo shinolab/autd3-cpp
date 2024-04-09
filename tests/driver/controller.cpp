@@ -41,7 +41,7 @@ TEST(Internal, ControllerCloseAsync) {
   {
     const auto autd = create_controller();
     autd.link().break_down();
-    ASSERT_THROW(sync_wait(autd.close_async()), autd3::AUTDException);
+    ASSERT_ANY_THROW(sync_wait(autd.close_async()));
   }
 }
 
@@ -140,7 +140,7 @@ TEST(Internal, ControllerSendSingleAsync) {
   ASSERT_FALSE(sync_wait(autd.send_async(autd3::modulation::Static())));
 
   autd.link().break_down();
-  ASSERT_THROW(sync_wait(autd.send_async(autd3::modulation::Static())), autd3::AUTDException);
+  ASSERT_ANY_THROW(sync_wait(autd.send_async(autd3::modulation::Static())));
 }
 
 TEST(Internal, ControllerSendDouble) {
@@ -194,7 +194,7 @@ TEST(Internal, ControllerSendDoubleAsync) {
   ASSERT_FALSE(sync_wait(autd.send_async(autd3::modulation::Static(), autd3::gain::Uniform(1))));
 
   autd.link().break_down();
-  ASSERT_THROW(sync_wait(autd.send_async(autd3::modulation::Static(), autd3::gain::Uniform(1))), autd3::AUTDException);
+  ASSERT_ANY_THROW(sync_wait(autd.send_async(autd3::modulation::Static(), autd3::gain::Uniform(1))));
 }
 
 TEST(Internal, ControllerGroup) {

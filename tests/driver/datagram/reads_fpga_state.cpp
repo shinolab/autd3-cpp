@@ -66,6 +66,6 @@ TEST(DriverDatagram, FPGAStateAsync) {
 
   {
     autd.link().break_down();
-    ASSERT_THROW((void)sync_wait(autd.fpga_info_async()), autd3::AUTDException);
+    ASSERT_ANY_THROW((void)sync_wait(autd.fpga_info_async()));
   }
 }

@@ -57,7 +57,7 @@ if(AUTD3_ASYNC_API)
     FetchContent_Declare(
         libcoro
         GIT_REPOSITORY https://github.com/jbaldwin/libcoro.git
-        GIT_TAG v0.10
+        GIT_TAG v0.11.1
     )
     set(LIBCORO_BUILD_TESTS OFF)
     set(LIBCORO_BUILD_EXAMPLES OFF)

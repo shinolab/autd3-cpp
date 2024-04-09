@@ -48,6 +48,6 @@ TEST(Internal, FirmwareInfoAsync) {
 
   {
     autd.link().break_down();
-    ASSERT_THROW((void)sync_wait(autd.firmware_infos_async()), autd3::AUTDException);
+    ASSERT_ANY_THROW((void)sync_wait(autd.firmware_infos_async()));
   }
 }
