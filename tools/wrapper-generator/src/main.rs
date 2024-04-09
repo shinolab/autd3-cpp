@@ -58,13 +58,13 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "ResultFocusSTM".to_string(),
             "DebugSettings".to_string(),
         ],
-        exclude: vec!["ConstPtr".to_string()],
-        rename: vec![
-            ("float".to_string(), "double".to_string()),
-            ("ConstPtr".to_string(), "void*".to_string()),
-        ]
-        .into_iter()
-        .collect(),
+        exclude: vec![
+            "ConstPtr".to_string(),
+            "AUTDDatagramConfigureDebugSettings2".to_string(),
+        ],
+        rename: vec![("ConstPtr".to_string(), "void*".to_string())]
+            .into_iter()
+            .collect(),
         ..Default::default()
     };
     config.function = cbindgen::FunctionConfig {
