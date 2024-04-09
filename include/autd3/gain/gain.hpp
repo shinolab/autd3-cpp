@@ -42,7 +42,7 @@ class Gain : public driver::Gain<G> {
       std::vector<driver::Drive> drives;
       drives.reserve(dev.num_transducers());
       std::transform(dev.cbegin(), dev.cend(), std::back_inserter(drives),
-                     [&dev, &drives_map, &func](const driver::geometry::Transducer& tr) { return func(dev, tr); });
+                     [&dev, &func](const driver::geometry::Transducer& tr) { return func(dev, tr); });
       drives_map[dev.idx()] = std::move(drives);
     });
     return drives_map;

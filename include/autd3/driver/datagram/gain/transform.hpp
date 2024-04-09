@@ -48,7 +48,7 @@ class Transform final : public driver::GainBase,
 
     native_methods::AUTDGainCalcFreeResult(res);
     return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainCustom(),
-                           [this, &drives](const native_methods::GainPtr acc, const driver::geometry::Device& dev) {
+                           [&drives](const native_methods::GainPtr acc, const driver::geometry::Device& dev) {
                              return AUTDGainCustomSet(acc, static_cast<uint32_t>(dev.idx()),
                                                       reinterpret_cast<native_methods::Drive*>(drives[dev.idx()].data()),
                                                       static_cast<uint32_t>(drives[dev.idx()].size()));

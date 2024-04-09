@@ -44,8 +44,8 @@ class SOEM final {
   explicit SOEM(const native_err_handler_t native_err_handler, const err_handler_t err_handler)
       : _native_err_handler(native_err_handler), _err_handler(err_handler) {}
 
-  native_err_handler_t _native_err_handler;
-  err_handler_t _err_handler;
+  [[maybe_unused]] native_err_handler_t _native_err_handler;
+  [[maybe_unused]] err_handler_t _err_handler;
 
  public:
   class Builder final {
