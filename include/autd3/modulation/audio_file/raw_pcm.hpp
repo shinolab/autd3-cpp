@@ -12,7 +12,7 @@ namespace autd3::modulation::audio_file {
 class RawPCM final : public driver::Modulation<RawPCM> {
  public:
   explicit RawPCM(std::filesystem::path path, const driver::Freq<uint32_t> sample_rate)
-      : Modulation(driver::SamplingConfig::from_division(5120)), _sample_rate(sample_rate), _path(std::move(path)) {}
+      : Modulation(driver::SamplingConfig::Division(5120)), _sample_rate(sample_rate), _path(std::move(path)) {}
 
   [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     return validate(AUTDModulationRawPCM(_path.string().c_str(), _sample_rate.hz(), _config, _loop_behavior));

@@ -14,7 +14,7 @@ class BurstModulation final : public autd3::Modulation<BurstModulation> {
   }
 
   explicit BurstModulation(const size_t buf_size = 4000,
-                           const autd3::native_methods::SamplingConfigWrap config = autd3::SamplingConfig::from_freq(4000 * autd3::Hz)) noexcept
+                           const autd3::native_methods::SamplingConfigWrap config = autd3::SamplingConfig::Freq(4000 * autd3::Hz)) noexcept
       : Modulation(config), _buf_size(buf_size) {}
 
  private:

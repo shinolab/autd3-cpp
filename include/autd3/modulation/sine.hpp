@@ -14,7 +14,7 @@ class Fourier;
   class T final : public driver::Modulation<T> {                                                                              \
    public:                                                                                                                    \
     explicit T(const F freq)                                                                                                  \
-        : Modulation(driver::SamplingConfig::from_division(5120)),                                                            \
+        : Modulation(driver::SamplingConfig::Division(5120)),                                                                 \
           _freq(freq),                                                                                                        \
           _intensity(std::numeric_limits<uint8_t>::max()),                                                                    \
           _offset(std::numeric_limits<uint8_t>::max() / 2),                                                                   \

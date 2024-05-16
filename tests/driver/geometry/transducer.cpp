@@ -44,19 +44,3 @@ TEST(DriverGeomtry, TransducerDirectionZ) {
     std::ranges::for_each(dev.transducers(), [](auto& tr) { ASSERT_EQ(tr.z_direction(), autd3::driver::Vector3::UnitZ()); });
   }
 }
-
-TEST(DriverGeomtry, TransducerWavelength) {
-  for (auto autd = create_controller(); auto& dev : autd.geometry()) {
-    for (auto& tr : dev) {
-      ASSERT_DOUBLE_EQ(tr.wavelength(340e3), 340e3 / autd3::native_methods::ULTRASOUND_FREQUENCY);
-    }
-  }
-}
-
-TEST(DriverGeomtry, TransducerWavenum) {
-  for (auto autd = create_controller(); auto& dev : autd.geometry()) {
-    for (auto& tr : dev) {
-      ASSERT_DOUBLE_EQ(tr.wavenumber(340e3), 2 * autd3::driver::pi * autd3::native_methods::ULTRASOUND_FREQUENCY / 340e3);
-    }
-  }
-}

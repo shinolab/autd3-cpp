@@ -10,7 +10,7 @@ namespace autd3::modulation {
   class T final : public driver::Modulation<T> {                                         \
    public:                                                                               \
     explicit T(const F freq)                                                             \
-        : Modulation(driver::SamplingConfig::from_division(5120)),                       \
+        : Modulation(driver::SamplingConfig::Division(5120)),                            \
           _freq(freq),                                                                   \
           _low(std::numeric_limits<uint8_t>::min()),                                     \
           _high(std::numeric_limits<uint8_t>::max()),                                    \

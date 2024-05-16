@@ -9,7 +9,7 @@ namespace autd3::modulation::audio_file {
 
 class Wav final : public driver::Modulation<Wav> {
  public:
-  explicit Wav(std::filesystem::path path) : Modulation(driver::SamplingConfig::from_division(5120)), _path(std::move(path)) {}
+  explicit Wav(std::filesystem::path path) : Modulation(driver::SamplingConfig::Division(5120)), _path(std::move(path)) {}
 
   [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     return validate(AUTDModulationWav(_path.string().c_str(), _config, _loop_behavior));

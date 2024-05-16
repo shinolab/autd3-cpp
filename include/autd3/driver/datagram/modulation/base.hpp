@@ -1,6 +1,6 @@
 #pragma once
 
-#include "autd3/driver/datagram/with_segment.hpp"
+#include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
@@ -10,7 +10,7 @@
 namespace autd3::driver {
 
 template <class M>
-class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public IntoDatagramWithSegment<native_methods::ModulationPtr, M> {
+class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public IntoDatagramWithSegmentTransition<native_methods::ModulationPtr, M> {
  public:
   ModulationBase() : _loop_behavior(LoopBehavior::infinite()) {}   // LCOV_EXCL_LINE
   ModulationBase(const ModulationBase& obj) = default;             // LCOV_EXCL_LINE

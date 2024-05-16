@@ -48,18 +48,17 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
   }
 
   [[nodiscard]] friend Fourier operator+(T&& lhs, const T& rhs) {
-    Fourier m(lhs);
+    Fourier<T> m(lhs);
     m._components.emplace_back(rhs);
     return m;
   }  // LCOV_EXCL_LINE
 
-  //[[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-  //  std::vector<native_methods::ModulationPtr> components;
-  //  components.reserve(_components.size());
-  //  std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(); });
-  //  return AUTDModulationFourier(components.data(), static_cast<uint32_t>(components.size()),
-  //                               static_cast<native_methods::LoopBehavior>(_loop_behavior));
-  //}
+  [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    std::vector<native_methods::ModulationPtr> components;
+    components.reserve(_components.size());
+    std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(); });
+    return AUTDModulationFourier(components.data(), static_cast<uint32_t>(components.size()), _loop_behavior);
+  }
 
  private:
   std::vector<T> _components;

@@ -30,24 +30,3 @@ TEST(Internal, FirmwareVersion) {
     ASSERT_THROW((void)autd.firmware_version(), autd3::AUTDException);
   }
 }
-
-TEST(Internal, FirmwareVersionAsync) {
-  auto autd = create_controller();
-
-  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareVersion::latest_version());
-
-  {
-    const auto infos = sync_wait(autd.firmware_version_async());
-    std::ranges::for_each(std::ranges::views::iota(0) | std::ranges::views::take(infos.size()), [&](auto i) {
-      std::stringstream ss;
-      ss << i;
-      ss << ": CPU = v6.1.0, FPGA = v6.1.0 [Emulator]";
-      ASSERT_EQ(ss.str(), infos[i].info());
-    });
-  }
-
-  {
-    autd.link().break_down();
-    ASSERT_ANY_THROW((void)sync_wait(autd.firmware_version_async()));
-  }
-}

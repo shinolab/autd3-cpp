@@ -10,8 +10,8 @@
 #include "utils.hpp"
 
 TEST(DriverGeomtry, Angle) {
-  ASSERT_NEAR((90.0 * autd3::driver::geometry::deg).to_radian(), std::numbers::pi / 2, 1e-6);
-  ASSERT_NEAR((std::numbers::pi / 2 * autd3::driver::geometry::rad).to_radian(), std::numbers::pi / 2, 1e-6);
+  ASSERT_NEAR((90.0 * autd3::driver::deg).to_radian(), std::numbers::pi / 2, 1e-6);
+  ASSERT_NEAR((std::numbers::pi / 2 * autd3::driver::rad).to_radian(), std::numbers::pi / 2, 1e-6);
 }
 
 static autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::driver::Quaternion& q) {
@@ -21,8 +21,8 @@ static autd3::controller::Controller<autd3::link::Audit> open_rotation(const aut
 }
 
 TEST(DriverGeomtry, WithRotation) {
+  using autd3::driver::deg;
   using autd3::driver::Vector3;
-  using autd3::driver::geometry::deg;
   using autd3::driver::geometry::EulerAngles;
 
   {

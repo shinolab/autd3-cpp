@@ -17,8 +17,8 @@ TEST(DriverDatagramSTM, FocusSTM) {
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::FocusSTM::from_freq(1).add_foci_from_iter(
       std::views::iota(0) | std::views::take(1) |
-      std::views::transform([&](auto) { return autd3::driver::ControlPoint{center, autd3::driver::std::numeric_limits<EmitIntensity>::max()}; }));
-  stm.add_focus(autd3::driver::ControlPoint{center, autd3::driver::std::numeric_limits<EmitIntensity>::max()});
+      std::views::transform([&](auto) { return autd3::driver::ControlPoint{center, std::numeric_limits<autd3::driver::EmitIntensity>::max()}; }));
+  stm.add_focus(autd3::driver::ControlPoint{center, std::numeric_limits<autd3::driver::EmitIntensity>::max()});
   ASSERT_TRUE(autd.send(stm));
   for (const auto& dev : autd.geometry()) {
     ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
@@ -30,11 +30,11 @@ TEST(DriverDatagramSTM, FocusSTM) {
   ASSERT_EQ(std::chrono::microseconds(2 * 500000), stm.period());
   ASSERT_EQ(std::chrono::microseconds(500000), stm.sampling_config().period());
   for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(10240000u, autd.link().stm_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  stm = autd3::driver::FocusSTM::from_sampling_config(autd3::driver::SamplingConfig::from_frequency_division(512))
-            .add_focus(autd3::driver::ControlPoint{center, autd3::driver::std::numeric_limits<EmitIntensity>::max()});
+  stm = autd3::driver::FocusSTM::from_sampling_config(autd3::driver::SamplingConfig::Division(512))
+            .add_focus(autd3::driver::ControlPoint{center, std::numeric_limits<autd3::driver::EmitIntensity>::max()});
   stm.add_focus(center);
   ASSERT_TRUE(autd.send(stm));
   ASSERT_EQ(20000.0, stm.frequency());
@@ -42,7 +42,7 @@ TEST(DriverDatagramSTM, FocusSTM) {
   ASSERT_EQ(512u, stm.sampling_config().frequency_division());
   ASSERT_EQ(std::chrono::microseconds(25), stm.sampling_config().period());
   for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(512u, autd.link().stm_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(512u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   for (const auto& dev : autd.geometry()) {
@@ -71,7 +71,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::FocusSTM::from_freq(1)
                  .add_foci_from_iter(std::views::iota(0) | std::views::take(1) | std::views::transform([&](auto) {
-                                       return autd3::driver::ControlPoint{center, autd3::driver::std::numeric_limits<EmitIntensity>::max()};
+                                       return autd3::driver::ControlPoint{center, std::numeric_limits<autd3::driver::EmitIntensity>::max()};
                                      }))
                  .add_focus(center);
 
@@ -94,7 +94,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
   ASSERT_TRUE(autd.send(autd3::driver::FocusSTM::from_freq(1)
                             .add_foci_from_iter(std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
                                                   return autd3::driver::ControlPoint{center,
-                                                                                     autd3::driver::std::numeric_limits<EmitIntensity>::max()};
+                                                                                     std::numeric_limits<autd3::driver::EmitIntensity>::max()};
                                                 }))
                             .with_segment(Segment::S0, false)));
   infos = autd.fpga_info();

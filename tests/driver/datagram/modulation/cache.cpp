@@ -23,7 +23,7 @@ TEST(DriverDatagramModulation, Cache) {
     auto mod = autd2.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     auto mod_expect = autd1.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
-    ASSERT_EQ(0xFFFFFFFF, autd2.link().modulation_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(0xFFFFFFFF, autd2.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -31,10 +31,10 @@ class ForModulationCacheTest final : public autd3::modulation::Modulation<ForMod
  public:
   [[nodiscard]] std::vector<autd3::driver::EmitIntensity> calc() const override {
     ++*_cnt;
-    return {autd3::driver::std::numeric_limits<EmitIntensity>::max(), autd3::driver::std::numeric_limits<EmitIntensity>::max()};
+    return {std::numeric_limits<autd3::driver::EmitIntensity>::max(), std::numeric_limits<autd3::driver::EmitIntensity>::max()};
   }
 
-  explicit ForModulationCacheTest(size_t* cnt) noexcept : Modulation(autd3::driver::SamplingConfig::from_frequency_division(5120)), _cnt(cnt) {}
+  explicit ForModulationCacheTest(size_t* cnt) noexcept : Modulation(autd3::driver::SamplingConfig::Division(5120)), _cnt(cnt) {}
 
  private:
   size_t* _cnt;

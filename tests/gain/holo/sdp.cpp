@@ -22,7 +22,7 @@ TEST(Gain_Holo, SDP) {
                .with_alpha(1e-3)
                .with_lambda(0.9)
                .with_repeat(10)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -60,7 +60,7 @@ TEST(Gain_Holo, SDP_CUDA) {
                .with_alpha(1e-3)
                .with_lambda(0.9)
                .with_repeat(10)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
 
   ASSERT_TRUE(autd.send(g));
 

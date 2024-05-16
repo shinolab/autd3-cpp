@@ -7,7 +7,7 @@
 TEST(Gain, Plane) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::gain::Plane(autd3::driver::Vector3::UnitZ()).with_intensity(0x80).with_phase(autd3::driver::Phase(0x81))));
+  ASSERT_TRUE(autd.send(autd3::gain::Plane(autd3::driver::Vector3::UnitZ()).with_intensity(0x80).with_phase_offset(autd3::driver::Phase(0x81))));
 
   for (auto& dev : autd.geometry()) {
     auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);

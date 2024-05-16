@@ -6,13 +6,13 @@
 
 class BurstModulation final : public autd3::modulation::Modulation<BurstModulation> {
  public:
-  [[nodiscard]] std::vector<autd3::driver::EmitIntensity> calc() const override {
-    std::vector buffer(10, autd3::driver::std::numeric_limits<EmitIntensity>::min());
-    buffer[0] = autd3::driver::std::numeric_limits<EmitIntensity>::max();
+  [[nodiscard]] std::vector<uint8_t> calc() const override {
+    std::vector buffer(10, std::numeric_limits<uint8_t>::min());
+    buffer[0] = std::numeric_limits<uint8_t>::max();
     return buffer;
   }
 
-  explicit BurstModulation() noexcept : Modulation(autd3::driver::SamplingConfig::from_frequency_division(5120)) {}
+  explicit BurstModulation() noexcept : Modulation(autd3::driver::SamplingConfig::Division(5120)) {}
 };
 
 TEST(DriverDatagramModulation, Modulation) {
@@ -24,6 +24,6 @@ TEST(DriverDatagramModulation, Modulation) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{255, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
-    ASSERT_EQ(5120, autd.link().modulation_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

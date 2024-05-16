@@ -33,10 +33,10 @@ TEST(DriverDatagramSTM, GainSTM) {
   ASSERT_EQ(std::chrono::microseconds(2 * 500000), stm.period());
   ASSERT_EQ(std::chrono::microseconds(500000), stm.sampling_config().period());
   for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(10240000u, autd.link().stm_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfig::from_frequency_division(512))
+  stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfig::Division(512))
             .add_gain(autd3::gain::Uniform(0x80))
             .add_gain(autd3::gain::Uniform(0x80))
             .with_mode(autd3::native_methods::GainSTMMode::PhaseIntensityFull);
@@ -46,7 +46,7 @@ TEST(DriverDatagramSTM, GainSTM) {
   ASSERT_EQ(512u, stm.sampling_config().frequency_division());
   ASSERT_EQ(std::chrono::microseconds(25), stm.sampling_config().period());
   for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(512u, autd.link().stm_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(512u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   for (const auto& dev : autd.geometry()) {

@@ -8,16 +8,14 @@ TEST(Modulation, Sine) {
   auto autd = create_controller();
 
   {
-    const auto m = autd3::modulation::Sine(150)
-                       .with_intensity(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 2)
-                       .with_offset(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 4)
-                       .with_phase(autd3::driver::Phase::from_rad(autd3::driver::pi / 2));
+    const auto m = autd3::modulation::Sine::create(150 * autd3::driver::Hz)
+                       .with_intensity(std::numeric_limits<uint8_t>::max() / 2)
+                       .with_offset(std::numeric_limits<uint8_t>::max() / 4)
+                       .with_phase(autd3::driver::pi / 2 * autd3::driver::rad);
     ASSERT_EQ(150, m.freq());
-    ASSERT_EQ(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 2, m.intensity());
-    ASSERT_EQ(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 4, m.offset());
-    ASSERT_EQ(autd3::driver::Phase::from_rad(autd3::driver::pi / 2), m.phase());
-    ASSERT_EQ(autd3::driver::SamplingConfig::from_frequency(4e3), m.sampling_config());
-    ASSERT_EQ(autd3::driver::LoopBehavior::infinite(), m.loop_behavior());
+    ASSERT_EQ(std::numeric_limits<autd3::driver::EmitIntensity>::max() / 2, m.intensity());
+    ASSERT_EQ(std::numeric_limits<autd3::driver::EmitIntensity>::max() / 4, m.offset());
+    ASSERT_EQ(autd3::driver::pi / 2 * autd3::driver::rad, m.phase());
     ASSERT_TRUE(autd.send(m));
 
     for (auto& dev : autd.geometry()) {
@@ -26,25 +24,23 @@ TEST(Modulation, Sine) {
                                       126, 123, 117, 108, 96,  83, 68, 53, 39, 26, 15, 6, 1, 0, 1, 6, 15, 26, 39, 53, 68, 83, 96,  108, 117, 123, 126,
                                       126, 122, 114, 104, 92,  78, 63, 48, 34, 22, 12, 4, 0, 0, 3, 9, 18, 30, 43, 58, 73, 87, 100, 111, 120, 125};
       ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
-      ASSERT_EQ(5120, autd.link().modulation_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
     }
   }
 
   {
-    const auto m = autd3::modulation::Sine(150)
-                       .with_sampling_config(autd3::driver::SamplingConfig::from_frequency_division(10240))
+    const auto m = autd3::modulation::Sine::create(150 * autd3::driver::Hz)
+                       .with_sampling_config(autd3::driver::SamplingConfig::Division(10240))
                        .with_loop_behavior(autd3::driver::LoopBehavior::finite(10));
-    ASSERT_EQ(autd3::driver::SamplingConfig::from_frequency_division(10240), m.sampling_config());
-    ASSERT_EQ(autd3::driver::LoopBehavior::finite(10), m.loop_behavior());
     ASSERT_TRUE(autd.send(m));
-    for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
 TEST(Modulation, SineWithMode) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Sine(150).with_mode(autd3::native_methods::SamplingMode::SizeOptimized)));
+  ASSERT_TRUE(autd.send(autd3::modulation::Sine::create(150 * autd3::driver::Hz)));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -53,11 +49,11 @@ TEST(Modulation, SineWithMode) {
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
   }
 
-  ASSERT_THROW(autd.send(autd3::modulation::Sine(100.1).with_mode(autd3::native_methods::SamplingMode::ExactFrequency)), autd3::AUTDException);
-  ASSERT_TRUE(autd.send(autd3::modulation::Sine(100.1).with_mode(autd3::native_methods::SamplingMode::SizeOptimized)));
+  ASSERT_THROW(autd.send(autd3::modulation::Sine::create(100.1 * autd3::driver::Hz)), autd3::AUTDException);
+  ASSERT_TRUE(autd.send(autd3::modulation::Sine::create(100.1 * autd3::driver::Hz)));
 }
 
 TEST(Modulation, SineDefault) {
-  const auto m = autd3::modulation::Sine(150);
+  const auto m = autd3::modulation::Sine::create(150 * autd3::driver::Hz);
   ASSERT_TRUE(AUTDModulationSineIsDefault(m.modulation_ptr()));
 }

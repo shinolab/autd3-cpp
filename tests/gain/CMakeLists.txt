@@ -4,7 +4,7 @@ target_sources(test_autd3 PRIVATE
   group.cpp
   null.cpp
   plane.cpp
-  trans_test.cpp
+  custom.cpp
   uniform.cpp
 )
 

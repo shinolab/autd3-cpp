@@ -10,7 +10,7 @@ TEST(Gain_Holo, ConstraintUniform) {
   auto g = autd3::gain::holo::Naive(std::move(backend))
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -28,7 +28,7 @@ TEST(Gain_Holo, ConstraintNormalize) {
   auto g = autd3::gain::holo::Naive(std::move(backend))
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::normalize());
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Normalize);
 
   ASSERT_TRUE(autd.send(g));
 
@@ -46,7 +46,7 @@ TEST(Gain_Holo, ConstraintClamp) {
   auto g = autd3::gain::holo::Naive(std::move(backend))
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::clamp(67, 85));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(67, 85));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -64,7 +64,7 @@ TEST(Gain_Holo, ConstraintDontCare) {
   auto g = autd3::gain::holo::Naive(std::move(backend))
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::dont_care());
+               .with_constraint(autd3::gain::holo::EmissionConstraint::DontCare);
 
   ASSERT_TRUE(autd.send(g));
 

@@ -5,15 +5,16 @@
 
 #include "utils.hpp"
 
-TEST(Gain, TransTest) {
+TEST(Gain, Coustom) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::gain::TransducerTest(
-      [](const autd3::driver::geometry::Device& dev, const autd3::driver::geometry::Transducer& tr) -> std::optional<autd3::driver::Drive> {
-        if (dev.idx() == 0 && tr.idx() == 0) return autd3::driver::Drive(autd3::driver::Phase(0x90), 0x80);
-        if (dev.idx() == 1 && tr.idx() == 248) return autd3::driver::Drive(autd3::driver::Phase(0x91), 0x81);
-        return std::nullopt;
-      })));
+  ASSERT_TRUE(autd.send(autd3::gain::Custom([](const autd3::driver::geometry::Device& dev) -> auto {
+    return [&](const autd3::driver::geometry::Transducer& tr) {
+      if (dev.idx() == 0 && tr.idx() == 0) return autd3::driver::Drive(autd3::driver::Phase(0x90), 0x80);
+      if (dev.idx() == 1 && tr.idx() == 248) return autd3::driver::Drive(autd3::driver::Phase(0x91), 0x81);
+      return autd3::driver::Drive::null();
+    };
+  })));
 
   {
     auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);

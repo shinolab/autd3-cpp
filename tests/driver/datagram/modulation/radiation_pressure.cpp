@@ -7,7 +7,7 @@
 TEST(DriverDatagramModulation, RadiationPressure) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Sine(150).with_radiation_pressure()));
+  ASSERT_TRUE(autd.send(autd3::modulation::Sine::create(150 * autd3::driver::Hz).with_radiation_pressure()));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -17,6 +17,6 @@ TEST(DriverDatagramModulation, RadiationPressure) {
         194, 212, 227, 239, 248, 253, 255, 253, 248, 239, 227, 212, 194, 173, 150, 124, 97,  68, 39, 0,  16, 48, 78, 106, 133, 157,
     };
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
-    ASSERT_EQ(5120, autd.link().modulation_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

@@ -12,7 +12,6 @@ TEST(DriverGeomtry, AUTD3) {
   ASSERT_EQ(18, autd3::driver::AUTD3::NUM_TRANS_IN_X);
   ASSERT_EQ(14, autd3::driver::AUTD3::NUM_TRANS_IN_Y);
   ASSERT_EQ(249, autd3::driver::AUTD3::NUM_TRANS_IN_UNIT);
-  ASSERT_EQ(20.48e6, autd3::driver::AUTD3::FPGA_CLK_FREQ);
 }
 
 TEST(DriverGeomtry, GeometryNumDevices) {

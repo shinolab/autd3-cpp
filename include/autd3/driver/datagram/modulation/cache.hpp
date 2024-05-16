@@ -40,7 +40,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
       const auto res = native_methods::AUTDModulationCalc(_m.modulation_ptr());
       const auto ptr = validate(res);
       _cache->resize(res.result_len, driver::EmitIntensity(0));
-      _sampling_config = driver::SamplingConfig::from_frequency_division(res.freq_div);
+      _sampling_config = driver::SamplingConfig::Division(res.freq_div);
       native_methods::AUTDModulationCalcGetResult(ptr, reinterpret_cast<uint8_t*>(_cache->data()));
     }
     return *_cache;

@@ -97,12 +97,12 @@ class Audit final {
     return buf;
   }  // LCOV_EXCL_LINE
 
-  [[nodiscard]] uint32_t modulation_frequency_division(const size_t idx, const native_methods::Segment segment) const {
-    return AUTDLinkAuditFpgaModulationFrequencyDivision(_ptr, segment, static_cast<uint32_t>(idx));
+  [[nodiscard]] uint32_t modulation_freq_division(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaModulationFreqDivision(_ptr, segment, static_cast<uint32_t>(idx));
   }
 
-  [[nodiscard]] driver::LoopBehavior modulation_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
-    return driver::LoopBehavior(AUTDLinkAuditFpgaModulationLoopBehavior(_ptr, segment, static_cast<uint32_t>(idx)));
+  [[nodiscard]] native_methods::LoopBehavior modulation_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaModulationLoopBehavior(_ptr, segment, static_cast<uint32_t>(idx));
   }
 
   [[nodiscard]] std::pair<std::vector<std::uint8_t>, std::vector<std::uint8_t>> drives(const size_t idx, const native_methods::Segment segment,
@@ -122,12 +122,12 @@ class Audit final {
     return AUTDLinkAuditFpgaIsStmGainMode(_ptr, segment, static_cast<uint32_t>(idx));
   }
 
-  [[nodiscard]] uint32_t stm_frequency_division(const size_t idx, const native_methods::Segment segment) const {
-    return AUTDLinkAuditFpgaStmFrequencyDivision(_ptr, segment, static_cast<uint32_t>(idx));
+  [[nodiscard]] uint32_t stm_freq_division(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaStmFreqDivision(_ptr, segment, static_cast<uint32_t>(idx));
   }
 
-  [[nodiscard]] driver::LoopBehavior stm_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
-    return driver::LoopBehavior(AUTDLinkAuditFpgaStmLoopBehavior(_ptr, segment, static_cast<uint32_t>(idx)));
+  [[nodiscard]] native_methods::LoopBehavior stm_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaStmLoopBehavior(_ptr, segment, static_cast<uint32_t>(idx));
   }
 
   [[nodiscard]] native_methods::Segment current_stm_segment(const size_t idx) const {

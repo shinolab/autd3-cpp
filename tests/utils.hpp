@@ -6,10 +6,10 @@
 #include <autd3/link/audit.hpp>
 
 static inline autd3::controller::Controller<autd3::link::Audit> create_controller() {
-  return coro::sync_wait(autd3::controller::ControllerBuilder()
-                             .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                             .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                             .open_async(autd3::link::Audit::builder()));
+  return autd3::controller::ControllerBuilder()
+      .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+      .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+      .open(autd3::link::Audit::builder());
 }
 
 #define ASSERT_NEAR_VECTOR3(val1, val2, abs_error) \

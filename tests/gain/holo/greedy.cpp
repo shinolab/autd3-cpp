@@ -19,7 +19,7 @@ TEST(Gain_Holo, Greedy) {
                                      return std::make_pair(p, 5e3 * autd3::gain::holo::Pascal);
                                    }))
                .with_phase_div(16)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
 
   ASSERT_TRUE(autd.send(g));
 
