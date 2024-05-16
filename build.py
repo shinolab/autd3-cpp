@@ -151,11 +151,17 @@ def should_update_lib(config: Config, version: str) -> bool:
 
 
 def copy_lib(config: Config):
-    with open("CMakeLists.txt", "r") as f:
+    with open("include/autd3.hpp", "r") as f:
         content = f.read()
-        version = re.search(r"project\(autd3 VERSION (.*)\)", content).group(1)
-        # version = ".".join(version.split(".")[:3])
-        version = "24.0.0-rc.1"
+        version = (
+            re.search(r"static inline std::string version = \"(.*)\";", content)
+            .group(1)
+            .split(".")
+        )
+        if version[2].endswith("-rc"):
+            version = ".".join(version)
+        else:
+            version = ".".join(version[:3])
 
     if not should_update_lib(config, version):
         return
@@ -372,9 +378,15 @@ def util_update_ver(args):
     with working_dir("."):
         with open("CMakeLists.txt", "r") as f:
             content = f.read()
+            version_cmake = version.split(".")
+            if version_cmake[2].endswith("-rc"):
+                version_cmake[2] = version_cmake[2].replace("-rc", "")
+                version_cmake = ".".join(version_cmake[:3])
+            else:
+                version_cmake = ".".join(version_cmake)
             content = re.sub(
                 r"^project\(autd3 VERSION (.*)\)",
-                f"project(autd3 VERSION {version})",
+                f"project(autd3 VERSION {version_cmake})",
                 content,
                 flags=re.MULTILINE,
             )
@@ -395,8 +407,8 @@ def util_update_ver(args):
         with open("examples/CMakeLists.txt", "r") as f:
             content = f.read()
             content = re.sub(
-                r"v(.*)/autd3-v(\d*\.\d*\.\d*)",
-                f"v{version}/autd3-v{version}",
+                r"v.*/autd3-v.*-(win|macos|linux)",
+                rf"v{version}/autd3-v{version}-\1",
                 content,
                 flags=re.MULTILINE,
             )

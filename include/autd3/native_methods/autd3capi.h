@@ -89,7 +89,11 @@ ResultI32 AUTDControllerSend(ControllerPtr cnt,
                              DatagramPtr d2,
                              int64_t timeout_ns);
 
-[[nodiscard]] ControllerBuilderPtr AUTDControllerBuilder(uint32_t ultrasound_freq);
+[[nodiscard]] ControllerBuilderPtr AUTDControllerBuilder();
+
+[[nodiscard]]
+ControllerBuilderPtr AUTDControllerBuilderWithUltrasoundFreq(ControllerBuilderPtr builder,
+                                                             uint32_t ultrasound_freq);
 
 ControllerBuilderPtr AUTDControllerBuilderAddDevice(ControllerBuilderPtr builder,
                                                     double x,

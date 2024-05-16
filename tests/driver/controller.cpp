@@ -2,7 +2,6 @@
 
 #include <autd3/controller/builder.hpp>
 #include <autd3/driver/autd3_device.hpp>
-#include <autd3/driver/datagram/datagram.hpp>
 #include <autd3/driver/datagram/force_fan.hpp>
 #include <autd3/gain/focus.hpp>
 #include <autd3/gain/null.hpp>
@@ -71,7 +70,7 @@ TEST(Internal, ControllerSendSingle) {
   }
 
   autd.link().down();
-  ASSERT_FALSE(autd.send(autd3::modulation::Static()));
+  ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
 
   autd.link().break_down();
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
@@ -98,7 +97,7 @@ TEST(Internal, ControllerSendDouble) {
   }
 
   autd.link().down();
-  ASSERT_FALSE(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(1)));
+  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(1)), autd3::AUTDException);
 
   autd.link().break_down();
   ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(1)), autd3::AUTDException);

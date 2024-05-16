@@ -72,7 +72,7 @@ TEST(Gain, GroupUnspecifiedKey) {
     autd.send(autd3::gain::Group([](const auto&, const auto&) -> std::optional<const char*> { return "null"; }));
   } catch (autd3::AUTDException& e) {
     caught_err = true;
-    ASSERT_STREQ("Unspecified group key", e.what());
+    ASSERT_STREQ("Unspecified group key: [0]", e.what());
   }
 
   if (!caught_err) FAIL();

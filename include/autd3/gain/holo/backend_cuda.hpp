@@ -23,25 +23,25 @@ class CUDABackend final : public Backend {
   CUDABackend& operator=(CUDABackend&& obj) = default;
 
   [[nodiscard]] native_methods::GainPtr sdp(const double* foci, const double* amps, const uint64_t size, const double alpha, const double lambda,
-                                            const uint32_t repeat, const EmissionConstraint constraint) const override {
-    return AUTDGainHoloCUDASDP(_ptr, foci, amps, size, alpha, lambda, repeat, constraint.ptr());
+                                            const uint32_t repeat, const native_methods::EmissionConstraintWrap constraint) const override {
+    return AUTDGainHoloCUDASDP(_ptr, foci, amps, size, alpha, lambda, repeat, constraint);
   }
   [[nodiscard]] native_methods::GainPtr gs(const double* foci, const double* amps, const uint64_t size, const uint32_t repeat,
-                                           const EmissionConstraint constraint) const override {
-    return AUTDGainHoloCUDAGS(_ptr, foci, amps, size, repeat, constraint.ptr());
+                                           const native_methods::EmissionConstraintWrap constraint) const override {
+    return AUTDGainHoloCUDAGS(_ptr, foci, amps, size, repeat, constraint);
   }
   [[nodiscard]] native_methods::GainPtr gspat(const double* foci, const double* amps, const uint64_t size, const uint32_t repeat,
-                                              const EmissionConstraint constraint) const override {
-    return AUTDGainHoloCUDAGSPAT(_ptr, foci, amps, size, repeat, constraint.ptr());
+                                              const native_methods::EmissionConstraintWrap constraint) const override {
+    return AUTDGainHoloCUDAGSPAT(_ptr, foci, amps, size, repeat, constraint);
   }
   [[nodiscard]] native_methods::GainPtr naive(const double* foci, const double* amps, const uint64_t size,
-                                              const EmissionConstraint constraint) const override {
-    return AUTDGainHoloCUDANaive(_ptr, foci, amps, size, constraint.ptr());
+                                              const native_methods::EmissionConstraintWrap constraint) const override {
+    return AUTDGainHoloCUDANaive(_ptr, foci, amps, size, constraint);
   }
   [[nodiscard]] native_methods::GainPtr lm(const double* foci, const double* amps, const uint64_t size, const double eps1, const double eps2,
                                            const double tau, const uint32_t k_max, const double* initial, const uint64_t initial_size,
-                                           const EmissionConstraint constraint) const override {
-    return AUTDGainHoloCUDALM(_ptr, foci, amps, size, eps1, eps2, tau, k_max, constraint.ptr(), initial, initial_size);
+                                           const native_methods::EmissionConstraintWrap constraint) const override {
+    return AUTDGainHoloCUDALM(_ptr, foci, amps, size, eps1, eps2, tau, k_max, constraint, initial, initial_size);
   }
 };
 

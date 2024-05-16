@@ -25,7 +25,7 @@ TEST(Modulation, Square) {
 TEST(Modulation, SquareWithMode) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Square::create(150 * autd3::driver::Hz)));
+  ASSERT_TRUE(autd.send(autd3::modulation::Square::with_freq_nearest(150. * autd3::driver::Hz)));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -34,10 +34,11 @@ TEST(Modulation, SquareWithMode) {
   }
 
   ASSERT_THROW(autd.send(autd3::modulation::Square::create(100.1 * autd3::driver::Hz)), autd3::AUTDException);
-  ASSERT_TRUE(autd.send(autd3::modulation::Square::create(100.1 * autd3::driver::Hz)));
+  ASSERT_TRUE(autd.send(autd3::modulation::Square::with_freq_nearest(100.1 * autd3::driver::Hz)));
 }
 
 TEST(Modulation, SquareDefault) {
-  const auto m = autd3::modulation::Square::create(150 * autd3::driver::Hz);
-  ASSERT_TRUE(AUTDModulationSquareIsDefault(m.modulation_ptr(autd3::driver::geometry::Geometry{autd3::native_methods::GeometryPtr{nullptr}})));
+  auto autd = create_controller();
+  const auto m = autd3::modulation::Square::create(150.0 * autd3::driver::Hz);
+  ASSERT_TRUE(AUTDModulationSquareIsDefault(m.modulation_ptr(autd.geometry())));
 }

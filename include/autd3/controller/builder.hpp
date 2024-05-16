@@ -21,6 +21,11 @@ class ControllerBuilder {
     return *this;
   }
 
+  ControllerBuilder with_ultrasound_freq(const driver::Freq<uint32_t> ultrasound_freq) {
+    _ptr = AUTDControllerBuilderWithUltrasoundFreq(_ptr, ultrasound_freq.hz());
+    return *this;
+  }
+
   template <driver::link_builder B, typename Rep, typename Period>
   [[nodiscard]] Controller<typename B::Link> open_with_timeout(B&& link_builder, const std::chrono::duration<Rep, Period> timeout) {
     const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout.value()).count();
@@ -48,8 +53,7 @@ class ControllerBuilder {
   }
 #endif
 
-  ControllerBuilder(driver::Freq<uint32_t> ultrasound_freq = 40000 * driver::Hz)
-      : _ptr(native_methods::AUTDControllerBuilder(ultrasound_freq.hz())) {}
+  ControllerBuilder() : _ptr(native_methods::AUTDControllerBuilder()) {}
 
  private:
   native_methods::ControllerBuilderPtr _ptr;
