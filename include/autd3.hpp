@@ -11,16 +11,20 @@
 #include "autd3/driver/datagram/debug.hpp"
 #include "autd3/driver/datagram/force_fan.hpp"
 #include "autd3/driver/datagram/phase_filter.hpp"
+#include "autd3/driver/datagram/pulse_width_encoder.hpp"
 #include "autd3/driver/datagram/reads_fpga_state.hpp"
+#include "autd3/driver/datagram/segment.hpp"
 #include "autd3/driver/datagram/silencer.hpp"
 #include "autd3/driver/datagram/stm/focus.hpp"
 #include "autd3/driver/datagram/stm/gain.hpp"
+#include "autd3/driver/datagram/synchronize.hpp"
 #include "autd3/driver/defined/angle.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
+#include "autd3/driver/firmware/fpga/transition_mode.hpp"
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/geometry/rotation.hpp"
@@ -56,11 +60,18 @@ using driver::geometry::EulerAngles;
 using driver::geometry::Geometry;
 using driver::geometry::Transducer;
 
+using driver::DcSysTime;
+using driver::DebugType;
 using driver::Drive;
 using driver::EmitIntensity;
 using driver::LoopBehavior;
 using driver::Phase;
 using driver::SamplingConfig;
+using driver::TransitionMode;
+using native_methods::GPIOIn;
+using native_methods::GPIOOut;
+using native_methods::Segment;
+
 using gain::Gain;
 using modulation::Modulation;
 
@@ -72,8 +83,12 @@ using driver::FocusSTM;
 using driver::ForceFan;
 using driver::GainSTM;
 using driver::PhaseFilter;
+using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;
 using driver::Silencer;
+using driver::SwapSegment;
+using driver::Synchronize;
+
 using native_methods::GainSTMMode;
 
 using gain::Bessel;
@@ -95,7 +110,5 @@ using driver::Vector3;
 
 using controller::Controller;
 using controller::ControllerBuilder;
-
-using native_methods::Segment;
 
 }  // namespace autd3
