@@ -19,9 +19,11 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public 
   ModulationBase& operator=(ModulationBase&& obj) = default;
   virtual ~ModulationBase() = default;
 
-  [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const { return AUTDModulationIntoDatagram(modulation_ptr()); }
+  [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
+    return AUTDModulationIntoDatagram(modulation_ptr(geometry));
+  }
 
-  [[nodiscard]] native_methods::ModulationPtr raw_ptr(const geometry::Geometry&) const override { return modulation_ptr(); }
+  [[nodiscard]] native_methods::ModulationPtr raw_ptr(const geometry::Geometry& geometry) const override { return modulation_ptr(geometry); }
   [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::ModulationPtr p,
                                                          const native_methods::Segment segment) const override {
     return AUTDModulationIntoDatagramWithSegment(p, segment);
@@ -30,13 +32,15 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public 
                                                                     const native_methods::TransitionModeWrap transition_mode) const override {
     return native_methods::AUTDModulationIntoDatagramWithSegmentTransition(p, segment, transition_mode);
   }
-  [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr() const = 0;
+  [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const = 0;
 
   void with_loop_behavior(const native_methods::LoopBehavior loop_behavior) & { _loop_behavior = loop_behavior; }
   [[nodiscard]] M&& with_loop_behavior(const native_methods::LoopBehavior loop_behavior) && {
     _loop_behavior = loop_behavior;
     return std::move(*static_cast<M*>(this));
   }
+
+  [[nodiscard]] native_methods::LoopBehavior loop_behavior() const noexcept { return _loop_behavior; }
 
  protected:
   native_methods::LoopBehavior _loop_behavior;

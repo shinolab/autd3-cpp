@@ -3,9 +3,9 @@
 #include <autd3.hpp>
 
 template <typename L>
-inline coro::task<void> tran_test(autd3::Controller<L>& autd) {
+inline void custom(autd3::Controller<L>& autd) {
   auto silencer = autd3::Silencer::default_();
-  co_await autd.send_async(silencer);
+  autd.send(silencer);
 
   auto m = autd3::modulation::Sine::create(150 * autd3::Hz);  // 150Hz AM
 
@@ -16,5 +16,5 @@ inline coro::task<void> tran_test(autd3::Controller<L>& autd) {
       return autd3::Drive::null();
     };
   });
-  co_await autd.send_async(m, g);
+  autd.send(m, g);
 }

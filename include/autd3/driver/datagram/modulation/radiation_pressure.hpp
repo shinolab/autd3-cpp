@@ -11,8 +11,9 @@ class RadiationPressure final : public driver::ModulationBase<RadiationPressure<
  public:
   explicit RadiationPressure(M m) : _m(std::move(m)) { this->_loop_behavior = _m.loop_behavior(); }
 
-  [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    return native_methods::AUTDModulationWithRadiationPressure(_m.modulation_ptr(), static_cast<native_methods::LoopBehavior>(this->_loop_behavior));
+  [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry& geometry) const override {
+    return native_methods::AUTDModulationWithRadiationPressure(_m.modulation_ptr(geometry),
+                                                               static_cast<native_methods::LoopBehavior>(this->_loop_behavior));
   }
 
  private:

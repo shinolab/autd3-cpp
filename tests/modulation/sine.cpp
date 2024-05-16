@@ -12,9 +12,9 @@ TEST(Modulation, Sine) {
                        .with_intensity(std::numeric_limits<uint8_t>::max() / 2)
                        .with_offset(std::numeric_limits<uint8_t>::max() / 4)
                        .with_phase(autd3::driver::pi / 2 * autd3::driver::rad);
-    ASSERT_EQ(150, m.freq());
-    ASSERT_EQ(std::numeric_limits<autd3::driver::EmitIntensity>::max() / 2, m.intensity());
-    ASSERT_EQ(std::numeric_limits<autd3::driver::EmitIntensity>::max() / 4, m.offset());
+    ASSERT_EQ(150 * autd3::driver::Hz, m.freq());
+    ASSERT_EQ(std::numeric_limits<uint8_t>::max() / 2, m.intensity());
+    ASSERT_EQ(std::numeric_limits<uint8_t>::max() / 4, m.offset());
     ASSERT_EQ(autd3::driver::pi / 2 * autd3::driver::rad, m.phase());
     ASSERT_TRUE(autd.send(m));
 
@@ -55,5 +55,5 @@ TEST(Modulation, SineWithMode) {
 
 TEST(Modulation, SineDefault) {
   const auto m = autd3::modulation::Sine::create(150 * autd3::driver::Hz);
-  ASSERT_TRUE(AUTDModulationSineIsDefault(m.modulation_ptr()));
+  ASSERT_TRUE(AUTDModulationSineIsDefault(m.modulation_ptr(autd3::driver::geometry::Geometry{autd3::native_methods::GeometryPtr{nullptr}})));
 }

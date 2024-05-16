@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <autd3/driver/datagram/reads_fpga_state.hpp>
+#include <autd3/driver/datagram/segment.hpp>
 #include <autd3/gain/gain.hpp>
 #include <autd3/gain/uniform.hpp>
 
@@ -64,7 +65,7 @@ TEST(DriverDatagramGain, Segment) {
     }
   }
 
-  ASSERT_TRUE(autd.send(autd3::driver::ChangeGainSegment(Segment::S0)));
+  ASSERT_TRUE(autd.send(autd3::driver::SwapSegment::gain(Segment::S0)));
   infos = autd.fpga_info();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());

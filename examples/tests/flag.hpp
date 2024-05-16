@@ -8,11 +8,11 @@
 #include "autd3.hpp"
 
 template <typename L>
-inline coro::task<void> flag_test(autd3::Controller<L>& autd) {
+inline void flag_test(autd3::Controller<L>& autd) {
   std::cout << "press any key to run fan..." << std::endl;
   std::cin.ignore();
 
-  co_await autd.send_async(autd3::ForceFan([](const auto&) { return true; }), autd3::ReadsFPGAState([](const auto&) { return true; }));
+  autd.send(autd3::ForceFan([](const auto&) { return true; }), autd3::ReadsFPGAState([](const auto&) { return true; }));
 
   bool fin = false;
   std::cout << "press any key stop checking FPGA status..." << std::endl;
@@ -24,7 +24,7 @@ inline coro::task<void> flag_test(autd3::Controller<L>& autd) {
   const std::vector prompts = {'-', '/', '|', '\\'};
   size_t prompts_idx = 0;
   while (!fin) {
-    const auto states = co_await autd.fpga_info_async();
+    const auto states = autd.fpga_info();
     std::cout << prompts[prompts_idx++ / 1000 % prompts.size()] << " FPGA Status...\n";
     std::ranges::for_each(std::ranges::views::iota(states.size()), [&states](const size_t i) {
       std::cout << "[" << i << "]: " << (states[i].has_value() ? std::to_string(states[i].value().is_thermal_assert()) : "-") << std::endl;
@@ -34,5 +34,5 @@ inline coro::task<void> flag_test(autd3::Controller<L>& autd) {
 
   if (fin_signal.joinable()) fin_signal.join();
 
-  co_await autd.send_async(autd3::ForceFan([](const auto&) { return false; }), autd3::ReadsFPGAState([](const auto&) { return false; }));
+  autd.send(autd3::ForceFan([](const auto&) { return false; }), autd3::ReadsFPGAState([](const auto&) { return false; }));
 }

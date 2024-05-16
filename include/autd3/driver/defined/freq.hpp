@@ -9,6 +9,8 @@ class Freq {
 
   explicit Freq(const T value) : _value(value) {}
 
+  auto operator<=>(const Freq<T>&) const = default;
+
  private:
   T _value;
 };
@@ -19,6 +21,8 @@ class Freq<int> {
   operator Freq<uint32_t>() const { return Freq<uint32_t>(static_cast<uint32_t>(_value)); }
 
   explicit Freq(const int value) : _value(value) {}
+
+  auto operator<=>(const Freq<int>&) const = default;
 
  private:
   int _value;

@@ -62,6 +62,7 @@ struct ModulationCalcPtr {
 
 struct ResultModulationCalc {
   ModulationCalcPtr result;
+  SamplingConfigWrap config;
   uint32_t err_len;
   void* err;
 };
@@ -135,6 +136,20 @@ DatagramPtr AUTDDatagramPhaseFilterAdditive(void* f,
 [[nodiscard]] DatagramPtr AUTDDatagramReadsFPGAState(void* f, void* context, GeometryPtr geometry);
 
 [[nodiscard]]
+DatagramPtr AUTDDatagramSwapSegmentModulation(Segment segment,
+                                              TransitionModeWrap transition_mode);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramSwapSegmentFocusSTM(Segment segment,
+                                            TransitionModeWrap transition_mode);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
+                                           TransitionModeWrap transition_mode);
+
+[[nodiscard]] DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment);
+
+[[nodiscard]]
 ResultDatagram AUTDDatagramSilencerFixedUpdateRate(uint16_t value_intensity,
                                                    uint16_t value_phase);
 
@@ -191,39 +206,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegmentTransition(GainSTMPtr stm,
 
 [[nodiscard]] DatagramPtr AUTDDatagramSynchronize();
 
-[[nodiscard]]
-DatagramPtr AUTDDatagramSwapSegmentModulation(Segment segment,
-                                              TransitionModeWrap transition_mode);
-
-[[nodiscard]]
-DatagramPtr AUTDDatagramSwapSegmentFocusSTM(Segment segment,
-                                            TransitionModeWrap transition_mode);
-
-[[nodiscard]]
-DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
-                                           TransitionModeWrap transition_mode);
-
-[[nodiscard]] DatagramPtr AUTDDatagramChangeGainSegment(Segment segment);
-
 [[nodiscard]] uint64_t AUTDDcSysTimeNow();
-
-[[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
-
-[[nodiscard]] LoopBehavior AUTDLoopBehaviorFinite(uint32_t v);
-
-[[nodiscard]] LoopBehavior AUTDLoopBehaviorOnce();
-
-[[nodiscard]] uint8_t AUTDPhaseFromRad(double value);
-
-[[nodiscard]] double AUTDPhaseToRad(uint8_t value);
-
-[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromDivision(uint32_t div);
-
-[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromDivisionRaw(uint32_t div);
-
-[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreq(uint32_t f);
-
-[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreqNearest(double f);
 
 [[nodiscard]] DebugTypeWrap AUTDDebugTypeNone();
 
@@ -248,6 +231,24 @@ DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
 [[nodiscard]] DebugTypeWrap AUTDDebugTypePwmOut(TransducerPtr value);
 
 [[nodiscard]] DebugTypeWrap AUTDDebugTypeDirect(bool value);
+
+[[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
+
+[[nodiscard]] LoopBehavior AUTDLoopBehaviorFinite(uint32_t v);
+
+[[nodiscard]] LoopBehavior AUTDLoopBehaviorOnce();
+
+[[nodiscard]] uint8_t AUTDPhaseFromRad(double value);
+
+[[nodiscard]] double AUTDPhaseToRad(uint8_t value);
+
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromDivision(uint32_t div);
+
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromDivisionRaw(uint32_t div);
+
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreq(uint32_t f);
+
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreqNearest(double f);
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeSyncIdx();
 

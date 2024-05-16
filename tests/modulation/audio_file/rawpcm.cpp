@@ -26,6 +26,6 @@ TEST(Modulation, RawPCM) {
 
 TEST(Modulation, RawPCMDefault) {
   const auto m = autd3::modulation::audio_file::RawPCM(std::filesystem::path(""), 4000 * autd3::driver::Hz);
-  ASSERT_TRUE(AUTDModulationRawPCMIsDefault(m.modulation_ptr()));
+  ASSERT_TRUE(AUTDModulationRawPCMIsDefault(m.modulation_ptr(autd3::driver::geometry::Geometry{autd3::native_methods::GeometryPtr{nullptr}})));
   ;
 }

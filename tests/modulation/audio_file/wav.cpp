@@ -25,5 +25,5 @@ TEST(Modulation, Wav) {
 
 TEST(Modulation, WavDefault) {
   const auto m = autd3::modulation::audio_file::Wav(std::filesystem::path(""));
-  ASSERT_TRUE(AUTDModulationWavIsDefault(m.modulation_ptr()));
+  ASSERT_TRUE(AUTDModulationWavIsDefault(m.modulation_ptr(autd3::driver::geometry::Geometry{autd3::native_methods::GeometryPtr{nullptr}})));
 }

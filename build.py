@@ -161,7 +161,13 @@ def copy_lib(config: Config):
         return
 
     if config.is_windows():
-        url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-x64-static.zip"
+        if platform.machine().lower() in ["amd64", "x86_64"]:
+            url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-x64-static.zip"
+        elif platform.machine().lower() in ["arm64", "aarch64"]:
+            url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-arm-static.zip"
+        else:
+            err(f"Unsupported platform: {platform.machine()}")
+            sys.exit(-1)
         urllib.request.urlretrieve(url, "tmp.zip")
         shutil.unpack_archive("tmp.zip", ".")
         rm_f("tmp.zip")

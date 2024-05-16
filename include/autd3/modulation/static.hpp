@@ -17,7 +17,7 @@ class Static final : public driver::ModulationBase<Static>,
 
   [[nodiscard]] uint8_t intensity() const { return _intensity; }
 
-  [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+  [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
     return native_methods::AUTDModulationStatic(_intensity, static_cast<native_methods::LoopBehavior>(_loop_behavior));
   }
 

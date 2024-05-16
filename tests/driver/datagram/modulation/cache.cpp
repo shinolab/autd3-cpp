@@ -15,10 +15,10 @@ TEST(DriverDatagramModulation, Cache) {
   ASSERT_TRUE(autd1.send(m1));
   ASSERT_TRUE(autd2.send(m2));
 
-  ASSERT_TRUE(std::ranges::all_of(m2.buffer(), [](auto d) { return d == autd3::driver::EmitIntensity(0x80); }));
-  for (const auto& m : m2) ASSERT_EQ(autd3::driver::EmitIntensity(0x80), m);
-  std::for_each(m2.cbegin(), m2.cend(), [](const auto& m) { ASSERT_EQ(autd3::driver::EmitIntensity(0x80), m); });
-  for (size_t i = 0; i < m2.size(); i++) ASSERT_EQ(autd3::driver::EmitIntensity(0x80), m2[i]);
+  ASSERT_TRUE(std::ranges::all_of(m2.buffer(), [](auto d) { return d == 0x80; }));
+  for (const auto& m : m2) ASSERT_EQ(0x80, m);
+  std::ranges::for_each(m2.cbegin(), m2.cend(), [](const auto& m) { ASSERT_EQ(0x80, m); });
+  for (size_t i = 0; i < 2; i++) ASSERT_EQ(0x80, m2[i]);
   for (auto& dev : autd1.geometry()) {
     auto mod = autd2.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     auto mod_expect = autd1.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -29,9 +29,9 @@ TEST(DriverDatagramModulation, Cache) {
 
 class ForModulationCacheTest final : public autd3::modulation::Modulation<ForModulationCacheTest> {
  public:
-  [[nodiscard]] std::vector<autd3::driver::EmitIntensity> calc() const override {
+  [[nodiscard]] std::vector<uint8_t> calc() const override {
     ++*_cnt;
-    return {std::numeric_limits<autd3::driver::EmitIntensity>::max(), std::numeric_limits<autd3::driver::EmitIntensity>::max()};
+    return {std::numeric_limits<uint8_t>::max(), std::numeric_limits<uint8_t>::max()};
   }
 
   explicit ForModulationCacheTest(size_t* cnt) noexcept : Modulation(autd3::driver::SamplingConfig::Division(5120)), _cnt(cnt) {}

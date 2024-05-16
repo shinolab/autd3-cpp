@@ -19,5 +19,5 @@ TEST(Modulation, Static) {
 
 TEST(Modulation, StaticDefault) {
   const auto m = autd3::modulation::Static();
-  ASSERT_TRUE(AUTDModulationStaticIsDefault(m.modulation_ptr()));
+  ASSERT_TRUE(AUTDModulationStaticIsDefault(m.modulation_ptr(autd3::driver::geometry::Geometry{autd3::native_methods::GeometryPtr{nullptr}})));
 }

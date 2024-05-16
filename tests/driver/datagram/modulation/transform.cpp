@@ -9,9 +9,8 @@ TEST(DriverDatagramModulation, Transform) {
   auto autd2 = create_controller();
 
   ASSERT_TRUE(autd1.send(autd3::modulation::Sine::create(150 * autd3::driver::Hz)));
-  ASSERT_TRUE(autd2.send(autd3::modulation::Sine::create(150 * autd3::driver::Hz).with_transform([](size_t, const autd3::driver::EmitIntensity v) {
-    return autd3::driver::EmitIntensity(v.value() / 2);
-  })));
+  ASSERT_TRUE(autd2.send(
+      autd3::modulation::Sine::create(150 * autd3::driver::Hz).with_transform([](size_t, const uint8_t v) { return static_cast<uint8_t>(v / 2); })));
 
   for (auto& dev : autd1.geometry()) {
     auto mod_expect = autd1.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);

@@ -8,9 +8,9 @@
 namespace fs = std::filesystem;
 
 template <typename L>
-inline coro::task<void> mod_audio_file_test(autd3::Controller<L>& autd) {
+inline void mod_audio_file_test(autd3::Controller<L>& autd) {
   auto silencer = autd3::Silencer::default_();
-  co_await autd.send_async(silencer);
+  autd.send(silencer);
 
   const fs::path path = fs::path(AUTD3_RESOURCE_PATH).append("sin150.wav");
   autd3::modulation::audio_file::Wav m(path);
@@ -19,5 +19,5 @@ inline coro::task<void> mod_audio_file_test(autd3::Controller<L>& autd) {
 
   autd3::gain::Focus g(center);
 
-  co_await autd.send_async(m, g);
+  autd.send(m, g);
 }

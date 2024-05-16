@@ -24,7 +24,7 @@ class Fourier;
     AUTD3_DEF_PARAM(T, uint8_t, offset)                                                                                       \
     AUTD3_DEF_PARAM(T, driver::Angle, phase)                                                                                  \
     friend Fourier<T> operator+(T&& lhs, const T& rhs);                                                                       \
-    [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {                                             \
+    [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {            \
       return native_methods::AUTDModulation##T(_freq.hz(), _config, _intensity, _offset, _phase.to_radian(), _loop_behavior); \
     }                                                                                                                         \
   };

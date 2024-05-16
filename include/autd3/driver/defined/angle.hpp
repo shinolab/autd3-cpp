@@ -29,6 +29,8 @@ class Angle {
   friend Angle operator*(const double l, const UnitRad&) { return Angle(l); }
   friend Angle operator*(const double l, const UnitDegree&) { return Angle(l / 180 * std::numbers::pi); }
 
+  auto operator<=>(const Angle&) const = default;
+
  private:
   explicit Angle(const double value) : _value(value) {}
 

@@ -25,6 +25,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
       case autd3::native_methods::GPIOOut::O3:
         return autd3::driver::DebugType::ForceFan;
     }
+    return autd3::driver::DebugType::None;
   })));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x00, 0x01, 0x02, 0x03};
@@ -44,6 +45,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
       case autd3::native_methods::GPIOOut::O3:
         return autd3::driver::DebugType::StmSegment;
     }
+    return autd3::driver::DebugType::None;
   })));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x10, 0x20, 0x21, 0x50};
@@ -64,6 +66,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
           case autd3::native_methods::GPIOOut::O3:
             return autd3::driver::DebugType::Direct(true);
         }
+        return autd3::driver::DebugType::None;
       })));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x51, 0x52, 0xE0, 0xF0};

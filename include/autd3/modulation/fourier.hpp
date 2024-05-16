@@ -8,8 +8,8 @@
 
 namespace autd3::modulation {
 
-template <class T, class R>
-concept fourier_sine_range = std::ranges::viewable_range<R> && std::same_as<std::ranges::range_value_t<R>, T>;
+template <class R, class T>
+concept fourier_sine_range = std::ranges::viewable_range<R> && std::same_as<std::remove_reference_t<std::ranges::range_value_t<R>>, T>;
 
 template <class T>
 class Fourier final : public driver::ModulationBase<Fourier<T>>,
@@ -17,7 +17,7 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
                       public driver::IntoRadiationPressure<Fourier<T>>,
                       public driver::IntoModulationTransform<Fourier<T>> {
  public:
-  explicit Fourier(T component) : driver::ModulationBase() { _components.emplace_back(std::move(component)); }
+  explicit Fourier(T component) { _components.emplace_back(std::move(component)); }
 
   void add_component(T component) & { _components.emplace_back(std::move(component)); }
 
@@ -53,15 +53,17 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
     return m;
   }
 
-  [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    std::vector<native_methods::ModulationPtr> components;
-    components.reserve(_components.size());
-    std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(); });
-    return AUTDModulationFourier(components.data(), static_cast<uint32_t>(components.size()), _loop_behavior);
-  }
+  [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override;
 
  private:
   std::vector<T> _components;
 };
+
+[[nodiscard]] native_methods::ModulationPtr Fourier<SineExact>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
+  std::vector<native_methods::ModulationPtr> components;
+  components.reserve(_components.size());
+  std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(geometry); });
+  return AUTDModulationFourierExact(components.data(), static_cast<uint32_t>(components.size()), this->_loop_behavior);
+}
 
 }  // namespace autd3::modulation
