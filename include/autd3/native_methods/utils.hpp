@@ -25,25 +25,6 @@
                                                                           \
  public:
 
-#define AUTD3_DEF_PARAM_INTENSITY(T, PARAM_NAME)                                                 \
-  void with_##PARAM_NAME(const uint8_t value)& { _##PARAM_NAME = driver::EmitIntensity(value); } \
-  [[nodiscard]] T&& with_##PARAM_NAME(const uint8_t value)&& {                                   \
-    _##PARAM_NAME = driver::EmitIntensity(value);                                                \
-    return std::move(*this);                                                                     \
-  }                                                                                              \
-  void with_##PARAM_NAME(const driver::EmitIntensity value)& { _##PARAM_NAME = value; }          \
-  [[nodiscard]] T&& with_##PARAM_NAME(const driver::EmitIntensity value)&& {                     \
-    _##PARAM_NAME = value;                                                                       \
-    return std::move(*this);                                                                     \
-  }                                                                                              \
-                                                                                                 \
-  [[nodiscard]] driver::EmitIntensity PARAM_NAME() const { return _##PARAM_NAME; }               \
-                                                                                                 \
- private:                                                                                        \
-  driver::EmitIntensity _##PARAM_NAME;                                                           \
-                                                                                                 \
- public:
-
 namespace autd3::native_methods {
 
 template <class T>

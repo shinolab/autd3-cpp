@@ -24,7 +24,7 @@ TEST(DriverDatagramGain, Segment) {
     ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x00; }));
   }
 
-  ASSERT_TRUE(autd.send(autd3::gain::Uniform(0x80).with_phase(autd3::driver::Phase(0x90))));
+  ASSERT_TRUE(autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90))));
   infos = autd.fpga_info();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
@@ -35,7 +35,7 @@ TEST(DriverDatagramGain, Segment) {
     ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
   }
 
-  auto g = autd3::gain::Uniform(0x81).with_phase(autd3::driver::Phase(0x91));
+  auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91));
   ASSERT_TRUE(autd.send(g.with_segment(Segment::S1, true)));
   infos = autd.fpga_info();
   for (auto& dev : autd.geometry()) {
@@ -47,7 +47,8 @@ TEST(DriverDatagramGain, Segment) {
     ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x91; }));
   }
 
-  ASSERT_TRUE(autd.send(autd3::gain::Uniform(0x82).with_phase(autd3::driver::Phase(0x92)).with_segment(Segment::S0, false)));
+  ASSERT_TRUE(
+      autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x82)).with_phase(autd3::driver::Phase(0x92)).with_segment(Segment::S0, false)));
   infos = autd.fpga_info();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());

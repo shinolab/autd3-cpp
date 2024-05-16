@@ -7,7 +7,8 @@
 TEST(Gain, Focus) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::gain::Focus(autd.geometry().center() + 150 * autd3::driver::Vector3::UnitZ()).with_intensity(0x80)));
+  ASSERT_TRUE(autd.send(
+      autd3::gain::Focus(autd.geometry().center() + 150 * autd3::driver::Vector3::UnitZ()).with_intensity(autd3::driver::EmitIntensity(0x80))));
 
   for (auto& dev : autd.geometry()) {
     auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);

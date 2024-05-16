@@ -9,7 +9,7 @@
 TEST(DriverDatagramGain, Cache) {
   auto autd = create_controller();
 
-  const auto g = autd3::gain::Uniform(0x80).with_phase(autd3::driver::Phase(0x90)).with_cache();
+  const auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)).with_cache();
 
   g.init(autd.geometry());
 

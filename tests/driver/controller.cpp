@@ -87,7 +87,7 @@ TEST(Internal, ControllerSendDouble) {
     ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
   }
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(0x80)));
+  ASSERT_TRUE(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))));
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
@@ -97,10 +97,10 @@ TEST(Internal, ControllerSendDouble) {
   }
 
   autd.link().down();
-  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(1)), autd3::AUTDException);
+  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Null()), autd3::AUTDException);
 
   autd.link().break_down();
-  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(1)), autd3::AUTDException);
+  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Null()), autd3::AUTDException);
 }
 
 TEST(Internal, ControllerGroup) {
@@ -108,7 +108,7 @@ TEST(Internal, ControllerGroup) {
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
       .set(0, autd3::modulation::Static(), autd3::gain::Null())
-      .set(1, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(0x80))
+      .set(1, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
       .send();
 
   {
@@ -129,7 +129,7 @@ TEST(Internal, ControllerGroup) {
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
       .set(1, autd3::gain::Null())
-      .set(0, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(0x80))
+      .set(0, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
       .send();
 
   {
@@ -154,7 +154,8 @@ TEST(Internal, ControllerGroupCheckOnlyForEnabled) {
         check[dev.idx()] = true;
         return 0;
       })
-      .set(0, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(0x80).with_phase(autd3::driver::Phase(0x90)))
+      .set(0, autd3::modulation::Sine::create(150 * autd3::driver::Hz),
+           autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
       .send();
 
   ASSERT_FALSE(check[0]);

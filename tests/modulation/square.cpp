@@ -7,7 +7,10 @@
 TEST(Modulation, Square) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Square::create(200 * autd3::driver::Hz).with_low(32).with_high(85).with_duty(0.1)));
+  ASSERT_TRUE(autd.send(autd3::modulation::Square::create(200 * autd3::driver::Hz)
+                            .with_low(autd3::driver::EmitIntensity(32))
+                            .with_high(autd3::driver::EmitIntensity(85))
+                            .with_duty(0.1)));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);

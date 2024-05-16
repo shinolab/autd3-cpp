@@ -1,13 +1,13 @@
 #include <gtest/gtest.h>
 
 #include <autd3/driver/datagram/reads_fpga_state.hpp>
+#include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/datagram/silencer.hpp>
-#include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <autd3/driver/datagram/stm/gain.hpp>
+#include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <autd3/gain/focus.hpp>
 #include <autd3/gain/uniform.hpp>
 #include <ranges>
-#include <autd3/driver/datagram/segment.hpp>
 
 #include "utils.hpp"
 
@@ -22,15 +22,16 @@ TEST(DriverDatagramSTM, GainSTM) {
   ASSERT_TRUE(autd.send(autd3::driver::Silencer::disable()));
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
-  auto stm = autd3::driver::GainSTM::from_freq(1.0 * autd3::driver::Hz).add_gains_from_iter(std::views::iota(0) | std::views::take(2) |
-                                                                      std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
+  auto stm =
+      autd3::driver::GainSTM::from_freq(1.0 * autd3::driver::Hz)
+          .add_gains_from_iter(std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
   ASSERT_TRUE(autd.send(stm));
   for (const auto& dev : autd.geometry()) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
   for (const auto& dev : autd.geometry()) ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 
   stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfig::Division(512))
-            .add_gain(autd3::gain::Uniform(0x80))
-            .add_gain(autd3::gain::Uniform(0x80))
+            .add_gain(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+            .add_gain(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
             .with_mode(autd3::native_methods::GainSTMMode::PhaseIntensityFull);
   ASSERT_TRUE(autd.send(stm));
   for (const auto& dev : autd.geometry()) ASSERT_EQ(512u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
@@ -85,8 +86,9 @@ TEST(DriverDatagramSTM, GainSTMSegment) {
   }
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
-  auto stm = autd3::driver::GainSTM::from_freq(1.0 * autd3::driver::Hz).add_gains_from_iter(std::views::iota(0) | std::views::take(2) |
-                                                                      std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
+  auto stm =
+      autd3::driver::GainSTM::from_freq(1.0 * autd3::driver::Hz)
+          .add_gains_from_iter(std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
 
   ASSERT_TRUE(autd.send(stm));
   infos = autd.fpga_info();

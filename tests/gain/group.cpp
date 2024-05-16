@@ -15,7 +15,7 @@ TEST(Gain, Group) {
                           if (tr.position().x() < cx) return "uniform";
                           return "null";
                         })
-                            .set("uniform", autd3::gain::Uniform(0x80).with_phase(autd3::driver::Phase(0x90)))
+                            .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
                             .set("null", autd3::gain::Null())));
   for (auto& dev : autd.geometry()) {
     auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -33,7 +33,7 @@ TEST(Gain, Group) {
   ASSERT_TRUE(autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
                           if (tr.position().x() < cx) return "uniform";
                           return std::nullopt;
-                        }).set("uniform", autd3::gain::Uniform(0x81).with_phase(autd3::driver::Phase(0x91)))));
+                        }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91)))));
   for (auto& dev : autd.geometry()) {
     auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
@@ -54,7 +54,7 @@ TEST(Gain, GroupUnkownKey) {
   bool caught_err = false;
   try {
     autd.send(autd3::gain::Group([](const auto&, const auto&) -> std::optional<const char*> { return "null"; })
-                  .set("uniform", autd3::gain::Uniform(0x80).with_phase(autd3::driver::Phase(0x90)))
+                  .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
                   .set("null", autd3::gain::Null()));
   } catch (autd3::AUTDException& e) {
     caught_err = true;
@@ -86,7 +86,7 @@ TEST(Gain, GroupCheckOnlyForEnabled) {
   ASSERT_TRUE(autd.send(autd3::gain::Group([&check](const auto& dev, const auto&) -> std::optional<int> {
                           check[dev.idx()] = true;
                           return 0;
-                        }).set(0, autd3::gain::Uniform(0x80).with_phase(autd3::driver::Phase(0x90)))));
+                        }).set(0, autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))));
 
   ASSERT_FALSE(check[0]);
   ASSERT_TRUE(check[1]);

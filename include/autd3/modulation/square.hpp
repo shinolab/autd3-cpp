@@ -2,6 +2,7 @@
 
 #include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/driver/defined/freq.hpp"
+#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
@@ -12,15 +13,15 @@ namespace autd3::modulation {
     explicit T(const F freq)                                                                                       \
         : Modulation(driver::SamplingConfig::Division(5120)),                                                      \
           _freq(freq),                                                                                             \
-          _low(std::numeric_limits<uint8_t>::min()),                                                               \
-          _high(std::numeric_limits<uint8_t>::max()),                                                              \
+          _low(std::numeric_limits<driver::EmitIntensity>::min()),                                                 \
+          _high(std::numeric_limits<driver::EmitIntensity>::max()),                                                \
           _duty(0.5) {}                                                                                            \
     AUTD3_DEF_PROP(F, freq)                                                                                        \
-    AUTD3_DEF_PARAM(T, uint8_t, low)                                                                               \
-    AUTD3_DEF_PARAM(T, uint8_t, high)                                                                              \
+    AUTD3_DEF_PARAM(T, driver::EmitIntensity, low)                                                                 \
+    AUTD3_DEF_PARAM(T, driver::EmitIntensity, high)                                                                \
     AUTD3_DEF_PARAM(T, double, duty)                                                                               \
     [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override { \
-      return AUTDModulation##T(_freq.hz(), _config, _low, _high, _duty, _loop_behavior);                           \
+      return AUTDModulation##T(_freq.hz(), _config, _low.value(), _high.value(), _duty, _loop_behavior);           \
     }                                                                                                              \
   };
 

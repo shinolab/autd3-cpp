@@ -12,7 +12,6 @@ namespace autd3::gain {
 
 class Uniform final : public driver::Gain<Uniform> {
  public:
-  explicit Uniform(const uint8_t intensity) : _intensity(driver::EmitIntensity(intensity)), _phase(driver::Phase(0)) {}
   explicit Uniform(const driver::EmitIntensity intensity) : _intensity(intensity), _phase(driver::Phase(0)) {}
   Uniform() = delete;
   Uniform(const Uniform& obj) = default;

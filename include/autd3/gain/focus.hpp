@@ -23,8 +23,8 @@ class Focus final : public driver::Gain<Focus> {
   ~Focus() override = default;
 
   AUTD3_DEF_PROP(driver::Vector3, pos)
-  AUTD3_DEF_PARAM_INTENSITY(Focus, intensity)
-  AUTD3_DEF_PROP(driver::Phase, phase_offset)
+  AUTD3_DEF_PARAM(Focus, driver::EmitIntensity, intensity)
+  AUTD3_DEF_PARAM(Focus, driver::Phase, phase_offset)
 
   [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     return native_methods::AUTDGainFocus(_pos.x(), _pos.y(), _pos.z(), _intensity.value(), _phase_offset.value());
