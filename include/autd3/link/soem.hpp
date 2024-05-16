@@ -34,7 +34,7 @@ concept soem_err_handler_f = requires(F f, const uint16_t slave, const Status st
 };
 
 class SOEM final {
-  using native_err_handler_t = void (*)(const void*, uint32_t, uint8_t, const char*);
+  using native_err_handler_t = void (*)(const void*, uint32_t, Status);
   using err_handler_t = void (*)(uint16_t, Status, const std::string&);
 
   explicit SOEM(const native_err_handler_t native_err_handler, const err_handler_t err_handler)
@@ -84,8 +84,10 @@ class SOEM final {
     template <soem_err_handler_f F>
     [[nodiscard]] Builder with_err_handler(F value) {
       _err_handler = static_cast<err_handler_t>(value);
-      _native_err_handler = +[](const void* context, const uint32_t slave, const uint8_t status, const char* msg) {
-        (*reinterpret_cast<err_handler_t>(const_cast<void*>(context)))(static_cast<uint16_t>(slave), static_cast<Status>(status), std::string(msg));
+      _native_err_handler = +[](const void* context, const uint32_t slave, const native_methods::Status status) {
+        const std::string msg(128, ' ');
+        native_methods::AUTDLinkSOEMStatusGetMsg(status, const_cast<char*>(msg.c_str()));
+        (*reinterpret_cast<err_handler_t>(const_cast<void*>(context)))(static_cast<uint16_t>(slave), status, msg);
       };
       _ptr = AUTDLinkSOEMWithErrHandler(_ptr, reinterpret_cast<void*>(_native_err_handler), reinterpret_cast<void*>(_err_handler));
       return *this;
