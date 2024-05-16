@@ -12,7 +12,7 @@ class UnitSPL {
   friend Amplitude operator*(double l, const UnitSPL&);
 };
 
-constexpr UnitPascal Pascal = UnitPascal{};
+constexpr UnitPascal Pa = UnitPascal{};
 constexpr UnitSPL dB = UnitSPL{};
 
 class Amplitude {

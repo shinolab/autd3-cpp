@@ -10,7 +10,7 @@ TEST(Gain_Holo, AmplitudeDB) {
 }
 
 TEST(Gain_Holo, AmplitudeSPL) {
-  const auto amp = 23.77004454874038 * autd3::gain::holo::Pascal;
+  const auto amp = 23.77004454874038 * autd3::gain::holo::Pa;
   ASSERT_EQ(amp.as_spl(), 121.5);
   ASSERT_EQ(amp.as_pascal(), 23.77004454874038);
 }

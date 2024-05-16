@@ -14,10 +14,10 @@ TEST(Gain_Holo, GS) {
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<double> p{-30};
   auto g = autd3::gain::holo::GS(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .add_foci_from_iter(p | std::ranges::views::transform([&](auto x) {
                                      autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                                     return std::make_pair(p, 5e3 * autd3::gain::holo::Pascal);
+                                     return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                    }))
                .with_repeat(100)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
@@ -50,10 +50,10 @@ TEST(Gain_Holo, GS_CUDA) {
   auto backend = std::make_shared<autd3::gain::holo::CUDABackend>();
   std::vector<double> p{-30};
   auto g = autd3::gain::holo::GS(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .add_foci_from_iter(p | std::ranges::views::transform([&](auto x) {
                                      autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                                     return std::make_pair(p, 5e3 * autd3::gain::holo::Pascal);
+                                     return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                    }))
                .with_repeat(100)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));

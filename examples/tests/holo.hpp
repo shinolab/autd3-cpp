@@ -37,7 +37,7 @@ inline void holo_test(autd3::Controller<L>& autd) {
   if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= 6 || is_empty) idx = 2;
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  auto amp = 5e3 * autd3::gain::holo::Pascal;
+  auto amp = 5e3 * autd3::gain::holo::Pa;
   switch (idx) {
     case 0:
       autd.send(m, autd3::gain::holo::SDP(backend)

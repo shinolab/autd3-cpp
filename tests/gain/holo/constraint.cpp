@@ -8,8 +8,8 @@ TEST(Gain_Holo, ConstraintUniform) {
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto g = autd3::gain::holo::Naive(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
 
   ASSERT_TRUE(autd.send(g));
@@ -26,8 +26,8 @@ TEST(Gain_Holo, ConstraintNormalize) {
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto g = autd3::gain::holo::Naive(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Normalize);
 
   ASSERT_TRUE(autd.send(g));
@@ -44,8 +44,8 @@ TEST(Gain_Holo, ConstraintClamp) {
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto g = autd3::gain::holo::Naive(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(67, 85));
 
   ASSERT_TRUE(autd.send(g));
@@ -62,8 +62,8 @@ TEST(Gain_Holo, ConstraintDontCare) {
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto g = autd3::gain::holo::Naive(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pascal)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::DontCare);
 
   ASSERT_TRUE(autd.send(g));
