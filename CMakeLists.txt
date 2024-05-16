@@ -16,7 +16,7 @@ set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 option(USE_SYSTEM_EIGEN "Use system installed eigen3" OFF)
 option(USE_SYSTEM_LIBCORO "Use system installed libcoro" OFF)
-option(AUTD3_ASYNC_API "Use async APIs" ON)
+option(AUTD3_ASYNC_API "Use async APIs" OFF)
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.24.0") 
   cmake_policy(SET CMP0135 NEW)
@@ -37,12 +37,11 @@ else()
 endif()
 
 if(WIN32)
-  FetchContent_Declare(
-    soem
-    GIT_REPOSITORY https://github.com/OpenEtherCATsociety/SOEM.git
-    GIT_TAG v1.4.0)
-  FetchContent_Populate(soem)
-  set(WPCAP_LIB_DIR ${PROJECT_BINARY_DIR}/../soem-src/oshw/win32/wpcap/Lib/x64)
+  if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "AMD64|IA64")
+    set(WPCAP_LIB_DIR ${PROJECT_SOURCE_DIR}/lib/wpcap/x64)
+  elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "ARM64")
+    set(WPCAP_LIB_DIR ${PROJECT_SOURCE_DIR}/lib/wpcap/ARM64)
+  endif()
 endif()
 
 if(AUTD3_ASYNC_API AND APPLE)
@@ -113,7 +112,7 @@ target_link_libraries(autd3_link_soem INTERFACE autd3::common autd3capi_link_soe
 if(WIN32)
   target_link_libraries(autd3_link_soem INTERFACE Ws2_32.lib Winmm.lib)
   target_link_directories(autd3_link_soem INTERFACE ${WPCAP_LIB_DIR})
-  target_link_libraries(autd3_link_soem INTERFACE wpcap.lib Packet.lib)
+  target_link_libraries(autd3_link_soem INTERFACE wpcap.lib)
 elseif(APPLE)
   target_link_libraries(autd3_link_soem INTERFACE pcap)
 endif()
