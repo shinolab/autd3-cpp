@@ -7,7 +7,7 @@
 
 namespace autd3::modulation {
 
-#define AUTD3_DEF_MOD_SQUARE(T, F)                                                                                 \
+#define AUTD3_DEF_MOD_SQUARE(T, N, F)                                                                              \
   class T final : public driver::Modulation<T> {                                                                   \
    public:                                                                                                         \
     explicit T(const F freq)                                                                                       \
@@ -21,13 +21,13 @@ namespace autd3::modulation {
     AUTD3_DEF_PARAM(T, driver::EmitIntensity, high)                                                                \
     AUTD3_DEF_PARAM(T, double, duty)                                                                               \
     [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override { \
-      return AUTDModulation##T(_freq.hz(), _config, _low.value(), _high.value(), _duty, _loop_behavior);           \
+      return N(_freq.hz(), _config, _low.value(), _high.value(), _duty, _loop_behavior);                           \
     }                                                                                                              \
   };
 
-AUTD3_DEF_MOD_SQUARE(SquareExact, driver::Freq<uint32_t>)
-AUTD3_DEF_MOD_SQUARE(SquareExactFloat, driver::Freq<double>)
-AUTD3_DEF_MOD_SQUARE(SquareNearest, driver::Freq<double>)
+AUTD3_DEF_MOD_SQUARE(SquareExact, AUTDModulationSquareExact, driver::Freq<uint32_t>)
+AUTD3_DEF_MOD_SQUARE(SquareExactFloat, AUTDModulationSquareExactFloat, driver::Freq<double>)
+AUTD3_DEF_MOD_SQUARE(SquareNearest, AUTDModulationSquareNearest, driver::Freq<double>)
 
 #undef AUTD3_DEF_MOD_SQUARE
 

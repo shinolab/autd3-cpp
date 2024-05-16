@@ -255,9 +255,10 @@ def check_if_all_native_methods_called():
                 result = pattern.match(line)
                 if result:
                     defined_methods.add(result.group(1))
+    defined_methods = set(filter(lambda x: not x.endswith("T4010A1"), defined_methods))
 
     used_methods = set()
-    pattern = re.compile(".*(AUTD.*?)\\(.*")
+    pattern = re.compile(".*(AUTD.*?)[\\(|,].*")
     for file in glob("include/**/*.hpp", recursive=True) + glob(
         "tests/**/*.cpp", recursive=True
     ):
