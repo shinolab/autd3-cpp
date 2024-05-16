@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <autd3/driver/datagram/reads_fpga_state.hpp>
-#include <autd3/driver/fpga/defined/fpga_state.hpp>
+#include <autd3/driver/firmware/fpga/fpga_state.hpp>
 #include <autd3/exception.hpp>
 
 #include "utils.hpp"
@@ -13,7 +13,7 @@ TEST(DriverDatagram, FPGAState) {
     for (const auto infos = autd.fpga_info(); auto info : infos) ASSERT_FALSE(info.has_value());
   }
 
-  ASSERT_TRUE(autd.send(autd3::driver::ConfigureReadsFPGAState([](const auto&) { return true; })));
+  ASSERT_TRUE(autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; })));
 
   {
     autd.link().assert_thermal_sensor(0);
@@ -45,7 +45,7 @@ TEST(DriverDatagram, FPGAStateAsync) {
     for (const auto infos = autd.fpga_info(); auto info : infos) ASSERT_FALSE(info.has_value());
   }
 
-  ASSERT_TRUE(autd.send(autd3::driver::ConfigureReadsFPGAState([](const auto&) { return true; })));
+  ASSERT_TRUE(autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; })));
 
   {
     autd.link().assert_thermal_sensor(0);

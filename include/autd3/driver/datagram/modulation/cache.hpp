@@ -2,15 +2,12 @@
 
 #include <memory>
 
-#include "autd3/driver/common/emit_intensity.hpp"
 #include "autd3/driver/datagram/modulation/base.hpp"
+#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
 
-/**
- * @brief Modulation to cache the result of calculation
- */
 template <class M>
 class Cache final : public driver::ModulationBase<Cache<M>> {
  public:
@@ -21,12 +18,11 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
   Cache& operator=(Cache&& obj) noexcept = delete;
   ~Cache() noexcept override = default;  // LCOV_EXCL_LINE
 
-  const std::vector<driver::EmitIntensity>& calc() const { return init(); }
+  const std::vector<uint8_t>& calc() const { return init(); }
 
   [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    const auto buf = calc();
-    return AUTDModulationCustom(static_cast<native_methods::SamplingConfiguration>(_sampling_config.value()),
-                                reinterpret_cast<const uint8_t*>(buf.data()), static_cast<uint64_t>(buf.size()),
+    const auto& buf = calc();
+    return AUTDModulationCustom(_sampling_config, reinterpret_cast<const uint8_t*>(buf.data()), static_cast<uint64_t>(buf.size()),
                                 static_cast<native_methods::LoopBehavior>(_m.loop_behavior()));
   }
 
@@ -44,7 +40,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
       const auto res = native_methods::AUTDModulationCalc(_m.modulation_ptr());
       const auto ptr = validate(res);
       _cache->resize(res.result_len, driver::EmitIntensity(0));
-      _sampling_config = driver::SamplingConfiguration::from_frequency_division(res.freq_div);
+      _sampling_config = driver::SamplingConfig::from_frequency_division(res.freq_div);
       native_methods::AUTDModulationCalcGetResult(ptr, reinterpret_cast<uint8_t*>(_cache->data()));
     }
     return *_cache;
@@ -52,7 +48,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
 
   M _m;
   mutable std::shared_ptr<std::vector<driver::EmitIntensity>> _cache;
-  mutable std::optional<driver::SamplingConfiguration> _sampling_config;
+  mutable std::optional<native_methods::SamplingConfigWrap> _sampling_config;
 };
 
 }  // namespace autd3::modulation

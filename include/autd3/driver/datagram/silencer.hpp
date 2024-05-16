@@ -6,14 +6,8 @@
 
 namespace autd3::driver {
 
-/**
- * @brief Datagram to configure silencer
- */
-class ConfigureSilencer final {
+class Silencer final {
  public:
-  /**
-   * @brief Datagram to configure silencer
-   */
   class FixedUpdateRate final {
    public:
     explicit FixedUpdateRate(const uint16_t update_rate_intensity, const uint16_t update_rate_phase) noexcept
@@ -27,9 +21,6 @@ class ConfigureSilencer final {
     }
   };
 
-  /**
-   * @brief Datagram to configure silencer
-   */
   class FixedCompletionSteps final {
    public:
     explicit FixedCompletionSteps(const uint16_t steps_intensity, const uint16_t steps_phase) noexcept
@@ -44,33 +35,14 @@ class ConfigureSilencer final {
     }
   };
 
-  /**
-   * @brief Constructor
-   *
-   * @param update_rate_intensity Intensity update rate of silencer. The smaller value
-   * is, the quieter the output is.
-   * @param update_rate_phase Phase update rate of silencer. The smaller value is, the
-   * quieter the output is.
-   */
   [[nodiscard]] static FixedUpdateRate fixed_update_rate(const uint16_t update_rate_intensity, const uint16_t update_rate_phase) noexcept {
     return FixedUpdateRate(update_rate_intensity, update_rate_phase);
   }
 
-  /**
-   * @brief Constructor
-   *
-   * @param steps_intensity Intensity completion steps of silencer. The smaller value is,
-   * the quieter the output is.
-   * @param steps_phase Phase completion steps of silencer. The smaller value is, the
-   * quieter the output is.
-   */
   [[nodiscard]] static FixedCompletionSteps fixed_completion_steps(const uint16_t steps_intensity, const uint16_t steps_phase) noexcept {
     return FixedCompletionSteps(steps_intensity, steps_phase);
   }
 
-  /**
-   * @brief Disable silencer
-   */
   [[nodiscard]] static FixedCompletionSteps disable() noexcept { return fixed_completion_steps(1, 1); }
 
   [[nodiscard]] static FixedCompletionSteps default_() noexcept { return fixed_completion_steps(10, 40); }

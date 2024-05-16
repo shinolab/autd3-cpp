@@ -7,19 +7,16 @@
 #include <unordered_map>
 #include <vector>
 
-#include "autd3/driver/common/drive.hpp"
-#include "autd3/driver/common/phase.hpp"
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
+#include "autd3/driver/firmware/fpga/drive.hpp"
+#include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
 namespace autd3::gain {
 
-/**
- * @brief Gain to cache the result of calculation
- */
 template <class G>
 class Cache final : public driver::GainBase, public driver::IntoDatagramWithSegment<native_methods::GainPtr, Cache<G>> {
  public:
@@ -51,11 +48,11 @@ class Cache final : public driver::GainBase, public driver::IntoDatagramWithSegm
 
   [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     init(geometry);
-    return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainCustom(),
+    return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainRaw(),
                            [this](const native_methods::GainPtr acc, const driver::geometry::Device& dev) {
-                             return AUTDGainCustomSet(acc, static_cast<uint32_t>(dev.idx()),
-                                                      reinterpret_cast<native_methods::Drive*>(_cache->at(dev.idx()).data()),
-                                                      static_cast<uint32_t>(_cache->at(dev.idx()).size()));
+                             return AUTDGainRawSet(acc, static_cast<uint32_t>(dev.idx()),
+                                                   reinterpret_cast<native_methods::Drive*>(_cache->at(dev.idx()).data()),
+                                                   static_cast<uint32_t>(_cache->at(dev.idx()).size()));
                            });
   }
 

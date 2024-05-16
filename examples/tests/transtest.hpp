@@ -4,15 +4,17 @@
 
 template <typename L>
 inline coro::task<void> tran_test(autd3::Controller<L>& autd) {
-  auto silencer = autd3::ConfigureSilencer::default_();
+  auto silencer = autd3::Silencer::default_();
   co_await autd.send_async(silencer);
 
-  autd3::modulation::Sine m(150);  // 150Hz AM
+  auto m = autd3::modulation::Sine::create(150 * autd3::Hz);  // 150Hz AM
 
-  const autd3::gain::TransducerTest g([](const auto& dev, const auto& tr) -> std::optional<autd3::Drive> {
-    if (dev.idx() == 0 && tr.idx() == 0) return autd3::Drive(autd3::Phase(0), autd3::EmitIntensity::maximum());
-    if (dev.idx() == 0 && tr.idx() == 248) return autd3::Drive(autd3::Phase(0), autd3::EmitIntensity::maximum());
-    return std::nullopt;
+  const autd3::gain::Custom g([](const auto& dev) -> auto {
+    return [&](const auto& tr) -> autd3::Drive {
+      if (dev.idx() == 0 && tr.idx() == 0) return autd3::Drive(autd3::Phase(0), std::numeric_limits<autd3::EmitIntensity>::max());
+      if (dev.idx() == 0 && tr.idx() == 248) return autd3::Drive(autd3::Phase(0), std::numeric_limits<autd3::EmitIntensity>::max());
+      return autd3::Drive::null();
+    };
   });
   co_await autd.send_async(m, g);
 }

@@ -16,9 +16,6 @@ class FPGAState {
   FPGAState(FPGAState&& obj) = default;
   FPGAState& operator=(FPGAState&& obj) = default;
 
-  /**
-   * @brief Check if thermal sensor is asserted
-   */
   [[nodiscard]] bool is_thermal_assert() const noexcept { return (_info & (1 << 0)) != 0; }
 
   [[nodiscard]] native_methods::Segment current_mod_segment() const noexcept {

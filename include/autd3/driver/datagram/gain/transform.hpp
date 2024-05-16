@@ -6,10 +6,10 @@
 #include <numeric>
 #include <vector>
 
-#include "autd3/driver/common/drive.hpp"
-#include "autd3/driver/common/emit_intensity.hpp"
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/gain/cache.hpp"
+#include "autd3/driver/firmware/fpga/drive.hpp"
+#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
@@ -40,18 +40,18 @@ class Transform final : public driver::GainBase,
     const auto res = validate(native_methods::AUTDGainCalc(_g.gain_ptr(geometry), geometry.ptr()));
     std::for_each(geometry.devices().begin(), geometry.devices().end(), [this, &res, &drives](const driver::geometry::Device& dev) {
       std::vector<driver::Drive> d;
-      d.resize(dev.num_transducers(), driver::Drive{driver::Phase(0), driver::EmitIntensity::minimum()});
+      d.resize(dev.num_transducers(), driver::Drive{driver::Phase(0), std::numeric_limits<driver::EmitIntensity>::min()});
       native_methods::AUTDGainCalcGetResult(res, reinterpret_cast<native_methods::Drive*>(d.data()), static_cast<uint32_t>(dev.idx()));
       std::for_each(dev.cbegin(), dev.cend(), [this, &d, &dev](const driver::geometry::Transducer& tr) { d[tr.idx()] = _f(dev, tr, d[tr.idx()]); });
       drives.emplace(dev.idx(), std::move(d));
     });
 
     native_methods::AUTDGainCalcFreeResult(res);
-    return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainCustom(),
+    return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainRaw(),
                            [&drives](const native_methods::GainPtr acc, const driver::geometry::Device& dev) {
-                             return AUTDGainCustomSet(acc, static_cast<uint32_t>(dev.idx()),
-                                                      reinterpret_cast<native_methods::Drive*>(drives[dev.idx()].data()),
-                                                      static_cast<uint32_t>(drives[dev.idx()].size()));
+                             return AUTDGainRawSet(acc, static_cast<uint32_t>(dev.idx()),
+                                                   reinterpret_cast<native_methods::Drive*>(drives[dev.idx()].data()),
+                                                   static_cast<uint32_t>(drives[dev.idx()].size()));
                            });
   }
 

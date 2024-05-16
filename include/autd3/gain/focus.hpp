@@ -3,20 +3,18 @@
 #include <algorithm>
 
 #include "autd3/def.hpp"
-#include "autd3/driver/common/emit_intensity.hpp"
 #include "autd3/driver/datagram/gain/gain.hpp"
+#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
 namespace autd3::gain {
 
-/**
- * @brief Gain to produce single focal point
- */
 class Focus final : public driver::Gain<Focus> {
  public:
-  explicit Focus(driver::Vector3 p) : _pos(std::move(p)), _intensity(driver::EmitIntensity::maximum()), _phase_offset(driver::Phase(0)) {}
+  explicit Focus(driver::Vector3 p)
+      : _pos(std::move(p)), _intensity(std::numeric_limits<driver::EmitIntensity>::max()), _phase_offset(driver::Phase(0)) {}
   Focus() = delete;
   Focus(const Focus& obj) = default;
   Focus& operator=(const Focus& obj) = default;

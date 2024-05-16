@@ -23,11 +23,18 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
     config.usize_is_size_t = true;
     config.export = cbindgen::ExportConfig {
         include: vec![
+            "ContextPtr".to_string(),
+            "GPIOOut".to_string(),
+            "GPIOIn".to_string(),
+            "SyncMode".to_string(),
+            "LoopBehavior".to_string(),
+            "TransitionModeWrap".to_string(),
             "TimerStrategy".to_string(),
             "GainSTMMode".to_string(),
             "ControllerPtr".to_string(),
-            "EmissionConstraintPtr".to_string(),
-            "FirmwareInfoListPtr".to_string(),
+            "SamplingConfigWrap".to_string(),
+            "EmissionConstraintWrap".to_string(),
+            "FirmwareVersionListPtr".to_string(),
             "GroupKVMapPtr".to_string(),
             "CachePtr".to_string(),
             "DevicePtr".to_string(),
@@ -56,12 +63,9 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "FocusSTMPtr".to_string(),
             "ResultGainSTM".to_string(),
             "ResultFocusSTM".to_string(),
-            "DebugSettings".to_string(),
+            "DebugTypeWrap".to_string(),
         ],
-        exclude: vec![
-            "ConstPtr".to_string(),
-            "AUTDDatagramConfigureDebugSettings2".to_string(),
-        ],
+        exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "void*".to_string())]
             .into_iter()
             .collect(),

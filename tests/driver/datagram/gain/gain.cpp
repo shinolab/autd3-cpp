@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <autd3/driver/common/emit_intensity.hpp>
+#include <autd3/driver/firmware/fpga/emit_intensity.hpp>
 #include <autd3/gain/gain.hpp>
 
 #include "utils.hpp"

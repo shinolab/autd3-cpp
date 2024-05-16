@@ -6,10 +6,6 @@
 #include "autd3/controller/controller.hpp"
 #include "autd3/def.hpp"
 #include "autd3/driver/autd3_device.hpp"
-#include "autd3/driver/common/drive.hpp"
-#include "autd3/driver/common/emit_intensity.hpp"
-#include "autd3/driver/common/phase.hpp"
-#include "autd3/driver/common/sampling_config.hpp"
 #include "autd3/driver/datagram/clear.hpp"
 #include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/datagram/debug.hpp"
@@ -19,6 +15,12 @@
 #include "autd3/driver/datagram/silencer.hpp"
 #include "autd3/driver/datagram/stm/focus.hpp"
 #include "autd3/driver/datagram/stm/gain.hpp"
+#include "autd3/driver/defined/angle.hpp"
+#include "autd3/driver/defined/freq.hpp"
+#include "autd3/driver/firmware/fpga/drive.hpp"
+#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/phase.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/geometry/rotation.hpp"
@@ -39,48 +41,39 @@
 
 namespace autd3 {
 
-/**
- * @brief Mathematical constant pi
- */
 constexpr double pi = driver::pi;
 
-/**
- * @brief AUTD3 software version
- */
-static inline std::string version = "22.1.0";
+static inline std::string version = "24.0.0-rc.1";
+
+using autd3::driver::deg;
+using autd3::driver::Hz;
+using autd3::driver::kHz;
+using autd3::driver::rad;
 
 using driver::AUTD3;
-using driver::geometry::deg;
 using driver::geometry::Device;
 using driver::geometry::EulerAngles;
 using driver::geometry::Geometry;
-using driver::geometry::rad;
 using driver::geometry::Transducer;
 
 using driver::Drive;
 using driver::EmitIntensity;
 using driver::LoopBehavior;
 using driver::Phase;
+using driver::SamplingConfig;
 using gain::Gain;
-constexpr driver::UnitPhaseRad phase_rad = driver::rad;
-using driver::SamplingConfiguration;
 using modulation::Modulation;
 
-using driver::ChangeFocusSTMSegment;
-using driver::ChangeGainSegment;
-using driver::ChangeGainSTMSegment;
-using driver::ChangeModulationSegment;
 using driver::Clear;
-using driver::ConfigureDebugSettings;
-using driver::ConfigureForceFan;
-using driver::ConfigurePhaseFilter;
-using driver::ConfigureReadsFPGAState;
-using driver::ConfigureSilencer;
 using driver::ControlPoint;
+using driver::DebugSettings;
 using driver::DebugType;
-using driver::DebugTypes;
 using driver::FocusSTM;
+using driver::ForceFan;
 using driver::GainSTM;
+using driver::PhaseFilter;
+using driver::ReadsFPGAState;
+using driver::Silencer;
 using native_methods::GainSTMMode;
 
 using gain::Bessel;
@@ -88,15 +81,13 @@ using gain::Focus;
 using gain::Group;
 using gain::Null;
 using gain::Plane;
-using gain::TransducerTest;
 using gain::Uniform;
 
-using modulation::SamplingMode;
 using modulation::Sine;
 using modulation::Square;
 using modulation::Static;
 
-using driver::FirmwareInfo;
+using driver::FirmwareVersion;
 using driver::FPGAState;
 
 using driver::Quaternion;
@@ -104,8 +95,6 @@ using driver::Vector3;
 
 using controller::Controller;
 using controller::ControllerBuilder;
-
-using native_methods::TimerStrategy;
 
 using native_methods::Segment;
 

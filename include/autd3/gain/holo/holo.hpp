@@ -15,7 +15,7 @@ concept holo_foci_range = std::ranges::viewable_range<R> && std::same_as<std::ra
 template <class H>
 class Holo : public driver::Gain<H> {
  public:
-  explicit Holo(const EmissionConstraint value) : _constraint(value) {}
+  explicit Holo(const native_methods::EmissionConstraintWrap value) : _constraint(value) {}
 
   void add_focus(driver::Vector3 focus, Amplitude amp) & {
     _foci.emplace_back(std::move(focus));
@@ -45,18 +45,16 @@ class Holo : public driver::Gain<H> {
     return std::move(*static_cast<H*>(this));
   }
 
-  void with_constraint(const EmissionConstraint value) & { _constraint = value; }
-  [[nodiscard]] H with_constraint(const EmissionConstraint value) && {
+  void with_constraint(const native_methods::EmissionConstraintWrap value) & { _constraint = value; }
+  [[nodiscard]] H with_constraint(const native_methods::EmissionConstraintWrap value) && {
     _constraint = value;
     return std::move(*static_cast<H*>(this));
   }
 
-  [[nodiscard]] EmissionConstraint constraint() const { return _constraint; }
-
  protected:
   std::vector<driver::Vector3> _foci;
   std::vector<Amplitude> _amps;
-  EmissionConstraint _constraint;
+  native_methods::EmissionConstraintWrap _constraint;
 };
 
 }  // namespace autd3::gain::holo

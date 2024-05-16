@@ -10,7 +10,7 @@ extern "C" {
 
 [[nodiscard]]
 ResultModulation AUTDModulationWav(const char *path,
-                                   SamplingConfiguration config,
+                                   SamplingConfigWrap config,
                                    LoopBehavior loop_behavior);
 
 [[nodiscard]] bool AUTDModulationWavIsDefault(ModulationPtr wav);
@@ -18,7 +18,7 @@ ResultModulation AUTDModulationWav(const char *path,
 [[nodiscard]]
 ResultModulation AUTDModulationRawPCM(const char *path,
                                       uint32_t sample_rate,
-                                      SamplingConfiguration config,
+                                      SamplingConfigWrap config,
                                       LoopBehavior loop_behavior);
 
 [[nodiscard]] bool AUTDModulationRawPCMIsDefault(ModulationPtr rawpcm);

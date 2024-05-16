@@ -11,7 +11,7 @@ using autd3::native_methods::Segment;
 TEST(DriverDatagramGain, Segment) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::driver::ConfigureReadsFPGAState([](const auto&) { return true; })));
+  ASSERT_TRUE(autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; })));
 
   auto infos = autd.fpga_info();
   for (auto& dev : autd.geometry()) {

@@ -9,14 +9,14 @@ TEST(Modulation, Sine) {
 
   {
     const auto m = autd3::modulation::Sine(150)
-                       .with_intensity(autd3::driver::EmitIntensity::maximum() / 2)
-                       .with_offset(autd3::driver::EmitIntensity::maximum() / 4)
+                       .with_intensity(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 2)
+                       .with_offset(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 4)
                        .with_phase(autd3::driver::Phase::from_rad(autd3::driver::pi / 2));
     ASSERT_EQ(150, m.freq());
-    ASSERT_EQ(autd3::driver::EmitIntensity::maximum() / 2, m.intensity());
-    ASSERT_EQ(autd3::driver::EmitIntensity::maximum() / 4, m.offset());
+    ASSERT_EQ(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 2, m.intensity());
+    ASSERT_EQ(autd3::driver::std::numeric_limits<EmitIntensity>::max() / 4, m.offset());
     ASSERT_EQ(autd3::driver::Phase::from_rad(autd3::driver::pi / 2), m.phase());
-    ASSERT_EQ(autd3::driver::SamplingConfiguration::from_frequency(4e3), m.sampling_config());
+    ASSERT_EQ(autd3::driver::SamplingConfig::from_frequency(4e3), m.sampling_config());
     ASSERT_EQ(autd3::driver::LoopBehavior::infinite(), m.loop_behavior());
     ASSERT_TRUE(autd.send(m));
 
@@ -32,9 +32,9 @@ TEST(Modulation, Sine) {
 
   {
     const auto m = autd3::modulation::Sine(150)
-                       .with_sampling_config(autd3::driver::SamplingConfiguration::from_frequency_division(10240))
+                       .with_sampling_config(autd3::driver::SamplingConfig::from_frequency_division(10240))
                        .with_loop_behavior(autd3::driver::LoopBehavior::finite(10));
-    ASSERT_EQ(autd3::driver::SamplingConfiguration::from_frequency_division(10240), m.sampling_config());
+    ASSERT_EQ(autd3::driver::SamplingConfig::from_frequency_division(10240), m.sampling_config());
     ASSERT_EQ(autd3::driver::LoopBehavior::finite(10), m.loop_behavior());
     ASSERT_TRUE(autd.send(m));
     for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));

@@ -3,7 +3,7 @@
 #include <chrono>
 #include <utility>
 
-#include "autd3/driver/common/loop_behavior.hpp"
+#include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::controller {

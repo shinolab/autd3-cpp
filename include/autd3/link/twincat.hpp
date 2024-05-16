@@ -12,9 +12,6 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
-/**
- * @brief Link using TwinCAT3
- */
 class TwinCAT final {
   TwinCAT() = default;
 
@@ -45,9 +42,6 @@ class TwinCAT final {
   [[nodiscard]] static Builder builder() { return {}; }
 };
 
-/**
- * @brief Link for remote TwinCAT3 server via [ADS](https://github.com/Beckhoff/ADS) library
- */
 class RemoteTwinCAT final {
   RemoteTwinCAT() = default;
 
@@ -69,23 +63,11 @@ class RemoteTwinCAT final {
 
     [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkRemoteTwinCATIntoBuilder(_ptr); }
 
-    /**
-     * @brief Set server IP address
-     *
-     * @param ip Server IP address
-     * @return RemoteTwinCAT
-     */
     [[nodiscard]] Builder with_server_ip(const std::string& ip) {
       _ptr = AUTDLinkRemoteTwinCATWithServerIP(_ptr, ip.c_str());
       return *this;
     }
 
-    /**
-     * @brief Set client AMS Net ID
-     *
-     * @param id AMS Net ID
-     * @return RemoteTwinCAT
-     */
     [[nodiscard]] Builder with_client_ams_net_id(const std::string& id) {
       _ptr = AUTDLinkRemoteTwinCATWithClientAmsNetId(_ptr, id.c_str());
       return *this;
@@ -99,11 +81,6 @@ class RemoteTwinCAT final {
     }
   };
 
-  /**
-   * @brief Constructor
-   *
-   * @param server_ams_net_id Server AMS Net ID
-   */
   [[nodiscard]] static Builder builder(const std::string& server_ams_net_id) { return Builder(server_ams_net_id); }
 };
 

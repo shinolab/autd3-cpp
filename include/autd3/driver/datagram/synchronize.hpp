@@ -5,9 +5,6 @@
 
 namespace autd3::driver {
 
-/**
- * @brief Datagram to synchronize devices
- */
 class Synchronize final {
  public:
   Synchronize() = default;

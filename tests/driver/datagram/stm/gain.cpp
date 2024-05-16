@@ -17,7 +17,7 @@ TEST(DriverDatagramSTM, GainSTM) {
                   .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
                   .open(autd3::link::Audit::builder());
 
-  ASSERT_TRUE(autd.send(autd3::driver::ConfigureSilencer::disable()));
+  ASSERT_TRUE(autd.send(autd3::driver::Silencer::disable()));
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::GainSTM::from_freq(1).add_gains_from_iter(std::views::iota(0) | std::views::take(2) |
@@ -36,7 +36,7 @@ TEST(DriverDatagramSTM, GainSTM) {
     ASSERT_EQ(10240000u, autd.link().stm_frequency_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfiguration::from_frequency_division(512))
+  stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfig::from_frequency_division(512))
             .add_gain(autd3::gain::Uniform(0x80))
             .add_gain(autd3::gain::Uniform(0x80))
             .with_mode(autd3::native_methods::GainSTMMode::PhaseIntensityFull);
@@ -90,7 +90,7 @@ TEST(DriverDatagramSTM, GainSTM) {
 TEST(DriverDatagramSTM, GainSTMSegment) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::driver::ConfigureReadsFPGAState([](const auto&) { return true; })));
+  ASSERT_TRUE(autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; })));
 
   auto infos = autd.fpga_info();
   for (auto& dev : autd.geometry()) {

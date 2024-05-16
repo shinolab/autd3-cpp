@@ -9,15 +9,10 @@
 
 namespace autd3::gain::holo {
 
-/**
- * @brief Gain to produce multiple foci with GS algorithm
- *
- * @details Asier Marzo and Bruce W Drinkwater. Holographic acoustic tweezers.Proceedings of theNational Academy of Sciences, 116(1):84–89, 2019.
- */
 template <backend B>
 class GS final : public Holo<GS<B>> {
  public:
-  explicit GS(std::shared_ptr<B> holo_backend) : Holo<GS>(EmissionConstraint::dont_care()), _repeat(100), _backend(std::move(holo_backend)) {}
+  explicit GS(std::shared_ptr<B> holo_backend) : Holo<GS>(EmissionConstraint::DontCare), _repeat(100), _backend(std::move(holo_backend)) {}
 
   AUTD3_DEF_PARAM(GS, uint32_t, repeat)
 

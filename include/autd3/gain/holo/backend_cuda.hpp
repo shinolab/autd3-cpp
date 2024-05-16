@@ -8,9 +8,6 @@
 
 namespace autd3::gain::holo {
 
-/**
- * @brief Backend using CUDA
- */
 class CUDABackend final : public Backend {
  public:
   CUDABackend() { _ptr = validate(native_methods::AUTDCUDABackend()); }

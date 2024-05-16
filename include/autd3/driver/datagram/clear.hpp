@@ -4,9 +4,6 @@
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
-/**
- * @brief Datagram for clear all data in devices
- */
 class Clear final {
  public:
   Clear() = default;

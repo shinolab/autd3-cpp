@@ -17,10 +17,6 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
-/**
- * @brief Link for AUTD Simulator
- *
- */
 class Simulator final {
   native_methods::LinkPtr _ptr;
 
@@ -42,12 +38,6 @@ class Simulator final {
 
     [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSimulatorIntoBuilder(_ptr); }
 
-    /**
-     * @brief Set server IP address
-     *
-     * @param ip Server IP address
-     * @return Simulator
-     */
     [[nodiscard]] Builder with_server_ip(const std::string& ip) {
       _ptr = validate(AUTDLinkSimulatorWithAddr(_ptr, ip.c_str()));
       return *this;
@@ -65,7 +55,7 @@ class Simulator final {
 
   [[nodiscard]] bool update_geometry(const driver::geometry::Geometry& geometry) const {                   // LCOV_EXCL_LINE
     return validate(AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr())) == native_methods::AUTD3_TRUE;  // LCOV_EXCL_LINE
-  }                                                                                                        // LCOV_EXCL_LINE
+  }  // LCOV_EXCL_LINE
 
 #ifdef AUTD3_ASYNC_API
   [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const { co_return update_geometry(geometry); }

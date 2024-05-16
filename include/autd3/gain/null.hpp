@@ -6,9 +6,6 @@
 
 namespace autd3::gain {
 
-/**
- * @brief Gain to output nothing
- */
 class Null final : public driver::Gain<Null> {
  public:
   Null() = default;

@@ -35,66 +35,30 @@ class Device {
   Device(Device&& obj) = default;  // LCOV_EXCL_LINE
   Device& operator=(Device&& obj) = default;
 
-  /**
-   *@brief Device index
-   *
-   */
   [[nodiscard]] size_t idx() const { return _idx; }
 
-  /**
-   * @brief Get the number of transducers
-   */
   [[nodiscard]] size_t num_transducers() const { return _transducers.size(); }
 
-  /**
-   * @brief Get center position of the transducers in the device
-   */
   [[nodiscard]] Vector3 center() const {
     Vector3 v;
     AUTDDeviceCenter(_ptr, v.data());
     return v;
   }
 
-  /**
-   * @brief Speed of sound
-   */
   [[nodiscard]] double sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
 
-  /**
-   * @brief Set speed of sound
-   */
   void set_sound_speed(const double value) const { AUTDDeviceSetSoundSpeed(_ptr, value); }
 
-  /**
-   * @brief Set the sound speed from temperature
-   *
-   * @param temp Temperature in celsius
-   * @param k Ratio of specific heat
-   * @param r Gas constant
-   * @param m Molar mass
-   */
   void set_sound_speed_from_temp(const double temp, const double k = 1.4, const double r = 8.31446261815324, const double m = 28.9647e-3) const {
     AUTDDeviceSetSoundSpeedFromTemp(_ptr, temp, k, r, m);
   }
 
-  /**
-   * @brief Attenuation coefficient
-   */
   [[nodiscard]] double attenuation() const { return AUTDDeviceGetAttenuation(_ptr); }
 
-  /**
-   * @brief Set attenuation coefficient
-   */
   void set_attenuation(const double value) const { AUTDDeviceSetAttenuation(_ptr, value); }
 
-  /**
-   * @brief get enable flag
-   */
   [[nodiscard]] bool enable() const { return AUTDDeviceEnableGet(_ptr); }
 
-  /**
-   * @brief set enable flag
-   */
   void set_enable(const bool value) const { AUTDDeviceEnableSet(_ptr, value); }
 
   void translate(Vector3 t) const { AUTDDeviceTranslate(_ptr, t.x(), t.y(), t.z()); }

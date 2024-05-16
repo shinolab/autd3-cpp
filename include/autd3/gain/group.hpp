@@ -24,25 +24,11 @@ class Group final : public driver::Gain<Group<F>> {
 
   explicit Group(F f) : _f(std::move(f)) {}
 
-  /**
-   * @brief Set gain
-   *
-   * @tparam G Gain
-   * @param key Key
-   * @param gain Gain
-   */
   template <driver::gain G>
   void set(const key_type key, G&& gain) & {
     _map[key] = std::make_shared<std::remove_reference_t<G>>(std::forward<G>(gain));
   }
 
-  /**
-   * @brief Set gain
-   *
-   * @tparam G Gain
-   * @param key Key
-   * @param gain Gain
-   */
   template <driver::gain G>
   [[nodiscard]] Group&& set(const key_type key, G&& gain) && {
     _map[key] = std::make_shared<std::remove_reference_t<G>>(std::forward<G>(gain));

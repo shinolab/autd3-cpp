@@ -12,9 +12,10 @@ enum class Status : uint8_t {
   Lost = 2,
 };
 
-enum class SyncMode : uint8_t {
-  FreeRun = 0,
-  DC = 1,
+enum class TimerStrategy : uint8_t {
+  Sleep = 0,
+  BusyWait = 1,
+  NativeTimer = 2,
 };
 
 struct EthernetAdaptersPtr {
@@ -70,6 +71,8 @@ LinkSOEMBuilderPtr AUTDLinkSOEMWithIfname(LinkSOEMBuilderPtr soem,
 [[nodiscard]]
 LinkSOEMBuilderPtr AUTDLinkSOEMWithStateCheckInterval(LinkSOEMBuilderPtr soem,
                                                       uint32_t interval_ms);
+
+void AUTDLinkSOEMStatusGetMsg(Status src, char *dst);
 
 [[nodiscard]]
 LinkSOEMBuilderPtr AUTDLinkSOEMWithErrHandler(LinkSOEMBuilderPtr soem,

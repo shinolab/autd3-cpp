@@ -154,7 +154,8 @@ def copy_lib(config: Config):
     with open("CMakeLists.txt", "r") as f:
         content = f.read()
         version = re.search(r"project\(autd3 VERSION (.*)\)", content).group(1)
-        version = ".".join(version.split(".")[:3])
+        # version = ".".join(version.split(".")[:3])
+        version = "24.0.0-rc.1"
 
     if not should_update_lib(config, version):
         return
@@ -165,7 +166,7 @@ def copy_lib(config: Config):
         shutil.unpack_archive("tmp.zip", ".")
         rm_f("tmp.zip")
     elif config.is_macos():
-        url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-macos-universal-static.tar.gz"
+        url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-macos-aarch64-static.tar.gz"
         urllib.request.urlretrieve(url, "tmp.tar.gz")
         with tarfile.open("tmp.tar.gz", "r:gz") as tar:
             tar.extractall()

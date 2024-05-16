@@ -38,21 +38,12 @@ class Geometry {
   Geometry(Geometry&& obj) = default;
   Geometry& operator=(Geometry&& obj) = default;
 
-  /**
-   * @brief Get the number of devices
-   */
   [[nodiscard]] size_t num_devices() const { return _devices.size(); }
 
-  /**
-   * @brief Get the number of transducers
-   */
   [[nodiscard]] size_t num_transducers() const {
     return std::accumulate(_devices.begin(), _devices.end(), size_t{0}, [](const size_t acc, const Device& d) { return acc + d.num_transducers(); });
   }
 
-  /**
-   * @brief Get center position of all devices
-   */
   [[nodiscard]] Vector3 center() const {
     return std::accumulate(_devices.begin(), _devices.end(), Vector3(0, 0, 0),
                            [](const Vector3& acc, const Device& d) -> Vector3 {
@@ -62,28 +53,14 @@ class Geometry {
            static_cast<double>(num_devices());
   }
 
-  /*
-   * @brief Enumerate enabled devices
-   */
   [[nodiscard]] auto devices() const noexcept {
     return GeometryView(_devices) | std::views::filter([](const auto& dev) { return dev.enable(); });
   }
 
-  /**
-   * @brief Set speed of sound of enabled devices
-   */
   void set_sound_speed(const double value) const {
     std::ranges::for_each(devices(), [value](const auto& dev) { dev.set_sound_speed(value); });
   }
 
-  /**
-   * @brief Set the sound speed from temperature of enabled devices
-   *
-   * @param temp Temperature in celsius
-   * @param k Ratio of specific heat
-   * @param r Gas constant
-   * @param m Molar mass
-   */
   void set_sound_speed_from_temp(const double temp, const double k = 1.4, const double r = 8.31446261815324, const double m = 28.9647e-3) const {
     std::ranges::for_each(devices(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
   }
@@ -95,6 +72,7 @@ class Geometry {
   [[nodiscard]] const Device& operator[](const size_t i) const { return _devices[i]; }
   [[nodiscard]] Device& operator[](const size_t i) { return _devices[i]; }
   [[nodiscard]] native_methods::GeometryPtr ptr() const noexcept { return _ptr; }
+
   // LCOV_EXCL_START
  private:
   native_methods::GeometryPtr _ptr;

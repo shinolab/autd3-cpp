@@ -1,42 +1,39 @@
-
-
 #pragma once
 
-#include "autd3/driver/common/emit_intensity.hpp"
 #include "autd3/driver/datagram/modulation/modulation.hpp"
+#include "autd3/driver/defined/freq.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::modulation {
 
-/**
- * @brief Square wave modulation
- */
-class Square final : public driver::Modulation<Square> {
- public:
-  /**
-   * @brief Constructor
-   *
-   * @param freq Frequency of square wave
-   */
-  explicit Square(const double freq)
-      : Modulation(driver::SamplingConfiguration::from_frequency(4e3)),
-        _freq(freq),
-        _low(driver::EmitIntensity::minimum()),
-        _high(driver::EmitIntensity::maximum()),
-        _duty(0.5),
-        _mode(native_methods::SamplingMode::ExactFrequency) {}
+#define AUTD3_DEF_MOD_SQUARE(T, F)                                                       \
+  class T final : public driver::Modulation<T> {                                         \
+   public:                                                                               \
+    explicit T(const F freq)                                                             \
+        : Modulation(driver::SamplingConfig::from_division(5120)),                       \
+          _freq(freq),                                                                   \
+          _low(std::numeric_limits<uint8_t>::min()),                                     \
+          _high(std::numeric_limits<uint8_t>::max()),                                    \
+          _duty(0.5) {}                                                                  \
+    AUTD3_DEF_PROP(F, freq)                                                              \
+    AUTD3_DEF_PARAM(T, uint8_t, low)                                                     \
+    AUTD3_DEF_PARAM(T, uint8_t, high)                                                    \
+    AUTD3_DEF_PARAM(T, double, duty)                                                     \
+    [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {        \
+      return AUTDModulation##T(_freq.hz(), _config, _low, _high, _duty, _loop_behavior); \
+    }                                                                                    \
+  };
 
-  AUTD3_DEF_PROP(double, freq)
-  AUTD3_DEF_PARAM_INTENSITY(Square, low)
-  AUTD3_DEF_PARAM_INTENSITY(Square, high)
-  AUTD3_DEF_PARAM(Square, double, duty)
-  AUTD3_DEF_PARAM(Square, native_methods::SamplingMode, mode)
+AUTD3_DEF_MOD_SQUARE(SquareExact, driver::Freq<uint32_t>)
+AUTD3_DEF_MOD_SQUARE(SquareExactFloat, driver::Freq<double>)
+AUTD3_DEF_MOD_SQUARE(SquareNearest, driver::Freq<double>)
 
-  [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    return AUTDModulationSquare(_freq, static_cast<native_methods::SamplingConfiguration>(_config), _low.value(), _high.value(), _duty, _mode,
-                                static_cast<native_methods::LoopBehavior>(_loop_behavior));
-  }
+#undef AUTD3_DEF_MOD_SQUARE
+
+struct Square final {
+  static SquareExact create(const driver::Freq<uint32_t> freq) { return SquareExact(freq); };
+  static SquareExactFloat create(const driver::Freq<double> freq) { return SquareExactFloat(freq); };
+  static SquareNearest with_freq_nearest(const driver::Freq<double> freq) { return SquareNearest(freq); };
 };
 
 }  // namespace autd3::modulation

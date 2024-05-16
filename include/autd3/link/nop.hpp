@@ -8,10 +8,6 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
-/**
- * @brief Link which does nothing
- *
- */
 class Nop {
   explicit Nop(native_methods::LinkPtr) {}
 

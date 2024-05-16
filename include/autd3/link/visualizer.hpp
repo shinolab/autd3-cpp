@@ -101,10 +101,6 @@ struct NullPlotConfig {};
 
 using Config = std::variant<PlotConfig, PyPlotConfig, NullPlotConfig>;
 
-/**
- * @brief Link for visualizing
- *
- */
 class Visualizer final {
   native_methods::LinkPtr _ptr;
   native_methods::Backend _backend;

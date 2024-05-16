@@ -12,9 +12,6 @@ concept modulation_transform_f = requires(F f, size_t idx, driver::EmitIntensity
   { f(idx, d) } -> std::same_as<driver::EmitIntensity>;
 };
 
-/**
- * @brief Modulation to transform the result of calculation
- */
 template <class M, modulation_transform_f F>
 class Transform final : public driver::ModulationBase<Transform<M, F>>,
                         public driver::IntoModulationCache<Transform<M, F>>,

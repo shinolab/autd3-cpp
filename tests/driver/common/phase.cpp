@@ -1,7 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <autd3/def.hpp>
-#include <autd3/driver/common/phase.hpp>
+#include <autd3/driver/firmware/fpga/phase.hpp>
 
 using autd3::driver::Phase;
 using autd3::driver::rad;

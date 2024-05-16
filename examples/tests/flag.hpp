@@ -12,8 +12,7 @@ inline coro::task<void> flag_test(autd3::Controller<L>& autd) {
   std::cout << "press any key to run fan..." << std::endl;
   std::cin.ignore();
 
-  co_await autd.send_async(autd3::ConfigureForceFan([](const auto&) { return true; }),
-                           autd3::ConfigureReadsFPGAState([](const auto&) { return true; }));
+  co_await autd.send_async(autd3::ForceFan([](const auto&) { return true; }), autd3::ReadsFPGAState([](const auto&) { return true; }));
 
   bool fin = false;
   std::cout << "press any key stop checking FPGA status..." << std::endl;
@@ -35,6 +34,5 @@ inline coro::task<void> flag_test(autd3::Controller<L>& autd) {
 
   if (fin_signal.joinable()) fin_signal.join();
 
-  co_await autd.send_async(autd3::ConfigureForceFan([](const auto&) { return false; }),
-                           autd3::ConfigureReadsFPGAState([](const auto&) { return false; }));
+  co_await autd.send_async(autd3::ForceFan([](const auto&) { return false; }), autd3::ReadsFPGAState([](const auto&) { return false; }));
 }

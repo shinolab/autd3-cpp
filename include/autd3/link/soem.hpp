@@ -33,10 +33,6 @@ concept soem_err_handler_f = requires(F f, const uint16_t slave, const Status st
   { f(slave, status, msg) } -> std::same_as<void>;
 };
 
-/**
- * @brief Link using [SOEM](https://github.com/OpenEtherCATsociety/SOEM)
- *
- */
 class SOEM final {
   using native_err_handler_t = void (*)(const void*, uint32_t, uint8_t, const char*);
   using err_handler_t = void (*)(uint16_t, Status, const std::string&);
@@ -65,58 +61,26 @@ class SOEM final {
 
     [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSOEMIntoBuilder(_ptr); }
 
-    /**
-     * @brief Set network interface name
-     * @details If empty, this link will automatically find the network
-     * interface that is connected to AUTD3 devices.
-     *
-     * @param ifname Network interface name
-     * @return Builder
-     */
     [[nodiscard]] Builder with_ifname(const std::string& ifname) {
       _ptr = AUTDLinkSOEMWithIfname(_ptr, ifname.c_str());
       return *this;
     }
 
-    /**
-     * @brief Set buffer size
-     *
-     * @param value
-     * @return Builder
-     */
     [[nodiscard]] Builder with_buf_size(const size_t value) {
       _ptr = AUTDLinkSOEMWithBufSize(_ptr, static_cast<uint32_t>(value));
       return *this;
     }
 
-    /**
-     * @brief Set send cycle (the unit is 500us)
-     *
-     * @param value
-     * @return Builder
-     */
     [[nodiscard]] Builder with_send_cycle(const uint16_t value) {
       _ptr = AUTDLinkSOEMWithSendCycle(_ptr, value);
       return *this;
     }
 
-    /**
-     * @brief Set sync0 cycle (the unit is 500us)
-     *
-     * @param value
-     * @return Builder
-     */
     [[nodiscard]] Builder with_sync0_cycle(const uint16_t value) {
       _ptr = AUTDLinkSOEMWithSync0Cycle(_ptr, value);
       return *this;
     }
 
-    /**
-     * @brief Set callback function when some error occur
-     *
-     * @param value
-     * @return Builder
-     */
     template <soem_err_handler_f F>
     [[nodiscard]] Builder with_err_handler(F value) {
       _err_handler = static_cast<err_handler_t>(value);
@@ -128,35 +92,16 @@ class SOEM final {
       return *this;
     }
 
-    /**
-     * @brief Set timer strategy
-     *
-     * @param value
-     * @return Builder
-     */
     [[nodiscard]] Builder with_timer_strategy(const native_methods::TimerStrategy value) {
       _ptr = AUTDLinkSOEMWithTimerStrategy(_ptr, value);
       return *this;
     }
 
-    /**
-     * @brief Set sync mode
-     * @details See [Beckhoff's site](https://infosys.beckhoff.com/content/1033/ethercatsystem/2469122443.html) for more details.
-     *
-     * @param value
-     * @return Builder
-     */
     [[nodiscard]] Builder with_sync_mode(const SyncMode value) {
       _ptr = AUTDLinkSOEMWithSyncMode(_ptr, value);
       return *this;
     }
 
-    /**
-     * @brief Set state check interval
-     *
-     * @param value
-     * @return Builder
-     */
     template <typename Rep, typename Period>
     [[nodiscard]] Builder with_state_check_interval(const std::chrono::duration<Rep, Period> value) {
       const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(value).count();
@@ -189,9 +134,6 @@ class SOEM final {
   }
 };
 
-/**
- * @brief Link to connect to remote SOEMServer
- */
 class RemoteSOEM final {
   RemoteSOEM() = default;
 
@@ -219,11 +161,6 @@ class RemoteSOEM final {
     }
   };
 
-  /**
-   * @brief Constructor
-   *
-   * @param addr IP address and port of SOEMServer (e.g., "127.0.0.1:8080")
-   */
   [[nodiscard]] static Builder builder(const std::string& addr) { return Builder(addr); }
 };
 

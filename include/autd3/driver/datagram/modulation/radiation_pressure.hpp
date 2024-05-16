@@ -6,9 +6,6 @@
 
 namespace autd3::modulation {
 
-/**
- * @brief Modulation for modulating radiation pressure
- */
 template <class M>
 class RadiationPressure final : public driver::ModulationBase<RadiationPressure<M>>, public driver::IntoModulationCache<RadiationPressure<M>> {
  public:
@@ -31,7 +28,7 @@ class IntoRadiationPressure {
  public:
   [[nodiscard]] modulation::RadiationPressure<M> with_radiation_pressure() & {  // LCOV_EXCL_LINE
     return modulation::RadiationPressure(*static_cast<M*>(this));               // LCOV_EXCL_LINE
-  }                                                                             // LCOV_EXCL_LINE
+  }  // LCOV_EXCL_LINE
   [[nodiscard]] modulation::RadiationPressure<M> with_radiation_pressure() && {
     return modulation::RadiationPressure(std::move(*static_cast<M*>(this)));
   }

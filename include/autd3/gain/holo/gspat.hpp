@@ -9,16 +9,10 @@
 
 namespace autd3::gain::holo {
 
-/**
- * @brief Gain to produce multiple foci with GS-PAT algorithm
- *
- * @details Diego Martinez Plasencia et al. "Gs-pat: high-speed multi-point sound-fields for phased arrays of transducers," ACMTrans-actions on
- * Graphics (TOG), 39(4):138–1, 2020.
- */
 template <backend B>
 class GSPAT final : public Holo<GSPAT<B>> {
  public:
-  explicit GSPAT(std::shared_ptr<B> holo_backend) : Holo<GSPAT>(EmissionConstraint::dont_care()), _repeat(100), _backend(std::move(holo_backend)) {}
+  explicit GSPAT(std::shared_ptr<B> holo_backend) : Holo<GSPAT>(EmissionConstraint::DontCare), _repeat(100), _backend(std::move(holo_backend)) {}
 
   AUTD3_DEF_PARAM(GSPAT, uint32_t, repeat)
 

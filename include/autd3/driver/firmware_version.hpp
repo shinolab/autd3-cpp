@@ -6,9 +6,9 @@
 
 namespace autd3::driver {
 
-class FirmwareInfo {
+class FirmwareVersion {
  public:
-  explicit FirmwareInfo(std::string info) noexcept : _info(std::move(info)) {}
+  explicit FirmwareVersion(std::string info) noexcept : _info(std::move(info)) {}
 
   [[nodiscard]] std::string info() const { return _info; }
 
@@ -22,7 +22,7 @@ class FirmwareInfo {
   std::string _info;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const FirmwareInfo& obj) {
+inline std::ostream& operator<<(std::ostream& os, const FirmwareVersion& obj) {
   os << obj.info();
   return os;
 }

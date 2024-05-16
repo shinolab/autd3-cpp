@@ -6,8 +6,8 @@
 #include <unordered_map>
 #include <vector>
 
-#include "autd3/driver/common/drive.hpp"
 #include "autd3/driver/datagram/gain/gain.hpp"
+#include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -27,11 +27,11 @@ class Gain : public driver::Gain<G> {
 
   [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     const auto drives = calc(geometry);
-    return std::accumulate(drives.begin(), drives.end(), native_methods::AUTDGainCustom(),
+    return std::accumulate(drives.begin(), drives.end(), native_methods::AUTDGainRaw(),
                            [](const native_methods::GainPtr acc, const std::pair<size_t, std::vector<driver::Drive>>& kv) {
-                             return AUTDGainCustomSet(acc, static_cast<uint32_t>(kv.first),
-                                                      reinterpret_cast<const native_methods::Drive*>(kv.second.data()),
-                                                      static_cast<uint32_t>(kv.second.size()));
+                             return AUTDGainRawSet(acc, static_cast<uint32_t>(kv.first),
+                                                   reinterpret_cast<const native_methods::Drive*>(kv.second.data()),
+                                                   static_cast<uint32_t>(kv.second.size()));
                            });
   }
 

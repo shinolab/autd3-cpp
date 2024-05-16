@@ -7,13 +7,13 @@
 
 #include "utils.hpp"
 
-TEST(Internal, FirmwareInfo) {
+TEST(Internal, FirmwareVersion) {
   auto autd = create_controller();
 
-  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareInfo::latest_version());
+  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareVersion::latest_version());
 
   {
-    const auto infos = autd.firmware_infos();
+    const auto infos = autd.firmware_version();
     std::ranges::for_each(std::ranges::views::iota(0) | std::ranges::views::take(infos.size()), [&](auto i) {
       std::stringstream ss;
       ss << i;
@@ -27,17 +27,17 @@ TEST(Internal, FirmwareInfo) {
 
   {
     autd.link().break_down();
-    ASSERT_THROW((void)autd.firmware_infos(), autd3::AUTDException);
+    ASSERT_THROW((void)autd.firmware_version(), autd3::AUTDException);
   }
 }
 
-TEST(Internal, FirmwareInfoAsync) {
+TEST(Internal, FirmwareVersionAsync) {
   auto autd = create_controller();
 
-  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareInfo::latest_version());
+  ASSERT_EQ("v6.1.0", autd3::driver::FirmwareVersion::latest_version());
 
   {
-    const auto infos = sync_wait(autd.firmware_infos_async());
+    const auto infos = sync_wait(autd.firmware_version_async());
     std::ranges::for_each(std::ranges::views::iota(0) | std::ranges::views::take(infos.size()), [&](auto i) {
       std::stringstream ss;
       ss << i;
@@ -48,6 +48,6 @@ TEST(Internal, FirmwareInfoAsync) {
 
   {
     autd.link().break_down();
-    ASSERT_ANY_THROW((void)sync_wait(autd.firmware_infos_async()));
+    ASSERT_ANY_THROW((void)sync_wait(autd.firmware_version_async()));
   }
 }

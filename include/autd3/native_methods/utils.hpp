@@ -70,14 +70,4 @@ constexpr T validate(ResultI32 res) {
   return static_cast<T>(result);
 }
 
-static inline SamplingConfiguration validate(ResultSamplingConfig res) {
-  const auto [result, err_len, err] = res;
-  if (result.div == 0) {
-    const std::string err_str(err_len, ' ');
-    AUTDGetErr(err, const_cast<char*>(err_str.c_str()));
-    throw AUTDException(err_str);
-  }
-  return result;
-}
-
 }  // namespace autd3::native_methods

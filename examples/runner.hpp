@@ -21,8 +21,8 @@
 #include "tests/transtest.hpp"
 
 template <typename L>
-inline coro::task<int> run(autd3::Controller<L>& autd) {
-  using F = std::function<coro::task<void>(autd3::Controller<L>&)>;
+inline void run(autd3::Controller<L>& autd) {
+  using F = std::function<void(autd3::Controller<L>&)>;
   std::vector<std::pair<F, std::string>> tests = {std::pair(F{focus_test<L>}, "Single focus test"),
                                                   std::pair(F{bessel_test<L>}, "Bessel beam test"),
                                                   std::pair(F{plane_test<L>}, "Plane wave test"),
@@ -37,9 +37,9 @@ inline coro::task<int> run(autd3::Controller<L>& autd) {
 
   if (autd.geometry().num_devices() >= 2) tests.emplace_back(F{group_by_device_test<L>}, "Group (by Device) test");
 
-  const auto firm_infos = co_await autd.firmware_infos_async();
+  const auto firm_infos = autd.firmware_version();
   std::cout << "======== AUTD3 firmware information ========" << std::endl;
-  std::copy(firm_infos.begin(), firm_infos.end(), std::ostream_iterator<autd3::FirmwareInfo>(std::cout, "\n"));
+  std::copy(firm_infos.begin(), firm_infos.end(), std::ostream_iterator<autd3::FirmwareVersion>(std::cout, "\n"));
   std::cout << "============================================" << std::endl;
 
   while (true) {
@@ -55,16 +55,14 @@ inline coro::task<int> run(autd3::Controller<L>& autd) {
     std::stringstream s(in);
     if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= tests.size() || is_empty) break;
 
-    co_await tests[idx].first(autd);
+    tests[idx].first(autd);
 
     std::cout << "press any key to finish..." << std::endl;
     std::cin.ignore();
 
     std::cout << "finish." << std::endl;
-    co_await autd.send_async(autd3::gain::Null(), autd3::ConfigureSilencer::default_());
+    autd.send(autd3::gain::Null(), autd3::Silencer::default_());
   }
 
-  co_await autd.close_async();
-
-  co_return 0;
+  autd.close();
 }

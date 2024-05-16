@@ -31,11 +31,10 @@ class ForModulationCacheTest final : public autd3::modulation::Modulation<ForMod
  public:
   [[nodiscard]] std::vector<autd3::driver::EmitIntensity> calc() const override {
     ++*_cnt;
-    return {autd3::driver::EmitIntensity::maximum(), autd3::driver::EmitIntensity::maximum()};
+    return {autd3::driver::std::numeric_limits<EmitIntensity>::max(), autd3::driver::std::numeric_limits<EmitIntensity>::max()};
   }
 
-  explicit ForModulationCacheTest(size_t* cnt) noexcept
-      : Modulation(autd3::driver::SamplingConfiguration::from_frequency_division(5120)), _cnt(cnt) {}
+  explicit ForModulationCacheTest(size_t* cnt) noexcept : Modulation(autd3::driver::SamplingConfig::from_frequency_division(5120)), _cnt(cnt) {}
 
  private:
   size_t* _cnt;

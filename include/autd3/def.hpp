@@ -22,9 +22,6 @@ using Matrix3X3 = Eigen::Matrix<double, 3, 3>;
 using Quaternion = Eigen::Quaternion<double>;
 using Affine3 = Eigen::Transform<double, 3, Eigen::Affine>;
 
-/**
- * @brief Mathematical constant pi
- */
 constexpr double pi = std::numbers::pi_v<double>;
 
 }  // namespace autd3::driver
