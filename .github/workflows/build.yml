@@ -54,12 +54,4 @@ jobs:
         run: |
           python3 build.py build --release
           python3 build.py test --release
-        if: needs.check.outputs.status && matrix.os == 'windows-latest'
-
-      - name: Build and test C++ library on ${{ matrix.os }}
-        run: |
-          brew update
-          brew install llvm@17
-          python3 build.py build --release --cmake-extra="-DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin//clang-17 -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin//clang-17"
-          python3 build.py test --release --cmake-extra="-DCMAKE_C_COMPILER=/usr/local/opt/llvm/bin//clang-17 -DCMAKE_CXX_COMPILER=/usr/local/opt/llvm/bin//clang-17"
-        if: needs.check.outputs.status && matrix.os == 'macos-latest'
+        if: needs.check.outputs.status && matrix.os != 'ubuntu-latest'
