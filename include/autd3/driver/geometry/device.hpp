@@ -67,6 +67,9 @@ class Device {
 
   void affine(Vector3 t, Quaternion r) const { AUTDDeviceAffine(_ptr, t.x(), t.y(), t.z(), r.w(), r.x(), r.y(), r.z()); }
 
+  [[nodiscard]] double wavelength() const { return AUTDDeviceWavelength(_ptr); }
+  [[nodiscard]] double wavenumber() const { return AUTDDeviceWavenumber(_ptr); }
+
   [[nodiscard]] DeviceView transducers() const noexcept { return DeviceView(_transducers); }
 
   [[nodiscard]] std::vector<Transducer>::const_iterator cbegin() const noexcept { return _transducers.cbegin(); }
