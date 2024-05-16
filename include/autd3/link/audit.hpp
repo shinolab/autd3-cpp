@@ -95,7 +95,7 @@ class Audit final {
     std::vector<std::uint8_t> buf(n);
     AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint32_t>(idx), buf.data());
     return buf;
-  }  // LCOV_EXCL_LINE
+  }
 
   [[nodiscard]] uint32_t modulation_freq_division(const size_t idx, const native_methods::Segment segment) const {
     return AUTDLinkAuditFpgaModulationFreqDivision(_ptr, segment, static_cast<uint32_t>(idx));

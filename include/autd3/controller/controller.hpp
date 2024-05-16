@@ -81,7 +81,7 @@ class Controller {
     }
     AUTDControllerFirmwareVersionListPointerDelete(handle);
     return ret;
-  }  // LCOV_EXCL_LINE
+  }
 
   template <driver::datagram D, typename Rep, typename Period>
   bool send(D&& data, const std::chrono::duration<Rep, Period> timeout) {

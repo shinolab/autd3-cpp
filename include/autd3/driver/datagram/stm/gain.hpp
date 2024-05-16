@@ -22,7 +22,7 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
   GainSTM& operator=(const GainSTM& obj) = default;
   GainSTM(GainSTM&& obj) = default;
   GainSTM& operator=(GainSTM&& obj) = default;
-  ~GainSTM() override = default;  // LCOV_EXCL_LINE
+  ~GainSTM() override = default;
 
   [[nodiscard]] static GainSTM from_freq(const Freq<double> freq) { return GainSTM(freq, std::nullopt, std::nullopt); }
   [[nodiscard]] static GainSTM from_freq_nearest(const Freq<double> freq) { return GainSTM(std::nullopt, freq, std::nullopt); }

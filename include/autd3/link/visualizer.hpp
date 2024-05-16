@@ -55,7 +55,7 @@ struct PlotRange {
     points.resize(len);
     AUTDLinkVisualizerPlotRangeObservePoints(range, reinterpret_cast<double*>(points.data()));
     return points;
-  }  // LCOV_EXCL_LINE
+  }
 
  private:
   [[nodiscard]] native_methods::PlotRangePtr ptr() const {
@@ -147,8 +147,8 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSpherePlotters(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Plotters(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:                                    // LCOV_EXCL_LINE
-              throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
+            default:
+              throw std::runtime_error("unreachable");
           }
         case native_methods::Backend::Python:
           switch (_directivity) {
@@ -156,8 +156,8 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSpherePython(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Python(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:                                    // LCOV_EXCL_LINE
-              throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
+            default:
+              throw std::runtime_error("unreachable");
           }
         case native_methods::Backend::Null:
           switch (_directivity) {
@@ -165,18 +165,18 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSphereNull(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Null(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:                                    // LCOV_EXCL_LINE
-              throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
+            default:
+              throw std::runtime_error("unreachable");
           }
-        default:                                    // LCOV_EXCL_LINE
-          throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
+        default:
+          throw std::runtime_error("unreachable");
       }
     }
 
-    [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {  // LCOV_EXCL_START
+    [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {
       _gpu_idx = gpu_idx;
       return *this;
-    }  // LCOV_EXCL_STOP
+    }
 
     template <typename B>
     [[nodiscard]] Builder with_backend() {
@@ -207,7 +207,7 @@ class Visualizer final {
     buf.resize(size);
     AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), buf.data());
     return buf;
-  }  // LCOV_EXCL_LINE
+  }
 
   [[nodiscard]] std::vector<uint8_t> intensities(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
@@ -215,7 +215,7 @@ class Visualizer final {
     buf.resize(size);
     AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), buf.data());
     return buf;
-  }  // LCOV_EXCL_LINE
+  }
 
   [[nodiscard]] std::vector<uint8_t> modulation(const native_methods::Segment segment) const {
     const auto size = AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, nullptr);
@@ -223,7 +223,7 @@ class Visualizer final {
     buf.resize(size);
     AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, buf.data());
     return buf;
-  }  // LCOV_EXCL_LINE
+  }
 
   [[nodiscard]] std::vector<std::complex<double>> calc_field(std::vector<driver::Vector3>& points, const driver::geometry::Geometry& geometry,
                                                              const native_methods::Segment segment, const size_t idx) const {
@@ -234,7 +234,7 @@ class Visualizer final {
     native_methods::validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment,
                                                          static_cast<uint32_t>(idx), reinterpret_cast<double*>(buf.data())));
     return buf;
-  }  // LCOV_EXCL_LINE
+  }
 
   void plot_field(const Config& config, const PlotRange& range, const driver::geometry::Geometry& geometry, const native_methods::Segment segment,
                   const size_t idx) const {

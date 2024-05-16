@@ -19,7 +19,7 @@ class Uniform final : public driver::Gain<Uniform> {
   Uniform& operator=(const Uniform& obj) = default;
   Uniform(Uniform&& obj) = default;
   Uniform& operator=(Uniform&& obj) = default;
-  ~Uniform() override = default;  // LCOV_EXCL_LINE
+  ~Uniform() override = default;
 
   AUTD3_DEF_PROP(driver::EmitIntensity, intensity)
   AUTD3_DEF_PARAM(Uniform, driver::Phase, phase)

@@ -54,10 +54,9 @@ class FPGAState {
   [[nodiscard]] bool is_gain_mode() const noexcept { return (_info & (1 << 3)) != 0; }
 
   [[nodiscard]] bool is_stm_mode() const noexcept { return !is_gain_mode(); }
-  // LCOV_EXCL_START
+
  private:
   uint8_t _info;
-  // LCOV_EXCL_STOP
 };
 
 }  // namespace autd3::driver

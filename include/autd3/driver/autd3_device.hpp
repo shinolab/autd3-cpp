@@ -20,7 +20,7 @@ class AUTD3 {
 
   explicit AUTD3(Vector3 pos) : _position(std::move(pos)), _rotation(Quaternion::Identity()) {}
 
-  AUTD3_DEF_PROP(Vector3, position)             // LCOV_EXCL_LINE
-  AUTD3_DEF_PARAM(AUTD3, Quaternion, rotation)  // LCOV_EXCL_LINE
+  AUTD3_DEF_PROP(Vector3, position)
+  AUTD3_DEF_PARAM(AUTD3, Quaternion, rotation)
 };
 }  // namespace autd3::driver

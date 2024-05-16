@@ -30,7 +30,7 @@ class ForCacheTest final : public autd3::gain::Gain<ForCacheTest> {
   ForCacheTest& operator=(const ForCacheTest& obj) = default;
   ForCacheTest(ForCacheTest&& obj) = default;
   ForCacheTest& operator=(ForCacheTest&& obj) = default;
-  ~ForCacheTest() override = default;  // LCOV_EXCL_LINE
+  ~ForCacheTest() override = default;
   explicit ForCacheTest(size_t* cnt) : _cnt(cnt) {}
 
   [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::driver::Drive>> calc(const autd3::driver::geometry::Geometry& geometry) const override {

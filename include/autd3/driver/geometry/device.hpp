@@ -30,9 +30,9 @@ class Device {
   }
 
   ~Device() = default;
-  Device(const Device& v) noexcept = default;  // LCOV_EXCL_LINE
+  Device(const Device& v) noexcept = default;
   Device& operator=(const Device& obj) = default;
-  Device(Device&& obj) = default;  // LCOV_EXCL_LINE
+  Device(Device&& obj) = default;
   Device& operator=(Device&& obj) = default;
 
   [[nodiscard]] size_t idx() const { return _idx; }

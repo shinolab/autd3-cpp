@@ -30,7 +30,7 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   FocusSTM& operator=(const FocusSTM& obj) = default;
   FocusSTM(FocusSTM&& obj) = default;
   FocusSTM& operator=(FocusSTM&& obj) = default;
-  ~FocusSTM() override = default;  // LCOV_EXCL_LINE
+  ~FocusSTM() override = default;
 
   static FocusSTM from_freq(const Freq<double> freq) { return FocusSTM(freq, std::nullopt, std::nullopt); }
   static FocusSTM from_freq_nearest(const Freq<double> freq) { return FocusSTM(std::nullopt, freq, std::nullopt); }

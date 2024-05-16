@@ -16,7 +16,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
   Cache& operator=(const Cache& obj) = delete;
   Cache(Cache&& obj) noexcept = default;
   Cache& operator=(Cache&& obj) noexcept = delete;
-  ~Cache() noexcept override = default;  // LCOV_EXCL_LINE
+  ~Cache() noexcept override = default;
 
   const std::vector<uint8_t>& calc() const { return init(); }
 

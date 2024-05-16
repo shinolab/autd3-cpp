@@ -51,7 +51,7 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
     Fourier<T> m(lhs);
     m._components.emplace_back(rhs);
     return m;
-  }  // LCOV_EXCL_LINE
+  }
 
   [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     std::vector<native_methods::ModulationPtr> components;

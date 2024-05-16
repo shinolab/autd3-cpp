@@ -13,7 +13,7 @@ class Backend {
   Backend& operator=(const Backend& obj) = default;
   Backend(Backend&& obj) = default;
   Backend& operator=(Backend&& obj) = default;
-  virtual ~Backend() = default;  // LCOV_EXCL_LINE
+  virtual ~Backend() = default;
 
   [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
 

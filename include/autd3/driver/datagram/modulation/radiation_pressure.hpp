@@ -26,9 +26,7 @@ namespace autd3::driver {
 template <class M>
 class IntoRadiationPressure {
  public:
-  [[nodiscard]] modulation::RadiationPressure<M> with_radiation_pressure() & {  // LCOV_EXCL_LINE
-    return modulation::RadiationPressure(*static_cast<M*>(this));               // LCOV_EXCL_LINE
-  }  // LCOV_EXCL_LINE
+  [[nodiscard]] modulation::RadiationPressure<M> with_radiation_pressure() & { return modulation::RadiationPressure(*static_cast<M*>(this)); }
   [[nodiscard]] modulation::RadiationPressure<M> with_radiation_pressure() && {
     return modulation::RadiationPressure(std::move(*static_cast<M*>(this)));
   }

@@ -27,12 +27,12 @@ class Transform final : public driver::GainBase,
                         public driver::IntoGainCache<Transform<G, F>> {
  public:
   Transform(G g, F f) : _g(std::move(g)), _f(std::move(f)) {}
-  Transform() = delete;                                  // LCOV_EXCL_LINE
-  Transform(const Transform& obj) = default;             // LCOV_EXCL_LINE
-  Transform& operator=(const Transform& obj) = default;  // LCOV_EXCL_LINE
-  Transform(Transform&& obj) = default;                  // LCOV_EXCL_LINE
-  Transform& operator=(Transform&& obj) = default;       // LCOV_EXCL_LINE
-  ~Transform() override = default;                       // LCOV_EXCL_LINE
+  Transform() = delete;
+  Transform(const Transform& obj) = default;
+  Transform& operator=(const Transform& obj) = default;
+  Transform(Transform&& obj) = default;
+  Transform& operator=(Transform&& obj) = default;
+  ~Transform() override = default;
 
   [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     std::unordered_map<size_t, std::vector<driver::Drive>> drives;
@@ -66,12 +66,12 @@ namespace autd3::driver {
 template <class G>
 class IntoGainTransform {
  public:
-  IntoGainTransform() = default;                                         // LCOV_EXCL_LINE
-  IntoGainTransform(const IntoGainTransform& obj) = default;             // LCOV_EXCL_LINE
-  IntoGainTransform& operator=(const IntoGainTransform& obj) = default;  // LCOV_EXCL_LINE
-  IntoGainTransform(IntoGainTransform&& obj) = default;                  // LCOV_EXCL_LINE
-  IntoGainTransform& operator=(IntoGainTransform&& obj) = default;       // LCOV_EXCL_LINE
-  virtual ~IntoGainTransform() = default;                                // LCOV_EXCL_LINE
+  IntoGainTransform() = default;
+  IntoGainTransform(const IntoGainTransform& obj) = default;
+  IntoGainTransform& operator=(const IntoGainTransform& obj) = default;
+  IntoGainTransform(IntoGainTransform&& obj) = default;
+  IntoGainTransform& operator=(IntoGainTransform&& obj) = default;
+  virtual ~IntoGainTransform() = default;
 
   template <gain::gain_transform_f F>
   [[nodiscard]] gain::Transform<G, F> with_transform(F f) & {

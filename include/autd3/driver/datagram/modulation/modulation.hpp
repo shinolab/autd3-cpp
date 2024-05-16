@@ -19,7 +19,7 @@ class Modulation : public ModulationBase<M>, public IntoModulationCache<M>, publ
   explicit Modulation(const native_methods::SamplingConfigWrap config) : _config(config) {}
 
  public:
-  void with_sampling_config(const native_methods::SamplingConfigWrap config) & { _config = config; }  // LCOV_EXCL_LINE
+  void with_sampling_config(const native_methods::SamplingConfigWrap config) & { _config = config; }
   [[nodiscard]] M&& with_sampling_config(const native_methods::SamplingConfigWrap config) && {
     _config = config;
     return std::move(*static_cast<M*>(this));

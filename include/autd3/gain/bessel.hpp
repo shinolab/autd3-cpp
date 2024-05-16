@@ -24,7 +24,7 @@ class Bessel final : public driver::Gain<Bessel> {
   Bessel& operator=(const Bessel& obj) = default;
   Bessel(Bessel&& obj) = default;
   Bessel& operator=(Bessel&& obj) = default;
-  ~Bessel() override = default;  // LCOV_EXCL_LINE
+  ~Bessel() override = default;
 
   AUTD3_DEF_PROP(driver::Vector3, pos)
   AUTD3_DEF_PROP(driver::Vector3, dir)

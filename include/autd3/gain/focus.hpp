@@ -20,7 +20,7 @@ class Focus final : public driver::Gain<Focus> {
   Focus& operator=(const Focus& obj) = default;
   Focus(Focus&& obj) = default;
   Focus& operator=(Focus&& obj) = default;
-  ~Focus() override = default;  // LCOV_EXCL_LINE
+  ~Focus() override = default;
 
   AUTD3_DEF_PROP(driver::Vector3, pos)
   AUTD3_DEF_PARAM_INTENSITY(Focus, intensity)

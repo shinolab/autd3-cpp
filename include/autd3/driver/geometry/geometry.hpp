@@ -73,11 +73,9 @@ class Geometry {
   [[nodiscard]] Device& operator[](const size_t i) { return _devices[i]; }
   [[nodiscard]] native_methods::GeometryPtr ptr() const noexcept { return _ptr; }
 
-  // LCOV_EXCL_START
  private:
   native_methods::GeometryPtr _ptr;
   std::vector<Device> _devices{};
-  // LCOV_EXCL_STOP
 };
 
 }  // namespace autd3::driver::geometry

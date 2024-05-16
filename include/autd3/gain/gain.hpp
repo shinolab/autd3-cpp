@@ -46,7 +46,7 @@ class Gain : public driver::Gain<G> {
       drives_map[dev.idx()] = std::move(drives);
     });
     return drives_map;
-  }  // LCOV_EXCL_LINE
+  }
 };
 
 }  // namespace autd3::gain

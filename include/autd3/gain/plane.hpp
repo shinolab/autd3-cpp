@@ -19,7 +19,7 @@ class Plane final : public driver::Gain<Plane> {
   Plane& operator=(const Plane& obj) = default;
   Plane(Plane&& obj) = default;
   Plane& operator=(Plane&& obj) = default;
-  ~Plane() override = default;  // LCOV_EXCL_LINE
+  ~Plane() override = default;
 
   AUTD3_DEF_PROP(driver::Vector3, dir)
   AUTD3_DEF_PARAM(Plane, driver::Phase, phase_offset)

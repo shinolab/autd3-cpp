@@ -43,11 +43,9 @@ class Transducer {
 
   [[nodiscard]] native_methods::TransducerPtr ptr() const { return _ptr; }
 
-  // LCOV_EXCL_START
  private:
   native_methods::TransducerPtr _ptr;
   uint32_t _idx;
-  // LCOV_EXCL_STOP
 };
 
 }  // namespace autd3::driver::geometry
