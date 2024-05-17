@@ -14,12 +14,12 @@ TEST(GainHolo, ConstraintUniform) {
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
-  ASSERT_TRUE(autd.send(g));
+  autd.send(g);
 
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::any_of(phases, [](auto p) { return p != 0; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80; }));
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
   }
 }
 
@@ -32,12 +32,12 @@ TEST(GainHolo, ConstraintNormalize) {
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Normalize);
 
-  ASSERT_TRUE(autd.send(g));
+  autd.send(g);
 
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::any_of(intensities, [](auto d) { return d != 0; }));
-    ASSERT_TRUE(std::ranges::any_of(phases, [](auto p) { return p != 0; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.intensity.value() != 0; }));
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
   }
 }
 
@@ -50,12 +50,12 @@ TEST(GainHolo, ConstraintClamp) {
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(autd3::driver::EmitIntensity(67), autd3::driver::EmitIntensity(85)));
 
-  ASSERT_TRUE(autd.send(g));
+  autd.send(g);
 
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return 67 <= d && d <= 85; }));
-    ASSERT_TRUE(std::ranges::any_of(phases, [](auto p) { return p != 0; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return 67 <= d.intensity.value() && d.intensity.value() <= 85; }));
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
   }
 }
 
@@ -68,11 +68,11 @@ TEST(GainHolo, ConstraintDontCare) {
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .with_constraint(autd3::gain::holo::EmissionConstraint::DontCare);
 
-  ASSERT_TRUE(autd.send(g));
+  autd.send(g);
 
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::any_of(intensities, [](auto d) { return d != 0; }));
-    ASSERT_TRUE(std::ranges::any_of(phases, [](auto p) { return p != 0; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.intensity.value() != 0; }));
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
   }
 }

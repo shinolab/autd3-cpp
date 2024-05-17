@@ -14,7 +14,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
 
-  ASSERT_TRUE(autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
+  autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::None;
@@ -26,7 +26,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
         return autd3::driver::DebugType::ForceFan;
     }
     return autd3::driver::DebugType::None;
-  })));
+  }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x00, 0x01, 0x02, 0x03};
     std::array<uint16_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
@@ -34,7 +34,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
 
-  ASSERT_TRUE(autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
+  autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::Sync;
@@ -46,7 +46,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
         return autd3::driver::DebugType::StmSegment;
     }
     return autd3::driver::DebugType::None;
-  })));
+  }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x10, 0x20, 0x21, 0x50};
     std::array<uint16_t, 4> value{0x0000, 0x0000, 0x0001, 0x0000};
@@ -54,20 +54,19 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
 
-  ASSERT_TRUE(
-      autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device& dev, const autd3::native_methods::GPIOOut gpio) -> auto {
-        switch (gpio) {
-          case autd3::native_methods::GPIOOut::O0:
-            return autd3::driver::DebugType::StmIdx(0x02);
-          case autd3::native_methods::GPIOOut::O1:
-            return autd3::driver::DebugType::IsStmMode;
-          case autd3::native_methods::GPIOOut::O2:
-            return autd3::driver::DebugType::PwmOut(&dev[3]);
-          case autd3::native_methods::GPIOOut::O3:
-            return autd3::driver::DebugType::Direct(true);
-        }
-        return autd3::driver::DebugType::None;
-      })));
+  autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device& dev, const autd3::native_methods::GPIOOut gpio) -> auto {
+    switch (gpio) {
+      case autd3::native_methods::GPIOOut::O0:
+        return autd3::driver::DebugType::StmIdx(0x02);
+      case autd3::native_methods::GPIOOut::O1:
+        return autd3::driver::DebugType::IsStmMode;
+      case autd3::native_methods::GPIOOut::O2:
+        return autd3::driver::DebugType::PwmOut(&dev[3]);
+      case autd3::native_methods::GPIOOut::O3:
+        return autd3::driver::DebugType::Direct(true);
+    }
+    return autd3::driver::DebugType::None;
+  }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x51, 0x52, 0xE0, 0xF0};
     std::array<uint16_t, 4> value{0x0002, 0x0000, 0x0003, 0x0001};

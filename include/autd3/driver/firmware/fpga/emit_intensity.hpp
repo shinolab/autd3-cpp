@@ -10,7 +10,7 @@ class EmitIntensity final {
 
   AUTD3_API [[nodiscard]] constexpr uint8_t value() const noexcept { return _value; }
 
-  AUTD3_API friend EmitIntensity operator/(EmitIntensity&& lhs, const int& rhs) { return EmitIntensity(static_cast<uint8_t>(lhs._value / rhs)); }
+  AUTD3_API friend EmitIntensity operator/(const EmitIntensity& lhs, const int& rhs) { return EmitIntensity(static_cast<uint8_t>(lhs._value / rhs)); }
   auto operator<=>(const EmitIntensity&) const = default;
 
  private:

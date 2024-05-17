@@ -13,7 +13,7 @@ TEST(DriverDatagram, FPGAState) {
     for (const auto infos = autd.fpga_info(); auto info : infos) ASSERT_FALSE(info.has_value());
   }
 
-  ASSERT_TRUE(autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; })));
+  autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
 
   {
     autd.link().assert_thermal_sensor(0);

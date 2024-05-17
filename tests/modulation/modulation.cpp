@@ -18,12 +18,12 @@ class BurstModulation final : public autd3::modulation::Modulation<BurstModulati
 TEST(DriverDatagramModulation, Modulation) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(BurstModulation()));
+  autd.send(BurstModulation());
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{255, 0, 0, 0, 0, 0, 0, 0, 0, 0};
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

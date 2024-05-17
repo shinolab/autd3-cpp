@@ -34,12 +34,11 @@ TEST(DriverDatagramGain, Gain) {
   auto autd = create_controller();
 
   std::vector cnt(autd.geometry().num_devices(), false);
-  ASSERT_TRUE(autd.send(Uniform(0x80, 0x90, &cnt)));
+  autd.send(Uniform(0x80, 0x90, &cnt));
 
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
 }
 
@@ -48,19 +47,17 @@ TEST(DriverDatagramGain, GainCheckOnlyForEnabled) {
   autd.geometry()[0].set_enable(false);
 
   std::vector check(autd.geometry().num_devices(), false);
-  ASSERT_TRUE(autd.send(Uniform(0x80, 0x90, &check)));
+  autd.send(Uniform(0x80, 0x90, &check));
 
   ASSERT_FALSE(check[0]);
   ASSERT_TRUE(check[1]);
 
   {
-    auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }
   {
-    auto [intensities, phases] = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
+    auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
 }

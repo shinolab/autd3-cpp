@@ -10,5 +10,5 @@ TEST(DriverDatagram, Synchronize) {
                   .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
                   .open(autd3::link::Audit::builder());
 
-  ASSERT_TRUE(autd.send(autd3::driver::Synchronize()));
+  autd.send(autd3::driver::Synchronize());
 }

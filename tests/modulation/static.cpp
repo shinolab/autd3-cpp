@@ -7,12 +7,12 @@
 TEST(Modulation, Static) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Static(autd3::driver::EmitIntensity(32))));
+  autd.send(autd3::modulation::Static(autd3::driver::EmitIntensity(32)));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{32, 32};
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
     ASSERT_EQ(0xFFFFFFFF, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

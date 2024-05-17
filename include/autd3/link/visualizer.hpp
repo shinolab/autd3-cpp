@@ -205,24 +205,21 @@ class Visualizer final {
 
   AUTD3_API [[nodiscard]] std::vector<autd3::driver::Phase> phases(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
-    std::vector<autd3::driver::Phase> buf;
-    buf.resize(size);
+    std::vector<autd3::driver::Phase> buf(size, autd3::driver::Phase(0));
     AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
   AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> intensities(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
-    std::vector<autd3::driver::EmitIntensity> buf;
-    buf.resize(size);
+    std::vector<autd3::driver::EmitIntensity> buf(size, autd3::driver::EmitIntensity(0));
     AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
   AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> modulation(const native_methods::Segment segment) const {
     const auto size = AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, nullptr);
-    std::vector<autd3::driver::EmitIntensity> buf;
-    buf.resize(size);
+    std::vector<autd3::driver::EmitIntensity> buf(size, autd3::driver::EmitIntensity(0));
     AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }

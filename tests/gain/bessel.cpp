@@ -7,13 +7,13 @@
 TEST(Gain, Bessel) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::gain::Bessel(autd.geometry().center(), autd3::driver::Vector3::UnitZ(), autd3::driver::pi / 4)
-                            .with_intensity(autd3::driver::EmitIntensity(0x80))));
+  autd.send(autd3::gain::Bessel(autd.geometry().center(), autd3::driver::Vector3::UnitZ(), autd3::driver::pi / 4)
+                .with_intensity(autd3::driver::EmitIntensity(0x80)));
 
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::any_of(phases, [](auto p) { return p != 0; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80; }));
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.phase.value() != 0; }));
   }
 }
 

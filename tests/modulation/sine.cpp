@@ -16,14 +16,14 @@ TEST(Modulation, Sine) {
     ASSERT_EQ(std::numeric_limits<autd3::driver::EmitIntensity>::max() / 2, m.intensity());
     ASSERT_EQ(std::numeric_limits<autd3::driver::EmitIntensity>::max() / 4, m.offset());
     ASSERT_EQ(autd3::driver::pi / 2 * autd3::driver::rad, m.phase());
-    ASSERT_TRUE(autd.send(m));
+    autd.send(m);
 
     for (auto& dev : autd.geometry()) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{127, 125, 120, 111, 100, 87, 73, 58, 43, 30, 18, 9, 3, 0, 0, 4, 12, 22, 34, 48, 63, 78, 92,  104, 114, 122, 126,
                                       126, 123, 117, 108, 96,  83, 68, 53, 39, 26, 15, 6, 1, 0, 1, 6, 15, 26, 39, 53, 68, 83, 96,  108, 117, 123, 126,
                                       126, 122, 114, 104, 92,  78, 63, 48, 34, 22, 12, 4, 0, 0, 3, 9, 18, 30, 43, 58, 73, 87, 100, 111, 120, 125};
-      ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+      ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
       ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
     }
   }
@@ -32,7 +32,7 @@ TEST(Modulation, Sine) {
     const auto m = autd3::modulation::Sine::create(150 * autd3::driver::Hz)
                        .with_sampling_config(autd3::driver::SamplingConfig::Division(10240))
                        .with_loop_behavior(autd3::driver::LoopBehavior::finite(10));
-    ASSERT_TRUE(autd.send(m));
+    autd.send(m);
     for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
@@ -40,17 +40,17 @@ TEST(Modulation, Sine) {
 TEST(Modulation, SineWithMode) {
   auto autd = create_controller();
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Sine::with_freq_nearest(150. * autd3::driver::Hz)));
+  autd.send(autd3::modulation::Sine::with_freq_nearest(150. * autd3::driver::Hz));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{127, 156, 184, 209, 229, 244, 253, 254, 249, 237, 220, 197, 171, 142,
                                     112, 83,  57,  34,  17,  5,   0,   1,   10,  25,  45,  70,  98};
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
   }
 
   ASSERT_THROW(autd.send(autd3::modulation::Sine::create(100.1 * autd3::driver::Hz)), autd3::AUTDException);
-  ASSERT_TRUE(autd.send(autd3::modulation::Sine::with_freq_nearest(100.1 * autd3::driver::Hz)));
+  autd.send(autd3::modulation::Sine::with_freq_nearest(100.1 * autd3::driver::Hz));
 }
 
 TEST(Modulation, SineDefault) {

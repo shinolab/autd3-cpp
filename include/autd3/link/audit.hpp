@@ -1,5 +1,6 @@
 #pragma once
 
+#include <autd3/driver/firmware/fpga/drive.hpp>
 #include <chrono>
 #include <utility>
 
@@ -92,8 +93,8 @@ class Audit final {
 
   AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> modulation(const size_t idx, const native_methods::Segment segment) const {
     const auto n = AUTDLinkAuditFpgaModulationCycle(_ptr, segment, static_cast<uint32_t>(idx));
-    std::vector<autd3::driver::EmitIntensity> buf(n);
-    AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint32_t>(idx), reinterpret_cast<const uint8_t *>(buf.data()));
+    std::vector<autd3::driver::EmitIntensity> buf(n, autd3::driver::EmitIntensity(0));
+    AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
@@ -105,13 +106,16 @@ class Audit final {
     return AUTDLinkAuditFpgaModulationLoopBehavior(_ptr, segment, static_cast<uint32_t>(idx));
   }
 
-  AUTD3_API [[nodiscard]] std::pair<std::vector<autd3::driver::Drive>> drives(const size_t idx, const native_methods::Segment segment,
-                                                                              const int stm_idx) const {
+  AUTD3_API [[nodiscard]] std::vector<autd3::driver::Drive> drives(const size_t idx, const native_methods::Segment segment, const int stm_idx) const {
     const auto n = AUTDLinkAuditCpuNumTransducers(_ptr, static_cast<uint32_t>(idx));
-    std::vector<std::uint8_t> duties(n);
-    std::vector<std::uint8_t> phases(n);
+    std::vector<uint8_t> duties(n);
+    std::vector<uint8_t> phases(n);
     AUTDLinkAuditFpgaDrives(_ptr, segment, static_cast<uint32_t>(idx), static_cast<uint32_t>(stm_idx), duties.data(), phases.data());
-    return std::make_pair(duties, phases);
+    std::vector<autd3::driver::Drive> drives;
+    drives.reserve(n);
+    std::transform(duties.cbegin(), duties.cend(), phases.cbegin(), std::back_inserter(drives),
+                   [](const auto& i, const auto& p) { return autd3::driver::Drive(autd3::driver::Phase(p), autd3::driver::EmitIntensity(i)); });
+    return drives;
   }
 
   AUTD3_API [[nodiscard]] uint32_t stm_cycle(const size_t idx, const native_methods::Segment segment) const {
@@ -144,8 +148,8 @@ class Audit final {
 
   AUTD3_API [[nodiscard]] std::vector<autd3::driver::Phase> phase_filter(const size_t idx) const {
     const auto n = AUTDLinkAuditCpuNumTransducers(_ptr, static_cast<uint32_t>(idx));
-    std::vector<autd3::driver::Phase> buf(n);
-    AUTDLinkAuditFpgaPhaseFilter(_ptr, static_cast<uint32_t>(idx), reinterpret_cast<const uint8_t *>(buf.data()));
+    std::vector<autd3::driver::Phase> buf(n, autd3::driver::Phase(0));
+    AUTDLinkAuditFpgaPhaseFilter(_ptr, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 };

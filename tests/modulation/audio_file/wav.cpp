@@ -8,7 +8,7 @@ TEST(Modulation, Wav) {
   auto autd = create_controller();
 
   const std::filesystem::path path = std::filesystem::path(AUTD3_RESOURCE_PATH).append("sin150.wav");
-  ASSERT_TRUE(autd.send(autd3::modulation::audio_file::Wav(path)));
+  autd.send(autd3::modulation::audio_file::Wav(path));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -16,11 +16,11 @@ TEST(Modulation, Wav) {
                                     1,   5,   15,  32,  54,  80,  109, 137, 167, 194, 217, 236, 248, 254, 253, 245, 230, 210, 185, 157,
                                     128, 99,  71,  46,  26,  11,  3,   2,   8,   20,  39,  62,  89,  119, 147, 176, 202, 224, 241, 251,
                                     255, 251, 241, 224, 202, 176, 147, 119, 89,  62,  39,  20,  8,   2,   3,   11,  26,  46,  71,  99};
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  ASSERT_TRUE(autd.send(autd3::modulation::audio_file::Wav(path).with_sampling_config(autd3::driver::SamplingConfig::Division(10240))));
+  autd.send(autd3::modulation::audio_file::Wav(path).with_sampling_config(autd3::driver::SamplingConfig::Division(10240)));
   for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 }
 

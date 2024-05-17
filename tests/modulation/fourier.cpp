@@ -15,7 +15,7 @@ TEST(Modulation, FourierExact) {
                    f | std::ranges::views::transform([](const autd3::driver::Freq<uint32_t> x) { return autd3::modulation::Sine::create(x); })) +
            autd3::modulation::Sine::create(250 * autd3::driver::Hz);
 
-  ASSERT_TRUE(autd.send(m));
+  autd.send(m);
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -24,7 +24,7 @@ TEST(Modulation, FourierExact) {
         125, 120, 118, 119, 122, 127, 132, 137, 140, 141, 141, 137, 133, 127, 121, 116, 113, 112, 113, 117, 121, 127, 131, 134, 135, 133, 129,
         122, 115, 108, 102, 99,  99,  101, 106, 113, 120, 127, 130, 129, 124, 115, 100, 83,  65,  48,  35,  27,  26,  34,  48,  70,  97,
     };
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
@@ -39,7 +39,7 @@ TEST(Modulation, FourierExactFloat) {
                    f | std::ranges::views::transform([](const autd3::driver::Freq<double> x) { return autd3::modulation::Sine::create(x); })) +
            autd3::modulation::Sine::create(250.0 * autd3::driver::Hz);
 
-  ASSERT_TRUE(autd.send(m));
+  autd.send(m);
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -48,7 +48,7 @@ TEST(Modulation, FourierExactFloat) {
         125, 120, 118, 119, 122, 127, 132, 137, 140, 141, 141, 137, 133, 127, 121, 116, 113, 112, 113, 117, 121, 127, 131, 134, 135, 133, 129,
         122, 115, 108, 102, 99,  99,  101, 106, 113, 120, 127, 130, 129, 124, 115, 100, 83,  65,  48,  35,  27,  26,  34,  48,  70,  97,
     };
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

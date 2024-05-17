@@ -11,38 +11,38 @@ TEST(Gain, Group) {
 
   const auto cx = autd.geometry().center().x();
 
-  ASSERT_TRUE(autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
-                          if (tr.position().x() < cx) return "uniform";
-                          return "null";
-                        })
-                            .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
-                            .set("null", autd3::gain::Null())));
+  autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
+              if (tr.position().x() < cx) return "uniform";
+              return "null";
+            })
+                .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
+                .set("null", autd3::gain::Null()));
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
       if (tr.position().x() < cx) {
-        ASSERT_EQ(0x80, intensities[tr.idx()]);
-        ASSERT_EQ(0x90, phases[tr.idx()]);
+        ASSERT_EQ(0x80, drives[tr.idx()].intensity.value());
+        ASSERT_EQ(0x90, drives[tr.idx()].phase.value());
       } else {
-        ASSERT_EQ(0, intensities[tr.idx()]);
-        ASSERT_EQ(0, phases[tr.idx()]);
+        ASSERT_EQ(0, drives[tr.idx()].intensity.value());
+        ASSERT_EQ(0, drives[tr.idx()].phase.value());
       }
     }
   }
 
-  ASSERT_TRUE(autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
-                          if (tr.position().x() < cx) return "uniform";
-                          return std::nullopt;
-                        }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91)))));
+  autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
+              if (tr.position().x() < cx) return "uniform";
+              return std::nullopt;
+            }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91))));
   for (auto& dev : autd.geometry()) {
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
       if (tr.position().x() < cx) {
-        ASSERT_EQ(0x81, intensities[tr.idx()]);
-        ASSERT_EQ(0x91, phases[tr.idx()]);
+        ASSERT_EQ(0x81, drives[tr.idx()].intensity.value());
+        ASSERT_EQ(0x91, drives[tr.idx()].phase.value());
       } else {
-        ASSERT_EQ(0, intensities[tr.idx()]);
-        ASSERT_EQ(0, phases[tr.idx()]);
+        ASSERT_EQ(0, drives[tr.idx()].intensity.value());
+        ASSERT_EQ(0, drives[tr.idx()].phase.value());
       }
     }
   }
@@ -83,22 +83,20 @@ TEST(Gain, GroupCheckOnlyForEnabled) {
   autd.geometry()[0].set_enable(false);
 
   std::vector check(autd.geometry().num_devices(), false);
-  ASSERT_TRUE(autd.send(autd3::gain::Group([&check](const auto& dev, const auto&) -> std::optional<int> {
-                          check[dev.idx()] = true;
-                          return 0;
-                        }).set(0, autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))));
+  autd.send(autd3::gain::Group([&check](const auto& dev, const auto&) -> std::optional<int> {
+              check[dev.idx()] = true;
+              return 0;
+            }).set(0, autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90))));
 
   ASSERT_FALSE(check[0]);
   ASSERT_TRUE(check[1]);
 
   {
-    auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }
   {
-    auto [intensities, phases] = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
+    auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
 }

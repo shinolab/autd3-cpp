@@ -38,7 +38,7 @@ class Cache final : public driver::GainBase, public driver::IntoDatagramWithSegm
       const auto res = validate(native_methods::AUTDGainCalc(_g.gain_ptr(geometry), geometry.ptr()));
       for (const auto& dev : geometry.devices()) {
         std::vector<driver::Drive> drives;
-        drives.resize(dev.num_transducers(), driver::Drive{driver::Phase(0), 0});
+        drives.resize(dev.num_transducers(), driver::Drive::null());
         native_methods::AUTDGainCalcGetResult(res, reinterpret_cast<native_methods::Drive*>(drives.data()), static_cast<uint32_t>(dev.idx()));
         _cache->emplace(dev.idx(), std::move(drives));
       }

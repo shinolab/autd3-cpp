@@ -8,7 +8,7 @@ TEST(Modulation, RawPCM) {
   auto autd = create_controller();
 
   const std::filesystem::path path = std::filesystem::path(AUTD3_RESOURCE_PATH).append("sin150.dat");
-  ASSERT_TRUE(autd.send(autd3::modulation::audio_file::RawPCM(path, 4000 * autd3::driver::Hz)));
+  autd.send(autd3::modulation::audio_file::RawPCM(path, 4000 * autd3::driver::Hz));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -16,12 +16,12 @@ TEST(Modulation, RawPCM) {
                                     4,   14,  31,  53,  79,  108, 138, 167, 194, 218, 236, 249, 255, 253, 245, 231, 210, 185, 157, 128,
                                     98,  70,  45,  24,  10,  2,   0,   6,   19,  37,  61,  88,  117, 147, 176, 202, 224, 241, 251, 255,
                                     251, 241, 224, 202, 176, 147, 117, 88,  61,  37,  19,  6,   0,   2,   10,  24,  45,  70,  98,  128};
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l.value() == r; }));
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  ASSERT_TRUE(autd.send(
-      autd3::modulation::audio_file::RawPCM(path, 4000 * autd3::driver::Hz).with_sampling_config(autd3::driver::SamplingConfig::Division(10240))));
+  autd.send(
+      autd3::modulation::audio_file::RawPCM(path, 4000 * autd3::driver::Hz).with_sampling_config(autd3::driver::SamplingConfig::Division(10240)));
   for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 }
 

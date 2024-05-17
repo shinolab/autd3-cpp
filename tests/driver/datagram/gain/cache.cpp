@@ -14,13 +14,14 @@ TEST(DriverDatagramGain, Cache) {
 
   g.init(autd.geometry());
 
-  ASSERT_TRUE(autd.send(g));
+  autd.send(g);
   for (auto& dev : autd.geometry()) {
-    ASSERT_TRUE(std::ranges::all_of(g[dev], [](auto d) { return d == autd3::driver::Drive{autd3::driver::Phase(0x90), 0x80}; }));
-    ASSERT_TRUE(std::ranges::all_of(g.drives().at(dev.idx()), [](auto d) { return d == autd3::driver::Drive{autd3::driver::Phase(0x90), 0x80}; }));
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
+    ASSERT_TRUE(std::ranges::all_of(
+        g[dev], [](auto d) { return d == autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; }));
+    ASSERT_TRUE(std::ranges::all_of(
+        g.drives().at(dev.idx()), [](auto d) { return d == autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
 }
 
@@ -51,9 +52,9 @@ TEST(DriverDatagramGain, CacheCheckOnce) {
   {
     size_t cnt = 0;
     ForCacheTest g(&cnt);
-    ASSERT_TRUE(autd.send(g));
+    autd.send(g);
     ASSERT_EQ(cnt, 1);
-    ASSERT_TRUE(autd.send(g));
+    autd.send(g);
     ASSERT_EQ(cnt, 2);
   }
 
@@ -64,9 +65,9 @@ TEST(DriverDatagramGain, CacheCheckOnce) {
     ASSERT_EQ(cnt, 0);
     gc.init(autd.geometry());
     ASSERT_EQ(cnt, 1);
-    ASSERT_TRUE(autd.send(gc));
+    autd.send(gc);
     ASSERT_EQ(cnt, 1);
-    ASSERT_TRUE(autd.send(gc));
+    autd.send(gc);
     ASSERT_EQ(cnt, 1);
   }
 }
@@ -77,19 +78,17 @@ TEST(DriverDatagramGain, CacheCheckOnlyForEnabled) {
 
   size_t cnt = 0;
   auto g = ForCacheTest(&cnt).with_cache();
-  ASSERT_TRUE(autd.send(g));
+  autd.send(g);
 
   ASSERT_FALSE(g.drives().contains(0));
   ASSERT_TRUE(g.drives().contains(1));
 
   {
-    auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }
   {
-    auto [intensities, phases] = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
+    auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
 }

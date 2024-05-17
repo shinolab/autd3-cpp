@@ -61,13 +61,13 @@ TEST(Controller, ControllerSendSingle) {
 
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
   }
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Static()));
+  autd.send(autd3::modulation::Static());
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
   }
 
   autd.link().down();
@@ -82,19 +82,17 @@ TEST(Controller, ControllerSendDouble) {
 
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }
 
-  ASSERT_TRUE(autd.send(autd3::modulation::Static(), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))));
+  autd.send(autd3::modulation::Static(), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)));
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
-    auto [intensities, phases] = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
   }
 
   autd.link().down();
@@ -115,17 +113,15 @@ TEST(Controller, ControllerGroup) {
   {
     const auto m = autd.link().modulation(0, autd3::native_methods::Segment::S0);
     ASSERT_EQ(2, m.size());
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
-    auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }
   {
     const auto m = autd.link().modulation(1, autd3::native_methods::Segment::S0);
     ASSERT_EQ(80, m.size());
-    auto [intensities, phases] = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
   }
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
@@ -136,13 +132,12 @@ TEST(Controller, ControllerGroup) {
   {
     const auto m = autd.link().modulation(0, autd3::native_methods::Segment::S0);
     ASSERT_EQ(80, m.size());
-    auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
   }
   {
-    auto [intensities, _] = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
+    auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0; }));
   }
 }
 
@@ -163,15 +158,13 @@ TEST(Controller, ControllerGroupCheckOnlyForEnabled) {
   ASSERT_TRUE(check[1]);
 
   {
-    auto [intensities, phases] = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0; }));
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }
   {
     const auto m = autd.link().modulation(1, autd3::native_methods::Segment::S0);
     ASSERT_EQ(80, m.size());
-    auto [intensities, phases] = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
-    ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x90; }));
+    auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
 }

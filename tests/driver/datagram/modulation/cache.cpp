@@ -13,8 +13,8 @@ TEST(DriverDatagramModulation, Cache) {
   const auto m1 = autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x80));
   const auto m2 = autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x80)).with_cache();
 
-  ASSERT_TRUE(autd1.send(m1));
-  ASSERT_TRUE(autd2.send(m2));
+  autd1.send(m1);
+  autd2.send(m2);
 
   ASSERT_TRUE(std::ranges::all_of(m2.buffer(), [](auto d) { return d.value() == 0x80; }));
   for (const auto& m : m2) ASSERT_EQ(0x80, m.value());
@@ -47,9 +47,9 @@ TEST(DriverDatagramModulation, CacheCheckOnce) {
   {
     size_t cnt = 0;
     ForModulationCacheTest m(&cnt);
-    ASSERT_TRUE(autd.send(m));
+    autd.send(m);
     ASSERT_EQ(cnt, 1);
-    ASSERT_TRUE(autd.send(m));
+    autd.send(m);
     ASSERT_EQ(cnt, 2);
   }
 
@@ -57,9 +57,9 @@ TEST(DriverDatagramModulation, CacheCheckOnce) {
     size_t cnt = 0;
     ForModulationCacheTest g(&cnt);
     auto gc = g.with_cache();
-    ASSERT_TRUE(autd.send(gc));
+    autd.send(gc);
     ASSERT_EQ(cnt, 1);
-    ASSERT_TRUE(autd.send(gc));
+    autd.send(gc);
     ASSERT_EQ(cnt, 1);
   }
 }

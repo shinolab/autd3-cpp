@@ -22,12 +22,12 @@ void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>
   autd.link().plot_modulation(config, autd3::native_methods::Segment::S0);
 
   auto intensities = autd.link().intensities(autd3::native_methods::Segment::S0, 0);
-  ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d == 0x80; }));
+  ASSERT_TRUE(std::ranges::all_of(intensities, [](auto d) { return d.value() == 0x80; }));
   auto phases = autd.link().phases(autd3::native_methods::Segment::S0, 0);
-  ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p == 0x81; }));
+  ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p.value() == 0x81; }));
   auto modulation = autd.link().modulation(autd3::native_methods::Segment::S0);
   ASSERT_EQ(modulation.size(), 2);
-  ASSERT_TRUE(std::ranges::all_of(modulation, [](auto m) { return m == 0x82; }));
+  ASSERT_TRUE(std::ranges::all_of(modulation, [](auto m) { return m.value() == 0x82; }));
 
   std::vector<autd3::driver::Vector3> points{center};
   (void)autd.link().calc_field(points, autd.geometry(), autd3::native_methods::Segment::S0, 0);
