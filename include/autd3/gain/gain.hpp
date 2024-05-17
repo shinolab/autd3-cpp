@@ -21,7 +21,7 @@ concept gain_transform = requires(F f, const driver::geometry::Device& dev, cons
 template <class G>
 class Gain : public driver::Gain<G> {
  public:
-  Gain() = default;
+  Gain() = default;  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] virtual std::unordered_map<size_t, std::vector<driver::Drive>> calc(const driver::geometry::Geometry& geometry) const = 0;
 

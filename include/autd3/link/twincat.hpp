@@ -13,7 +13,7 @@ class ControllerBuilder;
 namespace autd3::link {
 
 class TwinCAT final {
-  TwinCAT() = default;
+  TwinCAT() = default;  // LCOV_EXCL_LINE
 
  public:
   class Builder final {
@@ -43,7 +43,7 @@ class TwinCAT final {
 };
 
 class RemoteTwinCAT final {
-  RemoteTwinCAT() = default;
+  RemoteTwinCAT() = default;  // LCOV_EXCL_LINE
 
  public:
   class Builder final {

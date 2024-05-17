@@ -11,12 +11,12 @@ namespace autd3::driver {
 template <typename P>
 class DatagramST {
  public:
-  DatagramST() = default;
-  AUTD3_API virtual ~DatagramST() = default;
-  DatagramST(const DatagramST& v) noexcept = default;
-  DatagramST& operator=(const DatagramST& obj) = default;
-  DatagramST(DatagramST&& obj) = default;
-  DatagramST& operator=(DatagramST&& obj) = default;
+  DatagramST() = default;                                  // LCOV_EXCL_LINE
+  AUTD3_API virtual ~DatagramST() = default;               // LCOV_EXCL_LINE
+  DatagramST(const DatagramST& v) noexcept = default;      // LCOV_EXCL_LINE
+  DatagramST& operator=(const DatagramST& obj) = default;  // LCOV_EXCL_LINE
+  DatagramST(DatagramST&& obj) = default;                  // LCOV_EXCL_LINE
+  DatagramST& operator=(DatagramST&& obj) = default;       // LCOV_EXCL_LINE
   AUTD3_API [[nodiscard]] virtual P raw_ptr(const geometry::Geometry&) const = 0;
   AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr into_segment(P p, native_methods::Segment segment) const = 0;
   AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr into_segment_transition(P p, native_methods::Segment segment,
@@ -29,11 +29,11 @@ class DatagramWithSegmentTransition {
   AUTD3_API explicit DatagramWithSegmentTransition(std::unique_ptr<DatagramST<P>> datagram, const native_methods::Segment segment,
                                                    std::optional<native_methods::TransitionModeWrap> transition_mode)
       : _datagram(std::move(datagram)), _segment(segment), _transition_mode(std::move(transition_mode)) {}
-  ~DatagramWithSegmentTransition() = default;
-  DatagramWithSegmentTransition(const DatagramWithSegmentTransition& v) noexcept = default;
-  DatagramWithSegmentTransition& operator=(const DatagramWithSegmentTransition& obj) = default;
-  DatagramWithSegmentTransition(DatagramWithSegmentTransition&& obj) = default;
-  DatagramWithSegmentTransition& operator=(DatagramWithSegmentTransition&& obj) = default;
+  ~DatagramWithSegmentTransition() = default;                                                    // LCOV_EXCL_LINE
+  DatagramWithSegmentTransition(const DatagramWithSegmentTransition& v) noexcept = default;      // LCOV_EXCL_LINE
+  DatagramWithSegmentTransition& operator=(const DatagramWithSegmentTransition& obj) = default;  // LCOV_EXCL_LINE
+  DatagramWithSegmentTransition(DatagramWithSegmentTransition&& obj) = default;                  // LCOV_EXCL_LINE
+  DatagramWithSegmentTransition& operator=(DatagramWithSegmentTransition&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) {
     auto raw_ptr = _datagram->raw_ptr(g);
@@ -50,12 +50,12 @@ class DatagramWithSegmentTransition {
 template <typename P, class D>
 class IntoDatagramWithSegmentTransition {
  public:
-  IntoDatagramWithSegmentTransition() = default;
-  virtual ~IntoDatagramWithSegmentTransition() = default;
-  IntoDatagramWithSegmentTransition(const IntoDatagramWithSegmentTransition& v) noexcept = default;
-  IntoDatagramWithSegmentTransition& operator=(const IntoDatagramWithSegmentTransition& obj) = default;
-  IntoDatagramWithSegmentTransition(IntoDatagramWithSegmentTransition&& obj) = default;
-  IntoDatagramWithSegmentTransition& operator=(IntoDatagramWithSegmentTransition&& obj) = default;
+  IntoDatagramWithSegmentTransition() = default;                                                         // LCOV_EXCL_LINE
+  virtual ~IntoDatagramWithSegmentTransition() = default;                                                // LCOV_EXCL_LINE
+  IntoDatagramWithSegmentTransition(const IntoDatagramWithSegmentTransition& v) noexcept = default;      // LCOV_EXCL_LINE
+  IntoDatagramWithSegmentTransition& operator=(const IntoDatagramWithSegmentTransition& obj) = default;  // LCOV_EXCL_LINE
+  IntoDatagramWithSegmentTransition(IntoDatagramWithSegmentTransition&& obj) = default;                  // LCOV_EXCL_LINE
+  IntoDatagramWithSegmentTransition& operator=(IntoDatagramWithSegmentTransition&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] DatagramWithSegmentTransition<P> with_segment(const native_methods::Segment segment,
                                                                         std::optional<native_methods::TransitionModeWrap> transition_mode) & {

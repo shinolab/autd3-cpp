@@ -10,12 +10,12 @@ namespace autd3::driver {
 template <typename P>
 class DatagramS {
  public:
-  DatagramS() = default;
-  AUTD3_API virtual ~DatagramS() = default;
-  DatagramS(const DatagramS& v) noexcept = default;
-  DatagramS& operator=(const DatagramS& obj) = default;
-  DatagramS(DatagramS&& obj) = default;
-  DatagramS& operator=(DatagramS&& obj) = default;
+  DatagramS() = default;                                 // LCOV_EXCL_LINE
+  AUTD3_API virtual ~DatagramS() = default;              // LCOV_EXCL_LINE
+  DatagramS(const DatagramS& v) noexcept = default;      // LCOV_EXCL_LINE
+  DatagramS& operator=(const DatagramS& obj) = default;  // LCOV_EXCL_LINE
+  DatagramS(DatagramS&& obj) = default;                  // LCOV_EXCL_LINE
+  DatagramS& operator=(DatagramS&& obj) = default;       // LCOV_EXCL_LINE
   AUTD3_API [[nodiscard]] virtual P raw_ptr(const geometry::Geometry&) const = 0;
   AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr into_segment(P p, native_methods::Segment segment, bool transition) const = 0;
 };
@@ -25,11 +25,11 @@ class DatagramWithSegment {
  public:
   AUTD3_API explicit DatagramWithSegment(std::unique_ptr<DatagramS<P>> datagram, const native_methods::Segment segment, const bool transition)
       : _datagram(std::move(datagram)), _segment(segment), _transition(transition) {}
-  ~DatagramWithSegment() = default;
-  DatagramWithSegment(const DatagramWithSegment& v) noexcept = default;
-  DatagramWithSegment& operator=(const DatagramWithSegment& obj) = default;
-  DatagramWithSegment(DatagramWithSegment&& obj) = default;
-  DatagramWithSegment& operator=(DatagramWithSegment&& obj) = default;
+  ~DatagramWithSegment() = default;                                          // LCOV_EXCL_LINE
+  DatagramWithSegment(const DatagramWithSegment& v) noexcept = default;      // LCOV_EXCL_LINE
+  DatagramWithSegment& operator=(const DatagramWithSegment& obj) = default;  // LCOV_EXCL_LINE
+  DatagramWithSegment(DatagramWithSegment&& obj) = default;                  // LCOV_EXCL_LINE
+  DatagramWithSegment& operator=(DatagramWithSegment&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) {
     auto raw_ptr = _datagram->raw_ptr(g);
@@ -45,12 +45,12 @@ class DatagramWithSegment {
 template <typename P, class D>
 class IntoDatagramWithSegment {
  public:
-  IntoDatagramWithSegment() = default;
-  virtual ~IntoDatagramWithSegment() = default;
-  IntoDatagramWithSegment(const IntoDatagramWithSegment& v) noexcept = default;
-  IntoDatagramWithSegment& operator=(const IntoDatagramWithSegment& obj) = default;
-  IntoDatagramWithSegment(IntoDatagramWithSegment&& obj) = default;
-  IntoDatagramWithSegment& operator=(IntoDatagramWithSegment&& obj) = default;
+  IntoDatagramWithSegment() = default;                                               // LCOV_EXCL_LINE
+  virtual ~IntoDatagramWithSegment() = default;                                      // LCOV_EXCL_LINE
+  IntoDatagramWithSegment(const IntoDatagramWithSegment& v) noexcept = default;      // LCOV_EXCL_LINE
+  IntoDatagramWithSegment& operator=(const IntoDatagramWithSegment& obj) = default;  // LCOV_EXCL_LINE
+  IntoDatagramWithSegment(IntoDatagramWithSegment&& obj) = default;                  // LCOV_EXCL_LINE
+  IntoDatagramWithSegment& operator=(IntoDatagramWithSegment&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) & {
     return DatagramWithSegment<P>(std::make_unique<D>(*static_cast<D*>(this)), segment, transition);

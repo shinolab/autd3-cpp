@@ -28,11 +28,11 @@ TEST(DriverDatagramGain, Cache) {
 class ForCacheTest final : public autd3::gain::Gain<ForCacheTest> {
  public:
   ForCacheTest() = delete;
-  ForCacheTest(const ForCacheTest& obj) = default;
-  ForCacheTest& operator=(const ForCacheTest& obj) = default;
-  ForCacheTest(ForCacheTest&& obj) = default;
-  ForCacheTest& operator=(ForCacheTest&& obj) = default;
-  ~ForCacheTest() override = default;
+  ForCacheTest(const ForCacheTest& obj) = default;             // LCOV_EXCL_LINE
+  ForCacheTest& operator=(const ForCacheTest& obj) = default;  // LCOV_EXCL_LINE
+  ForCacheTest(ForCacheTest&& obj) = default;                  // LCOV_EXCL_LINE
+  ForCacheTest& operator=(ForCacheTest&& obj) = default;       // LCOV_EXCL_LINE
+  ~ForCacheTest() override = default;                          // LCOV_EXCL_LINE
   explicit ForCacheTest(size_t* cnt) : _cnt(cnt) {}
 
   AUTD3_API [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::driver::Drive>> calc(

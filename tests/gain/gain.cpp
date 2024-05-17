@@ -10,11 +10,11 @@ class Uniform final : public autd3::gain::Gain<Uniform> {
   explicit Uniform(const uint8_t intensity, const uint8_t phase, std::vector<bool>* cnt)
       : _intensity(autd3::driver::EmitIntensity(intensity)), _phase(phase), _cnt(cnt) {}
   Uniform() = delete;
-  Uniform(const Uniform& obj) = default;
-  Uniform& operator=(const Uniform& obj) = default;
-  Uniform(Uniform&& obj) = default;
-  Uniform& operator=(Uniform&& obj) = default;
-  virtual ~Uniform() = default;
+  Uniform(const Uniform& obj) = default;             // LCOV_EXCL_LINE
+  Uniform& operator=(const Uniform& obj) = default;  // LCOV_EXCL_LINE
+  Uniform(Uniform&& obj) = default;                  // LCOV_EXCL_LINE
+  Uniform& operator=(Uniform&& obj) = default;       // LCOV_EXCL_LINE
+  virtual ~Uniform() = default;                      // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::driver::Drive>> calc(
       const autd3::driver::geometry::Geometry& geometry) const override {

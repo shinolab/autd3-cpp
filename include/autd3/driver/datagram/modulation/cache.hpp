@@ -13,11 +13,11 @@ template <class M>
 class Cache final : public driver::ModulationBase<Cache<M>> {
  public:
   AUTD3_API explicit Cache(M m) : _m(std::move(m)), _cache(std::make_shared<std::vector<driver::EmitIntensity>>()) {}
-  Cache(const Cache& v) = default;
+  Cache(const Cache& v) = default;  // LCOV_EXCL_LINE
   Cache& operator=(const Cache& obj) = delete;
-  Cache(Cache&& obj) noexcept = default;
+  Cache(Cache&& obj) noexcept = default;  // LCOV_EXCL_LINE
   Cache& operator=(Cache&& obj) noexcept = delete;
-  ~Cache() noexcept override = default;
+  ~Cache() noexcept override = default;  // LCOV_EXCL_LINE
 
   AUTD3_API const std::vector<driver::EmitIntensity>& calc(const driver::geometry::Geometry& geometry) const { return init(geometry); }
 

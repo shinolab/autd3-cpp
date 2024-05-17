@@ -14,7 +14,7 @@ class Phase final {
 
   AUTD3_API [[nodiscard]] uint8_t value() const noexcept { return _value; }
 
-  auto operator<=>(const Phase&) const = default;
+  auto operator<=>(const Phase&) const = default;  // LCOV_EXCL_LINE
 
  private:
   uint8_t _value;

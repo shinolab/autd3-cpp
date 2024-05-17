@@ -11,11 +11,11 @@ template <class M>
 class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public IntoDatagramWithSegmentTransition<native_methods::ModulationPtr, M> {
  public:
   AUTD3_API ModulationBase() : _loop_behavior(LoopBehavior::infinite()) {}
-  ModulationBase(const ModulationBase& obj) = default;
-  ModulationBase& operator=(const ModulationBase& obj) = default;
-  ModulationBase(ModulationBase&& obj) = default;
-  ModulationBase& operator=(ModulationBase&& obj) = default;
-  ~ModulationBase() override = default;
+  ModulationBase(const ModulationBase& obj) = default;             // LCOV_EXCL_LINE
+  ModulationBase& operator=(const ModulationBase& obj) = default;  // LCOV_EXCL_LINE
+  ModulationBase(ModulationBase&& obj) = default;                  // LCOV_EXCL_LINE
+  ModulationBase& operator=(ModulationBase&& obj) = default;       // LCOV_EXCL_LINE
+  ~ModulationBase() override = default;                            // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDModulationIntoDatagram(modulation_ptr(geometry));

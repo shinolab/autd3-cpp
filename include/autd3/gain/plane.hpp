@@ -15,11 +15,11 @@ class Plane final : public driver::Gain<Plane> {
   AUTD3_API explicit Plane(driver::Vector3 d)
       : _dir(std::move(d)), _phase_offset(driver::Phase(0)), _intensity(std::numeric_limits<driver::EmitIntensity>::max()) {}
   Plane() = delete;
-  Plane(const Plane& obj) = default;
-  Plane& operator=(const Plane& obj) = default;
-  Plane(Plane&& obj) = default;
-  Plane& operator=(Plane&& obj) = default;
-  ~Plane() override = default;
+  Plane(const Plane& obj) = default;             // LCOV_EXCL_LINE
+  Plane& operator=(const Plane& obj) = default;  // LCOV_EXCL_LINE
+  Plane(Plane&& obj) = default;                  // LCOV_EXCL_LINE
+  Plane& operator=(Plane&& obj) = default;       // LCOV_EXCL_LINE
+  ~Plane() override = default;                   // LCOV_EXCL_LINE
 
   AUTD3_DEF_PROP(driver::Vector3, dir)
   AUTD3_DEF_PARAM(Plane, driver::Phase, phase_offset)

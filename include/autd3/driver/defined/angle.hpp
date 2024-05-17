@@ -28,7 +28,7 @@ class Angle {
   AUTD3_API friend Angle operator*(const double l, const UnitRad&) { return Angle(l); }
   AUTD3_API friend Angle operator*(const double l, const UnitDegree&) { return Angle(l / 180 * std::numbers::pi); }
 
-  auto operator<=>(const Angle&) const = default;
+  auto operator<=>(const Angle&) const = default;  // LCOV_EXCL_LINE
 
  private:
   AUTD3_API explicit Angle(const double value) : _value(value) {}

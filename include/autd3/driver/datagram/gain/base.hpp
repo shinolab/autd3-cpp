@@ -8,12 +8,12 @@ namespace autd3::driver {
 
 class GainBase : public DatagramS<native_methods::GainPtr> {
  public:
-  GainBase() = default;
-  GainBase(const GainBase& obj) = default;
-  GainBase& operator=(const GainBase& obj) = default;
-  GainBase(GainBase&& obj) = default;
-  GainBase& operator=(GainBase&& obj) = default;
-  ~GainBase() override = default;
+  GainBase() = default;                                // LCOV_EXCL_LINE
+  GainBase(const GainBase& obj) = default;             // LCOV_EXCL_LINE
+  GainBase& operator=(const GainBase& obj) = default;  // LCOV_EXCL_LINE
+  GainBase(GainBase&& obj) = default;                  // LCOV_EXCL_LINE
+  GainBase& operator=(GainBase&& obj) = default;       // LCOV_EXCL_LINE
+  ~GainBase() override = default;                      // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDGainIntoDatagram(gain_ptr(geometry));

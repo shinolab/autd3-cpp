@@ -22,11 +22,11 @@ class Cache final : public driver::GainBase, public driver::IntoDatagramWithSegm
   AUTD3_API explicit Cache(G g) : _g(std::move(g)), _cache(std::make_shared<std::unordered_map<size_t, std::vector<driver::Drive>>>()) {}
 
   Cache() = delete;
-  Cache(const Cache& obj) = default;
-  Cache& operator=(const Cache& obj) = default;
-  Cache(Cache&& obj) = default;
-  Cache& operator=(Cache&& obj) = default;
-  ~Cache() override = default;
+  Cache(const Cache& obj) = default;             // LCOV_EXCL_LINE
+  Cache& operator=(const Cache& obj) = default;  // LCOV_EXCL_LINE
+  Cache(Cache&& obj) = default;                  // LCOV_EXCL_LINE
+  Cache& operator=(Cache&& obj) = default;       // LCOV_EXCL_LINE
+  ~Cache() override = default;                   // LCOV_EXCL_LINE
 
   AUTD3_API void init(const driver::geometry::Geometry& geometry) const {
     auto view = geometry.devices() | std::views::transform([](const driver::geometry::Device& dev) { return static_cast<uint32_t>(dev.idx()); });
@@ -69,12 +69,12 @@ namespace autd3::driver {
 template <class G>
 class IntoGainCache {
  public:
-  IntoGainCache() = default;
-  IntoGainCache(const IntoGainCache& obj) = default;
-  IntoGainCache& operator=(const IntoGainCache& obj) = default;
-  IntoGainCache(IntoGainCache&& obj) = default;
-  IntoGainCache& operator=(IntoGainCache&& obj) = default;
-  virtual ~IntoGainCache() = default;
+  IntoGainCache() = default;                                     // LCOV_EXCL_LINE
+  IntoGainCache(const IntoGainCache& obj) = default;             // LCOV_EXCL_LINE
+  IntoGainCache& operator=(const IntoGainCache& obj) = default;  // LCOV_EXCL_LINE
+  IntoGainCache(IntoGainCache&& obj) = default;                  // LCOV_EXCL_LINE
+  IntoGainCache& operator=(IntoGainCache&& obj) = default;       // LCOV_EXCL_LINE
+  virtual ~IntoGainCache() = default;                            // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] gain::Cache<G> with_cache() & { return gain::Cache(*static_cast<G*>(this)); }
   AUTD3_API [[nodiscard]] gain::Cache<G> with_cache() && { return gain::Cache(std::move(*static_cast<G*>(this))); }

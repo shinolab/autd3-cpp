@@ -10,11 +10,11 @@ namespace autd3::driver {
 class FPGAState {
  public:
   AUTD3_API explicit FPGAState(const uint8_t info) noexcept : _info(info) {}
-  ~FPGAState() = default;
-  FPGAState(const FPGAState& v) = default;
-  FPGAState& operator=(const FPGAState& obj) = default;
-  FPGAState(FPGAState&& obj) = default;
-  FPGAState& operator=(FPGAState&& obj) = default;
+  ~FPGAState() = default;                                // LCOV_EXCL_LINE
+  FPGAState(const FPGAState& v) = default;               // LCOV_EXCL_LINE
+  FPGAState& operator=(const FPGAState& obj) = default;  // LCOV_EXCL_LINE
+  FPGAState(FPGAState&& obj) = default;                  // LCOV_EXCL_LINE
+  FPGAState& operator=(FPGAState&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] bool is_thermal_assert() const noexcept { return (_info & (1 << 0)) != 0; }
 

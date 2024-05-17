@@ -8,11 +8,11 @@ class Backend {
  public:
   Backend() noexcept : _ptr(native_methods::BackendPtr{nullptr}) {}
   explicit Backend(const native_methods::BackendPtr ptr) noexcept : _ptr(ptr) {}
-  Backend(const Backend& obj) = default;
-  Backend& operator=(const Backend& obj) = default;
-  Backend(Backend&& obj) = default;
-  Backend& operator=(Backend&& obj) = default;
-  virtual ~Backend() = default;
+  Backend(const Backend& obj) = default;             // LCOV_EXCL_LINE
+  Backend& operator=(const Backend& obj) = default;  // LCOV_EXCL_LINE
+  Backend(Backend&& obj) = default;                  // LCOV_EXCL_LINE
+  Backend& operator=(Backend&& obj) = default;       // LCOV_EXCL_LINE
+  virtual ~Backend() = default;                      // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
 

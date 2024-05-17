@@ -17,11 +17,11 @@ concept gain_range = std::ranges::viewable_range<R> && gain<std::ranges::range_v
 class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
  public:
   GainSTM() = delete;
-  GainSTM(const GainSTM& obj) = default;
-  GainSTM& operator=(const GainSTM& obj) = default;
-  GainSTM(GainSTM&& obj) = default;
-  GainSTM& operator=(GainSTM&& obj) = default;
-  ~GainSTM() override = default;
+  GainSTM(const GainSTM& obj) = default;             // LCOV_EXCL_LINE
+  GainSTM& operator=(const GainSTM& obj) = default;  // LCOV_EXCL_LINE
+  GainSTM(GainSTM&& obj) = default;                  // LCOV_EXCL_LINE
+  GainSTM& operator=(GainSTM&& obj) = default;       // LCOV_EXCL_LINE
+  ~GainSTM() override = default;                     // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<double> freq) { return GainSTM(freq, std::nullopt, std::nullopt); }
   AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<double> freq) { return GainSTM(std::nullopt, freq, std::nullopt); }

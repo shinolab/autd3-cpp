@@ -13,7 +13,7 @@ class Freq {
 
   AUTD3_API explicit Freq(const T value) : _value(value) {}
 
-  auto operator<=>(const Freq<T>&) const = default;
+  auto operator<=>(const Freq<T>&) const = default;  // LCOV_EXCL_LINE
 
  private:
   T _value;
@@ -26,7 +26,7 @@ class Freq<int> {
 
   AUTD3_API explicit Freq(const int value) : _value(value) {}
 
-  auto operator<=>(const Freq<int>&) const = default;
+  auto operator<=>(const Freq<int>&) const = default;  // LCOV_EXCL_LINE
 
  private:
   int _value;

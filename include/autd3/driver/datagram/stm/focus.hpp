@@ -26,11 +26,11 @@ concept focus_range_c = std::ranges::viewable_range<R> && std::same_as<std::rang
 class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
  public:
   FocusSTM() = delete;
-  FocusSTM(const FocusSTM& obj) = default;
-  FocusSTM& operator=(const FocusSTM& obj) = default;
-  FocusSTM(FocusSTM&& obj) = default;
-  FocusSTM& operator=(FocusSTM&& obj) = default;
-  ~FocusSTM() override = default;
+  FocusSTM(const FocusSTM& obj) = default;             // LCOV_EXCL_LINE
+  FocusSTM& operator=(const FocusSTM& obj) = default;  // LCOV_EXCL_LINE
+  FocusSTM(FocusSTM&& obj) = default;                  // LCOV_EXCL_LINE
+  FocusSTM& operator=(FocusSTM&& obj) = default;       // LCOV_EXCL_LINE
+  ~FocusSTM() override = default;                      // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] static FocusSTM from_freq(const Freq<double> freq) { return FocusSTM(freq, std::nullopt, std::nullopt); }
   AUTD3_API [[nodiscard]] static FocusSTM from_freq_nearest(const Freq<double> freq) { return FocusSTM(std::nullopt, freq, std::nullopt); }

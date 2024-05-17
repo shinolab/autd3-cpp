@@ -18,8 +18,8 @@ class CUDABackend final : public Backend {
   }
   CUDABackend(const CUDABackend& v) noexcept = delete;
   CUDABackend& operator=(const CUDABackend& obj) = delete;
-  CUDABackend(CUDABackend&& obj) = default;
-  CUDABackend& operator=(CUDABackend&& obj) = default;
+  CUDABackend(CUDABackend&& obj) = default;             // LCOV_EXCL_LINE
+  CUDABackend& operator=(CUDABackend&& obj) = default;  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr sdp(const double* foci, const double* amps, const uint64_t size, const double alpha,
                                                       const double lambda, const uint32_t repeat,

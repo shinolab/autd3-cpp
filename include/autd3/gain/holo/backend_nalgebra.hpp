@@ -16,8 +16,8 @@ class NalgebraBackend final : public Backend {
   }
   NalgebraBackend(const NalgebraBackend& v) noexcept = delete;
   NalgebraBackend& operator=(const NalgebraBackend& obj) = delete;
-  NalgebraBackend(NalgebraBackend&& obj) = default;
-  NalgebraBackend& operator=(NalgebraBackend&& obj) = default;
+  NalgebraBackend(NalgebraBackend&& obj) = default;             // LCOV_EXCL_LINE
+  NalgebraBackend& operator=(NalgebraBackend&& obj) = default;  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr sdp(const double* foci, const double* amps, const uint64_t size, const double alpha,
                                                       const double lambda, const uint32_t repeat,

@@ -12,12 +12,12 @@ concept datagram = requires(D d, const geometry::Geometry& g) {
 
 class NullDatagram final {
  public:
-  NullDatagram() = default;
-  ~NullDatagram() = default;
-  NullDatagram(const NullDatagram& v) noexcept = default;
-  NullDatagram& operator=(const NullDatagram& obj) = default;
-  NullDatagram(NullDatagram&& obj) = default;
-  NullDatagram& operator=(NullDatagram&& obj) = default;
+  NullDatagram() = default;                                    // LCOV_EXCL_LINE
+  ~NullDatagram() = default;                                   // LCOV_EXCL_LINE
+  NullDatagram(const NullDatagram& v) noexcept = default;      // LCOV_EXCL_LINE
+  NullDatagram& operator=(const NullDatagram& obj) = default;  // LCOV_EXCL_LINE
+  NullDatagram(NullDatagram&& obj) = default;                  // LCOV_EXCL_LINE
+  NullDatagram& operator=(NullDatagram&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] static native_methods::DatagramPtr ptr(const geometry::Geometry&) { return native_methods::DatagramPtr{nullptr}; }
 };

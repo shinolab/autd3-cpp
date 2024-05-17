@@ -14,7 +14,7 @@ namespace autd3::driver::geometry {
 class Geometry {
   class GeometryView : public std::ranges::view_interface<GeometryView> {
    public:
-    GeometryView() = default;
+    GeometryView() = default;  // LCOV_EXCL_LINE
     AUTD3_API explicit GeometryView(const std::vector<Device>& vec) : _begin(vec.cbegin()), _end(vec.cend()) {}
 
     AUTD3_API [[nodiscard]] auto begin() const { return _begin; }
@@ -32,11 +32,11 @@ class Geometry {
     for (uint32_t i = 0; i < size; i++) _devices.emplace_back(static_cast<size_t>(i), AUTDDevice(_ptr, i));
   }
 
-  ~Geometry() = default;
-  Geometry(const Geometry& v) noexcept = default;
-  Geometry& operator=(const Geometry& obj) = default;
-  Geometry(Geometry&& obj) = default;
-  Geometry& operator=(Geometry&& obj) = default;
+  ~Geometry() = default;                               // LCOV_EXCL_LINE
+  Geometry(const Geometry& v) noexcept = default;      // LCOV_EXCL_LINE
+  Geometry& operator=(const Geometry& obj) = default;  // LCOV_EXCL_LINE
+  Geometry(Geometry&& obj) = default;                  // LCOV_EXCL_LINE
+  Geometry& operator=(Geometry&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] size_t num_devices() const { return _devices.size(); }
 

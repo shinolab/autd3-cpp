@@ -16,7 +16,7 @@ class Nop {
     friend class Nop;
     friend class controller::ControllerBuilder;
 
-    AUTD3_API Builder() = default;
+    AUTD3_API Builder() = default;  // LCOV_EXCL_LINE
 
     AUTD3_API [[nodiscard]] static Nop resolve_link(const native_methods::LinkPtr link) { return Nop{link}; }
 

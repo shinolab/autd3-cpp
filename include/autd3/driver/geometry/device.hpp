@@ -11,7 +11,7 @@ namespace autd3::driver::geometry {
 class Device {
   class DeviceView : public std::ranges::view_interface<DeviceView> {
    public:
-    DeviceView() = default;
+    DeviceView() = default;  // LCOV_EXCL_LINE
     AUTD3_API explicit DeviceView(const std::vector<Transducer>& vec) : _begin(vec.cbegin()), _end(vec.cend()) {}
 
     AUTD3_API [[nodiscard]] auto begin() const { return _begin; }
@@ -29,11 +29,11 @@ class Device {
     for (uint32_t i = 0; i < size; i++) _transducers.emplace_back(i, _ptr);
   }
 
-  ~Device() = default;
-  Device(const Device& v) noexcept = default;
-  Device& operator=(const Device& obj) = default;
-  Device(Device&& obj) = default;
-  Device& operator=(Device&& obj) = default;
+  ~Device() = default;                             // LCOV_EXCL_LINE
+  Device(const Device& v) noexcept = default;      // LCOV_EXCL_LINE
+  Device& operator=(const Device& obj) = default;  // LCOV_EXCL_LINE
+  Device(Device&& obj) = default;                  // LCOV_EXCL_LINE
+  Device& operator=(Device&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] size_t idx() const { return _idx; }
 

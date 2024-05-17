@@ -23,7 +23,7 @@ class BurstModulation final : public autd3::Modulation<BurstModulation> {
 
 class MyUniformGain final : public autd3::Gain<MyUniformGain> {
  public:
-  MyUniformGain() = default;
+  MyUniformGain() = default;  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::Drive>> calc(const autd3::Geometry& geometry) const override {
     return autd3::Gain<MyUniformGain>::transform(geometry, [](const autd3::Device&, const autd3::Transducer&) {

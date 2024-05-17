@@ -16,11 +16,11 @@ class Focus final : public driver::Gain<Focus> {
   AUTD3_API explicit Focus(driver::Vector3 p)
       : _pos(std::move(p)), _intensity(std::numeric_limits<driver::EmitIntensity>::max()), _phase_offset(driver::Phase(0)) {}
   Focus() = delete;
-  Focus(const Focus& obj) = default;
-  Focus& operator=(const Focus& obj) = default;
-  Focus(Focus&& obj) = default;
-  Focus& operator=(Focus&& obj) = default;
-  ~Focus() override = default;
+  Focus(const Focus& obj) = default;             // LCOV_EXCL_LINE
+  Focus& operator=(const Focus& obj) = default;  // LCOV_EXCL_LINE
+  Focus(Focus&& obj) = default;                  // LCOV_EXCL_LINE
+  Focus& operator=(Focus&& obj) = default;       // LCOV_EXCL_LINE
+  ~Focus() override = default;                   // LCOV_EXCL_LINE
 
   AUTD3_DEF_PROP(driver::Vector3, pos)
   AUTD3_DEF_PARAM(Focus, driver::EmitIntensity, intensity)

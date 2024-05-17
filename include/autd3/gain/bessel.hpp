@@ -20,11 +20,11 @@ class Bessel final : public driver::Gain<Bessel> {
         _intensity(std::numeric_limits<driver::EmitIntensity>::max()),
         _phase_offset(driver::Phase(0)) {}
   Bessel() = delete;
-  Bessel(const Bessel& obj) = default;
-  Bessel& operator=(const Bessel& obj) = default;
-  Bessel(Bessel&& obj) = default;
-  Bessel& operator=(Bessel&& obj) = default;
-  ~Bessel() override = default;
+  Bessel(const Bessel& obj) = default;             // LCOV_EXCL_LINE
+  Bessel& operator=(const Bessel& obj) = default;  // LCOV_EXCL_LINE
+  Bessel(Bessel&& obj) = default;                  // LCOV_EXCL_LINE
+  Bessel& operator=(Bessel&& obj) = default;       // LCOV_EXCL_LINE
+  ~Bessel() override = default;                    // LCOV_EXCL_LINE
 
   AUTD3_DEF_PROP(driver::Vector3, pos)
   AUTD3_DEF_PROP(driver::Vector3, dir)

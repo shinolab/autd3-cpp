@@ -136,7 +136,7 @@ class SOEM final {
 };
 
 class RemoteSOEM final {
-  RemoteSOEM() = default;
+  RemoteSOEM() = default;  // LCOV_EXCL_LINE
 
  public:
   class Builder final {

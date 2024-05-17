@@ -14,11 +14,11 @@ class Uniform final : public driver::Gain<Uniform> {
  public:
   AUTD3_API explicit Uniform(const driver::EmitIntensity intensity) : _intensity(intensity), _phase(driver::Phase(0)) {}
   Uniform() = delete;
-  Uniform(const Uniform& obj) = default;
-  Uniform& operator=(const Uniform& obj) = default;
-  Uniform(Uniform&& obj) = default;
-  Uniform& operator=(Uniform&& obj) = default;
-  ~Uniform() override = default;
+  Uniform(const Uniform& obj) = default;             // LCOV_EXCL_LINE
+  Uniform& operator=(const Uniform& obj) = default;  // LCOV_EXCL_LINE
+  Uniform(Uniform&& obj) = default;                  // LCOV_EXCL_LINE
+  Uniform& operator=(Uniform&& obj) = default;       // LCOV_EXCL_LINE
+  ~Uniform() override = default;                     // LCOV_EXCL_LINE
 
   AUTD3_DEF_PROP(driver::EmitIntensity, intensity)
   AUTD3_DEF_PARAM(Uniform, driver::Phase, phase)

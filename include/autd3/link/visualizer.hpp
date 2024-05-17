@@ -46,7 +46,7 @@ struct PlotRange {
   double z_end;
   double resolution;
 
-  AUTD3_API PlotRange() = default;
+  AUTD3_API PlotRange() = default;  // LCOV_EXCL_LINE
   AUTD3_API explicit PlotRange(const double x_start, const double x_end, const double y_start, const double y_end, const double z_start,
                                const double z_end, const double resolution = 1)
       : x_start(x_start), x_end(x_end), y_start(y_start), y_end(y_end), z_start(z_start), z_end(z_end), resolution(resolution) {}
