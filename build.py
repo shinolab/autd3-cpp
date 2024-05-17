@@ -256,6 +256,7 @@ def check_if_all_native_methods_called():
                 if result:
                     defined_methods.add(result.group(1))
     defined_methods = set(filter(lambda x: not x.endswith("T4010A1"), defined_methods))
+    defined_methods.remove("AUTDModulationFourierNearest")
 
     used_methods = set()
     pattern = re.compile(".*(AUTD.*?)[\\(|,].*")
@@ -312,28 +313,25 @@ def cpp_cov(args):
 
             with working_dir("CMakeFiles/test_autd3.dir"):
                 subprocess.run(
-                    ["lcov", "-d", ".", "-c", "-o", "coverage.raw.info"]
+                    [
+                        "lcov",
+                        "-d",
+                        ".",
+                        "-c",
+                        "-o",
+                        "coverage.raw.info",
+                    ]
                 ).check_returncode()
                 command = [
                     "lcov",
-                ]
-                command.extend(
-                    [
-                        "-a",
-                        "coverage.raw.info",
-                        "-o",
-                        "coverage.combined.info",
-                    ]
-                )
-                subprocess.run(command).check_returncode()
-                command = [
-                    "lcov",
                     "-r",
-                    "coverage.combined.info",
+                    "coverage.raw.info",
                     "*/_deps/*",
                     "*/usr/*",
                     "*/tests/*",
                     "*/gain/holo/backend_cuda.hpp",
+                    "--ignore-errors",
+                    "unused",
                     "-o",
                     "coverage.info",
                 ]

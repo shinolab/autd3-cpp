@@ -75,12 +75,4 @@ template <>
   return AUTDModulationFourierExactFloat(components.data(), static_cast<uint32_t>(components.size()), this->_loop_behavior);
 }
 
-template <>
-[[nodiscard]] native_methods::ModulationPtr Fourier<SineNearest>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
-  std::vector<native_methods::ModulationPtr> components;
-  components.reserve(_components.size());
-  std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(geometry); });
-  return AUTDModulationFourierNearest(components.data(), static_cast<uint32_t>(components.size()), this->_loop_behavior);
-}
-
 }  // namespace autd3::modulation
