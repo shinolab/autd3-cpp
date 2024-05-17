@@ -5,25 +5,25 @@
 #include "autd3/exception.hpp"
 #include "autd3/native_methods.hpp"
 
-#define AUTD3_DEF_PROP(PARAM_T, PARAM_NAME)                                    \
-  AUTD3_API [[nodiscard]] PARAM_T PARAM_NAME() const { return _##PARAM_NAME; } \
-                                                                               \
- private:                                                                      \
-  PARAM_T _##PARAM_NAME;                                                       \
-                                                                               \
+#define AUTD3_DEF_PROP(PARAM_T, PARAM_NAME)                                                         \
+  AUTD3_API [[nodiscard]] PARAM_T PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */ \
+                                                                                                    \
+ private:                                                                                           \
+  PARAM_T _##PARAM_NAME;                                                                            \
+                                                                                                    \
  public:
 
-#define AUTD3_DEF_PARAM(T, PARAM_T, PARAM_NAME)                                     \
-  AUTD3_API void with_##PARAM_NAME(const PARAM_T value)& { _##PARAM_NAME = value; } \
-  AUTD3_API [[nodiscard]] T&& with_##PARAM_NAME(const PARAM_T value)&& {            \
-    _##PARAM_NAME = value;                                                          \
-    return std::move(*this);                                                        \
-  }                                                                                 \
-  AUTD3_API [[nodiscard]] PARAM_T PARAM_NAME() const { return _##PARAM_NAME; }      \
-                                                                                    \
- private:                                                                           \
-  PARAM_T _##PARAM_NAME;                                                            \
-                                                                                    \
+#define AUTD3_DEF_PARAM(T, PARAM_T, PARAM_NAME)                                                          \
+  AUTD3_API void with_##PARAM_NAME(const PARAM_T value)& { _##PARAM_NAME = value; } /* LCOV_EXCL_LINE */ \
+  AUTD3_API [[nodiscard]] T&& with_##PARAM_NAME(const PARAM_T value)&& {            /* LCOV_EXCL_LINE */ \
+    _##PARAM_NAME = value;                                                          /* LCOV_EXCL_LINE */ \
+    return std::move(*this);                                                        /* LCOV_EXCL_LINE */ \
+  }                                                                                                      \
+  AUTD3_API [[nodiscard]] PARAM_T PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */      \
+                                                                                                         \
+ private:                                                                                                \
+  PARAM_T _##PARAM_NAME;                                                                                 \
+                                                                                                         \
  public:
 
 namespace autd3::native_methods {
