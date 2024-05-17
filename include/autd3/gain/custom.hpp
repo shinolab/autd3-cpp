@@ -18,7 +18,7 @@ class Custom final : public driver::Gain<Custom<F>> {
   using native_f = void (*)(const void*, native_methods::GeometryPtr, uint32_t, uint8_t, native_methods::Drive*);
 
  public:
-  explicit Custom(F f) : _f(std::move(f)) {
+  AUTD3_API explicit Custom(F f) : _f(std::move(f)) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const uint8_t tr_idx,
                     native_methods::Drive* raw) {
       const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
@@ -29,7 +29,7 @@ class Custom final : public driver::Gain<Custom<F>> {
     };
   }
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     return AUTDGainCustom(const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
                           native_methods::ContextPtr{const_cast<void*>(static_cast<const void*>(this))}, geometry.ptr());
   }

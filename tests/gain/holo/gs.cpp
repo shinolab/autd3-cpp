@@ -3,11 +3,11 @@
 #include <autd3/controller/builder.hpp>
 #include <autd3/controller/controller.hpp>
 #include <autd3/driver/autd3_device.hpp>
+#include <autd3/gain/holo.hpp>
+#include <autd3/gain/holo/gs.hpp>
 #include <autd3/link/audit.hpp>
 
-#include "autd3/gain/holo.hpp"
-
-TEST(Gain_Holo, GS) {
+TEST(GainHolo, GS) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
 
@@ -20,7 +20,7 @@ TEST(Gain_Holo, GS) {
                                      return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                    }))
                .with_repeat(100)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -31,7 +31,7 @@ TEST(Gain_Holo, GS) {
   }
 }
 
-TEST(Gain_Holo, GSDefault) {
+TEST(GainHolo, GSDefault) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
@@ -43,7 +43,7 @@ TEST(Gain_Holo, GSDefault) {
 
 #include "autd3/gain/holo/backend_cuda.hpp"
 
-TEST(Gain_Holo, GS_CUDA) {
+TEST(GainHolo, GS_CUDA) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
 
@@ -56,7 +56,7 @@ TEST(Gain_Holo, GS_CUDA) {
                                      return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                    }))
                .with_repeat(100)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 

@@ -1,5 +1,5 @@
 target_sources(test_autd3 PRIVATE
-  backend.cpp
+  backend_nalgebra.cpp
   constraint.cpp
   greedy.cpp
   gs.cpp
@@ -7,5 +7,5 @@ target_sources(test_autd3 PRIVATE
   lm.cpp
   naive.cpp
   sdp.cpp
-  amp.cpp
+  amplitude.cpp
 )

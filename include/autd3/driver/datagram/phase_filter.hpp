@@ -19,7 +19,7 @@ class PhaseFilter final {
   using native_f = Phase (*)(const void*, native_methods::GeometryPtr, uint32_t, uint8_t);
 
  public:
-  explicit PhaseFilter(F f) : _f(std::move(f)) {
+  AUTD3_API explicit PhaseFilter(F f) : _f(std::move(f)) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const uint8_t tr_idx) -> Phase {
       const auto dev_ptr = AUTDDevice(geometry_ptr, dev_idx);
       const geometry::Device dev(dev_idx, dev_ptr);
@@ -28,7 +28,7 @@ class PhaseFilter final {
     };
   }
 
-  [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDDatagramPhaseFilterAdditive(const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
                                            const_cast<void*>(static_cast<const void*>(this)), geometry.ptr());
   }

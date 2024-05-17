@@ -9,21 +9,21 @@ class ControllerBuilder;
 namespace autd3::link {
 
 class Nop {
-  explicit Nop(native_methods::LinkPtr) {}
+  AUTD3_API explicit Nop(native_methods::LinkPtr) {}
 
  public:
   class Builder final {
     friend class Nop;
     friend class controller::ControllerBuilder;
 
-    Builder() = default;
+    AUTD3_API Builder() = default;
 
-    [[nodiscard]] static Nop resolve_link(const native_methods::LinkPtr link) { return Nop{link}; }
+    AUTD3_API [[nodiscard]] static Nop resolve_link(const native_methods::LinkPtr link) { return Nop{link}; }
 
    public:
     using Link = Nop;
 
-    [[nodiscard]] static native_methods::LinkBuilderPtr ptr() { return native_methods::AUTDLinkNop(); }
+    AUTD3_API [[nodiscard]] static native_methods::LinkBuilderPtr ptr() { return native_methods::AUTDLinkNop(); }
   };
 
   static Builder builder() { return {}; }

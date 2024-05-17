@@ -26,7 +26,7 @@ class Transform final : public driver::GainBase,
                         public driver::IntoDatagramWithSegment<native_methods::GainPtr, Transform<G, F>>,
                         public driver::IntoGainCache<Transform<G, F>> {
  public:
-  Transform(G g, F f) : _g(std::move(g)), _f(std::move(f)) {}
+  AUTD3_API Transform(G g, F f) : _g(std::move(g)), _f(std::move(f)) {}
   Transform() = delete;
   Transform(const Transform& obj) = default;
   Transform& operator=(const Transform& obj) = default;
@@ -34,7 +34,7 @@ class Transform final : public driver::GainBase,
   Transform& operator=(Transform&& obj) = default;
   ~Transform() override = default;
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     std::unordered_map<size_t, std::vector<driver::Drive>> drives;
 
     const auto res = validate(native_methods::AUTDGainCalc(_g.gain_ptr(geometry), geometry.ptr()));
@@ -74,11 +74,11 @@ class IntoGainTransform {
   virtual ~IntoGainTransform() = default;
 
   template <gain::gain_transform_f F>
-  [[nodiscard]] gain::Transform<G, F> with_transform(F f) & {
+  AUTD3_API [[nodiscard]] gain::Transform<G, F> with_transform(F f) & {
     return gain::Transform(*static_cast<G*>(this), std::move(f));
   }
   template <gain::gain_transform_f F>
-  [[nodiscard]] gain::Transform<G, F> with_transform(F f) && {
+  AUTD3_API [[nodiscard]] gain::Transform<G, F> with_transform(F f) && {
     return gain::Transform(std::move(*static_cast<G*>(this)), std::move(f));
   }
 };

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <autd3/controller/builder.hpp>
+#include <autd3/controller/controller.hpp>
 #include <autd3/driver/autd3_device.hpp>
 #include <autd3/driver/datagram/force_fan.hpp>
 #include <autd3/gain/focus.hpp>
@@ -11,7 +12,7 @@
 
 #include "utils.hpp"
 
-TEST(Internal, ControllerClose) {
+TEST(Controller, ControllerClose) {
   {
     const auto autd = create_controller();
     ASSERT_TRUE(autd.link().is_open());
@@ -27,7 +28,7 @@ TEST(Internal, ControllerClose) {
   }
 }
 
-TEST(Internal, ControllerSendTimeout) {
+TEST(Controller, ControllerSendTimeout) {
   {
     auto autd = autd3::controller::ControllerBuilder()
                     .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
@@ -55,7 +56,7 @@ TEST(Internal, ControllerSendTimeout) {
   }
 }
 
-TEST(Internal, ControllerSendSingle) {
+TEST(Controller, ControllerSendSingle) {
   auto autd = create_controller();
 
   for (auto& dev : autd.geometry()) {
@@ -76,7 +77,7 @@ TEST(Internal, ControllerSendSingle) {
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
 }
 
-TEST(Internal, ControllerSendDouble) {
+TEST(Controller, ControllerSendDouble) {
   auto autd = create_controller();
 
   for (auto& dev : autd.geometry()) {
@@ -103,7 +104,7 @@ TEST(Internal, ControllerSendDouble) {
   ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Null()), autd3::AUTDException);
 }
 
-TEST(Internal, ControllerGroup) {
+TEST(Controller, ControllerGroup) {
   auto autd = create_controller();
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
@@ -145,7 +146,7 @@ TEST(Internal, ControllerGroup) {
   }
 }
 
-TEST(Internal, ControllerGroupCheckOnlyForEnabled) {
+TEST(Controller, ControllerGroupCheckOnlyForEnabled) {
   auto autd = create_controller();
   autd.geometry()[0].set_enable(false);
 

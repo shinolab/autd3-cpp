@@ -32,11 +32,13 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   FocusSTM& operator=(FocusSTM&& obj) = default;
   ~FocusSTM() override = default;
 
-  static FocusSTM from_freq(const Freq<double> freq) { return FocusSTM(freq, std::nullopt, std::nullopt); }
-  static FocusSTM from_freq_nearest(const Freq<double> freq) { return FocusSTM(std::nullopt, freq, std::nullopt); }
-  static FocusSTM from_sampling_config(const native_methods::SamplingConfigWrap config) { return FocusSTM(std::nullopt, std::nullopt, config); }
+  AUTD3_API [[nodiscard]] static FocusSTM from_freq(const Freq<double> freq) { return FocusSTM(freq, std::nullopt, std::nullopt); }
+  AUTD3_API [[nodiscard]] static FocusSTM from_freq_nearest(const Freq<double> freq) { return FocusSTM(std::nullopt, freq, std::nullopt); }
+  AUTD3_API [[nodiscard]] static FocusSTM from_sampling_config(const native_methods::SamplingConfigWrap config) {
+    return FocusSTM(std::nullopt, std::nullopt, config);
+  }
 
-  [[nodiscard]] native_methods::FocusSTMPtr raw_ptr(const geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::FocusSTMPtr raw_ptr(const geometry::Geometry&) const override {
     native_methods::FocusSTMPtr ptr;
     if (_freq.has_value())
       ptr = native_methods::AUTDSTMFocusFromFreq(_freq.value().hz());
@@ -51,46 +53,50 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
                                                reinterpret_cast<const uint8_t*>(_intensities.data()), _intensities.size());
   }
 
-  [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::FocusSTMPtr p, const native_methods::Segment segment) const override {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::FocusSTMPtr p,
+                                                                   const native_methods::Segment segment) const override {
     return native_methods::AUTDSTMFocusIntoDatagramWithSegment(p, segment);
   }
 
-  [[nodiscard]] native_methods::DatagramPtr into_segment_transition(const native_methods::FocusSTMPtr p, const native_methods::Segment segment,
-                                                                    const native_methods::TransitionModeWrap transition_mode) const override {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(
+      const native_methods::FocusSTMPtr p, const native_methods::Segment segment,
+      const native_methods::TransitionModeWrap transition_mode) const override {
     return native_methods::AUTDSTMFocusIntoDatagramWithSegmentTransition(p, segment, transition_mode);
   }
 
-  [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const { return AUTDSTMFocusIntoDatagram(raw_ptr(geometry)); }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
+    return AUTDSTMFocusIntoDatagram(raw_ptr(geometry));
+  }
 
-  [[nodiscard]] DatagramWithSegmentTransition<native_methods::FocusSTMPtr> with_segment(
+  AUTD3_API [[nodiscard]] DatagramWithSegmentTransition<native_methods::FocusSTMPtr> with_segment(
       const native_methods::Segment segment, const std::optional<native_methods::TransitionModeWrap> transition_mode) {
     return DatagramWithSegmentTransition<native_methods::FocusSTMPtr>(std::make_unique<FocusSTM>(std::move(*this)), segment, transition_mode);
   }
 
-  void add_focus(Vector3 point, const EmitIntensity intensity = std::numeric_limits<EmitIntensity>::max()) & {
+  AUTD3_API void add_focus(Vector3 point, const EmitIntensity intensity = std::numeric_limits<EmitIntensity>::max()) & {
     _points.emplace_back(std::move(point));
     _intensities.emplace_back(intensity);
   }
 
-  [[nodiscard]] FocusSTM&& add_focus(Vector3 point, const EmitIntensity intensity = std::numeric_limits<EmitIntensity>::max()) && {
+  AUTD3_API [[nodiscard]] FocusSTM&& add_focus(Vector3 point, const EmitIntensity intensity = std::numeric_limits<EmitIntensity>::max()) && {
     _points.emplace_back(std::move(point));
     _intensities.emplace_back(intensity);
     return std::move(*this);
   }
 
-  void add_focus(ControlPoint p) & {
+  AUTD3_API void add_focus(ControlPoint p) & {
     _points.emplace_back(std::move(p.point));
     _intensities.emplace_back(p.intensity);
   }
 
-  [[nodiscard]] FocusSTM&& add_focus(ControlPoint p) && {
+  AUTD3_API [[nodiscard]] FocusSTM&& add_focus(ControlPoint p) && {
     _points.emplace_back(std::move(p.point));
     _intensities.emplace_back(p.intensity);
     return std::move(*this);
   }
 
   template <focus_range_v R>
-  void add_foci_from_iter(R&& iter) & {
+  AUTD3_API void add_foci_from_iter(R&& iter) & {
     for (Vector3 e : iter) {
       _points.emplace_back(std::move(e));
       _intensities.emplace_back(std::numeric_limits<EmitIntensity>::max());
@@ -98,7 +104,7 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   }
 
   template <focus_range_v R>
-  [[nodiscard]] FocusSTM add_foci_from_iter(R&& iter) && {
+  AUTD3_API [[nodiscard]] FocusSTM add_foci_from_iter(R&& iter) && {
     for (Vector3 e : iter) {
       _points.emplace_back(std::move(e));
       _intensities.emplace_back(std::numeric_limits<EmitIntensity>::max());
@@ -107,7 +113,7 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   }
 
   template <focus_range_c R>
-  void add_foci_from_iter(R&& iter) & {
+  AUTD3_API void add_foci_from_iter(R&& iter) & {
     for (ControlPoint e : iter) {
       _points.emplace_back(std::move(e.point));
       _intensities.emplace_back(e.intensity);
@@ -115,7 +121,7 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   }
 
   template <focus_range_c R>
-  [[nodiscard]] FocusSTM add_foci_from_iter(R&& iter) && {
+  AUTD3_API [[nodiscard]] FocusSTM add_foci_from_iter(R&& iter) && {
     for (ControlPoint e : iter) {
       _points.emplace_back(std::move(e.point));
       _intensities.emplace_back(e.intensity);
@@ -126,8 +132,8 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   AUTD3_DEF_PARAM(FocusSTM, native_methods::LoopBehavior, loop_behavior)
 
  private:
-  explicit FocusSTM(const std::optional<Freq<double>> freq, const std::optional<Freq<double>> freq_nearest,
-                    const std::optional<native_methods::SamplingConfigWrap> config)
+  AUTD3_API explicit FocusSTM(const std::optional<Freq<double>> freq, const std::optional<Freq<double>> freq_nearest,
+                              const std::optional<native_methods::SamplingConfigWrap> config)
       : _freq(freq), _freq_nearest(freq_nearest), _config(config), _loop_behavior(LoopBehavior::infinite()) {}
 
   std::vector<Vector3> _points;

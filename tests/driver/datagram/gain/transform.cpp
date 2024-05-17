@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <autd3/driver/datagram/gain/transform.hpp>
 #include <autd3/gain/uniform.hpp>
 
 #include "utils.hpp"

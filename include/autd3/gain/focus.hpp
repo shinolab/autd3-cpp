@@ -13,7 +13,7 @@ namespace autd3::gain {
 
 class Focus final : public driver::Gain<Focus> {
  public:
-  explicit Focus(driver::Vector3 p)
+  AUTD3_API explicit Focus(driver::Vector3 p)
       : _pos(std::move(p)), _intensity(std::numeric_limits<driver::EmitIntensity>::max()), _phase_offset(driver::Phase(0)) {}
   Focus() = delete;
   Focus(const Focus& obj) = default;
@@ -26,7 +26,7 @@ class Focus final : public driver::Gain<Focus> {
   AUTD3_DEF_PARAM(Focus, driver::EmitIntensity, intensity)
   AUTD3_DEF_PARAM(Focus, driver::Phase, phase_offset)
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     return native_methods::AUTDGainFocus(_pos.x(), _pos.y(), _pos.z(), _intensity.value(), _phase_offset.value());
   }
 };

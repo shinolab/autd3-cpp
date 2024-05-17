@@ -7,9 +7,9 @@ namespace autd3::driver {
 
 class Synchronize final {
  public:
-  Synchronize() = default;
+  AUTD3_API Synchronize() = default;
 
-  [[nodiscard]] static native_methods::DatagramPtr ptr(const geometry::Geometry&) { return native_methods::AUTDDatagramSynchronize(); }
+  AUTD3_API [[nodiscard]] static native_methods::DatagramPtr ptr(const geometry::Geometry&) { return native_methods::AUTDDatagramSynchronize(); }
 };
 
 }  // namespace autd3::driver

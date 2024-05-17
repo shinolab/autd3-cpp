@@ -11,9 +11,9 @@ class Modulation : public driver::Modulation<M> {
  public:
   using driver::Modulation<M>::Modulation;
 
-  [[nodiscard]] virtual std::vector<autd3::driver::EmitIntensity> calc() const = 0;
+  AUTD3_API [[nodiscard]] virtual std::vector<autd3::driver::EmitIntensity> calc() const = 0;
 
-  [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry &) const override {
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry &) const override {
     const auto buffer = calc();
     const auto size = buffer.size();
     return native_methods::AUTDModulationRaw(this->_config, this->_loop_behavior, reinterpret_cast<const uint8_t *>(buffer.data()),

@@ -13,7 +13,7 @@ namespace autd3::gain::holo {
 template <backend B>
 class LM final : public Holo<LM<B>> {
  public:
-  explicit LM(std::shared_ptr<B> holo_backend)
+  AUTD3_API explicit LM(std::shared_ptr<B> holo_backend)
       : Holo<LM>(EmissionConstraint::DontCare), _eps1(1e-8), _eps2(1e-8), _tau(1e-3), _k_max(5), _backend(std::move(holo_backend)) {}
 
   AUTD3_DEF_PARAM(LM, double, eps1)
@@ -21,13 +21,13 @@ class LM final : public Holo<LM<B>> {
   AUTD3_DEF_PARAM(LM, double, tau)
   AUTD3_DEF_PARAM(LM, uint32_t, k_max)
 
-  void with_initial(std::vector<double> value) & { _initial = std::move(value); }
-  [[nodiscard]] LM&& with_initial(std::vector<double> value) && {
+  AUTD3_API void with_initial(std::vector<double> value) & { _initial = std::move(value); }
+  AUTD3_API [[nodiscard]] LM&& with_initial(std::vector<double> value) && {
     _initial = std::move(value);
     return std::move(*this);
   }
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     return this->_backend->lm(reinterpret_cast<const double*>(this->_foci.data()), reinterpret_cast<const double*>(this->_amps.data()),
                               this->_amps.size(), _eps1, _eps2, _tau, _k_max, _initial.data(), _initial.size(), this->_constraint);
   }

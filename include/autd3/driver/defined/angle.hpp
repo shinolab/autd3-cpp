@@ -24,15 +24,15 @@ class Angle {
   friend class UnitRad;
   friend class UnitDegree;
 
-  [[nodiscard]] double to_radian() const { return _value; }
+  AUTD3_API [[nodiscard]] double to_radian() const { return _value; }
 
-  friend Angle operator*(const double l, const UnitRad&) { return Angle(l); }
-  friend Angle operator*(const double l, const UnitDegree&) { return Angle(l / 180 * std::numbers::pi); }
+  AUTD3_API friend Angle operator*(const double l, const UnitRad&) { return Angle(l); }
+  AUTD3_API friend Angle operator*(const double l, const UnitDegree&) { return Angle(l / 180 * std::numbers::pi); }
 
   auto operator<=>(const Angle&) const = default;
 
  private:
-  explicit Angle(const double value) : _value(value) {}
+  AUTD3_API explicit Angle(const double value) : _value(value) {}
 
   double _value;
 };

@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
-#include "autd3/modulation/audio_file.hpp"
+#include <autd3/modulation/audio_file/wav.hpp>
+
 #include "utils.hpp"
 
 TEST(Modulation, Wav) {

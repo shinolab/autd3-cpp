@@ -15,20 +15,20 @@ namespace autd3::link {
 using native_methods::CMap;
 
 struct PlottersBackend {
-  static constexpr native_methods::Backend backend = native_methods::Backend::Plotters;
+  AUTD3_API static constexpr native_methods::Backend backend = native_methods::Backend::Plotters;
 };
 struct PythonBackend {
-  static constexpr native_methods::Backend backend = native_methods::Backend::Python;
+  AUTD3_API static constexpr native_methods::Backend backend = native_methods::Backend::Python;
 };
 struct NullBackend {
-  static constexpr native_methods::Backend backend = native_methods::Backend::Null;
+  AUTD3_API static constexpr native_methods::Backend backend = native_methods::Backend::Null;
 };
 
 struct Sphere {
-  static constexpr native_methods::Directivity directivity = native_methods::Directivity::Sphere;
+  AUTD3_API static constexpr native_methods::Directivity directivity = native_methods::Directivity::Sphere;
 };
 struct T4010A1 {
-  static constexpr native_methods::Directivity directivity = native_methods::Directivity::T4010A1;
+  AUTD3_API static constexpr native_methods::Directivity directivity = native_methods::Directivity::T4010A1;
 };
 
 class Visualizer;
@@ -44,12 +44,12 @@ struct PlotRange {
   double z_end;
   double resolution;
 
-  PlotRange() = default;
-  explicit PlotRange(const double x_start, const double x_end, const double y_start, const double y_end, const double z_start, const double z_end,
-                     const double resolution = 1)
+  AUTD3_API PlotRange() = default;
+  AUTD3_API explicit PlotRange(const double x_start, const double x_end, const double y_start, const double y_end, const double z_start,
+                               const double z_end, const double resolution = 1)
       : x_start(x_start), x_end(x_end), y_start(y_start), y_end(y_end), z_start(z_start), z_end(z_end), resolution(resolution) {}
 
-  [[nodiscard]] std::vector<driver::Vector3> observe_points() const {
+  AUTD3_API [[nodiscard]] std::vector<driver::Vector3> observe_points() const {
     const auto range = ptr();
     const auto len = AUTDLinkVisualizerPlotRangeObservePointsLen(range);
     std::vector<driver::Vector3> points;
@@ -59,7 +59,7 @@ struct PlotRange {
   }
 
  private:
-  [[nodiscard]] native_methods::PlotRangePtr ptr() const {
+  AUTD3_API [[nodiscard]] native_methods::PlotRangePtr ptr() const {
     return native_methods::AUTDLinkVisualizerPlotRange(x_start, x_end, y_start, y_end, z_start, z_end, resolution);
   }
 };
@@ -74,7 +74,7 @@ struct PlotConfig {
   CMap cmap = CMap::Jet;
   std::string fname;
 
-  [[nodiscard]] native_methods::PlotConfigPtr _raw_ptr() const {
+  AUTD3_API [[nodiscard]] native_methods::PlotConfigPtr _raw_ptr() const {
     return validate(native_methods::AUTDLinkVisualizerPlotConfig(figsize.first, figsize.second, cbar_size, font_size, label_area_size, margin,
                                                                  ticks_step, cmap, fname.c_str()));
   }
@@ -92,7 +92,7 @@ struct PyPlotConfig {
   bool show = false;
   std::string fname = "fig.png";
 
-  [[nodiscard]] native_methods::PyPlotConfigPtr _raw_ptr() const {
+  AUTD3_API [[nodiscard]] native_methods::PyPlotConfigPtr _raw_ptr() const {
     return validate(native_methods::AUTDLinkVisualizerPyPlotConfig(figsize.first, figsize.second, dpi, cbar_position.c_str(), cbar_size.c_str(),
                                                                    cbar_pad.c_str(), fontsize, ticks_step, cmap.c_str(), show, fname.c_str()));
   }
@@ -107,7 +107,7 @@ class Visualizer final {
   native_methods::Backend _backend;
   native_methods::Directivity _directivity;
 
-  [[nodiscard]] native_methods::ConfigPtr get_plot_config(const Config& config) const {
+  AUTD3_API [[nodiscard]] native_methods::ConfigPtr get_plot_config(const Config& config) const {
     if (_backend == native_methods::Backend::Plotters && std::holds_alternative<PlotConfig>(config)) {
       return native_methods::ConfigPtr{std::get<PlotConfig>(config)._raw_ptr()._0};
     }
@@ -131,16 +131,16 @@ class Visualizer final {
     native_methods::Backend _backend;
     native_methods::Directivity _directivity;
 
-    explicit Builder(const native_methods::Backend backend = native_methods::Backend::Plotters,
-                     const native_methods::Directivity directivity = native_methods::Directivity::Sphere)
+    AUTD3_API explicit Builder(const native_methods::Backend backend = native_methods::Backend::Plotters,
+                               const native_methods::Directivity directivity = native_methods::Directivity::Sphere)
         : _backend(backend), _directivity(directivity) {}
 
-    [[nodiscard]] Visualizer resolve_link(const native_methods::LinkPtr link) const { return Visualizer{link, _backend, _directivity}; }
+    AUTD3_API [[nodiscard]] Visualizer resolve_link(const native_methods::LinkPtr link) const { return Visualizer{link, _backend, _directivity}; }
 
    public:
     using Link = Visualizer;
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const {
+    AUTD3_API [[nodiscard]] native_methods::LinkBuilderPtr ptr() const {
       switch (_backend) {
         case native_methods::Backend::Plotters:
           switch (_directivity) {
@@ -174,60 +174,62 @@ class Visualizer final {
       }
     }
 
-    [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {
+    AUTD3_API [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {
       _gpu_idx = gpu_idx;
       return *this;
     }
 
     template <typename B>
-    [[nodiscard]] Builder with_backend() {
+    AUTD3_API [[nodiscard]] Builder with_backend() {
       _backend = B::backend;
       return *this;
     }
 
     template <typename D>
-    [[nodiscard]] Builder with_directivity() {
+    AUTD3_API [[nodiscard]] Builder with_directivity() {
       _directivity = D::directivity;
       return *this;
     }
   };
 
-  [[nodiscard]] static Builder builder() { return Builder(); }
-  [[nodiscard]] static Builder plotters() { return Builder().with_backend<PlottersBackend>(); }
-  [[nodiscard]] static Builder python() { return Builder().with_backend<PythonBackend>(); }
-  [[nodiscard]] static Builder null() { return Builder().with_backend<NullBackend>(); }
+  AUTD3_API [[nodiscard]] static Builder builder() { return Builder(); }
+  AUTD3_API [[nodiscard]] static Builder plotters() { return Builder().with_backend<PlottersBackend>(); }
+  AUTD3_API [[nodiscard]] static Builder python() { return Builder().with_backend<PythonBackend>(); }
+  AUTD3_API [[nodiscard]] static Builder null() { return Builder().with_backend<NullBackend>(); }
 
   Visualizer() = delete;
 
-  explicit Visualizer(const native_methods::LinkPtr ptr, const native_methods::Backend backend, const native_methods::Directivity directivity)
+  AUTD3_API explicit Visualizer(const native_methods::LinkPtr ptr, const native_methods::Backend backend,
+                                const native_methods::Directivity directivity)
       : _ptr(ptr), _backend(backend), _directivity(directivity) {}
 
-  [[nodiscard]] std::vector<uint8_t> phases(const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API [[nodiscard]] std::vector<autd3::driver::Phase> phases(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
-    std::vector<uint8_t> buf;
+    std::vector<autd3::driver::Phase> buf;
     buf.resize(size);
-    AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), buf.data());
+    AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
-  [[nodiscard]] std::vector<uint8_t> intensities(const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> intensities(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
-    std::vector<uint8_t> buf;
+    std::vector<autd3::driver::EmitIntensity> buf;
     buf.resize(size);
-    AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), buf.data());
+    AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
-  [[nodiscard]] std::vector<uint8_t> modulation(const native_methods::Segment segment) const {
+  AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> modulation(const native_methods::Segment segment) const {
     const auto size = AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, nullptr);
-    std::vector<uint8_t> buf;
+    std::vector<autd3::driver::EmitIntensity> buf;
     buf.resize(size);
-    AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, buf.data());
+    AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
-  [[nodiscard]] std::vector<std::complex<double>> calc_field(std::vector<driver::Vector3>& points, const driver::geometry::Geometry& geometry,
-                                                             const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API [[nodiscard]] std::vector<std::complex<double>> calc_field(std::vector<driver::Vector3>& points,
+                                                                       const driver::geometry::Geometry& geometry,
+                                                                       const native_methods::Segment segment, const size_t idx) const {
     const auto points_len = static_cast<uint32_t>(points.size());
     const auto points_ptr = reinterpret_cast<double*>(points.data());
     std::vector<std::complex<double>> buf;
@@ -237,20 +239,21 @@ class Visualizer final {
     return buf;
   }
 
-  void plot_field(const Config& config, const PlotRange& range, const driver::geometry::Geometry& geometry, const native_methods::Segment segment,
-                  const size_t idx) const {
+  AUTD3_API void plot_field(const Config& config, const PlotRange& range, const driver::geometry::Geometry& geometry,
+                            const native_methods::Segment segment, const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
     native_methods::validate(
         AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), geometry.ptr(), segment, static_cast<uint32_t>(idx)));
   }
 
-  void plot_phase(const Config& config, const driver::geometry::Geometry& geometry, const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API void plot_phase(const Config& config, const driver::geometry::Geometry& geometry, const native_methods::Segment segment,
+                            const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
     native_methods::validate(
         AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, geometry.ptr(), segment, static_cast<uint32_t>(idx)));
   }
 
-  void plot_modulation(const Config& config, const native_methods::Segment segment) const {
+  AUTD3_API void plot_modulation(const Config& config, const native_methods::Segment segment) const {
     const auto config_ptr = get_plot_config(config);
     native_methods::validate(AUTDLinkVisualizerPlotModulation(_ptr, _backend, _directivity, config_ptr, segment));
   }

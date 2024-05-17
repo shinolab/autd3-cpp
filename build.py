@@ -3,6 +3,7 @@
 import argparse
 import contextlib
 import os
+import pathlib
 import platform
 import re
 import shutil
@@ -277,8 +278,99 @@ def check_if_all_native_methods_called():
         sys.exit(-1)
 
 
+def check_all_headers_is_tested():
+    with working_dir("include/autd3"):
+        headers = glob("**/*.hpp", recursive=True)
+        headers = [
+            header for header in headers if not header.startswith("native_methods")
+        ]
+        headers.remove("exception.hpp")
+        headers.remove("def.hpp")
+        headers.remove("driver/link.hpp")
+        headers.remove("driver/datagram/datagram.hpp")
+        headers.remove("driver/datagram/gain/base.hpp")
+        headers.remove("driver/datagram/gain/gain.hpp")
+        headers.remove("driver/datagram/modulation/base.hpp")
+        headers.remove("driver/datagram/modulation/modulation.hpp")
+        headers.remove("gain/holo.hpp")
+        headers.remove("gain/holo/holo.hpp")
+        headers.remove("gain/holo/backend_cuda.hpp")
+        headers.remove("gain/holo/backend.hpp")
+        headers.remove("modulation/audio_file.hpp")
+        headers = set([header.replace(".hpp", ".cpp") for header in headers])
+
+    def load_sources(base_path: pathlib.Path) -> set[str]:
+        tested = set()
+        with open(base_path / "CMakeLists.txt", "r") as f:
+            for line in f.readlines():
+                subdir = re.search(r"add_subdirectory\((.*)\)", line)
+                if subdir:
+                    tested = tested | load_sources(base_path / subdir.group(1))
+
+        with open(base_path / "CMakeLists.txt", "r") as f:
+            sources = False
+            for line in f.readlines():
+                if line.startswith("target_sources(test_autd3 PRIVATE"):
+                    sources = True
+                if not sources:
+                    continue
+                if line.startswith(")"):
+                    break
+                src = re.search(r"\s*(.*.cpp)", line)
+                if src:
+                    tested.add(f"{base_path}/{src.group(1)}")
+        return tested
+
+    with working_dir("tests"):
+        base_path = pathlib.Path(".")
+        tested = load_sources(base_path)
+
+        untested_headers = headers.difference(tested)
+        if len(untested_headers) > 0:
+            err("Following headers are not tested.")
+            for header in sorted(untested_headers):
+                print(f"\t{header}")
+            sys.exit(-1)
+
+        unincluded_headers = set()
+        for cpp in tested:
+            hpp = cpp.replace(".cpp", ".hpp")
+            with open(base_path / cpp, "r") as f:
+                found_include = False
+                for line in f.readlines():
+                    if re.search(rf"#include <autd3/{hpp}>", line):
+                        found_include = True
+                        break
+                if not found_include:
+                    unincluded_headers.add(
+                        f"{cpp} does not include target header file {hpp}"
+                    )
+        if len(unincluded_headers) > 0:
+            err("Following source files do not include target header file.")
+            for header in sorted(unincluded_headers):
+                print(f"\t{header}")
+            sys.exit(-1)
+
+        empty_test = set()
+        for cpp in tested:
+            with open(base_path / cpp, "r") as f:
+                found_test = False
+                for line in f.readlines():
+                    if re.search(r"TEST\(", line):
+                        found_test = True
+                        break
+                if not found_test:
+                    empty_test.add(cpp)
+        if len(empty_test) > 0:
+            err("Following source files do not have any test.")
+            for header in sorted(empty_test):
+                print(f"\t{header}")
+            sys.exit(-1)
+
+
 def cpp_cov(args):
     check_if_all_native_methods_called()
+    check_all_headers_is_tested()
 
     config = Config(args)
     if not config.is_linux():
@@ -304,6 +396,19 @@ def cpp_cov(args):
                 command.append("Release")
             subprocess.run(command).check_returncode()
 
+            with working_dir("CMakeFiles/test_autd3.dir"):
+                subprocess.run(
+                    [
+                        "lcov",
+                        "-c",
+                        "-i",
+                        "-d",
+                        ".",
+                        "-o",
+                        "coverage.baseline",
+                    ]
+                ).check_returncode()
+
             target_dir = "."
             if config.is_windows():
                 target_dir = "Release" if config.release else "Debug"
@@ -315,37 +420,51 @@ def cpp_cov(args):
                 subprocess.run(
                     [
                         "lcov",
+                        "-c",
                         "-d",
                         ".",
-                        "-c",
+                        "-o",
+                        "coverage.out",
+                    ]
+                ).check_returncode()
+                subprocess.run(
+                    [
+                        "lcov",
+                        "-a",
+                        "coverage.baseline",
+                        "-a",
+                        "coverage.out",
                         "-o",
                         "coverage.raw.info",
                     ]
                 ).check_returncode()
-                command = [
-                    "lcov",
-                    "-r",
-                    "coverage.raw.info",
-                    "*/_deps/*",
-                    "*/usr/*",
-                    "*/tests/*",
-                    "*/gain/holo/backend_cuda.hpp",
-                    "--ignore-errors",
-                    "unused",
-                    "-o",
-                    "coverage.info",
-                ]
-                subprocess.run(command).check_returncode()
-                if args.html:
-                    command = [
-                        "genhtml",
+
+                subprocess.run(
+                    [
+                        "lcov",
+                        "-r",
+                        "coverage.raw.info",
+                        "*/_deps/*",
+                        "*/usr/*",
+                        "*/tests/*",
+                        "*/gain/holo/backend_cuda.hpp",
+                        "--ignore-errors",
+                        "unused",
                         "-o",
-                        "html",
-                        "--num-spaces",
-                        "4",
                         "coverage.info",
                     ]
-                    subprocess.run(command).check_returncode()
+                ).check_returncode()
+                if args.html:
+                    subprocess.run(
+                        [
+                            "genhtml",
+                            "-o",
+                            "html",
+                            "--num-spaces",
+                            "4",
+                            "coverage.info",
+                        ]
+                    ).check_returncode()
 
 
 def cpp_run(args):

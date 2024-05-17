@@ -16,11 +16,11 @@ class Modulation : public ModulationBase<M>, public IntoModulationCache<M>, publ
  protected:
   native_methods::SamplingConfigWrap _config;
 
-  explicit Modulation(const native_methods::SamplingConfigWrap config) : _config(config) {}
+  AUTD3_API explicit Modulation(const native_methods::SamplingConfigWrap config) : _config(config) {}
 
  public:
-  void with_sampling_config(const native_methods::SamplingConfigWrap config) & { _config = config; }
-  [[nodiscard]] M&& with_sampling_config(const native_methods::SamplingConfigWrap config) && {
+  AUTD3_API void with_sampling_config(const native_methods::SamplingConfigWrap config) & { _config = config; }
+  AUTD3_API [[nodiscard]] M&& with_sampling_config(const native_methods::SamplingConfigWrap config) && {
     _config = config;
     return std::move(*static_cast<M*>(this));
   }

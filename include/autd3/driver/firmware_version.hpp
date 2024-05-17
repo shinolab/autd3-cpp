@@ -8,11 +8,11 @@ namespace autd3::driver {
 
 class FirmwareVersion {
  public:
-  explicit FirmwareVersion(std::string info) noexcept : _info(std::move(info)) {}
+  AUTD3_API explicit FirmwareVersion(std::string info) noexcept : _info(std::move(info)) {}
 
-  [[nodiscard]] std::string info() const { return _info; }
+  AUTD3_API [[nodiscard]] std::string info() const { return _info; }
 
-  [[nodiscard]] static std::string latest_version() {
+  AUTD3_API [[nodiscard]] static std::string latest_version() {
     char info[256];
     native_methods::AUTDFirmwareLatest(info);
     return {info};

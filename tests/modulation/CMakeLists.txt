@@ -3,6 +3,7 @@ target_sources(test_autd3 PRIVATE
   sine.cpp
   square.cpp
   static.cpp
+  modulation.cpp
 )
 
 add_subdirectory(audio_file)

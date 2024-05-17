@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <autd3/driver/datagram/modulation/radiation_pressure.hpp>
 #include <autd3/modulation/sine.hpp>
 
 #include "utils.hpp"

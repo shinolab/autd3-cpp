@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <autd3/gain/trans_test.hpp>
+#include <autd3/gain/custom.hpp>
 #include <ranges>
 
 #include "utils.hpp"

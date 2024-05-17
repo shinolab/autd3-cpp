@@ -11,15 +11,15 @@ namespace autd3::driver {
 template <typename P>
 class DatagramS {
  public:
-  virtual ~DatagramS() = default;
-  virtual P raw_ptr(const geometry::Geometry&) const = 0;
-  virtual native_methods::DatagramPtr into_segment(const P p, const native_methods::Segment segment, const bool transition) const = 0;
+  AUTD3_API virtual ~DatagramS() = default;
+  AUTD3_API virtual P raw_ptr(const geometry::Geometry&) const = 0;
+  AUTD3_API virtual native_methods::DatagramPtr into_segment(const P p, const native_methods::Segment segment, const bool transition) const = 0;
 };
 
 template <typename P>
 class DatagramWithSegment {
  public:
-  explicit DatagramWithSegment(std::unique_ptr<DatagramS<P>> datagram, const native_methods::Segment segment, const bool transition)
+  AUTD3_API explicit DatagramWithSegment(std::unique_ptr<DatagramS<P>> datagram, const native_methods::Segment segment, const bool transition)
       : _datagram(std::move(datagram)), _segment(segment), _transition(transition) {}
   ~DatagramWithSegment() = default;
   DatagramWithSegment(const DatagramWithSegment& v) noexcept = default;
@@ -27,7 +27,7 @@ class DatagramWithSegment {
   DatagramWithSegment(DatagramWithSegment&& obj) = default;
   DatagramWithSegment& operator=(DatagramWithSegment&& obj) = default;
 
-  [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) {
     auto raw_ptr = _datagram->raw_ptr(g);
     return _datagram->into_segment(raw_ptr, _segment, _transition);
   }
@@ -43,10 +43,10 @@ class IntoDatagramWithSegment {
  public:
   virtual ~IntoDatagramWithSegment() = default;  // LCOV_Etransition_modeXCL_LINE
 
-  [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) & {
+  AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) & {
     return DatagramWithSegment<P>(std::make_unique<D>(*static_cast<D*>(this)), segment, transition);
   }
-  [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) && {
+  AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) && {
     return DatagramWithSegment<P>(std::make_unique<D>((std::move(*static_cast<D*>(this)))), segment, transition);
   }
 };

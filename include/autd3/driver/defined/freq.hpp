@@ -1,13 +1,17 @@
 #pragma once
 
+#include <cstdint>
+
+#include "autd3/native_methods.hpp"
+
 namespace autd3::driver {
 
 template <class T>
 class Freq {
  public:
-  [[nodiscard]] T hz() const { return _value; }
+  AUTD3_API [[nodiscard]] T hz() const { return _value; }
 
-  explicit Freq(const T value) : _value(value) {}
+  AUTD3_API explicit Freq(const T value) : _value(value) {}
 
   auto operator<=>(const Freq<T>&) const = default;
 
@@ -18,9 +22,9 @@ class Freq {
 template <>
 class Freq<int> {
  public:
-  operator Freq<uint32_t>() const { return Freq<uint32_t>(static_cast<uint32_t>(_value)); }
+  AUTD3_API operator Freq<uint32_t>() const { return Freq<uint32_t>(static_cast<uint32_t>(_value)); }
 
-  explicit Freq(const int value) : _value(value) {}
+  AUTD3_API explicit Freq(const int value) : _value(value) {}
 
   auto operator<=>(const Freq<int>&) const = default;
 
@@ -30,14 +34,14 @@ class Freq<int> {
 
 class UnitHz {
   template <class T>
-  friend Freq<T> operator*(T l, const UnitHz&) {
+  AUTD3_API friend Freq<T> operator*(T l, const UnitHz&) {
     return Freq<T>(l);
   }
 };
 
 class UnitkHz {
   template <class T>
-  Freq<T> friend operator*(T l, const UnitkHz&) {
+  AUTD3_API Freq<T> friend operator*(T l, const UnitkHz&) {
     return Freq<T>(l * 1000);
   }
 };

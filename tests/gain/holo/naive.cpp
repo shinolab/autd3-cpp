@@ -3,11 +3,11 @@
 #include <autd3/controller/builder.hpp>
 #include <autd3/controller/controller.hpp>
 #include <autd3/driver/autd3_device.hpp>
+#include <autd3/gain/holo.hpp>
+#include <autd3/gain/holo/naive.hpp>
 #include <autd3/link/audit.hpp>
 
-#include "autd3/gain/holo.hpp"
-
-TEST(Gain_Holo, Naive) {
+TEST(GainHolo, Naive) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
 
@@ -19,7 +19,7 @@ TEST(Gain_Holo, Naive) {
                                      autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
                                      return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                    }))
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -30,7 +30,7 @@ TEST(Gain_Holo, Naive) {
   }
 }
 
-TEST(Gain_Holo, NaiveDefault) {
+TEST(GainHolo, NaiveDefault) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
@@ -42,7 +42,7 @@ TEST(Gain_Holo, NaiveDefault) {
 
 #include "autd3/gain/holo/backend_cuda.hpp"
 
-TEST(Gain_Holo, Naive_CUDA) {
+TEST(GainHolo, Naive_CUDA) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
 
@@ -54,7 +54,7 @@ TEST(Gain_Holo, Naive_CUDA) {
                                      autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
                                      return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                    }))
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 

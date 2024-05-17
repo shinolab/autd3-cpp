@@ -17,50 +17,50 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
                       public driver::IntoRadiationPressure<Fourier<T>>,
                       public driver::IntoModulationTransform<Fourier<T>> {
  public:
-  explicit Fourier(T component) { _components.emplace_back(std::move(component)); }
+  AUTD3_API explicit Fourier(T component) { _components.emplace_back(std::move(component)); }
 
-  void add_component(T component) & { _components.emplace_back(std::move(component)); }
+  AUTD3_API void add_component(T component) & { _components.emplace_back(std::move(component)); }
 
-  [[nodiscard]] Fourier&& add_component(T component) && {
+  AUTD3_API [[nodiscard]] Fourier&& add_component(T component) && {
     _components.emplace_back(std::move(component));
     return std::move(*this);
   }
 
   template <fourier_sine_range<T> R>
-  void add_components_from_iter(R&& iter) & {
+  AUTD3_API void add_components_from_iter(R&& iter) & {
     for (T e : iter) _components.emplace_back(std::move(e));
   }
 
   template <fourier_sine_range<T> R>
-  [[nodiscard]] Fourier add_components_from_iter(R&& iter) && {
+  AUTD3_API [[nodiscard]] Fourier add_components_from_iter(R&& iter) && {
     for (T e : iter) _components.emplace_back(std::move(e));
     return std::move(*this);
   }
 
-  [[nodiscard]] Fourier& operator+=(const T& rhs) {
+  AUTD3_API [[nodiscard]] Fourier& operator+=(const T& rhs) {
     _components.emplace_back(rhs);
     return *this;
   }
 
-  [[nodiscard]] friend Fourier&& operator+(Fourier&& lhs, const T& rhs) {
+  AUTD3_API [[nodiscard]] friend Fourier&& operator+(Fourier&& lhs, const T& rhs) {
     lhs._components.emplace_back(rhs);
     return std::move(lhs);
   }
 
-  [[nodiscard]] friend Fourier operator+(T&& lhs, const T& rhs) {
+  AUTD3_API [[nodiscard]] friend Fourier operator+(T&& lhs, const T& rhs) {
     Fourier<T> m(lhs);
     m._components.emplace_back(rhs);
     return m;
   }
 
-  [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override;
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) override;
 
  private:
   std::vector<T> _components;
 };
 
 template <>
-[[nodiscard]] native_methods::ModulationPtr Fourier<SineExact>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
+AUTD3_API [[nodiscard]] inline native_methods::ModulationPtr Fourier<SineExact>::modulation_ptr(const driver::geometry::Geometry& geometry) {
   std::vector<native_methods::ModulationPtr> components;
   components.reserve(_components.size());
   std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(geometry); });
@@ -68,7 +68,7 @@ template <>
 }
 
 template <>
-[[nodiscard]] native_methods::ModulationPtr Fourier<SineExactFloat>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
+AUTD3_API [[nodiscard]] inline native_methods::ModulationPtr Fourier<SineExactFloat>::modulation_ptr(const driver::geometry::Geometry& geometry) {
   std::vector<native_methods::ModulationPtr> components;
   components.reserve(_components.size());
   std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(geometry); });

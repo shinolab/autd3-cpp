@@ -22,20 +22,20 @@ class Group final : public driver::Gain<Group<F>> {
  public:
   using key_type = typename std::invoke_result_t<F, const driver::geometry::Device&, const driver::geometry::Transducer&>::value_type;
 
-  explicit Group(F f) : _f(std::move(f)) {}
+  AUTD3_API explicit Group(F f) : _f(std::move(f)) {}
 
   template <driver::gain G>
-  void set(const key_type key, G&& gain) & {
+  AUTD3_API void set(const key_type key, G&& gain) & {
     _map[key] = std::make_shared<std::remove_reference_t<G>>(std::forward<G>(gain));
   }
 
   template <driver::gain G>
-  [[nodiscard]] Group&& set(const key_type key, G&& gain) && {
+  AUTD3_API [[nodiscard]] Group&& set(const key_type key, G&& gain) && {
     _map[key] = std::make_shared<std::remove_reference_t<G>>(std::forward<G>(gain));
     return std::move(*this);
   }
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     std::unordered_map<key_type, int32_t> keymap;
 
     auto view = geometry.devices() | std::views::transform([](const driver::geometry::Device& dev) { return static_cast<uint32_t>(dev.idx()); });

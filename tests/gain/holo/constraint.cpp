@@ -1,16 +1,18 @@
 #include <gtest/gtest.h>
 
-#include "autd3/gain/holo.hpp"
+#include <autd3/gain/holo.hpp>
+#include <autd3/gain/holo/constraint.hpp>
+
 #include "utils.hpp"
 
-TEST(Gain_Holo, ConstraintUniform) {
+TEST(GainHolo, ConstraintUniform) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto g = autd3::gain::holo::Naive(std::move(backend))
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -21,7 +23,7 @@ TEST(Gain_Holo, ConstraintUniform) {
   }
 }
 
-TEST(Gain_Holo, ConstraintNormalize) {
+TEST(GainHolo, ConstraintNormalize) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
@@ -39,14 +41,14 @@ TEST(Gain_Holo, ConstraintNormalize) {
   }
 }
 
-TEST(Gain_Holo, ConstraintClamp) {
+TEST(GainHolo, ConstraintClamp) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto g = autd3::gain::holo::Naive(std::move(backend))
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
                .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(67, 85));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(autd3::driver::EmitIntensity(67), autd3::driver::EmitIntensity(85)));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -57,7 +59,7 @@ TEST(Gain_Holo, ConstraintClamp) {
   }
 }
 
-TEST(Gain_Holo, ConstraintDontCare) {
+TEST(GainHolo, ConstraintDontCare) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();

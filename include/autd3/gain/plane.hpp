@@ -12,7 +12,7 @@ namespace autd3::gain {
 
 class Plane final : public driver::Gain<Plane> {
  public:
-  explicit Plane(driver::Vector3 d)
+  AUTD3_API explicit Plane(driver::Vector3 d)
       : _dir(std::move(d)), _phase_offset(driver::Phase(0)), _intensity(std::numeric_limits<driver::EmitIntensity>::max()) {}
   Plane() = delete;
   Plane(const Plane& obj) = default;
@@ -25,7 +25,7 @@ class Plane final : public driver::Gain<Plane> {
   AUTD3_DEF_PARAM(Plane, driver::Phase, phase_offset)
   AUTD3_DEF_PARAM(Plane, driver::EmitIntensity, intensity)
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     return native_methods::AUTDGainPlane(_dir.x(), _dir.y(), _dir.z(), _intensity.value(), _phase_offset.value());
   }
 };

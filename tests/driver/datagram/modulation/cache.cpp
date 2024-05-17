@@ -1,5 +1,6 @@
 #include <gtest/gtest.h>
 
+#include <autd3/driver/datagram/modulation/cache.hpp>
 #include <autd3/modulation/modulation.hpp>
 #include <autd3/modulation/static.hpp>
 
@@ -29,7 +30,7 @@ TEST(DriverDatagramModulation, Cache) {
 
 class ForModulationCacheTest final : public autd3::modulation::Modulation<ForModulationCacheTest> {
  public:
-  [[nodiscard]] std::vector<autd3::driver::EmitIntensity> calc() const override {
+  AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> calc() const override {
     ++*_cnt;
     return {std::numeric_limits<autd3::driver::EmitIntensity>::max(), std::numeric_limits<autd3::driver::EmitIntensity>::max()};
   }

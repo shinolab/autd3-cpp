@@ -13,7 +13,7 @@ namespace autd3::gain {
 
 class Bessel final : public driver::Gain<Bessel> {
  public:
-  explicit Bessel(driver::Vector3 p, driver::Vector3 d, const double theta)
+  AUTD3_API explicit Bessel(driver::Vector3 p, driver::Vector3 d, const double theta)
       : _pos(std::move(p)),
         _dir(std::move(d)),
         _theta(theta),
@@ -32,7 +32,7 @@ class Bessel final : public driver::Gain<Bessel> {
   AUTD3_DEF_PARAM(Bessel, driver::EmitIntensity, intensity)
   AUTD3_DEF_PARAM(Bessel, driver::Phase, phase_offset)
 
-  [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     return native_methods::AUTDGainBessel(_pos.x(), _pos.y(), _pos.z(), _dir.x(), _dir.y(), _dir.z(), _theta, _intensity.value(),
                                           _phase_offset.value());
   }

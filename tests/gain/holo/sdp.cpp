@@ -3,11 +3,11 @@
 #include <autd3/controller/builder.hpp>
 #include <autd3/controller/controller.hpp>
 #include <autd3/driver/autd3_device.hpp>
+#include <autd3/gain/holo.hpp>
+#include <autd3/gain/holo/sdp.hpp>
 #include <autd3/link/audit.hpp>
 
-#include "autd3/gain/holo.hpp"
-
-TEST(Gain_Holo, SDP) {
+TEST(GainHolo, SDP) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
 
@@ -22,7 +22,7 @@ TEST(Gain_Holo, SDP) {
                .with_alpha(1e-3)
                .with_lambda(0.9)
                .with_repeat(10)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 
@@ -33,7 +33,7 @@ TEST(Gain_Holo, SDP) {
   }
 }
 
-TEST(Gain_Holo, SDPDefault) {
+TEST(GainHolo, SDPDefault) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
@@ -45,7 +45,7 @@ TEST(Gain_Holo, SDPDefault) {
 
 #include "autd3/gain/holo/backend_cuda.hpp"
 
-TEST(Gain_Holo, SDP_CUDA) {
+TEST(GainHolo, SDP_CUDA) {
   auto autd =
       autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
 
@@ -60,7 +60,7 @@ TEST(Gain_Holo, SDP_CUDA) {
                .with_alpha(1e-3)
                .with_lambda(0.9)
                .with_repeat(10)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(0x80));
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   ASSERT_TRUE(autd.send(g));
 

@@ -7,7 +7,7 @@
 
 #include "utils.hpp"
 
-TEST(Internal, FirmwareVersion) {
+TEST(Driver, FirmwareVersion) {
   auto autd = create_controller();
 
   ASSERT_EQ("v7.0.0", autd3::driver::FirmwareVersion::latest_version());

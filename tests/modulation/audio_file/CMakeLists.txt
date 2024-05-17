@@ -1,4 +1,4 @@
 target_sources(test_autd3 PRIVATE
-  rawpcm.cpp
+  raw_pcm.cpp
   wav.cpp
 )

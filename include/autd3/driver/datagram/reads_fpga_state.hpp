@@ -18,14 +18,14 @@ class ReadsFPGAState final {
   using native_f = bool (*)(const void*, native_methods::GeometryPtr, uint32_t);
 
  public:
-  explicit ReadsFPGAState(F f) : _f(std::move(f)) {
+  AUTD3_API explicit ReadsFPGAState(F f) : _f(std::move(f)) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx) -> bool {
       const geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
       return static_cast<const ReadsFPGAState*>(context)->_f(dev);
     };
   }
 
-  [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDDatagramReadsFPGAState(const_cast<void*>(reinterpret_cast<const void*>(_f_native)), const_cast<void*>(static_cast<const void*>(this)),
                                       geometry.ptr());
   }
