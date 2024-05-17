@@ -3,11 +3,10 @@
 #include <memory>
 #include <ranges>
 
-#include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
+#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
-#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
@@ -37,16 +36,16 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
     else if (_freq_nearest.has_value())
       ptr = native_methods::AUTDSTMGainFromFreqNearest(_freq_nearest.value().hz());
     else if (_config.has_value())
-      ptr = native_methods::AUTDSTMGainFromSamplingConfig(_config.value());
+      ptr = AUTDSTMGainFromSamplingConfig(_config.value());
     else
       throw std::runtime_error("unreachable!");
-    ptr = native_methods::AUTDSTMGainWithMode(ptr, _mode);
-    ptr = native_methods::AUTDSTMGainWithLoopBehavior(ptr, _loop_behavior);
+    ptr = AUTDSTMGainWithMode(ptr, _mode);
+    ptr = AUTDSTMGainWithLoopBehavior(ptr, _loop_behavior);
 
     std::vector<native_methods::GainPtr> gains;
     gains.reserve(_gains.size());
     std::ranges::transform(_gains, std::back_inserter(gains), [&](const auto& gain) { return gain->gain_ptr(geometry); });
-    return native_methods::AUTDSTMGainAddGains(ptr, gains.data(), static_cast<uint32_t>(gains.size()));
+    return AUTDSTMGainAddGains(ptr, gains.data(), static_cast<uint32_t>(gains.size()));
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::GainSTMPtr p,
@@ -57,7 +56,7 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(
       const native_methods::GainSTMPtr p, const native_methods::Segment segment,
       const native_methods::TransitionModeWrap transition_mode) const override {
-    return native_methods::AUTDSTMGainIntoDatagramWithSegmentTransition(p, segment, transition_mode);
+    return AUTDSTMGainIntoDatagramWithSegmentTransition(p, segment, transition_mode);
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
@@ -65,8 +64,9 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
   }
 
   AUTD3_API [[nodiscard]] DatagramWithSegmentTransition<native_methods::GainSTMPtr> with_segment(
-      const native_methods::Segment segment, const std::optional<native_methods::TransitionModeWrap> transition_mode) {
-    return DatagramWithSegmentTransition<native_methods::GainSTMPtr>(std::make_unique<GainSTM>(std::move(*this)), segment, transition_mode);
+      const native_methods::Segment segment, std::optional<native_methods::TransitionModeWrap> transition_mode) {
+    return DatagramWithSegmentTransition<native_methods::GainSTMPtr>(std::make_unique<GainSTM>(std::move(*this)), segment,
+                                                                     std::move(transition_mode));
   }
 
   template <gain G>
@@ -98,12 +98,12 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
 
  private:
   AUTD3_API explicit GainSTM(const std::optional<Freq<double>> freq, const std::optional<Freq<double>> freq_nearest,
-                             const std::optional<native_methods::SamplingConfigWrap> config)
-      : _freq(freq),
+                             std::optional<native_methods::SamplingConfigWrap> config)
+      : _loop_behavior(LoopBehavior::infinite()),
+        _mode(native_methods::GainSTMMode::PhaseIntensityFull),
+        _freq(freq),
         _freq_nearest(freq_nearest),
-        _config(config),
-        _loop_behavior(LoopBehavior::infinite()),
-        _mode(native_methods::GainSTMMode::PhaseIntensityFull) {}
+        _config(std::move(config)) {}
 
   std::vector<std::shared_ptr<GainBase>> _gains;
   std::optional<Freq<double>> _freq;

@@ -2,10 +2,8 @@
 
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
-#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
 
@@ -17,7 +15,7 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public 
   ModulationBase& operator=(const ModulationBase& obj) = default;
   ModulationBase(ModulationBase&& obj) = default;
   ModulationBase& operator=(ModulationBase&& obj) = default;
-  virtual ~ModulationBase() = default;
+  ~ModulationBase() override = default;
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDModulationIntoDatagram(modulation_ptr(geometry));
@@ -33,9 +31,9 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>, public 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(
       const native_methods::ModulationPtr p, const native_methods::Segment segment,
       const native_methods::TransitionModeWrap transition_mode) const override {
-    return native_methods::AUTDModulationIntoDatagramWithSegmentTransition(p, segment, transition_mode);
+    return AUTDModulationIntoDatagramWithSegmentTransition(p, segment, transition_mode);
   }
-  AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const = 0;
+  AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr(const geometry::Geometry&) const = 0;
 
   void with_loop_behavior(const native_methods::LoopBehavior loop_behavior) & { _loop_behavior = loop_behavior; }
   AUTD3_API [[nodiscard]] M&& with_loop_behavior(const native_methods::LoopBehavior loop_behavior) && {

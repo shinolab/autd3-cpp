@@ -1,7 +1,5 @@
 #pragma once
 
-#include <numeric>
-
 #include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/modulation/sine.hpp"
 #include "autd3/native_methods.hpp"
@@ -53,14 +51,14 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
     return m;
   }
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override;
+  [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override;
 
  private:
   std::vector<T> _components;
 };
 
 template <>
-[[nodiscard]] inline native_methods::ModulationPtr Fourier<SineExact>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
+AUTD3_API [[nodiscard]] native_methods::ModulationPtr Fourier<SineExact>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
   std::vector<native_methods::ModulationPtr> components;
   components.reserve(_components.size());
   std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(geometry); });
@@ -68,7 +66,7 @@ template <>
 }
 
 template <>
-[[nodiscard]] inline native_methods::ModulationPtr Fourier<SineExactFloat>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
+AUTD3_API [[nodiscard]] native_methods::ModulationPtr Fourier<SineExactFloat>::modulation_ptr(const driver::geometry::Geometry& geometry) const {
   std::vector<native_methods::ModulationPtr> components;
   components.reserve(_components.size());
   std::ranges::transform(_components, std::back_inserter(components), [&](const auto& m) { return m.modulation_ptr(geometry); });

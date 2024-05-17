@@ -4,6 +4,7 @@
 
 #include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/driver/defined/freq.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 

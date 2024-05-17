@@ -4,6 +4,7 @@
 #include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/datagram/silencer.hpp>
 #include <autd3/driver/datagram/stm/gain.hpp>
+#include <autd3/driver/firmware/fpga/sampling_config.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <autd3/gain/focus.hpp>
 #include <autd3/gain/uniform.hpp>

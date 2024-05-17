@@ -1,7 +1,5 @@
 #pragma once
 
-#include <type_traits>
-
 #include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
@@ -15,7 +13,7 @@ class GainBase : public DatagramS<native_methods::GainPtr> {
   GainBase& operator=(const GainBase& obj) = default;
   GainBase(GainBase&& obj) = default;
   GainBase& operator=(GainBase&& obj) = default;
-  virtual ~GainBase() = default;
+  ~GainBase() override = default;
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDGainIntoDatagram(gain_ptr(geometry));

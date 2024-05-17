@@ -4,10 +4,7 @@
 #include "autd3/driver/datagram/modulation/cache.hpp"
 #include "autd3/driver/datagram/modulation/radiation_pressure.hpp"
 #include "autd3/driver/datagram/modulation/transform.hpp"
-#include "autd3/driver/firmware/fpga/sampling_config.hpp"
-#include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
 

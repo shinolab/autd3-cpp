@@ -201,6 +201,7 @@ class Controller {
                                                       const std::optional<std::chrono::duration<Rep, Period>> timeout = std::nullopt) {
     const int64_t timeout_ns = timeout.has_value() ? std::chrono::duration_cast<std::chrono::nanoseconds>(timeout.value()).count() : -1;
     validate(AUTDControllerSend(_ptr, data1.ptr(_geometry), data2.ptr(_geometry), timeout_ns));
+    co_return;
   }
 
   AUTD3_API [[nodiscard]] coro::task<std::vector<driver::FirmwareVersion>> firmware_version_async() { co_return firmware_version(); }

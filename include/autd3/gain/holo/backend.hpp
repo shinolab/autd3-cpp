@@ -1,6 +1,5 @@
 #pragma once
 
-#include "autd3/gain/holo/constraint.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::gain::holo {

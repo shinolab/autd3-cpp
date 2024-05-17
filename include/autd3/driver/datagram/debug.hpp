@@ -1,7 +1,6 @@
 #pragma once
 
 #include <concepts>
-#include <variant>
 
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
@@ -17,14 +16,12 @@ struct DebugType {
   AUTD3_API static inline const native_methods::DebugTypeWrap ForceFan = native_methods::AUTDDebugTypeForceFan();
   AUTD3_API static inline const native_methods::DebugTypeWrap Sync = native_methods::AUTDDebugTypeSync();
   AUTD3_API static inline const native_methods::DebugTypeWrap ModSegment = native_methods::AUTDDebugTypeModSegment();
-  AUTD3_API static inline const native_methods::DebugTypeWrap ModIdx(uint16_t idx) { return native_methods::AUTDDebugTypeModIdx(idx); }
+  AUTD3_API static native_methods::DebugTypeWrap ModIdx(const uint16_t idx) { return native_methods::AUTDDebugTypeModIdx(idx); }
   AUTD3_API static inline const native_methods::DebugTypeWrap StmSegment = native_methods::AUTDDebugTypeStmSegment();
-  AUTD3_API static inline const native_methods::DebugTypeWrap StmIdx(uint16_t idx) { return native_methods::AUTDDebugTypeStmIdx(idx); }
+  AUTD3_API static native_methods::DebugTypeWrap StmIdx(const uint16_t idx) { return native_methods::AUTDDebugTypeStmIdx(idx); }
   AUTD3_API static inline const native_methods::DebugTypeWrap IsStmMode = native_methods::AUTDDebugTypeIsStmMode();
-  AUTD3_API static inline const native_methods::DebugTypeWrap PwmOut(const geometry::Transducer* tr) {
-    return native_methods::AUTDDebugTypePwmOut(tr->ptr());
-  }
-  AUTD3_API static inline const native_methods::DebugTypeWrap Direct(bool v) { return native_methods::AUTDDebugTypeDirect(v); }
+  AUTD3_API static native_methods::DebugTypeWrap PwmOut(const geometry::Transducer* tr) { return AUTDDebugTypePwmOut(tr->ptr()); }
+  AUTD3_API static native_methods::DebugTypeWrap Direct(const bool v) { return native_methods::AUTDDebugTypeDirect(v); }
 };
 
 template <class F>
@@ -46,8 +43,8 @@ class DebugSettings final {
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return native_methods::AUTDDatagramDebugSettings(const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
-                                                     const_cast<void*>(static_cast<const void*>(this)), geometry.ptr());
+    return AUTDDatagramDebugSettings(const_cast<void*>(reinterpret_cast<const void*>(_f_native)), const_cast<void*>(static_cast<const void*>(this)),
+                                     geometry.ptr());
   }
 
  private:

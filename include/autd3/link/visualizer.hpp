@@ -4,6 +4,8 @@
 #include <string>
 #include <variant>
 
+#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/exception.hpp"
 #include "autd3/native_methods.hpp"
@@ -75,8 +77,8 @@ struct PlotConfig {
   std::string fname;
 
   AUTD3_API [[nodiscard]] native_methods::PlotConfigPtr _raw_ptr() const {
-    return validate(native_methods::AUTDLinkVisualizerPlotConfig(figsize.first, figsize.second, cbar_size, font_size, label_area_size, margin,
-                                                                 ticks_step, cmap, fname.c_str()));
+    return validate(
+        AUTDLinkVisualizerPlotConfig(figsize.first, figsize.second, cbar_size, font_size, label_area_size, margin, ticks_step, cmap, fname.c_str()));
   }
 };
 
@@ -203,23 +205,23 @@ class Visualizer final {
                                 const native_methods::Directivity directivity)
       : _ptr(ptr), _backend(backend), _directivity(directivity) {}
 
-  AUTD3_API [[nodiscard]] std::vector<autd3::driver::Phase> phases(const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API [[nodiscard]] std::vector<driver::Phase> phases(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
-    std::vector<autd3::driver::Phase> buf(size, autd3::driver::Phase(0));
+    std::vector buf(size, driver::Phase(0));
     AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
-  AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> intensities(const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity> intensities(const native_methods::Segment segment, const size_t idx) const {
     const auto size = AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
-    std::vector<autd3::driver::EmitIntensity> buf(size, autd3::driver::EmitIntensity(0));
+    std::vector buf(size, driver::EmitIntensity(0));
     AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
-  AUTD3_API [[nodiscard]] std::vector<autd3::driver::EmitIntensity> modulation(const native_methods::Segment segment) const {
+  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity> modulation(const native_methods::Segment segment) const {
     const auto size = AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, nullptr);
-    std::vector<autd3::driver::EmitIntensity> buf(size, autd3::driver::EmitIntensity(0));
+    std::vector buf(size, driver::EmitIntensity(0));
     AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
@@ -231,28 +233,26 @@ class Visualizer final {
     const auto points_ptr = reinterpret_cast<double*>(points.data());
     std::vector<std::complex<double>> buf;
     buf.resize(points_len);
-    native_methods::validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment,
-                                                         static_cast<uint32_t>(idx), reinterpret_cast<double*>(buf.data())));
+    validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment, static_cast<uint32_t>(idx),
+                                         reinterpret_cast<double*>(buf.data())));
     return buf;
   }
 
   AUTD3_API void plot_field(const Config& config, const PlotRange& range, const driver::geometry::Geometry& geometry,
                             const native_methods::Segment segment, const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
-    native_methods::validate(
-        AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), geometry.ptr(), segment, static_cast<uint32_t>(idx)));
+    validate(AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), geometry.ptr(), segment, static_cast<uint32_t>(idx)));
   }
 
   AUTD3_API void plot_phase(const Config& config, const driver::geometry::Geometry& geometry, const native_methods::Segment segment,
                             const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
-    native_methods::validate(
-        AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, geometry.ptr(), segment, static_cast<uint32_t>(idx)));
+    validate(AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, geometry.ptr(), segment, static_cast<uint32_t>(idx)));
   }
 
   AUTD3_API void plot_modulation(const Config& config, const native_methods::Segment segment) const {
     const auto config_ptr = get_plot_config(config);
-    native_methods::validate(AUTDLinkVisualizerPlotModulation(_ptr, _backend, _directivity, config_ptr, segment));
+    validate(AUTDLinkVisualizerPlotModulation(_ptr, _backend, _directivity, config_ptr, segment));
   }
 };
 

@@ -21,11 +21,9 @@ class EmitIntensity final {
 
 #include <limits>
 
-namespace std {
 template <>
-struct numeric_limits<autd3::driver::EmitIntensity> {
+class std::numeric_limits<autd3::driver::EmitIntensity> {
+ public:
   static constexpr autd3::driver::EmitIntensity min() noexcept { return autd3::driver::EmitIntensity{0x00}; }
-
   static constexpr autd3::driver::EmitIntensity max() noexcept { return autd3::driver::EmitIntensity{0xFF}; }
 };
-}  // namespace std

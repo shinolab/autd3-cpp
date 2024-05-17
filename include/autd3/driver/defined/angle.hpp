@@ -2,7 +2,6 @@
 
 #include <numbers>
 
-#include "autd3/def.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {

@@ -4,6 +4,8 @@
 #define AUTD3_API
 #elif defined __GNUC__ && defined COVERAGE
 #define AUTD3_API __attribute__((__used__))
+#else
+#define AUTD3_API
 #endif
 
 #include "autd3/native_methods/autd3capi-driver.h"

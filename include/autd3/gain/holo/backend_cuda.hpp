@@ -1,7 +1,6 @@
 #pragma once
 
 #include "autd3/gain/holo/backend.hpp"
-#include "autd3/gain/holo/constraint.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/autd3capi-backend-cuda.h"
 #include "autd3/native_methods/utils.hpp"

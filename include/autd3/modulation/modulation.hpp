@@ -2,6 +2,7 @@
 
 #include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
@@ -11,7 +12,7 @@ class Modulation : public driver::Modulation<M> {
  public:
   using driver::Modulation<M>::Modulation;
 
-  AUTD3_API [[nodiscard]] virtual std::vector<autd3::driver::EmitIntensity> calc() const = 0;
+  AUTD3_API [[nodiscard]] virtual std::vector<driver::EmitIntensity> calc() const = 0;
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry &) const override {
     const auto buffer = calc();

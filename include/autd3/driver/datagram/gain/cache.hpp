@@ -10,7 +10,6 @@
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
-#include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"

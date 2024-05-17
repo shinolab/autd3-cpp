@@ -260,7 +260,7 @@ def check_if_all_native_methods_called():
     defined_methods.remove("AUTDModulationFourierNearest")
 
     used_methods = set()
-    pattern = re.compile(".*(AUTD.*?)[\\(|,].*")
+    pattern = re.compile(r".*(AUTD.*?)[\(|,|\)].*")
     for file in glob("include/**/*.hpp", recursive=True) + glob(
         "tests/**/*.cpp", recursive=True
     ):

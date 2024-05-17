@@ -10,7 +10,7 @@ namespace autd3::gain {
 
 template <class F>
 concept custom_test_f = requires(F f, const driver::geometry::Device& d, const driver::geometry::Transducer& tr) {
-  { (f(d))(tr) } -> std::same_as<driver::Drive>;
+  { f(d)(tr) } -> std::same_as<driver::Drive>;
 };
 
 template <custom_test_f F>
@@ -23,7 +23,7 @@ class Custom final : public driver::Gain<Custom<F>> {
                     native_methods::Drive* raw) {
       const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
       const driver::geometry::Transducer tr(tr_idx, dev.ptr());
-      const auto d = (static_cast<const Custom*>(context)->_f(dev))(tr);
+      const auto d = static_cast<const Custom*>(context)->_f(dev)(tr);
       raw->phase = d.phase.value();
       raw->intensity = d.intensity.value();
     };

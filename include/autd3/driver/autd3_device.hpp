@@ -1,7 +1,6 @@
 #pragma once
 
 #include <algorithm>
-#include <optional>
 
 #include "autd3/def.hpp"
 #include "autd3/native_methods.hpp"

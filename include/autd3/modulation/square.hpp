@@ -3,6 +3,7 @@
 #include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
@@ -32,9 +33,9 @@ AUTD3_DEF_MOD_SQUARE(SquareNearest, AUTDModulationSquareNearest, driver::Freq<do
 #undef AUTD3_DEF_MOD_SQUARE
 
 struct Square final {
-  AUTD3_API [[nodiscard]] static SquareExact create(const driver::Freq<uint32_t> freq) { return SquareExact(freq); };
-  AUTD3_API [[nodiscard]] static SquareExactFloat create(const driver::Freq<double> freq) { return SquareExactFloat(freq); };
-  AUTD3_API [[nodiscard]] static SquareNearest with_freq_nearest(const driver::Freq<double> freq) { return SquareNearest(freq); };
+  AUTD3_API [[nodiscard]] static SquareExact create(const driver::Freq<uint32_t> freq) { return SquareExact(freq); }
+  AUTD3_API [[nodiscard]] static SquareExactFloat create(const driver::Freq<double> freq) { return SquareExactFloat(freq); }
+  AUTD3_API [[nodiscard]] static SquareNearest with_freq_nearest(const driver::Freq<double> freq) { return SquareNearest(freq); }
 };
 
 }  // namespace autd3::modulation

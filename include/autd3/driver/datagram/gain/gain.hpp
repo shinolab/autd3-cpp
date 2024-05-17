@@ -1,12 +1,8 @@
 #pragma once
 
-#include <memory>
-#include <type_traits>
-
 #include "autd3/driver/datagram/gain/cache.hpp"
 #include "autd3/driver/datagram/gain/transform.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
-#include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
@@ -19,7 +15,7 @@ class Gain : public GainBase, public IntoDatagramWithSegment<native_methods::Gai
   Gain& operator=(const Gain& obj) = default;
   Gain(Gain&& obj) = default;
   Gain& operator=(Gain&& obj) = default;
-  virtual ~Gain() = default;
+  ~Gain() override = default;
 };
 
 }  // namespace autd3::driver

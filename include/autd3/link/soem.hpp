@@ -84,9 +84,9 @@ class SOEM final {
     template <soem_err_handler_f F>
     AUTD3_API [[nodiscard]] Builder with_err_handler(F value) {
       _err_handler = static_cast<err_handler_t>(value);
-      _native_err_handler = +[](const void* context, const uint32_t slave, const native_methods::Status status) {
+      _native_err_handler = +[](const void* context, const uint32_t slave, const Status status) {
         const std::string msg(128, ' ');                                                                            // LCOV_EXCL_LINE
-        native_methods::AUTDLinkSOEMStatusGetMsg(status, const_cast<char*>(msg.c_str()));                           // LCOV_EXCL_LINE
+        AUTDLinkSOEMStatusGetMsg(status, const_cast<char*>(msg.c_str()));                                           // LCOV_EXCL_LINE
         (*reinterpret_cast<err_handler_t>(const_cast<void*>(context)))(static_cast<uint16_t>(slave), status, msg);  // LCOV_EXCL_LINE
       };  // LCOV_EXCL_LINE
       _ptr = AUTDLinkSOEMWithErrHandler(_ptr, reinterpret_cast<void*>(_native_err_handler), reinterpret_cast<void*>(_err_handler));

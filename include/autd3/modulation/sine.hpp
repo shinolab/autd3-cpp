@@ -4,6 +4,7 @@
 #include "autd3/driver/defined/angle.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
@@ -37,9 +38,9 @@ AUTD3_DEF_MOD_SINE(SineNearest, AUTDModulationSineNearest, driver::Freq<double>)
 #undef AUTD3_DEF_MOD_SINE
 
 struct Sine final {
-  AUTD3_API [[nodiscard]] static SineExact create(const driver::Freq<uint32_t> freq) { return SineExact(freq); };
-  AUTD3_API [[nodiscard]] static SineExactFloat create(const driver::Freq<double> freq) { return SineExactFloat(freq); };
-  AUTD3_API [[nodiscard]] static SineNearest with_freq_nearest(const driver::Freq<double> freq) { return SineNearest(freq); };
+  AUTD3_API [[nodiscard]] static SineExact create(const driver::Freq<uint32_t> freq) { return SineExact(freq); }
+  AUTD3_API [[nodiscard]] static SineExactFloat create(const driver::Freq<double> freq) { return SineExactFloat(freq); }
+  AUTD3_API [[nodiscard]] static SineNearest with_freq_nearest(const driver::Freq<double> freq) { return SineNearest(freq); }
 };
 
 }  // namespace autd3::modulation

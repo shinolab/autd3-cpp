@@ -1,8 +1,5 @@
 #pragma once
 
-#include <chrono>
-#include <ranges>
-
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
@@ -10,11 +7,9 @@ namespace autd3::driver {
 struct SwapSegment {
   class Gain final {
    public:
-    AUTD3_API explicit Gain(const native_methods::Segment segment) : _segment(segment){};
+    AUTD3_API explicit Gain(const native_methods::Segment segment) : _segment(segment) {}
 
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) {
-      return native_methods::AUTDDatagramSwapSegmentGain(_segment);
-    }
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const { return AUTDDatagramSwapSegmentGain(_segment); }
 
    private:
     native_methods::Segment _segment;
@@ -23,10 +18,10 @@ struct SwapSegment {
   class GainSTM final {
    public:
     AUTD3_API explicit GainSTM(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
-        : _segment(segment), _transition_mode(transition_mode){};
+        : _segment(segment), _transition_mode(transition_mode) {}
 
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) {
-      return native_methods::AUTDDatagramSwapSegmentGainSTM(_segment, _transition_mode);
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
+      return AUTDDatagramSwapSegmentGainSTM(_segment, _transition_mode);
     }
 
    private:
@@ -37,10 +32,10 @@ struct SwapSegment {
   class FocusSTM final {
    public:
     AUTD3_API explicit FocusSTM(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
-        : _segment(segment), _transition_mode(transition_mode){};
+        : _segment(segment), _transition_mode(transition_mode) {}
 
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) {
-      return native_methods::AUTDDatagramSwapSegmentFocusSTM(_segment, _transition_mode);
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
+      return AUTDDatagramSwapSegmentFocusSTM(_segment, _transition_mode);
     }
 
    private:
@@ -51,10 +46,10 @@ struct SwapSegment {
   class Modulation final {
    public:
     AUTD3_API explicit Modulation(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
-        : _segment(segment), _transition_mode(transition_mode){};
+        : _segment(segment), _transition_mode(transition_mode) {}
 
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) {
-      return native_methods::AUTDDatagramSwapSegmentModulation(_segment, _transition_mode);
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
+      return AUTDDatagramSwapSegmentModulation(_segment, _transition_mode);
     }
 
    private:

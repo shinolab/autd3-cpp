@@ -2,7 +2,6 @@
 
 #include <memory>
 
-#include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -11,9 +10,14 @@ namespace autd3::driver {
 template <typename P>
 class DatagramS {
  public:
+  DatagramS() = default;
   AUTD3_API virtual ~DatagramS() = default;
-  AUTD3_API virtual P raw_ptr(const geometry::Geometry&) const = 0;
-  AUTD3_API virtual native_methods::DatagramPtr into_segment(const P p, const native_methods::Segment segment, const bool transition) const = 0;
+  DatagramS(const DatagramS& v) noexcept = default;
+  DatagramS& operator=(const DatagramS& obj) = default;
+  DatagramS(DatagramS&& obj) = default;
+  DatagramS& operator=(DatagramS&& obj) = default;
+  AUTD3_API [[nodiscard]] virtual P raw_ptr(const geometry::Geometry&) const = 0;
+  AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr into_segment(P p, native_methods::Segment segment, bool transition) const = 0;
 };
 
 template <typename P>
@@ -41,7 +45,12 @@ class DatagramWithSegment {
 template <typename P, class D>
 class IntoDatagramWithSegment {
  public:
-  virtual ~IntoDatagramWithSegment() = default;  // LCOV_Etransition_modeXCL_LINE
+  IntoDatagramWithSegment() = default;
+  virtual ~IntoDatagramWithSegment() = default;
+  IntoDatagramWithSegment(const IntoDatagramWithSegment& v) noexcept = default;
+  IntoDatagramWithSegment& operator=(const IntoDatagramWithSegment& obj) = default;
+  IntoDatagramWithSegment(IntoDatagramWithSegment&& obj) = default;
+  IntoDatagramWithSegment& operator=(IntoDatagramWithSegment&& obj) = default;
 
   AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) & {
     return DatagramWithSegment<P>(std::make_unique<D>(*static_cast<D*>(this)), segment, transition);
