@@ -23,49 +23,62 @@ TEST(DriverDatagramSTM, GainSTM) {
   autd.send(autd3::driver::Silencer::disable());
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
-  auto stm =
-      autd3::driver::GainSTM::from_freq(1.0 * autd3::driver::Hz)
-          .add_gains_from_iter(std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
-  autd.send(stm);
-  for (const auto& dev : autd.geometry()) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-  for (const auto& dev : autd.geometry()) ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
-
-  stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfig::Division(512))
-            .add_gain(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
-            .add_gain(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
-            .with_mode(autd3::native_methods::GainSTMMode::PhaseIntensityFull);
-  autd.send(stm);
-  for (const auto& dev : autd.geometry()) ASSERT_EQ(512u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
-
-  for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
-
-    drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
+  {
+    auto stm =
+        autd3::driver::GainSTM::from_freq(1.0 * autd3::driver::Hz)
+            .add_gains_from_iter(std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
+    autd.send(stm);
+    for (const auto& dev : autd.geometry()) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd.geometry()) ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  stm.with_mode(autd3::native_methods::GainSTMMode::PhaseFull);
-  autd.send(stm);
-  for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
-
-    drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+  {
+    auto stm =
+        autd3::driver::GainSTM::from_freq_nearest(1.0 * autd3::driver::Hz)
+            .add_gains_from_iter(std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
+    autd.send(stm);
+    for (const auto& dev : autd.geometry()) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd.geometry()) ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  stm.with_mode(autd3::native_methods::GainSTMMode::PhaseHalf);
-  autd.send(stm);
-  for (const auto& dev : autd.geometry()) {
-    ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+  {
+    auto stm = autd3::driver::GainSTM::from_sampling_config(autd3::driver::SamplingConfig::Division(512))
+                   .add_gain(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+                   .add_gain(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+                   .with_mode(autd3::native_methods::GainSTMMode::PhaseIntensityFull);
+    autd.send(stm);
+    for (const auto& dev : autd.geometry()) ASSERT_EQ(512u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 
-    drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+    for (const auto& dev : autd.geometry()) {
+      ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
+      auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+      ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
+
+      drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
+      ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
+    }
+
+    stm.with_mode(autd3::native_methods::GainSTMMode::PhaseFull);
+    autd.send(stm);
+    for (const auto& dev : autd.geometry()) {
+      ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
+      auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+      ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+
+      drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
+      ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+    }
+
+    stm.with_mode(autd3::native_methods::GainSTMMode::PhaseHalf);
+    autd.send(stm);
+    for (const auto& dev : autd.geometry()) {
+      ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
+      auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+      ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+
+      drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
+      ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
+    }
   }
 }
 

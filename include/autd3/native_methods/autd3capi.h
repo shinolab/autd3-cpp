@@ -484,6 +484,13 @@ void AUTDLinkAuditFpgaDrives(LinkPtr audit,
 
 void AUTDLinkAuditFpgaPhaseFilter(LinkPtr audit, uint32_t idx, uint8_t *phase_filter);
 
+[[nodiscard]]
+uint16_t AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit,
+                                                 uint32_t idx,
+                                                 uint8_t *dst);
+
+[[nodiscard]] uint32_t AUTDLinkAuditFpgaUltrasoundFreq(LinkPtr audit, uint32_t idx);
+
 [[nodiscard]] LinkBuilderPtr AUTDLinkNop();
 
 [[nodiscard]] DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m, Segment segment);

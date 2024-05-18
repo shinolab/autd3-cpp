@@ -19,9 +19,13 @@ TEST(DriverDatagram, PulseWidthEncoder) {
 
   autd.send(autd3::driver::PulseWidthEncoder(buf));
 
-  // TODO
+  ASSERT_EQ(buf, autd.link().pulse_width_encoder_table(0));
+  ASSERT_EQ(buf, autd.link().pulse_width_encoder_table(1));
 
+  std::vector<uint16_t> buf_default(65536, 256);
+  std::ranges::for_each(std::views::iota(0, 255 * 255),
+                        [&](auto i) { buf_default[i] = std::round(std::asin(static_cast<double>(i) / 255. / 255.) / std::numbers::pi * 512); });
   autd.send(autd3::driver::PulseWidthEncoder());
-
-  // TODO
+  ASSERT_EQ(buf_default, autd.link().pulse_width_encoder_table(0));
+  ASSERT_EQ(buf_default, autd.link().pulse_width_encoder_table(1));
 }

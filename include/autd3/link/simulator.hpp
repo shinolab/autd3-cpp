@@ -20,7 +20,7 @@ namespace autd3::link {
 class Simulator final {
   native_methods::LinkPtr _ptr;
 
-  AUTD3_API explicit Simulator(const native_methods::LinkPtr ptr) : _ptr(ptr) {}
+  explicit Simulator(const native_methods::LinkPtr ptr) : _ptr(ptr) {}
 
  public:
   class Builder final {
