@@ -16,15 +16,14 @@ concept _phase_filter_f = requires(F f, const geometry::Device& d, const geometr
 
 template <_phase_filter_f F>
 class PhaseFilter final {
-  using native_f = Phase (*)(const void*, native_methods::GeometryPtr, uint32_t, uint8_t);
+  using native_f = uint8_t (*)(const void*, native_methods::GeometryPtr, uint32_t, uint8_t);
 
  public:
   AUTD3_API explicit PhaseFilter(F f) : _f(std::move(f)) {
-    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const uint8_t tr_idx) -> Phase {
-      const auto dev_ptr = AUTDDevice(geometry_ptr, dev_idx);
-      const geometry::Device dev(dev_idx, dev_ptr);
-      const geometry::Transducer tr(tr_idx, dev_ptr);
-      return static_cast<const PhaseFilter*>(context)->_f(dev)(tr);
+    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const uint8_t tr_idx) -> uint8_t {
+      const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
+      const driver::geometry::Transducer tr(tr_idx, dev.ptr());
+      return static_cast<const PhaseFilter*>(context)->_f(dev)(tr).value();
     };
   }
 
