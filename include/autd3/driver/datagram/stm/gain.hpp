@@ -38,7 +38,7 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
     else if (_config.has_value())
       ptr = AUTDSTMGainFromSamplingConfig(_config.value());
     else
-      throw std::runtime_error("unreachable!");
+      throw std::runtime_error("unreachable!");  // LCOV_EXCL_LINE
     ptr = AUTDSTMGainWithMode(ptr, _mode);
     ptr = AUTDSTMGainWithLoopBehavior(ptr, _loop_behavior);
 

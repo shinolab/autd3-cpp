@@ -52,7 +52,7 @@ TEST(Link, PlotRange) {
   ASSERT_EQ(points[points.size() - 1], autd3::driver::Vector3(20, 30, 0));
 }
 
-TEST(Link, Visualizer_Plotters) {
+TEST(Link, VisualizerPlotters) {
   {
     auto autd = autd3::controller::ControllerBuilder()
                     .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
@@ -76,7 +76,7 @@ TEST(Link, Visualizer_Plotters) {
   }
 }
 
-TEST(Link, Visualizer_Python) {
+TEST(Link, VisualizerPython) {
   {
     auto autd = autd3::controller::ControllerBuilder()
                     .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
@@ -102,7 +102,7 @@ TEST(Link, Visualizer_Python) {
   }
 }
 
-TEST(Link, Visualizer_Null) {
+TEST(Link, VisualizerNull) {
   {
     auto autd = autd3::controller::ControllerBuilder()
                     .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))

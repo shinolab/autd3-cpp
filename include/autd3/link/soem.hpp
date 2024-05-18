@@ -20,10 +20,10 @@ class EtherCATAdapter {
   std::string _name;
 
  public:
-  AUTD3_API EtherCATAdapter(std::string desc, std::string name) : _desc(std::move(desc)), _name(std::move(name)) {}
+  EtherCATAdapter(std::string desc, std::string name) : _desc(std::move(desc)), _name(std::move(name)) {}
 
-  AUTD3_API [[nodiscard]] const std::string& desc() const { return _desc; }
-  AUTD3_API [[nodiscard]] const std::string& name() const { return _name; }
+  [[nodiscard]] const std::string& desc() const { return _desc; }
+  [[nodiscard]] const std::string& name() const { return _name; }
 };
 
 using native_methods::Status;
@@ -37,7 +37,7 @@ class SOEM final {
   using native_err_handler_t = void (*)(const void*, uint32_t, Status);
   using err_handler_t = void (*)(uint16_t, Status, const std::string&);
 
-  AUTD3_API explicit SOEM(const native_err_handler_t native_err_handler, const err_handler_t err_handler)
+  explicit SOEM(const native_err_handler_t native_err_handler, const err_handler_t err_handler)
       : _native_err_handler(native_err_handler), _err_handler(err_handler) {}
 
   [[maybe_unused]] native_err_handler_t _native_err_handler;
@@ -54,12 +54,12 @@ class SOEM final {
 
     AUTD3_API Builder() : _ptr(native_methods::AUTDLinkSOEM()), _err_handler(nullptr) {}
 
-    AUTD3_API [[nodiscard]] SOEM resolve_link(native_methods::LinkPtr) const { return SOEM{_native_err_handler, _err_handler}; }
+    [[nodiscard]] SOEM resolve_link(native_methods::LinkPtr) const { return SOEM{_native_err_handler, _err_handler}; }
 
    public:
     using Link = SOEM;
 
-    AUTD3_API [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSOEMIntoBuilder(_ptr); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSOEMIntoBuilder(_ptr); }
 
     AUTD3_API [[nodiscard]] Builder with_ifname(const std::string& ifname) {
       _ptr = AUTDLinkSOEMWithIfname(_ptr, ifname.c_str());
@@ -120,7 +120,7 @@ class SOEM final {
 
   AUTD3_API [[nodiscard]] static Builder builder() { return {}; }
 
-  AUTD3_API [[nodiscard]] static std::vector<EtherCATAdapter> enumerate_adapters() {
+  [[nodiscard]] static std::vector<EtherCATAdapter> enumerate_adapters() {
     const auto handle = native_methods::AUTDAdapterPointer();
     const auto len = AUTDAdapterGetSize(handle);
     std::vector<EtherCATAdapter> adapters;
@@ -147,12 +147,12 @@ class RemoteSOEM final {
 
     AUTD3_API explicit Builder(const std::string& addr) { _ptr = validate(native_methods::AUTDLinkRemoteSOEM(addr.c_str())); }
 
-    AUTD3_API [[nodiscard]] static RemoteSOEM resolve_link(native_methods::LinkPtr) { return RemoteSOEM{}; }
+    [[nodiscard]] static RemoteSOEM resolve_link(native_methods::LinkPtr) { return RemoteSOEM{}; }
 
    public:
     using Link = RemoteSOEM;
 
-    AUTD3_API [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkRemoteSOEMIntoBuilder(_ptr); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkRemoteSOEMIntoBuilder(_ptr); }
 
     template <typename Rep, typename Period>
     AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {

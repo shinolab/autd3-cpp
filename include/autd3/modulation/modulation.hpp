@@ -17,7 +17,7 @@ class Modulation : public driver::Modulation<M> {
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry &) const override {
     const auto buffer = calc();
     const auto size = buffer.size();
-    return native_methods::AUTDModulationRaw(this->_config, this->_loop_behavior, reinterpret_cast<const uint8_t *>(buffer.data()),
+    return native_methods::AUTDModulationRaw(this->_sampling_config, this->_loop_behavior, reinterpret_cast<const uint8_t *>(buffer.data()),
                                              static_cast<uint32_t>(size));
   }
 };

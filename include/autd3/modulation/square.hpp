@@ -22,7 +22,7 @@ namespace autd3::modulation {
     AUTD3_DEF_PARAM(T, driver::EmitIntensity, high)                                                                          \
     AUTD3_DEF_PARAM(T, double, duty)                                                                                         \
     AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override { \
-      return N(_freq.hz(), _config, _low.value(), _high.value(), _duty, _loop_behavior);                                     \
+      return N(_freq.hz(), _sampling_config, _low.value(), _high.value(), _duty, _loop_behavior);                            \
     }                                                                                                                        \
   };
 

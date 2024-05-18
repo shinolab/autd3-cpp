@@ -35,7 +35,7 @@ class Fourier final : public driver::ModulationBase<Fourier<T>>,
     return std::move(*this);
   }
 
-  AUTD3_API [[nodiscard]] Fourier& operator+=(const T& rhs) {
+  AUTD3_API Fourier& operator+=(const T& rhs) {
     _components.emplace_back(rhs);
     return *this;
   }

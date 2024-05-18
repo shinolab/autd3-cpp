@@ -47,7 +47,7 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
     else if (_config.has_value())
       ptr = AUTDSTMFocusFromSamplingConfig(_config.value());
     else
-      throw std::runtime_error("unreachable!");
+      throw std::runtime_error("unreachable!");  // LCOV_EXCL_LINE
     ptr = AUTDSTMFocusWithLoopBehavior(ptr, _loop_behavior);
     return AUTDSTMFocusAddFoci(ptr, reinterpret_cast<const double*>(_points.data()), reinterpret_cast<const uint8_t*>(_intensities.data()),
                                _intensities.size());

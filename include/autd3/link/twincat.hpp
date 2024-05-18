@@ -24,12 +24,12 @@ class TwinCAT final {
 
     AUTD3_API Builder() : _ptr(native_methods::AUTDLinkTwinCAT()) {}
 
-    AUTD3_API [[nodiscard]] static TwinCAT resolve_link(native_methods::LinkPtr) { return TwinCAT{}; }
+    [[nodiscard]] static TwinCAT resolve_link(native_methods::LinkPtr) { return TwinCAT{}; }
 
    public:
     using Link = TwinCAT;
 
-    AUTD3_API [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkTwinCATIntoBuilder(_ptr); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkTwinCATIntoBuilder(_ptr); }
 
     template <typename Rep, typename Period>
     AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {
@@ -56,12 +56,12 @@ class RemoteTwinCAT final {
       _ptr = validate(native_methods::AUTDLinkRemoteTwinCAT(server_ams_net_id.c_str()));
     }
 
-    AUTD3_API [[nodiscard]] static RemoteTwinCAT resolve_link(native_methods::LinkPtr) { return RemoteTwinCAT{}; }
+    [[nodiscard]] static RemoteTwinCAT resolve_link(native_methods::LinkPtr) { return RemoteTwinCAT{}; }
 
    public:
     using Link = RemoteTwinCAT;
 
-    AUTD3_API [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkRemoteTwinCATIntoBuilder(_ptr); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkRemoteTwinCATIntoBuilder(_ptr); }
 
     AUTD3_API [[nodiscard]] Builder with_server_ip(const std::string& ip) {
       _ptr = AUTDLinkRemoteTwinCATWithServerIP(_ptr, ip.c_str());

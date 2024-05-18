@@ -31,12 +31,12 @@ class Simulator final {
 
     AUTD3_API explicit Builder(const uint16_t port) : _ptr(native_methods::AUTDLinkSimulator(port)) {}
 
-    AUTD3_API [[nodiscard]] static Simulator resolve_link(const native_methods::LinkPtr link) { return Simulator{link}; }
+    [[nodiscard]] static Simulator resolve_link(const native_methods::LinkPtr link) { return Simulator{link}; }
 
    public:
     using Link = Simulator;
 
-    AUTD3_API [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSimulatorIntoBuilder(_ptr); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSimulatorIntoBuilder(_ptr); }
 
     AUTD3_API [[nodiscard]] Builder with_server_ip(const std::string& ip) {
       _ptr = validate(AUTDLinkSimulatorWithAddr(_ptr, ip.c_str()));
@@ -53,14 +53,12 @@ class Simulator final {
 
   AUTD3_API [[nodiscard]] static Builder builder(const uint16_t port) { return Builder(port); }
 
-  AUTD3_API [[nodiscard]] bool update_geometry(const driver::geometry::Geometry& geometry) const {
+  [[nodiscard]] bool update_geometry(const driver::geometry::Geometry& geometry) const {
     return validate(AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr())) == native_methods::AUTD3_TRUE;
   }
 
 #ifdef AUTD3_ASYNC_API
-  AUTD3_API [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const {
-    co_return update_geometry(geometry);
-  }
+  [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const { co_return update_geometry(geometry); }
 #endif
 };
 

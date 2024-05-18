@@ -11,7 +11,7 @@ namespace autd3::driver {
 
 template <class F>
 concept _phase_filter_f = requires(F f, const geometry::Device& d, const geometry::Transducer& tr) {
-  { f(d, tr) } -> std::same_as<Phase>;
+  { f(d)(tr) } -> std::same_as<Phase>;
 };
 
 template <_phase_filter_f F>
@@ -24,7 +24,7 @@ class PhaseFilter final {
       const auto dev_ptr = AUTDDevice(geometry_ptr, dev_idx);
       const geometry::Device dev(dev_idx, dev_ptr);
       const geometry::Transducer tr(tr_idx, dev_ptr);
-      return static_cast<const PhaseFilter*>(context)->_f(dev, tr);
+      return static_cast<const PhaseFilter*>(context)->_f(dev)(tr);
     };
   }
 

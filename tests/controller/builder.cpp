@@ -1,5 +1,21 @@
 #include <gtest/gtest.h>
 
 #include <autd3/controller/builder.hpp>
+#include <autd3/controller/controller.hpp>
+#include <autd3/link/audit.hpp>
 
-TEST(Controller, Builder) {}
+TEST(Controller, Builder) {
+  auto autd =
+      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
+  //   ASSERT_EQ(40000, autd.link().ultrasound_freq()); // TODO
+  autd.close();
+}
+
+TEST(Controller, BuilderWithUltrasoundFreq) {
+  auto autd = autd3::controller::ControllerBuilder()
+                  .with_ultrasound_freq(41 * autd3::driver::kHz)
+                  .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+                  .open(autd3::link::Audit::builder());
+  //   ASSERT_EQ(41000, autd.link().ultrasound_freq()); // TODO
+  autd.close();
+}

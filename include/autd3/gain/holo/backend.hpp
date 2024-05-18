@@ -14,7 +14,7 @@ class Backend {
   Backend& operator=(Backend&& obj) = default;       // LCOV_EXCL_LINE
   virtual ~Backend() = default;                      // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
+  [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
 
   AUTD3_API [[nodiscard]] virtual native_methods::GainPtr sdp(const double* foci, const double* amps, uint64_t size, double alpha, double lambda,
                                                               uint32_t repeat, native_methods::EmissionConstraintWrap constraint) const = 0;

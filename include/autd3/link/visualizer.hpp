@@ -176,7 +176,7 @@ class Visualizer final {
       }
     }
 
-    AUTD3_API [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {
+    [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {
       _gpu_idx = gpu_idx;
       return *this;
     }

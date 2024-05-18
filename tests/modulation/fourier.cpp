@@ -33,11 +33,11 @@ TEST(Modulation, FourierExactFloat) {
   auto autd = create_controller();
 
   std::vector f{200.0 * autd3::driver::Hz};
-  auto m = (autd3::modulation::Sine::create(50.0 * autd3::driver::Hz) + autd3::modulation::Sine::create(100.0 * autd3::driver::Hz))
-               .add_component(autd3::modulation::Sine::create(150.0 * autd3::driver::Hz))
-               .add_components_from_iter(
-                   f | std::ranges::views::transform([](const autd3::driver::Freq<double> x) { return autd3::modulation::Sine::create(x); })) +
-           autd3::modulation::Sine::create(250.0 * autd3::driver::Hz);
+  auto m = autd3::modulation::Sine::create(50.0 * autd3::driver::Hz) + autd3::modulation::Sine::create(100.0 * autd3::driver::Hz);
+  m.add_component(autd3::modulation::Sine::create(150.0 * autd3::driver::Hz));
+  m.add_components_from_iter(f |
+                             std::ranges::views::transform([](const autd3::driver::Freq<double> x) { return autd3::modulation::Sine::create(x); }));
+  m += autd3::modulation::Sine::create(250.0 * autd3::driver::Hz);
 
   autd.send(m);
 

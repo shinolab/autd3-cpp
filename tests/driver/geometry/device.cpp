@@ -93,6 +93,14 @@ TEST(DriverGeomtry, DeviceAffine) {
   }
 }
 
+TEST(DriverGeomtry, DeviceWavelength) {
+  for (auto autd = create_controller(); auto& dev : autd.geometry()) ASSERT_NEAR(dev.wavelength(), 8.5, 1e-6);
+}
+
+TEST(DriverGeomtry, DeviceWavenumber) {
+  for (auto autd = create_controller(); auto& dev : autd.geometry()) ASSERT_NEAR(dev.wavenumber(), 2 * autd3::driver::pi / 8.5, 1e-6);
+}
+
 TEST(DriverGeomtry, TransducerLocal) {
   for (auto autd = create_controller(); auto& dev : autd.geometry()) {
     std::ranges::for_each(std::views::iota(0) | std::views::take(dev.num_transducers()), [&dev](auto i) { ASSERT_EQ(dev[i].idx(), i); });

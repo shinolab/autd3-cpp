@@ -16,13 +16,10 @@ class Static final : public driver::ModulationBase<Static>,
 
   AUTD3_API [[nodiscard]] static Static with_intensity(const driver::EmitIntensity intensity) { return Static(intensity); }
 
-  AUTD3_API [[nodiscard]] driver::EmitIntensity intensity() const { return _intensity; }
-
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
     return AUTDModulationStatic(_intensity.value(), _loop_behavior);
   }
 
- private:
-  driver::EmitIntensity _intensity;
+  AUTD3_DEF_PROP(driver::EmitIntensity, intensity)
 };
 }  // namespace autd3::modulation

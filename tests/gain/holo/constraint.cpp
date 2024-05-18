@@ -76,3 +76,21 @@ TEST(GainHolo, ConstraintDontCare) {
     ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
   }
 }
+
+TEST(GainHolo, ConstraintMultiply) {
+  auto autd = create_controller();
+
+  auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
+  auto g = autd3::gain::holo::Naive(std::move(backend))
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
+               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
+               .with_constraint(autd3::gain::holo::EmissionConstraint::Multiply(0));
+
+  autd.send(g);
+
+  for (auto& dev : autd.geometry()) {
+    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0; }));
+    ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
+  }
+}
