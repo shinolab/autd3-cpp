@@ -90,6 +90,7 @@ class Config:
     release: bool
     no_examples: bool
     cmake_extra: Optional[List[str]]
+    arch: str
 
     def __init__(self, args):
         self._platform = platform.system()
@@ -105,6 +106,14 @@ class Config:
             if hasattr(args, "cmake_extra") and args.cmake_extra is not None
             else None
         )
+        if hasattr(args, "arch") and args.arch is not None:
+            self.arch = args.arch
+        elif platform.machine().lower() in ["amd64", "x86_64"]:
+            self.arch = "x64"
+        elif platform.machine().lower() in ["arm64", "aarch64"]:
+            self.arch = "arm64"
+        else:
+            err(f"Unsupported platform: {platform.machine()}")
 
     def is_windows(self):
         return self._platform == "Windows"
@@ -168,9 +177,9 @@ def copy_lib(config: Config):
         return
 
     if config.is_windows():
-        if platform.machine().lower() in ["amd64", "x86_64"]:
+        if config.arch == "x64":
             url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-x64-static.zip"
-        elif platform.machine().lower() in ["arm64", "aarch64"]:
+        elif config.arch == "arm64":
             url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-arm-static.zip"
         else:
             err(f"Unsupported platform: {platform.machine()}")
@@ -210,6 +219,15 @@ def cpp_build(args):
                 if config.cmake_extra is not None:
                     for cmd in config.cmake_extra:
                         command.append(cmd)
+                if config.is_windows() and config.arch == "arm64":
+                    command.append("-A")
+                    command.append("ARM64")
+                if config.is_windows() and hasattr(args, "vs") and args.vs is not None:
+                    if args.vs == "2022":
+                        command.append("-GVisual Studio 17 2022")
+                    else:
+                        err(f"Unsupported Visual Studio version: {args.vs}")
+                        sys.exit(-1)
                 subprocess.run(command).check_returncode()
                 command = ["cmake", "--build", "."]
                 if config.release:
@@ -557,6 +575,8 @@ if __name__ == "__main__":
             "--no-examples", action="store_true", help="skip building examples"
         )
         parser_cpp_build.add_argument("--cmake-extra", help="cmake extra args")
+        parser_cpp_build.add_argument("--arch", help="architecture (x64, arm64)")
+        parser_cpp_build.add_argument("--vs", help="Visual Studio version")
         parser_cpp_build.set_defaults(handler=cpp_build)
 
         # test

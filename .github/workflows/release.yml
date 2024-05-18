@@ -77,6 +77,53 @@ jobs:
           asset_path: ./assets_x64.zip
           asset_name: ${{ steps.get_version.outputs.result }}-x64.zip
           asset_content_type: application/zip
+          
+
+  publish_win-arm:
+    needs: [release]
+    name: upload-release-asset-windows-arm
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        if: needs.check.outputs.status
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Get the version
+        id: get_version
+        uses: actions/github-script@v7
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          result-encoding: string
+          script: |
+            return 'autd3-'+context.payload.ref.replace(/refs\/tags\//, '')+'-win';
+
+      - name: Build project ARM
+        run: |
+          python3 build.py build --release --no-examples --arch=arm64 --vs=2022
+          Compress-Archive -Path LICENSE, lib, include, CMakeLists.txt, README.md, ThirdPartyNotice.txt -DestinationPath assets.zip
+      - name: Load Release URL File from release job
+        uses: actions/download-artifact@v1
+        with:
+          name: release_url
+      - name: Get Release File Name & Upload URL
+        id: get_release_info
+        uses: juliangruber/read-file-action@v1
+        with:
+          path: ./release_url/release_url.txt
+      - name: Upload Release Asset Win ARM
+        id: upload-release-asset-arm
+        uses: shogo82148/actions-upload-release-asset@v1
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          upload_url: ${{ steps.get_release_info.outputs.content }}
+          asset_path: ./assets.zip
+          asset_name: ${{ steps.get_version.outputs.result }}-arm.zip
+          asset_content_type: application/zip
 
   publish_linux:
     needs: [release]
@@ -146,7 +193,7 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           result-encoding: string
           script: |
-            return 'autd3-'+context.payload.ref.replace(/refs\/tags\//, '')+'-macos-universal.tar.gz';
+            return 'autd3-'+context.payload.ref.replace(/refs\/tags\//, '')+'-macos-aarch64.tar.gz';
 
       - name: Build project
         run: |
