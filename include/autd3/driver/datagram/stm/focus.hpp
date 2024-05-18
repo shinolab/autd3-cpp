@@ -1,8 +1,10 @@
 #pragma once
 
 #include <ranges>
+#include <variant>
 
 #include "autd3/def.hpp"
+#include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
@@ -32,22 +34,14 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   FocusSTM& operator=(FocusSTM&& obj) = default;       // LCOV_EXCL_LINE
   ~FocusSTM() override = default;                      // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] static FocusSTM from_freq(const Freq<double> freq) { return FocusSTM(freq, std::nullopt, std::nullopt); }
-  AUTD3_API [[nodiscard]] static FocusSTM from_freq_nearest(const Freq<double> freq) { return FocusSTM(std::nullopt, freq, std::nullopt); }
+  AUTD3_API [[nodiscard]] static FocusSTM from_freq(const Freq<double> freq) { return FocusSTM(STMSamplingModeFreq{freq}); }
+  AUTD3_API [[nodiscard]] static FocusSTM from_freq_nearest(const Freq<double> freq) { return FocusSTM(STMSamplingModeFreqNearest{freq}); }
   AUTD3_API [[nodiscard]] static FocusSTM from_sampling_config(const native_methods::SamplingConfigWrap config) {
-    return FocusSTM(std::nullopt, std::nullopt, config);
+    return FocusSTM(STMSamplingModeSamplingConfig{config});
   }
 
   AUTD3_API [[nodiscard]] native_methods::FocusSTMPtr raw_ptr(const geometry::Geometry&) const override {
-    native_methods::FocusSTMPtr ptr;
-    if (_freq.has_value())
-      ptr = native_methods::AUTDSTMFocusFromFreq(_freq.value().hz());
-    else if (_freq_nearest.has_value())
-      ptr = native_methods::AUTDSTMFocusFromFreqNearest(_freq_nearest.value().hz());
-    else if (_config.has_value())
-      ptr = AUTDSTMFocusFromSamplingConfig(_config.value());
-    else
-      throw std::runtime_error("unreachable!");  // LCOV_EXCL_LINE
+    native_methods::FocusSTMPtr ptr = std::visit([](const auto s) { return s.focus_ptr(); }, _sampling);
     ptr = AUTDSTMFocusWithLoopBehavior(ptr, _loop_behavior);
     return AUTDSTMFocusAddFoci(ptr, reinterpret_cast<const double*>(_points.data()), reinterpret_cast<const uint8_t*>(_intensities.data()),
                                _intensities.size());
@@ -133,15 +127,12 @@ class FocusSTM final : public DatagramST<native_methods::FocusSTMPtr> {
   AUTD3_DEF_PARAM(FocusSTM, native_methods::LoopBehavior, loop_behavior)
 
  private:
-  AUTD3_API explicit FocusSTM(const std::optional<Freq<double>> freq, const std::optional<Freq<double>> freq_nearest,
-                              std::optional<native_methods::SamplingConfigWrap> config)
-      : _loop_behavior(LoopBehavior::infinite()), _freq(freq), _freq_nearest(freq_nearest), _config(std::move(config)) {}
+  AUTD3_API explicit FocusSTM(std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> sampling)
+      : _loop_behavior(LoopBehavior::infinite()), _sampling(std::move(sampling)) {}
 
   std::vector<Vector3> _points;
   std::vector<EmitIntensity> _intensities;
-  std::optional<Freq<double>> _freq;
-  std::optional<Freq<double>> _freq_nearest;
-  std::optional<native_methods::SamplingConfigWrap> _config;
+  std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> _sampling;
 };
 
 }  // namespace autd3::driver

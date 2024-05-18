@@ -2,8 +2,10 @@
 
 #include <memory>
 #include <ranges>
+#include <variant>
 
 #include "autd3/driver/datagram/gain/base.hpp"
+#include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
@@ -23,22 +25,15 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
   GainSTM& operator=(GainSTM&& obj) = default;       // LCOV_EXCL_LINE
   ~GainSTM() override = default;                     // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<double> freq) { return GainSTM(freq, std::nullopt, std::nullopt); }
-  AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<double> freq) { return GainSTM(std::nullopt, freq, std::nullopt); }
+  AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<double> freq) { return GainSTM(STMSamplingModeFreq{freq}); }
+  AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<double> freq) { return GainSTM(STMSamplingModeFreqNearest{freq}); }
   AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const native_methods::SamplingConfigWrap config) {
-    return GainSTM(std::nullopt, std::nullopt, config);
+    return GainSTM(STMSamplingModeSamplingConfig{config});
   }
 
   AUTD3_API [[nodiscard]] native_methods::GainSTMPtr raw_ptr(const geometry::Geometry& geometry) const override {
-    native_methods::GainSTMPtr ptr;
-    if (_freq.has_value())
-      ptr = native_methods::AUTDSTMGainFromFreq(_freq.value().hz());
-    else if (_freq_nearest.has_value())
-      ptr = native_methods::AUTDSTMGainFromFreqNearest(_freq_nearest.value().hz());
-    else if (_config.has_value())
-      ptr = AUTDSTMGainFromSamplingConfig(_config.value());
-    else
-      throw std::runtime_error("unreachable!");  // LCOV_EXCL_LINE
+    native_methods::GainSTMPtr ptr = std::visit([](const auto s) { return s.gain_ptr(); }, _sampling);
+
     ptr = AUTDSTMGainWithMode(ptr, _mode);
     ptr = AUTDSTMGainWithLoopBehavior(ptr, _loop_behavior);
 
@@ -97,18 +92,11 @@ class GainSTM final : public DatagramST<native_methods::GainSTMPtr> {
   AUTD3_DEF_PARAM(GainSTM, native_methods::GainSTMMode, mode)
 
  private:
-  AUTD3_API explicit GainSTM(const std::optional<Freq<double>> freq, const std::optional<Freq<double>> freq_nearest,
-                             std::optional<native_methods::SamplingConfigWrap> config)
-      : _loop_behavior(LoopBehavior::infinite()),
-        _mode(native_methods::GainSTMMode::PhaseIntensityFull),
-        _freq(freq),
-        _freq_nearest(freq_nearest),
-        _config(std::move(config)) {}
+  AUTD3_API explicit GainSTM(std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> sampling)
+      : _loop_behavior(LoopBehavior::infinite()), _mode(native_methods::GainSTMMode::PhaseIntensityFull), _sampling(std::move(sampling)) {}
 
   std::vector<std::shared_ptr<GainBase>> _gains;
-  std::optional<Freq<double>> _freq;
-  std::optional<Freq<double>> _freq_nearest;
-  std::optional<native_methods::SamplingConfigWrap> _config;
+  std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> _sampling;
 };
 
 }  // namespace autd3::driver
