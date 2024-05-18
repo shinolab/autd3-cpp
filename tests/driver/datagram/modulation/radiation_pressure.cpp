@@ -9,7 +9,7 @@ TEST(DriverDatagramModulation, RadiationPressure) {
   auto autd = create_controller();
 
   {
-    autd.send(autd3::modulation::Sine::create(150 * autd3::driver::Hz).with_radiation_pressure());
+    autd.send(autd3::modulation::Sine(150 * autd3::driver::Hz).with_radiation_pressure());
 
     for (auto& dev : autd.geometry()) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -24,7 +24,7 @@ TEST(DriverDatagramModulation, RadiationPressure) {
   }
 
   {
-    auto m = autd3::modulation::Sine::create(150 * autd3::driver::Hz);
+    autd3::modulation::Sine m(150 * autd3::driver::Hz);
     autd.send(m.with_radiation_pressure());
 
     for (auto& dev : autd.geometry()) {

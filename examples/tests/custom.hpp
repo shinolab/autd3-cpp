@@ -7,7 +7,7 @@ inline void custom(autd3::Controller<L>& autd) {
   auto silencer = autd3::Silencer::default_();
   autd.send(silencer);
 
-  auto m = autd3::modulation::Sine::create(150 * autd3::Hz);  // 150Hz AM
+  autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM
 
   const autd3::gain::Custom g([](const auto& dev) -> auto {
     return [&](const auto& tr) -> autd3::Drive {

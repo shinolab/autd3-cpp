@@ -107,7 +107,7 @@ TEST(Controller, ControllerGroup) {
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
       .set(0, autd3::modulation::Static(), autd3::gain::Null())
-      .set(1, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+      .set(1, autd3::modulation::Sine(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
       .send();
 
   {
@@ -126,7 +126,7 @@ TEST(Controller, ControllerGroup) {
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
       .set(1, autd3::gain::Null())
-      .set(0, autd3::modulation::Sine::create(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+      .set(0, autd3::modulation::Sine(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
       .send();
 
   {
@@ -150,7 +150,7 @@ TEST(Controller, ControllerGroupCheckOnlyForEnabled) {
         check[dev.idx()] = true;
         return 0;
       })
-      .set(0, autd3::modulation::Sine::create(150 * autd3::driver::Hz),
+      .set(0, autd3::modulation::Sine(150 * autd3::driver::Hz),
            autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
       .send();
 

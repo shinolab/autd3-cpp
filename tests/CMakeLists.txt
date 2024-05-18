@@ -47,7 +47,9 @@ target_link_libraries(test_autd3 PRIVATE autd3::autd3 autd3::gain::holo autd3::m
 target_link_libraries(test_autd3 PRIVATE autd3::link::soem)
 target_link_libraries(test_autd3 PRIVATE autd3::link::twincat)
 target_link_libraries(test_autd3 PRIVATE autd3::link::simulator)
-target_link_libraries(test_autd3 PRIVATE autd3::link::visualizer)
+if(${AUTD3_LINK_VISUALIZER_BUILD})
+  target_link_libraries(test_autd3 PRIVATE autd3::link::visualizer)
+endif()
 
 add_subdirectory(controller)
 add_subdirectory(gain)

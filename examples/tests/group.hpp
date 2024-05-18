@@ -19,7 +19,7 @@ inline void group_by_device_test(autd3::Controller<T>& autd) {
         }
       })
       .set("null", autd3::modulation::Static(), autd3::gain::Null())
-      .set("focus", autd3::modulation::Sine::create(150 * autd3::Hz), autd3::gain::Focus(center))
+      .set("focus", autd3::modulation::Sine(150 * autd3::Hz), autd3::gain::Focus(center))
       .send();
 }
 
@@ -39,7 +39,7 @@ inline void group_by_transducer_test(autd3::Controller<T>& autd) {
                      .set("focus", g1)
                      .set("null", g2);
 
-  auto m = autd3::modulation::Sine::create(150 * autd3::Hz);  // 150Hz AM
+  autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM
 
   autd.send(m, g);
 }

@@ -4,5 +4,11 @@ target_sources(test_autd3 PRIVATE
   simulator.cpp
   soem.cpp
   twincat.cpp
-  visualizer.cpp
 )
+
+if(${AUTD3_LINK_VISUALIZER_BUILD})
+  target_sources(test_autd3 PRIVATE
+    visualizer.cpp
+  )
+endif()
+
