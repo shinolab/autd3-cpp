@@ -23,14 +23,21 @@ if(AUTD_LOCAL_TEST)
     SOURCE_DIR ${PROJECT_SOURCE_DIR}/..
   )
 elseif(WIN32)
-  FetchContent_Declare(
-    autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v24.0.0/autd3-v24.0.0-win-x64.zip
-  )
+  if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "AMD64|IA64")
+    FetchContent_Declare(
+      autd3
+      URL https://github.com/shinolab/autd3-cpp/releases/download/v24.0.0/autd3-v24.0.0-win-x64.zip
+    )
+  elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "ARM64")
+    FetchContent_Declare(
+      autd3
+      URL https://github.com/shinolab/autd3-cpp/releases/download/v24.0.0/autd3-v24.0.0-win-arm.zip
+    )
+  endif()
 elseif(APPLE)
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v24.0.0/autd3-v24.0.0-macos-universal.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v24.0.0/autd3-v24.0.0-macos-aarch64.tar.gz
   )
 else()
   FetchContent_Declare(
