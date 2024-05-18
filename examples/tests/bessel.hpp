@@ -4,7 +4,7 @@
 
 template <typename L>
 inline void bessel_test(autd3::Controller<L>& autd) {
-  auto silencer = autd3::Silencer::default_();
+  auto silencer = autd3::Silencer();
   autd.send(silencer);
 
   autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM

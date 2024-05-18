@@ -4,7 +4,7 @@
 
 template <typename T>
 inline void group_by_device_test(autd3::Controller<T>& autd) {
-  auto silencer = autd3::Silencer::default_();
+  auto silencer = autd3::Silencer();
   autd.send(silencer);
 
   const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0.0, 0.0, 150.0);
@@ -25,7 +25,7 @@ inline void group_by_device_test(autd3::Controller<T>& autd) {
 
 template <typename T>
 inline void group_by_transducer_test(autd3::Controller<T>& autd) {
-  auto silencer = autd3::Silencer::default_();
+  auto silencer = autd3::Silencer();
   autd.send(silencer);
 
   const auto cx = autd.geometry().center().x();

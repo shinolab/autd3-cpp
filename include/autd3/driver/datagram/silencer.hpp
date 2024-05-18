@@ -21,31 +21,29 @@ class Silencer final {
     }
   };
 
-  class FixedCompletionSteps final {
-   public:
-    AUTD3_API explicit FixedCompletionSteps(const uint16_t steps_intensity, const uint16_t steps_phase) noexcept
-        : _step_intensity(steps_intensity), _step_phase(steps_phase), _strict_mode(true) {}
-
-    AUTD3_DEF_PROP(uint16_t, step_intensity)
-    AUTD3_DEF_PROP(uint16_t, step_phase)
-    AUTD3_DEF_PARAM(FixedCompletionSteps, bool, strict_mode)
-
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
-      return validate(native_methods::AUTDDatagramSilencerFixedCompletionSteps(_step_intensity, _step_phase, _strict_mode));
-    }
-  };
-
   AUTD3_API [[nodiscard]] static FixedUpdateRate fixed_update_rate(const uint16_t update_rate_intensity, const uint16_t update_rate_phase) noexcept {
     return FixedUpdateRate(update_rate_intensity, update_rate_phase);
   }
 
-  AUTD3_API [[nodiscard]] static FixedCompletionSteps fixed_completion_steps(const uint16_t steps_intensity, const uint16_t steps_phase) noexcept {
-    return FixedCompletionSteps(steps_intensity, steps_phase);
+  AUTD3_API [[nodiscard]] static Silencer fixed_completion_steps(const uint16_t steps_intensity, const uint16_t steps_phase) noexcept {
+    return Silencer(steps_intensity, steps_phase);
   }
 
-  AUTD3_API [[nodiscard]] static FixedCompletionSteps disable() noexcept { return fixed_completion_steps(1, 1); }
+  AUTD3_API [[nodiscard]] static Silencer disable() noexcept { return fixed_completion_steps(1, 1); }
 
-  AUTD3_API [[nodiscard]] static FixedCompletionSteps default_() noexcept { return fixed_completion_steps(10, 40); }
+  Silencer() : Silencer(10, 40) {}
+
+  AUTD3_DEF_PROP(uint16_t, step_intensity)
+  AUTD3_DEF_PROP(uint16_t, step_phase)
+  AUTD3_DEF_PARAM(Silencer, bool, strict_mode)
+
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
+    return validate(native_methods::AUTDDatagramSilencerFixedCompletionSteps(_step_intensity, _step_phase, _strict_mode));
+  }
+
+ private:
+  Silencer(const uint16_t steps_intensity, const uint16_t steps_phase)
+      : _step_intensity(steps_intensity), _step_phase(steps_phase), _strict_mode(true) {}
 };
 
 }  // namespace autd3::driver

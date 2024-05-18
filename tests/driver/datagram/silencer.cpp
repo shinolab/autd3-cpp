@@ -34,12 +34,12 @@ TEST(DriverDatagram, Silencer) {
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  autd.send(autd3::driver::Silencer::default_());
+  autd.send(autd3::driver::Silencer());
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(10, autd.link().silencer_completion_steps_intensity(dev.idx()));
     ASSERT_EQ(40, autd.link().silencer_completion_steps_phase(dev.idx()));
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionStepsIsDefault(autd3::driver::Silencer::default_().ptr(autd.geometry())));
+  ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionStepsIsDefault(autd3::driver::Silencer().ptr(autd.geometry())));
 }
