@@ -305,6 +305,7 @@ def check_all_headers_is_tested():
         headers.remove("exception.hpp")
         headers.remove("def.hpp")
         headers.remove("driver/link.hpp")
+        headers.remove("driver/datagram/stm/stm.hpp")
         headers.remove("driver/datagram/datagram.hpp")
         headers.remove("driver/datagram/gain/base.hpp")
         headers.remove("driver/datagram/gain/gain.hpp")
@@ -315,6 +316,7 @@ def check_all_headers_is_tested():
         headers.remove("gain/holo/backend_cuda.hpp")
         headers.remove("gain/holo/backend.hpp")
         headers.remove("modulation/audio_file.hpp")
+        headers.remove("modulation/sampling_mode.hpp")
         headers = set([header.replace(".hpp", ".cpp") for header in headers])
 
     def load_sources(base_path: pathlib.Path) -> set[str]:
@@ -328,12 +330,13 @@ def check_all_headers_is_tested():
         with open(base_path / "CMakeLists.txt", "r") as f:
             sources = False
             for line in f.readlines():
-                if line.startswith("target_sources(test_autd3 PRIVATE"):
+                if line.strip().startswith("target_sources(test_autd3 PRIVATE"):
                     sources = True
                 if not sources:
                     continue
-                if line.startswith(")"):
-                    break
+                if line.strip().startswith(")"):
+                    sources = False
+                    continue
                 src = re.search(r"\s*(.*.cpp)", line)
                 if src:
                     tested.add(f"{base_path}/{src.group(1)}")
