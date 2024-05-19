@@ -12,6 +12,8 @@
 
 namespace autd3::modulation {
 
+class Fourier;
+
 class Sine final : public driver::Modulation<Sine> {
   AUTD3_API explicit Sine(const std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> freq)
       : Modulation(driver::SamplingConfig::Division(5120)),
@@ -21,7 +23,7 @@ class Sine final : public driver::Modulation<Sine> {
         _phase(0.0 * driver::rad) {}
 
  public:
-  friend class Fourier;
+  friend Fourier;
 
   AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq) : Sine(SamplingModeExact{freq}) {}
   AUTD3_API explicit Sine(const driver::Freq<double> freq) : Sine(SamplingModeExactFloat{freq}) {}
