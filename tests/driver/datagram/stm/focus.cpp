@@ -71,7 +71,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
 
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
 
-  auto infos = autd.fpga_info();
+  auto infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
@@ -85,7 +85,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
                  .add_focus(center);
 
   autd.send(stm);
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
@@ -93,7 +93,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
   }
 
   autd.send(stm.with_segment(Segment::S1, autd3::driver::TransitionMode::Immediate));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_stm_segment());
@@ -105,7 +105,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
                                       return autd3::driver::ControlPoint{center, std::numeric_limits<autd3::driver::EmitIntensity>::max()};
                                     }))
                 .with_segment(Segment::S0, std::nullopt));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_stm_segment());
@@ -113,7 +113,7 @@ TEST(DriverDatagramSTM, FocusSTMSegment) {
   }
 
   autd.send(autd3::driver::SwapSegment::focus_stm(Segment::S0, autd3::driver::TransitionMode::Immediate));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());

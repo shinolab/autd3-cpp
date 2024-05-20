@@ -59,7 +59,7 @@ class Controller {
 
   AUTD3_API void close() const { validate(AUTDControllerClose(_ptr)); }
 
-  AUTD3_API [[nodiscard]] std::vector<std::optional<driver::FPGAState>> fpga_info() {
+  AUTD3_API [[nodiscard]] std::vector<std::optional<driver::FPGAState>> fpga_state() {
     const size_t num_devices = geometry().num_devices();
     std::vector<int32_t> info(num_devices);
     validate(AUTDControllerFPGAState(_ptr, info.data()));
@@ -176,7 +176,7 @@ class Controller {
 #ifdef AUTD3_ASYNC_API
   AUTD3_API [[nodiscard]] coro::task<void> close_async() const { co_return close(); }
 
-  AUTD3_API [[nodiscard]] coro::task<std::vector<std::optional<driver::FPGAState>>> fpga_info_async() { co_return fpga_info(); }
+  AUTD3_API [[nodiscard]] coro::task<std::vector<std::optional<driver::FPGAState>>> fpga_info_async() { co_return fpga_state(); }
 
   template <driver::datagram D, typename Rep, typename Period>
   AUTD3_API [[nodiscard]] coro::task<void> send_async(D&& data, const std::chrono::duration<Rep, Period> timeout) {

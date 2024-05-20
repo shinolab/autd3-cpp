@@ -16,7 +16,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
 
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
 
-  auto infos = autd.fpga_info();
+  auto infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_gain_segment());
@@ -26,7 +26,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
   }
 
   autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_gain_segment());
@@ -37,7 +37,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
 
   auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91));
   autd.send(g.with_segment(Segment::S1, true));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_gain_segment());
@@ -47,7 +47,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
   }
 
   autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x82)).with_phase(autd3::driver::Phase(0x92)).with_segment(Segment::S0, false));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_gain_segment());
@@ -63,7 +63,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
   }
 
   autd.send(autd3::driver::SwapSegment::gain(Segment::S0));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_gain_segment());
@@ -76,7 +76,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
 
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
 
-  auto infos = autd.fpga_info();
+  auto infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_mod_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_mod_segment(dev.idx()));
@@ -84,7 +84,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
   }
 
   autd.send(autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x80)));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_mod_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_mod_segment(dev.idx()));
@@ -93,7 +93,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
 
   auto m = autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x81));
   autd.send(m.with_segment(Segment::S1, autd3::driver::TransitionMode::Immediate));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_mod_segment());
     ASSERT_EQ(Segment::S1, autd.link().current_mod_segment(dev.idx()));
@@ -101,7 +101,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
   }
 
   autd.send(autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x82)).with_segment(Segment::S0, std::nullopt));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_mod_segment());
     ASSERT_EQ(Segment::S1, autd.link().current_mod_segment(dev.idx()));
@@ -110,7 +110,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
   }
 
   autd.send(autd3::driver::SwapSegment::modulation(Segment::S0, autd3::driver::TransitionMode::Immediate));
-  infos = autd.fpga_info();
+  infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_mod_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_mod_segment(dev.idx()));

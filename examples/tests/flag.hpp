@@ -24,7 +24,7 @@ inline void flag_test(autd3::Controller<L>& autd) {
   const std::vector prompts = {'-', '/', '|', '\\'};
   size_t prompts_idx = 0;
   while (!fin) {
-    const auto states = autd.fpga_info();
+    const auto states = autd.fpga_state();
     std::cout << prompts[prompts_idx++ / 1000 % prompts.size()] << " FPGA Status...\n";
     std::ranges::for_each(std::ranges::views::iota(states.size()), [&states](const size_t i) {
       std::cout << "[" << i << "]: " << (states[i].has_value() ? std::to_string(states[i].value().is_thermal_assert()) : "-") << std::endl;
