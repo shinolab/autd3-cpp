@@ -18,9 +18,9 @@ class Uniform final : public autd3::gain::Gain<Uniform> {
 
   AUTD3_API [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::driver::Drive>> calc(
       const autd3::driver::geometry::Geometry& geometry) const override {
-    return transform(geometry, [&](const auto& dev, const auto&) {
+    return transform(geometry, [&](const auto& dev) {
       _cnt->operator[](dev.idx()) = true;
-      return autd3::driver::Drive{_phase, _intensity};
+      return [&](const auto&) { return autd3::driver::Drive{_phase, _intensity}; };
     });
   }
 

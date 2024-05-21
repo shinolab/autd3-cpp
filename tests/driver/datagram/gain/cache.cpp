@@ -38,8 +38,9 @@ class ForCacheTest final : public autd3::gain::Gain<ForCacheTest> {
   AUTD3_API [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::driver::Drive>> calc(
       const autd3::driver::geometry::Geometry& geometry) const override {
     ++*_cnt;
-    return transform(geometry,
-                     [&](const auto&, const auto&) { return autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; });
+    return transform(geometry, [](const auto&) {
+      return [](const auto&) { return autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; };
+    });
   }
 
  private:

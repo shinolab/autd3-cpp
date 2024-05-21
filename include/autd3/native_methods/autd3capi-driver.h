@@ -25,18 +25,18 @@ constexpr const int32_t AUTD3_TRUE = 1;
 constexpr const int32_t AUTD3_FALSE = 0;
 
 enum class DebugTypeTag : uint8_t {
-  None,
-  BaseSignal,
-  Thermo,
-  ForceFan,
-  Sync,
-  ModSegment,
-  ModIdx,
-  StmSegment,
-  StmIdx,
-  IsStmMode,
-  PwmOut,
-  Direct,
+  None = 0,
+  BaseSignal = 1,
+  Thermo = 2,
+  ForceFan = 3,
+  Sync = 4,
+  ModSegment = 5,
+  ModIdx = 6,
+  StmSegment = 7,
+  StmIdx = 8,
+  IsStmMode = 9,
+  PwmOut = 10,
+  Direct = 11,
 };
 
 enum class GPIOIn : uint8_t {
@@ -60,10 +60,10 @@ enum class GainSTMMode : uint8_t {
 };
 
 enum class SamplingConfigTag : uint8_t {
-  Division,
-  DivisionRaw,
-  Freq,
-  FreqNearest,
+  Division = 0,
+  DivisionRaw = 1,
+  Freq = 2,
+  FreqNearest = 3,
 };
 
 enum class Segment : uint8_t {
@@ -76,12 +76,20 @@ enum class SyncMode : uint8_t {
   DC = 1,
 };
 
+enum class TransitionModeTag : uint8_t {
+  SyncIdx = 0,
+  SysTime = 1,
+  Gpio = 2,
+  Ext = 3,
+  Immediate = 4,
+};
+
 struct LoopBehavior {
   uint32_t rep;
 };
 
 struct TransitionModeWrap {
-  uint8_t ty;
+  TransitionModeTag tag;
   uint64_t value;
 };
 

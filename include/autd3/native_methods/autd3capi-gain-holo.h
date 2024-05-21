@@ -7,14 +7,15 @@
 namespace autd3::native_methods {
 
 enum class EmissionConstraintTag : uint8_t {
-  DontCare,
-  Normalize,
-  Uniform,
-  Multiply,
-  Clamp,
+  DontCare = 0,
+  Normalize = 1,
+  Uniform = 2,
+  Multiply = 3,
+  Clamp = 4,
 };
 
 union EmissionConstraintValue {
+  uint8_t null;
   uint8_t uniform;
   double multiply;
   uint8_t clamp[2];

@@ -15,7 +15,7 @@ namespace autd3::gain {
 
 template <class F>
 concept gain_transform = requires(F f, const driver::geometry::Device& dev, const driver::geometry::Transducer& tr) {
-  { f(dev, tr) } -> std::same_as<driver::Drive>;
+  { f(dev)(tr) } -> std::same_as<driver::Drive>;
 };
 
 template <class G>
@@ -43,7 +43,7 @@ class Gain : public driver::Gain<G> {
       std::vector<driver::Drive> drives;
       drives.reserve(dev.num_transducers());
       std::transform(dev.cbegin(), dev.cend(), std::back_inserter(drives),
-                     [&dev, &func](const driver::geometry::Transducer& tr) { return func(dev, tr); });
+                     [&dev, &func](const driver::geometry::Transducer& tr) { return func(dev)(tr); });
       drives_map[dev.idx()] = std::move(drives);
     });
     return drives_map;
