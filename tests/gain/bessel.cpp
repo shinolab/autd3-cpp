@@ -7,7 +7,7 @@
 TEST(Gain, Bessel) {
   auto autd = create_controller();
 
-  autd.send(autd3::gain::Bessel(autd.geometry().center(), autd3::driver::Vector3::UnitZ(), autd3::driver::pi / 4)
+  autd.send(autd3::gain::Bessel(autd.geometry().center(), autd3::driver::Vector3::UnitZ(), autd3::driver::pi / 4 * autd3::driver::rad)
                 .with_intensity(autd3::driver::EmitIntensity(0x80)));
 
   for (auto& dev : autd.geometry()) {
@@ -19,6 +19,6 @@ TEST(Gain, Bessel) {
 
 TEST(Gain, BesselDefault) {
   auto autd = create_controller();
-  const auto g = autd3::gain::Bessel(autd3::driver::Vector3::Zero(), autd3::driver::Vector3::UnitZ(), 0);
+  const auto g = autd3::gain::Bessel(autd3::driver::Vector3::Zero(), autd3::driver::Vector3::UnitZ(), 0 * autd3::driver::rad);
   ASSERT_TRUE(autd3::native_methods::AUTDGainBesselIsDefault(g.gain_ptr(autd.geometry())));
 }

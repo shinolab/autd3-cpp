@@ -15,7 +15,7 @@ struct SamplingModeExact {
 
   native_methods::ModulationPtr sine_ptr(native_methods::SamplingConfigWrap config, driver::EmitIntensity intensity, driver::EmitIntensity offset,
                                          driver::Angle phase, native_methods::LoopBehavior loop_behavior) const {
-    return AUTDModulationSineExact(freq.hz(), config, intensity.value(), offset.value(), phase.to_radian(), loop_behavior);
+    return AUTDModulationSineExact(freq.hz(), config, intensity.value(), offset.value(), phase.radian(), loop_behavior);
   }
 
   native_methods::ModulationPtr fourier_ptr(std::vector<native_methods::ModulationPtr> components, native_methods::LoopBehavior loop_behavior) const {
@@ -32,7 +32,7 @@ struct SamplingModeExactFloat {
   driver::Freq<double> freq;
   native_methods::ModulationPtr sine_ptr(native_methods::SamplingConfigWrap config, driver::EmitIntensity intensity, driver::EmitIntensity offset,
                                          driver::Angle phase, native_methods::LoopBehavior loop_behavior) const {
-    return AUTDModulationSineExactFloat(freq.hz(), config, intensity.value(), offset.value(), phase.to_radian(), loop_behavior);
+    return AUTDModulationSineExactFloat(freq.hz(), config, intensity.value(), offset.value(), phase.radian(), loop_behavior);
   }
 
   native_methods::ModulationPtr fourier_ptr(std::vector<native_methods::ModulationPtr> components, native_methods::LoopBehavior loop_behavior) const {
@@ -49,7 +49,7 @@ struct SamplingModeNearest {
   driver::Freq<double> freq;
   native_methods::ModulationPtr sine_ptr(native_methods::SamplingConfigWrap config, driver::EmitIntensity intensity, driver::EmitIntensity offset,
                                          driver::Angle phase, native_methods::LoopBehavior loop_behavior) const {
-    return AUTDModulationSineNearest(freq.hz(), config, intensity.value(), offset.value(), phase.to_radian(), loop_behavior);
+    return AUTDModulationSineNearest(freq.hz(), config, intensity.value(), offset.value(), phase.radian(), loop_behavior);
   }
 
   native_methods::ModulationPtr fourier_ptr(std::vector<native_methods::ModulationPtr> components, native_methods::LoopBehavior loop_behavior) const {

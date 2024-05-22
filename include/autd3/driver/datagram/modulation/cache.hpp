@@ -12,7 +12,9 @@ namespace autd3::modulation {
 template <class M>
 class Cache final : public driver::ModulationBase<Cache<M>> {
  public:
-  AUTD3_API explicit Cache(M m) : _m(std::move(m)), _cache(std::make_shared<std::vector<driver::EmitIntensity>>()) {}
+  AUTD3_API explicit Cache(M m) : _m(std::move(m)), _cache(std::make_shared<std::vector<driver::EmitIntensity>>()) {
+    this->_loop_behavior = _m.loop_behavior();
+  }
   Cache(const Cache& v) = default;  // LCOV_EXCL_LINE
   Cache& operator=(const Cache& obj) = delete;
   Cache(Cache&& obj) noexcept = default;  // LCOV_EXCL_LINE
@@ -23,7 +25,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry& geometry) const override {
     const auto& buf = calc(geometry);
-    return native_methods::AUTDModulationRaw(_sampling_config.value(), _m.loop_behavior(), reinterpret_cast<const uint8_t*>(buf.data()),
+    return native_methods::AUTDModulationRaw(_sampling_config.value(), this->_loop_behavior, reinterpret_cast<const uint8_t*>(buf.data()),
                                              static_cast<uint32_t>(buf.size()));
   }
 

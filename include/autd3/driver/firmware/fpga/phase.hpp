@@ -8,7 +8,7 @@ namespace autd3::driver {
 class Phase final {
  public:
   AUTD3_API explicit constexpr Phase(const uint8_t value) : _value(value) {}
-  AUTD3_API explicit Phase(const Angle value) : _value(native_methods::AUTDPhaseFromRad(value.to_radian())) {}
+  AUTD3_API explicit Phase(const Angle value) : _value(native_methods::AUTDPhaseFromRad(value.radian())) {}
 
   AUTD3_API [[nodiscard]] double radian() const { return native_methods::AUTDPhaseToRad(_value); }
 

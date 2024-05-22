@@ -335,6 +335,12 @@ GainPtr AUTDGainRawSet(GainPtr custom,
                        const Drive *ptr,
                        uint32_t len);
 
+[[nodiscard]]
+GainPtr AUTDGainWithTransform(GainPtr g,
+                              void* f,
+                              void* context,
+                              GeometryPtr geometry);
+
 [[nodiscard]] GainPtr AUTDGainUniform(uint8_t intensity, uint8_t phase);
 
 [[nodiscard]] bool AUTDGainUniformIsDefault(GainPtr uniform);

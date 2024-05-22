@@ -23,7 +23,7 @@ class Angle {
   friend class UnitRad;
   friend class UnitDegree;
 
-  AUTD3_API [[nodiscard]] double to_radian() const { return _value; }
+  AUTD3_API [[nodiscard]] double radian() const { return _value; }
 
   AUTD3_API friend Angle operator*(const double l, const UnitRad&) { return Angle(l); }
   AUTD3_API friend Angle operator*(const double l, const UnitDegree&) { return Angle(l / 180 * std::numbers::pi); }

@@ -6,7 +6,8 @@ namespace autd3::driver {
 
 class EmitIntensity final {
  public:
-  AUTD3_API explicit constexpr EmitIntensity(const uint8_t value) noexcept : _value(value) {}
+  template <std::integral T>
+  AUTD3_API explicit constexpr EmitIntensity(const T value) noexcept : _value(value) {}
 
   AUTD3_API [[nodiscard]] constexpr uint8_t value() const noexcept { return _value; }
 
@@ -24,6 +25,6 @@ class EmitIntensity final {
 template <>
 class std::numeric_limits<autd3::driver::EmitIntensity> {
  public:
-  static constexpr autd3::driver::EmitIntensity min() noexcept { return autd3::driver::EmitIntensity{0x00}; }
-  static constexpr autd3::driver::EmitIntensity max() noexcept { return autd3::driver::EmitIntensity{0xFF}; }
+  static autd3::driver::EmitIntensity min() noexcept { return autd3::driver::EmitIntensity(0x00); }
+  static autd3::driver::EmitIntensity max() noexcept { return autd3::driver::EmitIntensity(0xFF); }
 };

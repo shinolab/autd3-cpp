@@ -10,8 +10,8 @@
 #include "utils.hpp"
 
 TEST(DriverGeomtry, Angle) {
-  ASSERT_NEAR((90.0 * autd3::driver::deg).to_radian(), std::numbers::pi / 2, 1e-6);
-  ASSERT_NEAR((std::numbers::pi / 2 * autd3::driver::rad).to_radian(), std::numbers::pi / 2, 1e-6);
+  ASSERT_NEAR((90.0 * autd3::driver::deg).radian(), std::numbers::pi / 2, 1e-6);
+  ASSERT_NEAR((std::numbers::pi / 2 * autd3::driver::rad).radian(), std::numbers::pi / 2, 1e-6);
 }
 
 static autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::driver::Quaternion& q) {
@@ -26,31 +26,31 @@ TEST(DriverGeomtry, WithRotation) {
   using autd3::driver::geometry::EulerAngles;
 
   {
-    const auto autd = open_rotation(EulerAngles::from_zyz(90.0 * deg, 0.0 * deg, 0.0 * deg));
+    const auto autd = open_rotation(EulerAngles::ZYZ(90.0 * deg, 0.0 * deg, 0.0 * deg));
     ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].x_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0][0].y_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0][0].z_direction(), 1e-6);
   }
   {
-    const auto autd = open_rotation(EulerAngles::from_zyz(0.0 * deg, 90.0 * deg, 0.0 * deg));
+    const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 90.0 * deg, 0.0 * deg));
     ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0][0].x_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].y_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0][0].z_direction(), 1e-6);
   }
   {
-    const auto autd = open_rotation(EulerAngles::from_zyz(0.0 * deg, 0.0 * deg, 90.0 * deg));
+    const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 0.0 * deg, 90.0 * deg));
     ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].x_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0][0].y_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0][0].z_direction(), 1e-6);
   }
   {
-    const auto autd = open_rotation(EulerAngles::from_zyz(0.0 * deg, 90.0 * deg, 90.0 * deg));
+    const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 90.0 * deg, 90.0 * deg));
     ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].x_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0][0].y_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0][0].z_direction(), 1e-6);
   }
   {
-    const auto autd = open_rotation(EulerAngles::from_zyz(90.0 * deg, 90.0 * deg, 0.0 * deg));
+    const auto autd = open_rotation(EulerAngles::ZYZ(90.0 * deg, 90.0 * deg, 0.0 * deg));
     ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0][0].x_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0][0].y_direction(), 1e-6);
     ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].z_direction(), 1e-6);

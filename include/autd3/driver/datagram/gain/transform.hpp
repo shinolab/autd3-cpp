@@ -18,15 +18,24 @@ namespace autd3::gain {
 
 template <class F>
 concept gain_transform_f = requires(F f, const driver::geometry::Device& dev, const driver::geometry::Transducer& tr, const driver::Drive d) {
-  { f(dev, tr, d) } -> std::same_as<driver::Drive>;
+  { f(dev)(tr, d) } -> std::same_as<driver::Drive>;
 };
 
 template <class G, gain_transform_f F>
 class Transform final : public driver::GainBase,
                         public driver::IntoDatagramWithSegment<native_methods::GainPtr, Transform<G, F>>,
                         public driver::IntoGainCache<Transform<G, F>> {
+  using transform_f = uint8_t (*)(const void*, native_methods::GeometryPtr, uint32_t, uint8_t, driver::Drive, driver::Drive*);
+
  public:
-  AUTD3_API Transform(G g, F f) : _g(std::move(g)), _f(std::move(f)) {}
+  AUTD3_API Transform(G g, F f) : _g(std::move(g)), _f(std::move(f)) {
+    _f_native = +[](const void* context, native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const uint8_t tr_idx, driver::Drive drive,
+                    driver::Drive* dst) -> uint8_t {
+      const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
+      const driver::geometry::Transducer tr(tr_idx, dev.ptr());
+      *dst = static_cast<const Transform*>(context)->_f(dev)(tr, drive);
+    };
+  }
   Transform() = delete;
   Transform(const Transform& obj) = default;             // LCOV_EXCL_LINE
   Transform& operator=(const Transform& obj) = default;  // LCOV_EXCL_LINE
@@ -35,34 +44,18 @@ class Transform final : public driver::GainBase,
   ~Transform() override = default;                       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
-    std::unordered_map<size_t, std::vector<driver::Drive>> drives;
-
-    const auto res = validate(native_methods::AUTDGainCalc(_g.gain_ptr(geometry), geometry.ptr()));
-    std::for_each(geometry.devices().begin(), geometry.devices().end(), [this, &res, &drives](const driver::geometry::Device& dev) {
-      std::vector<driver::Drive> d;
-      d.resize(dev.num_transducers(), driver::Drive{driver::Phase(0), std::numeric_limits<driver::EmitIntensity>::min()});
-      native_methods::AUTDGainCalcGetResult(res, reinterpret_cast<native_methods::Drive*>(d.data()), static_cast<uint32_t>(dev.idx()));
-      std::for_each(dev.cbegin(), dev.cend(), [this, &d, &dev](const driver::geometry::Transducer& tr) { d[tr.idx()] = _f(dev, tr, d[tr.idx()]); });
-      drives.emplace(dev.idx(), std::move(d));
-    });
-
-    native_methods::AUTDGainCalcFreeResult(res);
-    return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainRaw(),
-                           [&drives](const native_methods::GainPtr acc, const driver::geometry::Device& dev) {
-                             return AUTDGainRawSet(acc, static_cast<uint32_t>(dev.idx()),
-                                                   reinterpret_cast<native_methods::Drive*>(drives[dev.idx()].data()),
-                                                   static_cast<uint32_t>(drives[dev.idx()].size()));
-                           });
+    return AUTDGainWithTransform(_g.gain_ptr(geometry), const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
+                                 const_cast<void*>(static_cast<const void*>(this)), geometry.ptr());
   }
 
  private:
   G _g;
   F _f;
+  transform_f _f_native;
 };
 }  // namespace autd3::gain
 
 namespace autd3::driver {
-
 template <class G>
 class IntoGainTransform {
  public:
