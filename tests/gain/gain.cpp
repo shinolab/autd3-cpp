@@ -14,11 +14,10 @@ class Uniform final : public autd3::gain::Gain<Uniform> {
   Uniform& operator=(const Uniform& obj) = default;  // LCOV_EXCL_LINE
   Uniform(Uniform&& obj) = default;                  // LCOV_EXCL_LINE
   Uniform& operator=(Uniform&& obj) = default;       // LCOV_EXCL_LINE
-  virtual ~Uniform() = default;                      // LCOV_EXCL_LINE
+  ~Uniform() override = default;                     // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::driver::Drive>> calc(
-      const autd3::driver::geometry::Geometry& geometry) const override {
-    return transform(geometry, [&](const auto& dev) {
+  AUTD3_API [[nodiscard]] autd3::gain::GainCalcResult calc(const autd3::driver::geometry::Geometry& geometry) const override {
+    return transform([&](const auto& dev) {
       _cnt->operator[](dev.idx()) = true;
       return [&](const auto&) { return autd3::driver::Drive{_phase, _intensity}; };
     });

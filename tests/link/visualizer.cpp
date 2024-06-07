@@ -7,11 +7,11 @@
 #include <autd3/link/visualizer.hpp>
 #include <autd3/modulation/static.hpp>
 
-void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>& autd, autd3::link::Config config) {
+void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>& autd, const autd3::link::Config& config) {
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
 
-  auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x81));
-  auto m = autd3::modulation::Static(autd3::driver::EmitIntensity(0x82));
+  const auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x81));
+  const auto m = autd3::modulation::Static::with_intensity(0x82);
 
   autd.send(m, g);
 
@@ -54,14 +54,13 @@ TEST(Link, PlotRange) {
 
 TEST(Link, VisualizerPlotters) {
   {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+    auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                     .open(autd3::link::Visualizer::builder().with_backend<autd3::link::PlottersBackend>().with_directivity<autd3::link::Sphere>());
     visualizer_test_with(autd, autd3::link::PlotConfig());
   }
   {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+    auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
+
                     .open(autd3::link::Visualizer::plotters().with_directivity<autd3::link::T4010A1>());
     auto config = autd3::link::PlotConfig();
     config.fname = "test.png";
@@ -78,14 +77,12 @@ TEST(Link, VisualizerPlotters) {
 
 TEST(Link, VisualizerPython) {
   {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+    auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                     .open(autd3::link::Visualizer::builder().with_backend<autd3::link::PythonBackend>().with_directivity<autd3::link::Sphere>());
     visualizer_test_with(autd, autd3::link::PyPlotConfig());
   }
   {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+    auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                     .open(autd3::link::Visualizer::python().with_directivity<autd3::link::T4010A1>());
     auto config = autd3::link::PyPlotConfig();
     config.fname = "test.png";
@@ -104,23 +101,19 @@ TEST(Link, VisualizerPython) {
 
 TEST(Link, VisualizerNull) {
   {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+    auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                     .open(autd3::link::Visualizer::builder().with_backend<autd3::link::NullBackend>().with_directivity<autd3::link::Sphere>());
     visualizer_test_with(autd, autd3::link::NullPlotConfig());
   }
   {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+    auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                     .open(autd3::link::Visualizer::null().with_directivity<autd3::link::T4010A1>());
     visualizer_test_with(autd, autd3::link::NullPlotConfig());
   }
 }
 
 TEST(Link, VisualizerInvalidConfig) {
-  auto autd = autd3::controller::ControllerBuilder()
-                  .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                  .open(autd3::link::Visualizer::plotters());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Visualizer::plotters());
   ASSERT_THROW(autd.link().plot_modulation(autd3::link::NullPlotConfig(), autd3::native_methods::Segment::S0), autd3::AUTDException);
 }
 

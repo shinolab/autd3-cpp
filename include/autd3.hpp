@@ -10,7 +10,6 @@
 #include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/datagram/debug.hpp"
 #include "autd3/driver/datagram/force_fan.hpp"
-#include "autd3/driver/datagram/phase_filter.hpp"
 #include "autd3/driver/datagram/pulse_width_encoder.hpp"
 #include "autd3/driver/datagram/reads_fpga_state.hpp"
 #include "autd3/driver/datagram/segment.hpp"
@@ -45,9 +44,9 @@
 
 namespace autd3 {
 
-constexpr double pi = driver::pi;
+constexpr float pi = driver::pi;
 
-static inline std::string version = "24.1.0";
+static inline std::string version = "25.0.1";
 
 using autd3::driver::deg;
 using autd3::driver::Hz;
@@ -72,17 +71,14 @@ using native_methods::GPIOIn;
 using native_methods::GPIOOut;
 using native_methods::Segment;
 
-using gain::Gain;
-using modulation::Modulation;
-
 using driver::Clear;
 using driver::ControlPoint;
+using driver::ControlPoints;
 using driver::DebugSettings;
 using driver::DebugType;
-using driver::FocusSTM;
+using driver::FociSTM;
 using driver::ForceFan;
 using driver::GainSTM;
-using driver::PhaseFilter;
 using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;
 using driver::Silencer;
@@ -110,5 +106,14 @@ using driver::Vector3;
 
 using controller::Controller;
 using controller::ControllerBuilder;
+
+namespace derive {
+using gain::Gain;
+using gain::GainCalcResult;
+
+using modulation::Modulation;
+using modulation::ModulationCalcResult;
+
+}  // namespace derive
 
 }  // namespace autd3

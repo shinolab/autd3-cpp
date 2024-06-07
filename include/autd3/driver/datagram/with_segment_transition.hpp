@@ -3,6 +3,8 @@
 #include <memory>
 #include <optional>
 
+#include "autd3/driver/datagram/with_parallel_threshold.hpp"
+#include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -24,18 +26,19 @@ class DatagramST {
 };
 
 template <typename P>
-class DatagramWithSegmentTransition {
+class DatagramWithSegmentTransition final : public IntoDatagramWithTimeout<DatagramWithSegmentTransition<P>>,
+                                            public IntoDatagramWithParallelThreshold<DatagramWithSegmentTransition<P>> {
  public:
   AUTD3_API explicit DatagramWithSegmentTransition(std::unique_ptr<DatagramST<P>> datagram, const native_methods::Segment segment,
-                                                   std::optional<native_methods::TransitionModeWrap> transition_mode)
-      : _datagram(std::move(datagram)), _segment(segment), _transition_mode(std::move(transition_mode)) {}
-  ~DatagramWithSegmentTransition() = default;                                                    // LCOV_EXCL_LINE
+                                                   const std::optional<native_methods::TransitionModeWrap> transition_mode)
+      : _datagram(std::move(datagram)), _segment(segment), _transition_mode(transition_mode) {}
+  ~DatagramWithSegmentTransition() override = default;                                           // LCOV_EXCL_LINE
   DatagramWithSegmentTransition(const DatagramWithSegmentTransition& v) noexcept = default;      // LCOV_EXCL_LINE
   DatagramWithSegmentTransition& operator=(const DatagramWithSegmentTransition& obj) = default;  // LCOV_EXCL_LINE
   DatagramWithSegmentTransition(DatagramWithSegmentTransition&& obj) = default;                  // LCOV_EXCL_LINE
   DatagramWithSegmentTransition& operator=(DatagramWithSegmentTransition&& obj) = default;       // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
     auto raw_ptr = _datagram->raw_ptr(g);
     return _transition_mode.has_value() ? _datagram->into_segment_transition(raw_ptr, _segment, _transition_mode.value())
                                         : _datagram->into_segment(raw_ptr, _segment);
@@ -63,7 +66,7 @@ class IntoDatagramWithSegmentTransition {
   }
   AUTD3_API [[nodiscard]] DatagramWithSegmentTransition<P> with_segment(const native_methods::Segment segment,
                                                                         std::optional<native_methods::TransitionModeWrap> transition_mode) && {
-    return DatagramWithSegmentTransition<P>(std::make_unique<D>((std::move(*static_cast<D*>(this)))), segment, std::move(transition_mode));
+    return DatagramWithSegmentTransition<P>(std::make_unique<D>(std::move(*static_cast<D*>(this))), segment, std::move(transition_mode));
   }
 };
 

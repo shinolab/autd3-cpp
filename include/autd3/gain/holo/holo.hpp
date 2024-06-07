@@ -14,34 +14,12 @@ concept holo_foci_range = std::ranges::viewable_range<R> && std::same_as<std::ra
 template <class H>
 class Holo : public driver::Gain<H> {
  public:
-  AUTD3_API explicit Holo(const native_methods::EmissionConstraintWrap value) : _constraint(value) {}
-
-  AUTD3_API AUTD3_API void add_focus(driver::Vector3 focus, Amplitude amp) & {
-    _foci.emplace_back(std::move(focus));
-    _amps.emplace_back(amp);
-  }
-
-  AUTD3_API [[nodiscard]] H add_focus(driver::Vector3 focus, Amplitude amp) && {
-    this->_foci.emplace_back(std::move(focus));
-    _amps.emplace_back(amp);
-    return std::move(*static_cast<H*>(this));
-  }
-
   template <holo_foci_range R>
-  AUTD3_API void add_foci_from_iter(R&& iter) & {
+  AUTD3_API explicit Holo(const native_methods::EmissionConstraintWrap value, const R& iter) : _constraint(value) {
     for (auto [focus, amp] : iter) {
       _foci.emplace_back(std::move(focus));
       _amps.emplace_back(amp);
     }
-  }
-
-  template <holo_foci_range R>
-  AUTD3_API [[nodiscard]] H add_foci_from_iter(R&& iter) && {
-    for (auto [focus, amp] : iter) {
-      _foci.emplace_back(std::move(focus));
-      _amps.emplace_back(amp);
-    }
-    return std::move(*static_cast<H*>(this));
   }
 
   AUTD3_API void with_constraint(const native_methods::EmissionConstraintWrap value) & { _constraint = value; }

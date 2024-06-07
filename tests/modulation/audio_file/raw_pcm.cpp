@@ -20,13 +20,6 @@ TEST(Modulation, RawPCM) {
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
-  autd.send(
-      autd3::modulation::audio_file::RawPCM(path, 4000 * autd3::driver::Hz).with_sampling_config(autd3::driver::SamplingConfig::Division(10240)));
-  for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
-}
-
-TEST(Modulation, RawPCMDefault) {
-  auto autd = create_controller();
-  const auto m = autd3::modulation::audio_file::RawPCM(std::filesystem::path(""), 4000 * autd3::driver::Hz);
-  ASSERT_TRUE(AUTDModulationRawPCMIsDefault(m.modulation_ptr(autd.geometry())));
+  autd.send(autd3::modulation::audio_file::RawPCM(path, 4000 * autd3::driver::Hz));
+  for (auto& dev : autd.geometry()) ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 }

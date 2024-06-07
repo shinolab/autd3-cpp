@@ -4,6 +4,6 @@
 
 TEST(DriverDatagram, SegmentTransitionModulation) {}
 
-TEST(DriverDatagram, SegmentTransitionFocusSTM) {}
+TEST(DriverDatagram, SegmentTransitionFociSTM) {}
 
 TEST(DriverDatagram, SegmentTransitionGainSTM) {}

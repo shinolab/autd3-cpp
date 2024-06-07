@@ -11,14 +11,15 @@
 
 TEST(DriverGeomtry, Angle) {
   ASSERT_NEAR((90.0 * autd3::driver::deg).radian(), std::numbers::pi / 2, 1e-6);
-  ASSERT_NEAR((std::numbers::pi / 2 * autd3::driver::rad).radian(), std::numbers::pi / 2, 1e-6);
+  ASSERT_NEAR((std::numbers::pi_v<float> / 2 * autd3::driver::rad).radian(), std::numbers::pi / 2, 1e-6);
 }
 
-static autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::driver::Quaternion& q) {
-  return autd3::controller::ControllerBuilder()
-      .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()).with_rotation(q))
+namespace {
+autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::driver::Quaternion& q) {
+  return autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero()).with_rotation(q)})
       .open(autd3::link::Audit::builder());
 }
+}  // namespace
 
 TEST(DriverGeomtry, WithRotation) {
   using autd3::driver::deg;
@@ -27,32 +28,32 @@ TEST(DriverGeomtry, WithRotation) {
 
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(90.0 * deg, 0.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0][0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0][0].z_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 90.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0][0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0][0].z_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 0.0 * deg, 90.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0][0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0][0].z_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 90.0 * deg, 90.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0][0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0][0].z_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(90.0 * deg, 90.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0][0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0][0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0][0].z_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].axial_direction(), 1e-6);
   }
 }

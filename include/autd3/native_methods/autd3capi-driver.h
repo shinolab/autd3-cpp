@@ -12,11 +12,11 @@ constexpr const uint32_t NUM_TRANS_IN_X = 18;
 
 constexpr const uint32_t NUM_TRANS_IN_Y = 14;
 
-constexpr const double TRANS_SPACING_MM = 10.16;
+constexpr const float TRANS_SPACING_MM = 10.16;
 
-constexpr const double DEVICE_HEIGHT_MM = 151.4;
+constexpr const float DEVICE_HEIGHT_MM = 151.4;
 
-constexpr const double DEVICE_WIDTH_MM = 192.0;
+constexpr const float DEVICE_WIDTH_MM = 192.0;
 
 constexpr const int32_t AUTD3_ERR = -1;
 
@@ -84,6 +84,10 @@ enum class TransitionModeTag : uint8_t {
   Immediate = 4,
 };
 
+struct ContextPtr {
+  void* _0;
+};
+
 struct LoopBehavior {
   uint32_t rep;
 };
@@ -96,7 +100,7 @@ struct TransitionModeWrap {
 union SamplingConfigValue {
   uint32_t div;
   uint32_t freq;
-  double freq_nearest;
+  float freq_nearest;
 };
 
 struct SamplingConfigWrap {
@@ -163,8 +167,20 @@ struct GainSTMPtr {
   void* _0;
 };
 
-struct FocusSTMPtr {
+struct FociSTMPtr {
   void* _0;
+};
+
+struct ResultGainSTM {
+  GainSTMPtr result;
+  uint32_t err_len;
+  void* err;
+};
+
+struct ResultFociSTM {
+  FociSTMPtr result;
+  uint32_t err_len;
+  void* err;
 };
 
 struct DebugTypeWrap {

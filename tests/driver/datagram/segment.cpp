@@ -62,7 +62,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
     }
   }
 
-  autd.send(autd3::driver::SwapSegment::gain(Segment::S0));
+  autd.send(autd3::driver::SwapSegment::Gain(Segment::S0));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
@@ -83,7 +83,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link().modulation(dev.idx(), Segment::S0), [](auto d) { return d.value() == 0xFF; }));
   }
 
-  autd.send(autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x80)));
+  autd.send(autd3::modulation::Static::with_intensity(0x80));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_mod_segment());
@@ -91,7 +91,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link().modulation(dev.idx(), Segment::S0), [](auto d) { return d.value() == 0x80; }));
   }
 
-  auto m = autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x81));
+  auto m = autd3::modulation::Static::with_intensity(0x81);
   autd.send(m.with_segment(Segment::S1, autd3::driver::TransitionMode::Immediate));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
@@ -100,7 +100,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link().modulation(dev.idx(), Segment::S1), [](auto d) { return d.value() == 0x81; }));
   }
 
-  autd.send(autd3::modulation::Static::with_intensity(autd3::driver::EmitIntensity(0x82)).with_segment(Segment::S0, std::nullopt));
+  autd.send(autd3::modulation::Static::with_intensity(0x82).with_segment(Segment::S0, std::nullopt));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_mod_segment());
@@ -109,7 +109,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link().modulation(dev.idx(), Segment::S1), [](auto d) { return d.value() == 0x81; }));
   }
 
-  autd.send(autd3::driver::SwapSegment::modulation(Segment::S0, autd3::driver::TransitionMode::Immediate));
+  autd.send(autd3::driver::SwapSegment::Modulation(Segment::S0, autd3::driver::TransitionMode::Immediate));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_mod_segment());

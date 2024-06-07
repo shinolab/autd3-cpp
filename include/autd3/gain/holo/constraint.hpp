@@ -15,7 +15,7 @@ class EmissionConstraint final {
   AUTD3_API static native_methods::EmissionConstraintWrap Clamp(const driver::EmitIntensity min_v, const driver::EmitIntensity max_v) noexcept {
     return native_methods::AUTDGainHoloConstraintClamp(min_v.value(), max_v.value());
   }
-  AUTD3_API static native_methods::EmissionConstraintWrap Multiply(const double v) noexcept {
+  AUTD3_API static native_methods::EmissionConstraintWrap Multiply(const float v) noexcept {
     return native_methods::AUTDGainHoloConstraintMultiply(v);
   }
 };

@@ -29,7 +29,7 @@ class Geometry {
     const auto size = AUTDGeometryNumDevices(_ptr);
     _devices.clear();
     _devices.reserve(size);
-    for (uint32_t i = 0; i < size; i++) _devices.emplace_back(static_cast<size_t>(i), AUTDDevice(_ptr, i));
+    for (uint16_t i = 0; i < size; i++) _devices.emplace_back(static_cast<size_t>(i), AUTDDevice(_ptr, i));
   }
 
   ~Geometry() = default;                               // LCOV_EXCL_LINE
@@ -50,19 +50,19 @@ class Geometry {
                              Vector3 res = acc + d.center();
                              return res;
                            }) /
-           static_cast<double>(num_devices());
+           static_cast<float>(num_devices());
   }
 
   AUTD3_API [[nodiscard]] auto devices() const noexcept {
     return GeometryView(_devices) | std::views::filter([](const auto& dev) { return dev.enable(); });
   }
 
-  AUTD3_API void set_sound_speed(const double value) const {
+  AUTD3_API void set_sound_speed(const float value) const {
     std::ranges::for_each(devices(), [value](const auto& dev) { dev.set_sound_speed(value); });
   }
 
-  AUTD3_API void set_sound_speed_from_temp(const double temp, const double k = 1.4, const double r = 8.31446261815324,
-                                           const double m = 28.9647e-3) const {
+  AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f,
+                                           const float m = 28.9647e-3f) const {
     std::ranges::for_each(devices(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
   }
 

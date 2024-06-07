@@ -68,30 +68,30 @@ struct ResultPyPlotConfig {
 extern "C" {
 
 [[nodiscard]]
-PlotRangePtr AUTDLinkVisualizerPlotRange(double x_min,
-                                         double x_max,
-                                         double y_min,
-                                         double y_max,
-                                         double z_min,
-                                         double z_max,
-                                         double resolution);
+PlotRangePtr AUTDLinkVisualizerPlotRange(float x_min,
+                                         float x_max,
+                                         float y_min,
+                                         float y_max,
+                                         float z_min,
+                                         float z_max,
+                                         float resolution);
 
 [[nodiscard]] uint64_t AUTDLinkVisualizerPlotRangeObservePointsLen(PlotRangePtr range);
 
-void AUTDLinkVisualizerPlotRangeObservePoints(PlotRangePtr range, double *points);
+void AUTDLinkVisualizerPlotRangeObservePoints(PlotRangePtr range, float *points);
 
 uint32_t AUTDLinkVisualizerPhasesOf(LinkPtr visualizer,
                                     Backend backend,
                                     Directivity directivity,
                                     Segment segment,
-                                    uint32_t idx,
+                                    uint16_t idx,
                                     uint8_t *buf);
 
 uint32_t AUTDLinkVisualizerIntensities(LinkPtr visualizer,
                                        Backend backend,
                                        Directivity directivity,
                                        Segment segment,
-                                       uint32_t idx,
+                                       uint16_t idx,
                                        uint8_t *buf);
 
 uint32_t AUTDLinkVisualizerModulation(LinkPtr visualizer,
@@ -103,12 +103,12 @@ uint32_t AUTDLinkVisualizerModulation(LinkPtr visualizer,
 ResultI32 AUTDLinkVisualizerCalcField(LinkPtr visualizer,
                                       Backend backend,
                                       Directivity directivity,
-                                      const double *points,
+                                      const float *points,
                                       uint32_t points_len,
                                       GeometryPtr geometry,
                                       Segment segment,
-                                      uint32_t idx,
-                                      double *buf);
+                                      uint16_t idx,
+                                      float *buf);
 
 [[nodiscard]]
 ResultI32 AUTDLinkVisualizerPlotField(LinkPtr visualizer,
@@ -118,7 +118,7 @@ ResultI32 AUTDLinkVisualizerPlotField(LinkPtr visualizer,
                                       PlotRangePtr range,
                                       GeometryPtr geometry,
                                       Segment segment,
-                                      uint32_t idx);
+                                      uint16_t idx);
 
 [[nodiscard]]
 ResultI32 AUTDLinkVisualizerPlotPhase(LinkPtr visualizer,
@@ -127,7 +127,7 @@ ResultI32 AUTDLinkVisualizerPlotPhase(LinkPtr visualizer,
                                       ConfigPtr config,
                                       GeometryPtr geometry,
                                       Segment segment,
-                                      uint32_t idx);
+                                      uint16_t idx);
 
 [[nodiscard]]
 ResultI32 AUTDLinkVisualizerPlotModulation(LinkPtr visualizer,
@@ -149,11 +149,11 @@ ResultI32 AUTDLinkVisualizerPlotModulation(LinkPtr visualizer,
 [[nodiscard]]
 ResultPlotConfig AUTDLinkVisualizerPlotConfig(uint32_t width,
                                               uint32_t height,
-                                              double cbar_size,
+                                              float cbar_size,
                                               uint32_t font_size,
                                               uint32_t label_area_size,
                                               uint32_t margin,
-                                              double ticks_step,
+                                              float ticks_step,
                                               CMap cmap,
                                               const char *fname);
 
@@ -171,7 +171,7 @@ ResultPyPlotConfig AUTDLinkVisualizerPyPlotConfig(int32_t width,
                                                   const char *cbar_size,
                                                   const char *cbar_pad,
                                                   int32_t fontsize,
-                                                  double ticks_step,
+                                                  float ticks_step,
                                                   const char *cmap,
                                                   bool show,
                                                   const char *fname);

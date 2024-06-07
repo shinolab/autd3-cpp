@@ -6,9 +6,8 @@
 #include <autd3/link/audit.hpp>
 
 static inline autd3::controller::Controller<autd3::link::Audit> create_controller() {
-  return autd3::controller::ControllerBuilder()
-      .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-      .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
+  return autd3::controller::ControllerBuilder(
+             std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero()), autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
       .open(autd3::link::Audit::builder());
 }
 

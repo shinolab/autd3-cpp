@@ -16,16 +16,16 @@ class Backend {
 
   [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
 
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr sdp(const double* foci, const double* amps, uint64_t size, double alpha, double lambda,
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr sdp(const float* foci, const float* amps, uint32_t size, float alpha, float lambda,
                                                               uint32_t repeat, native_methods::EmissionConstraintWrap constraint) const = 0;
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gs(const double* foci, const double* amps, uint64_t size, uint32_t repeat,
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gs(const float* foci, const float* amps, uint32_t size, uint32_t repeat,
                                                              native_methods::EmissionConstraintWrap constraint) const = 0;
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gspat(const double* foci, const double* amps, uint64_t size, uint32_t repeat,
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gspat(const float* foci, const float* amps, uint32_t size, uint32_t repeat,
                                                                 native_methods::EmissionConstraintWrap constraint) const = 0;
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr naive(const double* foci, const double* amps, uint64_t size,
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr naive(const float* foci, const float* amps, uint32_t size,
                                                                 native_methods::EmissionConstraintWrap constraint) const = 0;
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr lm(const double* foci, const double* amps, uint64_t size, double eps1, double eps2,
-                                                             double tau, uint32_t k_max, const double* initial, uint64_t initial_size,
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr lm(const float* foci, const float* amps, uint32_t size, float eps1, float eps2, float tau,
+                                                             uint32_t k_max, const float* initial, uint32_t initial_size,
                                                              native_methods::EmissionConstraintWrap constraint) const = 0;
 
  protected:

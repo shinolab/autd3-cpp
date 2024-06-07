@@ -6,15 +6,14 @@
 
 TEST(Controller, Builder) {
   auto autd =
-      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
+      autd3::controller::ControllerBuilder(std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
   ASSERT_EQ(40000, autd.link().ultrasound_freq(0));
   autd.close();
 }
 
 TEST(Controller, BuilderWithUltrasoundFreq) {
-  auto autd = autd3::controller::ControllerBuilder()
+  auto autd = autd3::controller::ControllerBuilder(std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                   .with_ultrasound_freq(41 * autd3::driver::kHz)
-                  .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
                   .open(autd3::link::Audit::builder());
   ASSERT_EQ(41000, autd.link().ultrasound_freq(0));
   autd.close();

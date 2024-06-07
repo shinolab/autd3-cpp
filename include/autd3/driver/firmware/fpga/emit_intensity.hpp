@@ -7,7 +7,7 @@ namespace autd3::driver {
 class EmitIntensity final {
  public:
   template <std::integral T>
-  AUTD3_API explicit constexpr EmitIntensity(const T value) noexcept : _value(value) {}
+  AUTD3_API explicit constexpr EmitIntensity(const T value) noexcept : _value(static_cast<uint8_t>(value)) {}
 
   AUTD3_API [[nodiscard]] constexpr uint8_t value() const noexcept { return _value; }
 

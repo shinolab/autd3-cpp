@@ -50,7 +50,7 @@ class SOEM final {
     friend class controller::ControllerBuilder;
 
     native_methods::LinkSOEMBuilderPtr _ptr;
-    native_err_handler_t _native_err_handler;
+    native_err_handler_t _native_err_handler = nullptr;
     err_handler_t _err_handler;
 
     AUTD3_API Builder() : _ptr(native_methods::AUTDLinkSOEM()), _err_handler(nullptr) {}

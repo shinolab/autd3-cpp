@@ -1,11 +1,13 @@
 #pragma once
 
+#include "autd3/driver/datagram/with_parallel_threshold.hpp"
+#include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
 
-class Synchronize final {
+class Synchronize final : public IntoDatagramWithTimeout<Synchronize>, public IntoDatagramWithParallelThreshold<Synchronize> {
  public:
   AUTD3_API Synchronize() = default;  // LCOV_EXCL_LINE
 

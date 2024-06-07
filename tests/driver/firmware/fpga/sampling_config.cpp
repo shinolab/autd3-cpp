@@ -9,7 +9,7 @@ TEST(DriverFirmwareFPGA, SamplingConfigFreq) {
 }
 
 TEST(DriverFirmwareFPGA, SamplingConfigFreqNearest) {
-  const auto f = autd3::driver::SamplingConfig::FreqNearest(4000.0 * autd3::driver::Hz);
+  const auto f = autd3::driver::SamplingConfig::FreqNearest(4000.0f * autd3::driver::Hz);
   ASSERT_EQ(f.tag, autd3::native_methods::SamplingConfigTag::FreqNearest);
   ASSERT_EQ(f.value.freq_nearest, 4000.0);
 }

@@ -11,9 +11,11 @@ TEST(Gain, Group) {
 
   const auto cx = autd.geometry().center().x();
 
-  autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
-              if (tr.position().x() < cx) return "uniform";
-              return "null";
+  autd.send(autd3::gain::Group([cx](const auto&) {
+              return [cx](const auto& tr) -> std::optional<const char*> {
+                if (tr.position().x() < cx) return "uniform";
+                return "null";
+              };
             })
                 .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
                 .set("null", autd3::gain::Null()));
@@ -30,9 +32,11 @@ TEST(Gain, Group) {
     }
   }
 
-  autd.send(autd3::gain::Group([cx](const auto&, const auto& tr) -> std::optional<const char*> {
-              if (tr.position().x() < cx) return "uniform";
-              return std::nullopt;
+  autd.send(autd3::gain::Group([cx](const auto&) {
+              return [cx](const auto& tr) -> std::optional<const char*> {
+                if (tr.position().x() < cx) return "uniform";
+                return std::nullopt;
+              };
             }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91))));
   for (auto& dev : autd.geometry()) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -53,7 +57,7 @@ TEST(Gain, GroupUnkownKey) {
 
   bool caught_err = false;
   try {
-    autd.send(autd3::gain::Group([](const auto&, const auto&) -> std::optional<const char*> { return "null"; })
+    autd.send(autd3::gain::Group([](const auto&) { return [](const auto&) -> std::optional<const char*> { return "null"; }; })
                   .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
                   .set("null", autd3::gain::Null()));
   } catch (autd3::AUTDException& e) {
@@ -64,28 +68,16 @@ TEST(Gain, GroupUnkownKey) {
   if (!caught_err) FAIL();
 }
 
-TEST(Gain, GroupUnspecifiedKey) {
-  auto autd = create_controller();
-
-  bool caught_err = false;
-  try {
-    autd.send(autd3::gain::Group([](const auto&, const auto&) -> std::optional<const char*> { return "null"; }));
-  } catch (autd3::AUTDException& e) {
-    caught_err = true;
-    ASSERT_STREQ("Unspecified group key: [0]", e.what());
-  }
-
-  if (!caught_err) FAIL();
-}
-
 TEST(Gain, GroupCheckOnlyForEnabled) {
   auto autd = create_controller();
   autd.geometry()[0].set_enable(false);
 
-  std::vector check(autd.geometry().num_devices(), false);
-  autd.send(autd3::gain::Group([&check](const auto& dev, const auto&) -> std::optional<int> {
-              check[dev.idx()] = true;
-              return 0;
+  std::vector check(2, false);
+  autd.send(autd3::gain::Group([&check](const auto& dev) {
+              return [&dev, &check](const auto&) -> std::optional<int> {
+                check[dev.idx()] = true;
+                return 0;
+              };
             }).set(0, autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90))));
 
   ASSERT_FALSE(check[0]);

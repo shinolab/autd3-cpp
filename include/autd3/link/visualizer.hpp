@@ -4,6 +4,7 @@
 #include <string>
 #include <variant>
 
+#include "autd3/controller/builder.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
@@ -38,17 +39,17 @@ class Visualizer;
 struct PlotRange {
   friend class Visualizer;
 
-  double x_start;
-  double x_end;
-  double y_start;
-  double y_end;
-  double z_start;
-  double z_end;
-  double resolution;
+  float x_start;
+  float x_end;
+  float y_start;
+  float y_end;
+  float z_start;
+  float z_end;
+  float resolution;
 
   AUTD3_API PlotRange() = default;  // LCOV_EXCL_LINE
-  AUTD3_API explicit PlotRange(const double x_start, const double x_end, const double y_start, const double y_end, const double z_start,
-                               const double z_end, const double resolution = 1)
+  AUTD3_API explicit PlotRange(const float x_start, const float x_end, const float y_start, const float y_end, const float z_start, const float z_end,
+                               const float resolution = 1)
       : x_start(x_start), x_end(x_end), y_start(y_start), y_end(y_end), z_start(z_start), z_end(z_end), resolution(resolution) {}
 
   AUTD3_API [[nodiscard]] std::vector<driver::Vector3> observe_points() const {
@@ -56,7 +57,7 @@ struct PlotRange {
     const auto len = AUTDLinkVisualizerPlotRangeObservePointsLen(range);
     std::vector<driver::Vector3> points;
     points.resize(len);
-    AUTDLinkVisualizerPlotRangeObservePoints(range, reinterpret_cast<double*>(points.data()));
+    AUTDLinkVisualizerPlotRangeObservePoints(range, reinterpret_cast<float*>(points.data()));
     return points;
   }
 
@@ -68,11 +69,11 @@ struct PlotRange {
 
 struct PlotConfig {
   std::pair<uint32_t, uint32_t> figsize = std::make_pair(960, 640);
-  double cbar_size = 0.15;
+  float cbar_size = 0.15f;
   uint32_t font_size = 24;
   uint32_t label_area_size = 80;
   uint32_t margin = 10;
-  double ticks_step = 10;
+  float ticks_step = 10;
   CMap cmap = CMap::Jet;
   std::string fname;
 
@@ -89,7 +90,7 @@ struct PyPlotConfig {
   std::string cbar_size = "5%";
   std::string cbar_pad = "3%";
   int32_t fontsize = 12;
-  double ticks_step = 10;
+  float ticks_step = 10;
   std::string cmap = "jet";
   bool show = false;
   std::string fname = "fig.png";
@@ -150,8 +151,6 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSpherePlotters(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Plotters(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:                                    // LCOV_EXCL_LINE
-              throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
           }
         case native_methods::Backend::Python:
           switch (_directivity) {
@@ -159,8 +158,6 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSpherePython(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Python(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:                                    // LCOV_EXCL_LINE
-              throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
           }
         case native_methods::Backend::Null:
           switch (_directivity) {
@@ -168,12 +165,9 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSphereNull(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Null(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:                                    // LCOV_EXCL_LINE
-              throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
           }
-        default:                                    // LCOV_EXCL_LINE
-          throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
       }
+      throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
     }
 
     [[nodiscard]] Builder with_gpu(const int32_t gpu_idx) {
@@ -206,16 +200,16 @@ class Visualizer final {
       : _ptr(ptr), _backend(backend), _directivity(directivity) {}
 
   AUTD3_API [[nodiscard]] std::vector<driver::Phase> phases(const native_methods::Segment segment, const size_t idx) const {
-    const auto size = AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
+    const auto size = AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint16_t>(idx), nullptr);
     std::vector buf(size, driver::Phase(0));
-    AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
+    AUTDLinkVisualizerPhasesOf(_ptr, _backend, _directivity, segment, static_cast<uint16_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
   AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity> intensities(const native_methods::Segment segment, const size_t idx) const {
-    const auto size = AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), nullptr);
+    const auto size = AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint16_t>(idx), nullptr);
     std::vector buf(size, driver::EmitIntensity(0));
-    AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint32_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
+    AUTDLinkVisualizerIntensities(_ptr, _backend, _directivity, segment, static_cast<uint16_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }
 
@@ -226,28 +220,28 @@ class Visualizer final {
     return buf;
   }
 
-  AUTD3_API [[nodiscard]] std::vector<std::complex<double>> calc_field(std::vector<driver::Vector3>& points,
-                                                                       const driver::geometry::Geometry& geometry,
-                                                                       const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API [[nodiscard]] std::vector<std::complex<float>> calc_field(std::vector<driver::Vector3>& points,
+                                                                      const driver::geometry::Geometry& geometry,
+                                                                      const native_methods::Segment segment, const size_t idx) const {
     const auto points_len = static_cast<uint32_t>(points.size());
-    const auto points_ptr = reinterpret_cast<double*>(points.data());
-    std::vector<std::complex<double>> buf;
+    const auto points_ptr = reinterpret_cast<float*>(points.data());
+    std::vector<std::complex<float>> buf;
     buf.resize(points_len);
-    validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment, static_cast<uint32_t>(idx),
-                                         reinterpret_cast<double*>(buf.data())));
+    validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment, static_cast<uint16_t>(idx),
+                                         reinterpret_cast<float*>(buf.data())));
     return buf;
   }
 
   AUTD3_API void plot_field(const Config& config, const PlotRange& range, const driver::geometry::Geometry& geometry,
                             const native_methods::Segment segment, const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
-    validate(AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), geometry.ptr(), segment, static_cast<uint32_t>(idx)));
+    validate(AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), geometry.ptr(), segment, static_cast<uint16_t>(idx)));
   }
 
   AUTD3_API void plot_phase(const Config& config, const driver::geometry::Geometry& geometry, const native_methods::Segment segment,
                             const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
-    validate(AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, geometry.ptr(), segment, static_cast<uint32_t>(idx)));
+    validate(AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, geometry.ptr(), segment, static_cast<uint16_t>(idx)));
   }
 
   AUTD3_API void plot_modulation(const Config& config, const native_methods::Segment segment) const {

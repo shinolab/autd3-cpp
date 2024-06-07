@@ -11,15 +11,20 @@ class Static final : public driver::ModulationBase<Static>,
                      public driver::IntoRadiationPressure<Static>,
                      public driver::IntoModulationTransform<Static> {
  public:
-  AUTD3_API Static() : _intensity(std::numeric_limits<driver::EmitIntensity>::max()) {}
-  AUTD3_API explicit Static(const driver::EmitIntensity intensity) : _intensity(intensity) {}
+  AUTD3_API Static() : _intensity(std::numeric_limits<uint8_t>::max()) {}
 
-  AUTD3_API [[nodiscard]] static Static with_intensity(const driver::EmitIntensity intensity) { return Static(intensity); }
-
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
-    return AUTDModulationStatic(_intensity.value(), _loop_behavior);
+  template <class I, std::enable_if_t<std::is_integral_v<I>>* = nullptr>
+  AUTD3_API [[nodiscard]] static Static with_intensity(const I intensity) {
+    return Static(intensity);
   }
 
-  AUTD3_DEF_PROP(driver::EmitIntensity, intensity)
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
+    return AUTDModulationStatic(_intensity, _loop_behavior);
+  }
+
+  AUTD3_DEF_PROP(uint8_t, intensity)
+
+ private:
+  AUTD3_API explicit Static(const uint8_t intensity) : _intensity(intensity) {}
 };
 }  // namespace autd3::modulation

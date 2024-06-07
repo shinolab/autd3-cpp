@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "autd3/driver/datagram/with_parallel_threshold.hpp"
+#include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -21,17 +23,18 @@ class DatagramS {
 };
 
 template <typename P>
-class DatagramWithSegment {
+class DatagramWithSegment final : public IntoDatagramWithTimeout<DatagramWithSegment<P>>,
+                                  public IntoDatagramWithParallelThreshold<DatagramWithSegment<P>> {
  public:
   AUTD3_API explicit DatagramWithSegment(std::unique_ptr<DatagramS<P>> datagram, const native_methods::Segment segment, const bool transition)
       : _datagram(std::move(datagram)), _segment(segment), _transition(transition) {}
-  ~DatagramWithSegment() = default;                                          // LCOV_EXCL_LINE
+  ~DatagramWithSegment() override = default;                                 // LCOV_EXCL_LINE
   DatagramWithSegment(const DatagramWithSegment& v) noexcept = default;      // LCOV_EXCL_LINE
   DatagramWithSegment& operator=(const DatagramWithSegment& obj) = default;  // LCOV_EXCL_LINE
   DatagramWithSegment(DatagramWithSegment&& obj) = default;                  // LCOV_EXCL_LINE
   DatagramWithSegment& operator=(DatagramWithSegment&& obj) = default;       // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
     auto raw_ptr = _datagram->raw_ptr(g);
     return _datagram->into_segment(raw_ptr, _segment, _transition);
   }
@@ -56,7 +59,7 @@ class IntoDatagramWithSegment {
     return DatagramWithSegment<P>(std::make_unique<D>(*static_cast<D*>(this)), segment, transition);
   }
   AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) && {
-    return DatagramWithSegment<P>(std::make_unique<D>((std::move(*static_cast<D*>(this)))), segment, transition);
+    return DatagramWithSegment<P>(std::make_unique<D>(std::move(*static_cast<D*>(this))), segment, transition);
   }
 };
 

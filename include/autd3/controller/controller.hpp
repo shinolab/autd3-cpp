@@ -83,77 +83,59 @@ class Controller {
     return ret;
   }
 
-  template <driver::datagram D, typename Rep, typename Period>
-  AUTD3_API void send(D&& data, const std::chrono::duration<Rep, Period> timeout) {
-    send(std::forward<D>(data), std::optional(timeout));
+  template <driver::datagram D>
+  AUTD3_API void send(D&& data) {
+    send(std::forward<D>(data), driver::NullDatagram());
   }
 
-  template <driver::datagram D, typename Rep = uint64_t, typename Period = std::milli>
-  AUTD3_API void send(D&& data, const std::optional<std::chrono::duration<Rep, Period>> timeout = std::nullopt) {
-    send(std::forward<D>(data), driver::NullDatagram(), timeout);
-  }
-
-  template <driver::datagram D1, driver::datagram D2, typename Rep, typename Period>
-  AUTD3_API void send(D1&& data1, D2&& data2, const std::chrono::duration<Rep, Period> timeout) {
-    send(std::forward<D1>(data1), std::forward<D2>(data2), std::optional(timeout));
-  }
-
-  template <driver::datagram D1, driver::datagram D2, typename Rep = uint64_t, typename Period = std::milli>
-  AUTD3_API void send(D1&& data1, D2&& data2, const std::optional<std::chrono::duration<Rep, Period>> timeout = std::nullopt) {
-    const int64_t timeout_ns = timeout.has_value() ? std::chrono::duration_cast<std::chrono::nanoseconds>(timeout.value()).count() : -1;
-    validate(AUTDControllerSend(_ptr, data1.ptr(_geometry), data2.ptr(_geometry), timeout_ns));
+  template <driver::datagram D1, driver::datagram D2>
+  AUTD3_API void send(const D1& data1, const D2& data2) {
+    validate(AUTDControllerSend(_ptr, data1.ptr(_geometry), data2.ptr(_geometry)));
   }
 
   template <group_f F>
   class GroupGuard {
    public:
     using key_type = typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type;
+    using native_f = int32_t (*)(const void*, native_methods::GeometryPtr, uint16_t);
 
-    AUTD3_API explicit GroupGuard(F map, Controller& controller)
-        : _controller(controller), _map(std::move(map)), _kv_map(native_methods::AUTDControllerGroupCreateKVMap()) {}
+    AUTD3_API explicit GroupGuard(F map, Controller& controller) : _controller(controller), _map(std::move(map)) {
+      _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx) -> int32_t {
+        const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
+        const auto* self = static_cast<const GroupGuard*>(context);
+        const auto key = self->_map(dev);
+        const auto& keymap = self->_keymap;
+        return key.has_value() ? keymap.at(key.value()) : -1;
+      };
+    }
 
-    template <driver::datagram D, typename Rep = uint64_t, typename Period = std::milli>
-    AUTD3_API GroupGuard set(const key_type key, D&& data, const std::optional<std::chrono::duration<Rep, Period>> timeout = std::nullopt) {
+    template <driver::datagram D>
+    AUTD3_API GroupGuard set(const key_type key, const D& data) {
       if (_keymap.contains(key)) throw AUTDException("Key already exists");
-      const int64_t timeout_ns = timeout.has_value() ? timeout.value().count() : -1;
       const auto ptr = data.ptr(_controller._geometry);
+      _datagrams1.push_back(ptr);
+      _datagrams2.push_back(native_methods::DatagramPtr{nullptr});
+      _keys.push_back(_k);
       _keymap[key] = _k++;
-      native_methods::AUTDControllerGroupKVMapSet(_kv_map, _keymap[key], ptr, native_methods::DatagramPtr{nullptr}, timeout_ns);
       return std::move(*this);
     }
 
-    template <driver::datagram D, typename Rep, typename Period>
-    AUTD3_API GroupGuard set(const key_type key, D&& data, const std::chrono::duration<Rep, Period> timeout) {
-      return set(key, std::forward<D>(data), std::optional(timeout));
-    }
-
-    template <driver::datagram D1, driver::datagram D2, typename Rep = uint64_t, typename Period = std::milli>
-    AUTD3_API GroupGuard set(const key_type key, D1&& data1, D2&& data2,
-                             const std::optional<std::chrono::duration<Rep, Period>> timeout = std::nullopt) {
+    template <driver::datagram D1, driver::datagram D2>
+    AUTD3_API GroupGuard set(const key_type key, const D1& data1, const D2& data2) {
       if (_keymap.contains(key)) throw AUTDException("Key already exists");
-      const int64_t timeout_ns = timeout.has_value() ? timeout.value().count() : -1;
       const auto ptr1 = data1.ptr(_controller._geometry);
       const auto ptr2 = data2.ptr(_controller._geometry);
+      _datagrams1.push_back(ptr1);
+      _datagrams2.push_back(ptr2);
+      _keys.push_back(_k);
       _keymap[key] = _k++;
-      native_methods::AUTDControllerGroupKVMapSet(_kv_map, _keymap[key], ptr1, ptr2, timeout_ns);
       return std::move(*this);
     }
 
-    template <driver::datagram D1, driver::datagram D2, typename Rep, typename Period>
-    AUTD3_API GroupGuard set(const key_type key, D1&& data1, D2&& data2, const std::chrono::duration<Rep, Period> timeout) {
-      return set(key, std::forward<D1>(data1), std::forward<D2>(data2), std::optional(timeout));
-    }
-
-    AUTD3_API void send() {
-      std::vector<int32_t> map;
-      map.reserve(_controller.geometry().num_devices());
-      std::transform(_controller.geometry().cbegin(), _controller.geometry().cend(), std::back_inserter(map),
-                     [this](const driver::geometry::Device& d) {
-                       if (!d.enable()) return -1;
-                       const auto k = _map(d);
-                       return k.has_value() ? _keymap[k.value()] : -1;
-                     });
-      validate(AUTDControllerGroup(_controller._ptr, map.data(), _kv_map));
+    AUTD3_API void send() const {
+      validate(AUTDControllerGroup(_controller._ptr, const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
+                                   native_methods::ContextPtr{const_cast<void*>(static_cast<const void*>(this))}, _controller._geometry.ptr(),
+                                   _keys.data(), _datagrams1.data(), _datagrams2.data(), static_cast<uint16_t>(_keys.size())));
     }
 
 #ifdef AUTD3_ASYNC_API
@@ -163,7 +145,10 @@ class Controller {
    private:
     Controller& _controller;
     F _map;
-    native_methods::GroupKVMapPtr _kv_map;
+    native_f _f_native;
+    std::vector<int32_t> _keys;
+    std::vector<native_methods::DatagramPtr> _datagrams1;
+    std::vector<native_methods::DatagramPtr> _datagrams2;
     std::unordered_map<key_type, int32_t> _keymap;
     int32_t _k{0};
   };

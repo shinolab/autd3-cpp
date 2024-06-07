@@ -12,13 +12,15 @@ namespace autd3::gain::holo {
 
 class Greedy final : public Holo<Greedy> {
  public:
-  AUTD3_API Greedy() : Holo(EmissionConstraint::Uniform(std::numeric_limits<driver::EmitIntensity>::max())), _phase_div(16) {}
+  template <holo_foci_range R>
+  AUTD3_API Greedy(R&& iter)
+      : Holo(EmissionConstraint::Uniform(std::numeric_limits<driver::EmitIntensity>::max()), std::forward<R>(iter)), _phase_div(16) {}
 
   AUTD3_DEF_PARAM(Greedy, uint8_t, phase_div)
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return AUTDGainHoloGreedySphere(reinterpret_cast<const double*>(this->_foci.data()), reinterpret_cast<const double*>(this->_amps.data()),
-                                    this->_amps.size(), _phase_div, _constraint);
+    return AUTDGainHoloGreedySphere(reinterpret_cast<const float*>(this->_foci.data()), reinterpret_cast<const float*>(this->_amps.data()),
+                                    static_cast<uint32_t>(this->_amps.size()), _phase_div, _constraint);
   }
 };
 

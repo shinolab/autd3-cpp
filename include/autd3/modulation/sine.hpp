@@ -9,30 +9,32 @@
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/modulation/sampling_mode.hpp"
 #include "autd3/native_methods.hpp"
+#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::modulation {
 
 class Fourier;
+class Mixer;
 
 class Sine final : public driver::Modulation<Sine> {
   AUTD3_API explicit Sine(const std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> freq)
       : Modulation(driver::SamplingConfig::Division(5120)),
-        _freq(freq),
-        _intensity(std::numeric_limits<driver::EmitIntensity>::max()),
-        _offset(std::numeric_limits<driver::EmitIntensity>::max() / 2),
-        _phase(0.0 * driver::rad) {}
+        _intensity(std::numeric_limits<uint8_t>::max()),
+        _offset(std::numeric_limits<uint8_t>::max() / 2),
+        _phase(0.0 * driver::rad),
+        _freq(freq) {}
 
  public:
   friend Fourier;
+  friend Mixer;
 
   AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq) : Sine(SamplingModeExact{freq}) {}
-  AUTD3_API explicit Sine(const driver::Freq<double> freq) : Sine(SamplingModeExactFloat{freq}) {}
-  AUTD3_API [[nodiscard]] static Sine with_freq_nearest(const driver::Freq<double> freq) { return Sine(SamplingModeNearest{freq}); }
+  AUTD3_API explicit Sine(const driver::Freq<float> freq) : Sine(SamplingModeExactFloat{freq}) {}
+  AUTD3_API [[nodiscard]] static Sine with_freq_nearest(const driver::Freq<float> freq) { return Sine(SamplingModeNearest{freq}); }
 
-  AUTD3_DEF_PARAM(Sine, driver::EmitIntensity, intensity)
-  AUTD3_DEF_PARAM(Sine, driver::EmitIntensity, offset)
+  AUTD3_DEF_PARAM_INT(Sine, uint8_t, intensity)
+  AUTD3_DEF_PARAM_INT(Sine, uint8_t, offset)
   AUTD3_DEF_PARAM(Sine, driver::Angle, phase)
-  AUTD3_API friend Fourier operator+(Sine&& lhs, const Sine& rhs);
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
     return std::visit([&](const auto& f) { return f.sine_ptr(_sampling_config, _intensity, _offset, _phase, _loop_behavior); }, _freq);
   }

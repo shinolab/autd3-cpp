@@ -28,34 +28,6 @@ TEST(Controller, ControllerClose) {
   }
 }
 
-TEST(Controller, ControllerSendTimeout) {
-  {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                    .open(autd3::link::Audit::builder().with_timeout(std::chrono::microseconds(0)));
-
-    autd.send(autd3::gain::Null());
-
-    autd.send(autd3::gain::Null(), std::chrono::microseconds(1));
-
-    autd.send(autd3::gain::Null(), autd3::gain::Null(), std::chrono::microseconds(2));
-  }
-
-  {
-    auto autd = autd3::controller::ControllerBuilder()
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                    .add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero()))
-                    .open(autd3::link::Audit::builder().with_timeout(std::chrono::microseconds(10)));
-
-    autd.send(autd3::gain::Null());
-
-    autd.send(autd3::gain::Null(), std::chrono::microseconds(1));
-
-    autd.send(autd3::gain::Null(), autd3::gain::Null(), std::chrono::microseconds(2));
-  }
-}
-
 TEST(Controller, ControllerSendSingle) {
   auto autd = create_controller();
 
@@ -75,31 +47,6 @@ TEST(Controller, ControllerSendSingle) {
 
   autd.link().break_down();
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
-}
-
-TEST(Controller, ControllerSendDouble) {
-  auto autd = create_controller();
-
-  for (auto& dev : autd.geometry()) {
-    auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
-  }
-
-  autd.send(autd3::modulation::Static(), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)));
-  for (auto& dev : autd.geometry()) {
-    auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
-  }
-
-  autd.link().down();
-  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Null()), autd3::AUTDException);
-
-  autd.link().break_down();
-  ASSERT_THROW(autd.send(autd3::modulation::Static(), autd3::gain::Null()), autd3::AUTDException);
 }
 
 TEST(Controller, ControllerGroup) {

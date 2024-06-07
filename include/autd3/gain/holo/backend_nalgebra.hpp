@@ -19,26 +19,25 @@ class NalgebraBackend final : public Backend {
   NalgebraBackend(NalgebraBackend&& obj) = default;             // LCOV_EXCL_LINE
   NalgebraBackend& operator=(NalgebraBackend&& obj) = default;  // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::GainPtr sdp(const double* foci, const double* amps, const uint64_t size, const double alpha,
-                                                      const double lambda, const uint32_t repeat,
+  AUTD3_API [[nodiscard]] native_methods::GainPtr sdp(const float* foci, const float* amps, const uint32_t size, const float alpha,
+                                                      const float lambda, const uint32_t repeat,
                                                       const native_methods::EmissionConstraintWrap constraint) const override {
     return AUTDGainHoloSDPSphere(_ptr, foci, amps, size, alpha, lambda, repeat, constraint);
   }
-  AUTD3_API [[nodiscard]] native_methods::GainPtr gs(const double* foci, const double* amps, const uint64_t size, const uint32_t repeat,
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gs(const float* foci, const float* amps, const uint32_t size, const uint32_t repeat,
                                                      const native_methods::EmissionConstraintWrap constraint) const override {
     return AUTDGainHoloGSSphere(_ptr, foci, amps, size, repeat, constraint);
   }
-  AUTD3_API [[nodiscard]] native_methods::GainPtr gspat(const double* foci, const double* amps, const uint64_t size, const uint32_t repeat,
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gspat(const float* foci, const float* amps, const uint32_t size, const uint32_t repeat,
                                                         const native_methods::EmissionConstraintWrap constraint) const override {
     return AUTDGainHoloGSPATSphere(_ptr, foci, amps, size, repeat, constraint);
   }
-  AUTD3_API [[nodiscard]] native_methods::GainPtr naive(const double* foci, const double* amps, const uint64_t size,
+  AUTD3_API [[nodiscard]] native_methods::GainPtr naive(const float* foci, const float* amps, const uint32_t size,
                                                         const native_methods::EmissionConstraintWrap constraint) const override {
     return AUTDGainHoloNaiveSphere(_ptr, foci, amps, size, constraint);
   }
-  AUTD3_API [[nodiscard]] native_methods::GainPtr lm(const double* foci, const double* amps, const uint64_t size, const double eps1,
-                                                     const double eps2, const double tau, const uint32_t k_max, const double* initial,
-                                                     const uint64_t initial_size,
+  AUTD3_API [[nodiscard]] native_methods::GainPtr lm(const float* foci, const float* amps, const uint32_t size, const float eps1, const float eps2,
+                                                     const float tau, const uint32_t k_max, const float* initial, const uint32_t initial_size,
                                                      const native_methods::EmissionConstraintWrap constraint) const override {
     return AUTDGainHoloLMSphere(_ptr, foci, amps, size, eps1, eps2, tau, k_max, initial, initial_size, constraint);
   }

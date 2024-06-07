@@ -2,6 +2,8 @@
 
 #include <concepts>
 
+#include "autd3/driver/datagram/with_parallel_threshold.hpp"
+#include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/geometry/transducer.hpp"
@@ -30,12 +32,12 @@ concept _debug_settings_f = requires(F f, const geometry::Device& d, const nativ
 };
 
 template <_debug_settings_f F>
-class DebugSettings final {
-  using native_f = void (*)(const void*, native_methods::GeometryPtr, uint32_t, native_methods::GPIOOut, native_methods::DebugTypeWrap*);
+class DebugSettings final : public IntoDatagramWithTimeout<DebugSettings<F>>, public IntoDatagramWithParallelThreshold<DebugSettings<F>> {
+  using native_f = void (*)(const void*, native_methods::GeometryPtr, uint16_t, native_methods::GPIOOut, native_methods::DebugTypeWrap*);
 
  public:
   AUTD3_API explicit DebugSettings(F f) : _f(std::move(f)) {
-    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const native_methods::GPIOOut gpio,
+    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const native_methods::GPIOOut gpio,
                     native_methods::DebugTypeWrap* res) {
       const geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
       *res = static_cast<const DebugSettings*>(context)->_f(dev, gpio);
@@ -43,8 +45,8 @@ class DebugSettings final {
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return AUTDDatagramDebugSettings(const_cast<void*>(reinterpret_cast<const void*>(_f_native)), const_cast<void*>(static_cast<const void*>(this)),
-                                     geometry.ptr());
+    return AUTDDatagramDebugSettings(const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
+                                     native_methods::ContextPtr{const_cast<void*>(static_cast<const void*>(this))}, geometry.ptr());
   }
 
  private:

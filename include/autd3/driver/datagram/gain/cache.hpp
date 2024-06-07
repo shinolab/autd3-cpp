@@ -8,7 +8,9 @@
 #include <vector>
 
 #include "autd3/driver/datagram/gain/base.hpp"
+#include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
+#include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
@@ -17,7 +19,10 @@
 namespace autd3::gain {
 
 template <class G>
-class Cache final : public driver::GainBase, public driver::IntoDatagramWithSegment<native_methods::GainPtr, Cache<G>> {
+class Cache final : public driver::GainBase,
+                    public driver::IntoDatagramWithSegment<native_methods::GainPtr, Cache<G>>,
+                    public driver::IntoDatagramWithTimeout<Cache<G>>,
+                    public driver::IntoDatagramWithParallelThreshold<Cache<G>> {
  public:
   AUTD3_API explicit Cache(G g) : _g(std::move(g)), _cache(std::make_shared<std::unordered_map<size_t, std::vector<driver::Drive>>>()) {}
 
@@ -38,7 +43,7 @@ class Cache final : public driver::GainBase, public driver::IntoDatagramWithSegm
       for (const auto& dev : geometry.devices()) {
         std::vector<driver::Drive> drives;
         drives.resize(dev.num_transducers(), driver::Drive::null());
-        native_methods::AUTDGainCalcGetResult(res, reinterpret_cast<native_methods::Drive*>(drives.data()), static_cast<uint32_t>(dev.idx()));
+        native_methods::AUTDGainCalcGetResult(res, reinterpret_cast<native_methods::Drive*>(drives.data()), dev.ptr());
         _cache->emplace(dev.idx(), std::move(drives));
       }
       native_methods::AUTDGainCalcFreeResult(res);

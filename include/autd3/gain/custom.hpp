@@ -15,11 +15,11 @@ concept custom_test_f = requires(F f, const driver::geometry::Device& d, const d
 
 template <custom_test_f F>
 class Custom final : public driver::Gain<Custom<F>> {
-  using native_f = void (*)(const void*, native_methods::GeometryPtr, uint32_t, uint8_t, native_methods::Drive*);
+  using native_f = void (*)(const void*, native_methods::GeometryPtr, uint16_t, uint8_t, native_methods::Drive*);
 
  public:
   AUTD3_API explicit Custom(F f) : _f(std::move(f)) {
-    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint32_t dev_idx, const uint8_t tr_idx,
+    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint8_t tr_idx,
                     native_methods::Drive* raw) {
       const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
       const driver::geometry::Transducer tr(tr_idx, dev.ptr());

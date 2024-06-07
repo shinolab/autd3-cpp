@@ -13,16 +13,21 @@ namespace autd3::gain::holo {
 template <backend B>
 class SDP final : public Holo<SDP<B>> {
  public:
-  AUTD3_API explicit SDP(std::shared_ptr<B> holo_backend)
-      : Holo<SDP>(EmissionConstraint::DontCare), _alpha(1e-3), _repeat(100), _lambda(0.9), _backend(std::move(holo_backend)) {}
+  template <holo_foci_range R>
+  AUTD3_API explicit SDP(std::shared_ptr<B> holo_backend, R&& iter)
+      : Holo<SDP>(EmissionConstraint::DontCare, std::forward<R>(iter)),
+        _alpha(1e-3f),
+        _repeat(100),
+        _lambda(0.9f),
+        _backend(std::move(holo_backend)) {}
 
-  AUTD3_DEF_PARAM(SDP, double, alpha)
+  AUTD3_DEF_PARAM(SDP, float, alpha)
   AUTD3_DEF_PARAM(SDP, uint32_t, repeat)
-  AUTD3_DEF_PARAM(SDP, double, lambda)
+  AUTD3_DEF_PARAM(SDP, float, lambda)
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return this->_backend->sdp(reinterpret_cast<const double*>(this->_foci.data()), reinterpret_cast<const double*>(this->_amps.data()),
-                               this->_amps.size(), _alpha, _lambda, _repeat, this->_constraint);
+    return this->_backend->sdp(reinterpret_cast<const float*>(this->_foci.data()), reinterpret_cast<const float*>(this->_amps.data()),
+                               static_cast<uint32_t>(this->_amps.size()), _alpha, _lambda, _repeat, this->_constraint);
   }
 
  private:

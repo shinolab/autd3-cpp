@@ -8,16 +8,14 @@
 #include <autd3/link/audit.hpp>
 
 TEST(GainHolo, Greedy) {
-  auto autd =
-      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
 
-  std::vector<double> p{-30};
-  auto g = autd3::gain::holo::Greedy().with_phase_div(16);
-  g.add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa);
-  g.add_foci_from_iter(p | std::ranges::views::transform([&](auto x) {
-                         autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                         return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
-                       }));
+  std::vector<float> p{-30, 30};
+  auto g = autd3::gain::holo::Greedy(p | std::ranges::views::transform([&](auto x) {
+                                       autd3::driver::Vector3 focus = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                       return std::make_pair(focus, 5e3 * autd3::gain::holo::Pa);
+                                     }))
+               .with_phase_div(16);
   g.with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   autd.send(g);
@@ -30,8 +28,8 @@ TEST(GainHolo, Greedy) {
 }
 
 TEST(GainHolo, GreedyDefault) {
-  auto autd =
-      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
-  auto g = autd3::gain::holo::Greedy();
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
+  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
+  auto g = autd3::gain::holo::Greedy(foci);
   ASSERT_TRUE(autd3::native_methods::AUTDGainGreedyIsDefault(g.gain_ptr(autd.geometry())));
 }

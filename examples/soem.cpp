@@ -8,8 +8,7 @@
 
 int main() try {
   auto autd =
-      autd3::ControllerBuilder()
-          .add_device(autd3::AUTD3(autd3::Vector3::Zero()))
+      autd3::ControllerBuilder(std::vector{autd3::AUTD3(autd3::Vector3::Zero())})
           .open(autd3::link::SOEM::builder().with_err_handler([](const uint16_t slave, const autd3::link::Status status, const std::string& msg) {
             switch (status) {
               case autd3::link::Status::Error:

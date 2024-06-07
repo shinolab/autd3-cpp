@@ -8,22 +8,19 @@
 #include <autd3/link/audit.hpp>
 
 TEST(GainHolo, LM) {
-  auto autd =
-      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<double> p{-30};
-  auto g = autd3::gain::holo::LM(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
-               .add_foci_from_iter(p | std::ranges::views::transform([&](auto x) {
-                                     autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                                     return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
-                                   }))
+  std::vector<float> p{-30, 30};
+  auto g = autd3::gain::holo::LM(std::move(backend), p | std::ranges::views::transform([&](auto x) {
+                                                       autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                                       return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
+                                                     }))
                .with_eps1(1e-3)
                .with_eps2(1e-3)
                .with_tau(1e-3)
                .with_k_max(5)
-               .with_initial(std::vector{1.0})
+               .with_initial(std::vector{1.0f})
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   autd.send(g);
@@ -36,10 +33,10 @@ TEST(GainHolo, LM) {
 }
 
 TEST(GainHolo, LMDefault) {
-  auto autd =
-      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  auto g = autd3::gain::holo::LM(std::move(backend));
+  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
+  auto g = autd3::gain::holo::LM(std::move(backend), foci);
   ASSERT_TRUE(autd3::native_methods::AUTDGainLMIsDefault(g.gain_ptr(autd.geometry())));
 }
 
@@ -48,22 +45,19 @@ TEST(GainHolo, LMDefault) {
 #include "autd3/gain/holo/backend_cuda.hpp"
 
 TEST(GainHolo, LM_CUDA) {
-  auto autd =
-      autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
 
   auto backend = std::make_shared<autd3::gain::holo::CUDABackend>();
-  std::vector<double> p{-30};
-  auto g = autd3::gain::holo::LM(std::move(backend))
-               .add_focus(autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa)
-               .add_foci_from_iter(p | std::ranges::views::transform([&](auto x) {
-                                     autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                                     return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
-                                   }))
+  std::vector<float> p{-30, 30};
+  auto g = autd3::gain::holo::LM(std::move(backend), p | std::ranges::views::transform([&](auto x) {
+                                                       autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                                       return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
+                                                     }))
                .with_eps1(1e-3)
                .with_eps2(1e-3)
                .with_tau(1e-3)
                .with_k_max(5)
-               .with_initial(std::vector{1.0})
+               .with_initial(std::vector{1.0f})
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   autd.send(g);

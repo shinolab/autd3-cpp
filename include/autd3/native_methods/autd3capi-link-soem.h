@@ -72,7 +72,7 @@ LinkSOEMBuilderPtr AUTDLinkSOEMWithIfname(LinkSOEMBuilderPtr soem,
 LinkSOEMBuilderPtr AUTDLinkSOEMWithStateCheckInterval(LinkSOEMBuilderPtr soem,
                                                       uint32_t interval_ms);
 
-void AUTDLinkSOEMStatusGetMsg(Status src, char *dst);
+uint32_t AUTDLinkSOEMStatusGetMsg(Status src, char *dst);
 
 [[nodiscard]]
 LinkSOEMBuilderPtr AUTDLinkSOEMWithErrHandler(LinkSOEMBuilderPtr soem,

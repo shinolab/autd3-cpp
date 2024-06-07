@@ -26,6 +26,22 @@
                                                                                                     \
  public:
 
+#define AUTD3_DEF_PARAM_INT(T, PARAM_T, PARAM_NAME)                                       \
+  template <std::integral I>                                                              \
+  void with_##PARAM_NAME(I value)& {                                                      \
+    _##PARAM_NAME = value; /* LCOV_EXCL_LINE */                                           \
+  }                                                                                       \
+  template <std::integral I>                                                              \
+  [[nodiscard]] T&& with_##PARAM_NAME(I value)&& {                                        \
+    _##PARAM_NAME = value;                    /* LCOV_EXCL_LINE */                        \
+    return std::move(*static_cast<T*>(this)); /* LCOV_EXCL_LINE */                        \
+  }                                                                                       \
+  [[nodiscard]] PARAM_T PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */ \
+ protected:                                                                               \
+  PARAM_T _##PARAM_NAME;                                                                  \
+                                                                                          \
+ public:
+
 namespace autd3::native_methods {
 
 template <class T>

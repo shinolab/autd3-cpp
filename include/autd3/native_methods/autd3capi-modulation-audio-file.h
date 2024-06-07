@@ -18,10 +18,13 @@ ResultModulation AUTDModulationWav(const char *path,
 [[nodiscard]]
 ResultModulation AUTDModulationRawPCM(const char *path,
                                       uint32_t sample_rate,
-                                      SamplingConfigWrap config,
                                       LoopBehavior loop_behavior);
 
-[[nodiscard]] bool AUTDModulationRawPCMIsDefault(ModulationPtr rawpcm);
+[[nodiscard]]
+ResultModulation AUTDModulationCsv(const char *path,
+                                   uint32_t sample_rate,
+                                   uint8_t deliminator,
+                                   LoopBehavior loop_behavior);
 
 } // extern "C"
 

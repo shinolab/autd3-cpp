@@ -14,48 +14,48 @@ void AUTDCUDABackendDelete(BackendPtr backend);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloCUDASDP(BackendPtr backend,
-                            const double *points,
-                            const double *amps,
-                            uint64_t size,
-                            double alpha,
-                            double lambda,
+                            const float *points,
+                            const float *amps,
+                            uint32_t size,
+                            float alpha,
+                            float lambda,
                             uint32_t repeat,
                             EmissionConstraintWrap constraint);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloCUDAGS(BackendPtr backend,
-                           const double *points,
-                           const double *amps,
-                           uint64_t size,
+                           const float *points,
+                           const float *amps,
+                           uint32_t size,
                            uint32_t repeat,
                            EmissionConstraintWrap constraint);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloCUDAGSPAT(BackendPtr backend,
-                              const double *points,
-                              const double *amps,
-                              uint64_t size,
+                              const float *points,
+                              const float *amps,
+                              uint32_t size,
                               uint32_t repeat,
                               EmissionConstraintWrap constraint);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloCUDANaive(BackendPtr backend,
-                              const double *points,
-                              const double *amps,
-                              uint64_t size,
+                              const float *points,
+                              const float *amps,
+                              uint32_t size,
                               EmissionConstraintWrap constraint);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloCUDALM(BackendPtr backend,
-                           const double *points,
-                           const double *amps,
-                           uint64_t size,
-                           double eps_1,
-                           double eps_2,
-                           double tau,
+                           const float *points,
+                           const float *amps,
+                           uint32_t size,
+                           float eps_1,
+                           float eps_2,
+                           float tau,
                            uint32_t k_max,
                            EmissionConstraintWrap constraint,
-                           const double *initial_ptr,
+                           const float *initial_ptr,
                            uint64_t initial_len);
 
 } // extern "C"

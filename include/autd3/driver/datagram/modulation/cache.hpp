@@ -5,7 +5,6 @@
 #include "autd3/driver/datagram/modulation/base.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::modulation {
 

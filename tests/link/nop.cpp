@@ -7,7 +7,7 @@
 TEST(Link, Nop) {
   auto link = autd3::link::Nop::builder();
 
-  auto autd = autd3::controller::ControllerBuilder().add_device(autd3::driver::AUTD3(autd3::driver::Vector3::Zero())).open(std::move(link));
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(std::move(link));
 
   autd.close();
 }

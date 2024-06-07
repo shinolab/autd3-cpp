@@ -45,18 +45,38 @@ class Device {
     return v;
   }
 
-  AUTD3_API [[nodiscard]] double sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
+  AUTD3_API [[nodiscard]] float sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
 
-  AUTD3_API void set_sound_speed(const double value) const { AUTDDeviceSetSoundSpeed(_ptr, value); }
+  AUTD3_API void set_sound_speed(const float value) const { AUTDDeviceSetSoundSpeed(_ptr, value); }
 
-  AUTD3_API void set_sound_speed_from_temp(const double temp, const double k = 1.4, const double r = 8.31446261815324,
-                                           const double m = 28.9647e-3) const {
+  AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f,
+                                           const float m = 28.9647e-3f) const {
     AUTDDeviceSetSoundSpeedFromTemp(_ptr, temp, k, r, m);
   }
 
-  AUTD3_API [[nodiscard]] double attenuation() const { return AUTDDeviceGetAttenuation(_ptr); }
+  AUTD3_API [[nodiscard]] Quaternion rotation() const noexcept {
+    float v[4];
+    AUTDDeviceRotation(_ptr, v);
+    return {v[0], v[1], v[2], v[3]};
+  }
 
-  AUTD3_API void set_attenuation(const double value) const { AUTDDeviceSetAttenuation(_ptr, value); }
+  AUTD3_API [[nodiscard]] Vector3 x_direction() const {
+    Vector3 v;
+    AUTDDeviceDirectionX(_ptr, v.data());
+    return v;
+  }
+
+  AUTD3_API [[nodiscard]] Vector3 y_direction() const {
+    Vector3 v;
+    AUTDDeviceDirectionY(_ptr, v.data());
+    return v;
+  }
+
+  AUTD3_API [[nodiscard]] Vector3 axial_direction() const {
+    Vector3 v;
+    AUTDDeviceDirectionAxial(_ptr, v.data());
+    return v;
+  }
 
   AUTD3_API [[nodiscard]] bool enable() const { return AUTDDeviceEnableGet(_ptr); }
 
@@ -68,8 +88,8 @@ class Device {
 
   AUTD3_API void affine(Vector3 t, Quaternion r) const { AUTDDeviceAffine(_ptr, t.x(), t.y(), t.z(), r.w(), r.x(), r.y(), r.z()); }
 
-  AUTD3_API [[nodiscard]] double wavelength() const { return AUTDDeviceWavelength(_ptr); }
-  AUTD3_API [[nodiscard]] double wavenumber() const { return AUTDDeviceWavenumber(_ptr); }
+  AUTD3_API [[nodiscard]] float wavelength() const { return AUTDDeviceWavelength(_ptr); }
+  AUTD3_API [[nodiscard]] float wavenumber() const { return AUTDDeviceWavenumber(_ptr); }
 
   AUTD3_API [[nodiscard]] DeviceView transducers() const noexcept { return DeviceView(_transducers); }
 

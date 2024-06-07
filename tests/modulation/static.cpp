@@ -7,7 +7,7 @@
 TEST(Modulation, Static) {
   auto autd = create_controller();
 
-  auto m = autd3::modulation::Static(autd3::driver::EmitIntensity(32));
+  auto m = autd3::modulation::Static::with_intensity(32);
   autd.send(m);
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);

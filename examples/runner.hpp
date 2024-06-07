@@ -27,7 +27,7 @@ inline void run(autd3::Controller<L>& autd) {
                                                   std::pair(F{bessel_test<L>}, "Bessel beam test"),
                                                   std::pair(F{plane_test<L>}, "Plane wave test"),
                                                   std::pair(F{mod_audio_file_test<L>}, "Wav modulation test"),
-                                                  std::pair(F{focus_stm<L>}, "FocusSTM test"),
+                                                  std::pair(F{focus_stm<L>}, "FociSTM test"),
                                                   std::pair(F{gain_stm<L>}, "GainSTM test"),
                                                   std::pair(F{holo_test<L>}, "Multiple foci test"),
                                                   std::pair(F{advanced_test<L>}, "User-defined Gain & Modulation test"),

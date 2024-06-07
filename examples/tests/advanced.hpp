@@ -5,11 +5,11 @@
 
 #include "autd3.hpp"
 
-class BurstModulation final : public autd3::Modulation<BurstModulation> {
+class BurstModulation final : public autd3::derive::Modulation<BurstModulation> {
  public:
-  [[nodiscard]] std::vector<autd3::EmitIntensity> calc(const autd3::Geometry&) const override {
-    std::vector<autd3::EmitIntensity> buffer(_buf_size, std::numeric_limits<autd3::EmitIntensity>::min());
-    buffer[_buf_size - 1] = std::numeric_limits<autd3::EmitIntensity>::max();
+  [[nodiscard]] autd3::derive::ModulationCalcResult calc(const autd3::Geometry&) const override {
+    std::vector<uint8_t> buffer(_buf_size, std::numeric_limits<uint8_t>::min());
+    buffer[_buf_size - 1] = std::numeric_limits<uint8_t>::max();
     return buffer;
   }
 
@@ -21,12 +21,12 @@ class BurstModulation final : public autd3::Modulation<BurstModulation> {
   size_t _buf_size;
 };
 
-class MyUniformGain final : public autd3::Gain<MyUniformGain> {
+class MyUniformGain final : public autd3::derive::Gain<MyUniformGain> {
  public:
   MyUniformGain() = default;
 
-  [[nodiscard]] std::unordered_map<size_t, std::vector<autd3::Drive>> calc(const autd3::Geometry& geometry) const override {
-    return transform(geometry, [](const autd3::Device&) {
+  [[nodiscard]] autd3::derive::GainCalcResult calc(const autd3::Geometry& geometry) const override {
+    return transform([](const autd3::Device&) {
       return [](const autd3::Transducer&) { return autd3::Drive{autd3::Phase(0), std::numeric_limits<autd3::EmitIntensity>::max()}; };
     });
   }

@@ -7,8 +7,8 @@ namespace autd3::driver::geometry {
 
 class EulerAngles {
  public:
-  AUTD3_API [[nodiscard]] static inline Quaternion ZYZ(const Angle& z1, const Angle& y, const Angle& z2) {
-    double v[4];
+  AUTD3_API [[nodiscard]] static Quaternion ZYZ(const Angle& z1, const Angle& y, const Angle& z2) {
+    float v[4];
     native_methods::AUTDRotationFromEulerZYZ(z1.radian(), y.radian(), z2.radian(), v);
     return {v[0], v[1], v[2], v[3]};
   }
