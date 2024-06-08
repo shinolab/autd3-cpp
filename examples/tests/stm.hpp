@@ -22,7 +22,7 @@ inline void focus_stm(autd3::Controller<L>& autd) {
                                             return std::array{p};
                                           }));
 
-  autd.send(m, stm);
+  autd.send((m, stm));
 }
 
 template <typename L>
@@ -41,5 +41,5 @@ inline void gain_stm(autd3::Controller<L>& autd) {
                                          return autd3::gain::Focus(center + autd3::Vector3(radius * std::cos(theta), radius * std::sin(theta), 0));
                                        }));
 
-  autd.send(m, stm);
+  autd.send((m, stm));
 }

@@ -12,5 +12,5 @@ inline void focus_test(autd3::Controller<L>& autd) {
   const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0.0, 0.0, 150.0);
   autd3::gain::Focus g(center);
 
-  autd.send(m, g);
+  autd.send((m, g));
 }

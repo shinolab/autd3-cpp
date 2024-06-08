@@ -1,5 +1,6 @@
 #pragma once
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/native_methods.hpp"
@@ -7,7 +8,7 @@
 namespace autd3::driver {
 
 struct SwapSegment {
-  class Gain final : public IntoDatagramWithTimeout<Gain>, public IntoDatagramWithParallelThreshold<Gain> {
+  class Gain final : public IntoDatagramTuple<Gain>, public IntoDatagramWithTimeout<Gain>, public IntoDatagramWithParallelThreshold<Gain> {
    public:
     AUTD3_API explicit Gain(const native_methods::Segment segment) : _segment(segment) {}
 
@@ -17,7 +18,9 @@ struct SwapSegment {
     native_methods::Segment _segment;
   };
 
-  class GainSTM final : public IntoDatagramWithTimeout<GainSTM>, public IntoDatagramWithParallelThreshold<GainSTM> {
+  class GainSTM final : public IntoDatagramTuple<GainSTM>,
+                        public IntoDatagramWithTimeout<GainSTM>,
+                        public IntoDatagramWithParallelThreshold<GainSTM> {
    public:
     AUTD3_API explicit GainSTM(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
         : _segment(segment), _transition_mode(transition_mode) {}
@@ -31,7 +34,9 @@ struct SwapSegment {
     native_methods::TransitionModeWrap _transition_mode;
   };
 
-  class FociSTM final : public IntoDatagramWithTimeout<FociSTM>, public IntoDatagramWithParallelThreshold<FociSTM> {
+  class FociSTM final : public IntoDatagramTuple<FociSTM>,
+                        public IntoDatagramWithTimeout<FociSTM>,
+                        public IntoDatagramWithParallelThreshold<FociSTM> {
    public:
     AUTD3_API explicit FociSTM(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
         : _segment(segment), _transition_mode(transition_mode) {}
@@ -45,7 +50,9 @@ struct SwapSegment {
     native_methods::TransitionModeWrap _transition_mode;
   };
 
-  class Modulation final : public IntoDatagramWithTimeout<Modulation>, public IntoDatagramWithParallelThreshold<Modulation> {
+  class Modulation final : public IntoDatagramTuple<Modulation>,
+                           public IntoDatagramWithTimeout<Modulation>,
+                           public IntoDatagramWithParallelThreshold<Modulation> {
    public:
     AUTD3_API explicit Modulation(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
         : _segment(segment), _transition_mode(transition_mode) {}

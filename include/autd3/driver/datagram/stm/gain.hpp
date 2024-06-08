@@ -6,6 +6,7 @@
 
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/stm/stm.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
@@ -16,7 +17,8 @@ namespace autd3::driver {
 template <class R>
 concept gain_range = std::ranges::viewable_range<R> && gain<std::ranges::range_value_t<R>>;
 
-class GainSTM final : public DatagramST<native_methods::GainSTMPtr>,
+class GainSTM final : public IntoDatagramTuple<GainSTM>,
+                      public DatagramST<native_methods::GainSTMPtr>,
                       public IntoDatagramWithTimeout<GainSTM>,
                       public IntoDatagramWithParallelThreshold<GainSTM> {
  public:

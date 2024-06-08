@@ -61,7 +61,7 @@ inline void run(autd3::Controller<L>& autd) {
     std::cin.ignore();
 
     std::cout << "finish." << std::endl;
-    autd.send(autd3::gain::Null(), autd3::Silencer());
+    autd.send((autd3::gain::Null(), autd3::Silencer()));
   }
 
   autd.close();

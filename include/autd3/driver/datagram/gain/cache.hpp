@@ -8,6 +8,7 @@
 #include <vector>
 
 #include "autd3/driver/datagram/gain/base.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
@@ -20,6 +21,7 @@ namespace autd3::gain {
 
 template <class G>
 class Cache final : public driver::GainBase,
+                    public driver::IntoDatagramTuple<Cache<G>>,
                     public driver::IntoDatagramWithSegment<native_methods::GainPtr, Cache<G>>,
                     public driver::IntoDatagramWithTimeout<Cache<G>>,
                     public driver::IntoDatagramWithParallelThreshold<Cache<G>> {

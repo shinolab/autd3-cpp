@@ -12,5 +12,5 @@ inline void bessel_test(autd3::Controller<L>& autd) {
   const autd3::Vector3 apex = autd.geometry().center();
   autd3::gain::Bessel g(apex, autd3::Vector3::UnitZ(), 13.0 / 180.0 * autd3::pi * autd3::rad);
 
-  autd.send(m, g);
+  autd.send((m, g));
 }

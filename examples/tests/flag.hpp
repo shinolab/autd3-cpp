@@ -12,7 +12,7 @@ inline void flag_test(autd3::Controller<L>& autd) {
   std::cout << "press any key to run fan..." << std::endl;
   std::cin.ignore();
 
-  autd.send(autd3::ForceFan([](const auto&) { return true; }), autd3::ReadsFPGAState([](const auto&) { return true; }));
+  autd.send((autd3::ForceFan([](const auto&) { return true; }), autd3::ReadsFPGAState([](const auto&) { return true; })));
 
   bool fin = false;
   std::cout << "press any key stop checking FPGA status..." << std::endl;
@@ -34,5 +34,5 @@ inline void flag_test(autd3::Controller<L>& autd) {
 
   if (fin_signal.joinable()) fin_signal.join();
 
-  autd.send(autd3::ForceFan([](const auto&) { return false; }), autd3::ReadsFPGAState([](const auto&) { return false; }));
+  autd.send((autd3::ForceFan([](const auto&) { return false; }), autd3::ReadsFPGAState([](const auto&) { return false; })));
 }

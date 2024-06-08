@@ -19,6 +19,6 @@ TEST(DriverDatagram, WithParallelThreshold) {
   autd.send(autd3::modulation::Static().with_parallel_threshold(10));
   ASSERT_EQ(10, autd.last_parallel_threshold());
 
-  autd.send(autd3::modulation::Static().with_parallel_threshold(10), autd3::modulation::Static().with_parallel_threshold(5));
+  autd.send((autd3::modulation::Static(), autd3::modulation::Static()).with_parallel_threshold(5));
   ASSERT_EQ(5, autd.last_parallel_threshold());
 }

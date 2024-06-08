@@ -4,6 +4,7 @@
 #include <variant>
 
 #include "autd3/driver/datagram/stm/stm.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
@@ -16,7 +17,8 @@ template <class R, uint8_t N>
 concept foci_range_c = std::ranges::viewable_range<R> && std::is_constructible_v<ControlPoints<N>, std::ranges::range_value_t<R>>;
 
 template <uint8_t N>
-class FociSTM final : public DatagramST<native_methods::FociSTMPtr>,
+class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
+                      public DatagramST<native_methods::FociSTMPtr>,
                       public IntoDatagramWithTimeout<FociSTM<N>>,
                       public IntoDatagramWithParallelThreshold<FociSTM<N>> {
  public:

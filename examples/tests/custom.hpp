@@ -16,5 +16,5 @@ inline void custom(autd3::Controller<L>& autd) {
       return autd3::Drive::null();
     };
   });
-  autd.send(m, g);
+  autd.send((m, g));
 }

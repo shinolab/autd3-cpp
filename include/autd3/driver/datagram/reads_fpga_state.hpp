@@ -2,6 +2,7 @@
 
 #include <concepts>
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/device.hpp"
@@ -16,7 +17,9 @@ concept _reads_fpga_info_f = requires(F f, const geometry::Device& d) {
 };
 
 template <_reads_fpga_info_f F>
-class ReadsFPGAState final : public IntoDatagramWithTimeout<ReadsFPGAState<F>>, public IntoDatagramWithParallelThreshold<ReadsFPGAState<F>> {
+class ReadsFPGAState final : public IntoDatagramTuple<ReadsFPGAState<F>>,
+                             public IntoDatagramWithTimeout<ReadsFPGAState<F>>,
+                             public IntoDatagramWithParallelThreshold<ReadsFPGAState<F>> {
   using native_f = bool (*)(const void*, native_methods::GeometryPtr, uint16_t);
 
  public:

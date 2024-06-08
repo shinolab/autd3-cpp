@@ -19,5 +19,5 @@ inline void mod_audio_file_test(autd3::Controller<L>& autd) {
 
   autd3::gain::Focus g(center);
 
-  autd.send(m, g);
+  autd.send((m, g));
 }

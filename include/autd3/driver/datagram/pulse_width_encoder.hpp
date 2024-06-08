@@ -2,6 +2,7 @@
 
 #include <optional>
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
@@ -9,7 +10,9 @@
 
 namespace autd3::driver {
 
-class PulseWidthEncoder final : public IntoDatagramWithTimeout<PulseWidthEncoder>, public IntoDatagramWithParallelThreshold<PulseWidthEncoder> {
+class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
+                                public IntoDatagramWithTimeout<PulseWidthEncoder>,
+                                public IntoDatagramWithParallelThreshold<PulseWidthEncoder> {
   using native_f = uint16_t (*)(const void*, native_methods::GeometryPtr, uint16_t, uint16_t);
 
  public:

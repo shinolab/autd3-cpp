@@ -49,12 +49,32 @@ TEST(Controller, ControllerSendSingle) {
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
 }
 
+TEST(Controller, ControllerSendTuple) {
+  auto autd = create_controller();
+
+  for (auto& dev : autd.geometry()) {
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
+    auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
+  }
+
+  autd.send((autd3::modulation::Static::with_intensity(0x80),
+             autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x82))));
+  for (auto& dev : autd.geometry()) {
+    auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
+    ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x81 && d.phase.value() == 0x82; }));
+    auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0x80; }));
+  }
+}
+
 TEST(Controller, ControllerGroup) {
   auto autd = create_controller();
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
-      .set(0, autd3::modulation::Static(), autd3::gain::Null())
-      .set(1, autd3::modulation::Sine(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+      .set(0, (autd3::modulation::Static(), autd3::gain::Null()))
+      .set(1, (autd3::modulation::Sine(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))))
       .send();
 
   {
@@ -73,7 +93,7 @@ TEST(Controller, ControllerGroup) {
 
   autd.group([](auto& dev) -> std::optional<size_t> { return dev.idx(); })
       .set(1, autd3::gain::Null())
-      .set(0, autd3::modulation::Sine(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)))
+      .set(0, (autd3::modulation::Sine(150 * autd3::driver::Hz), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))))
       .send();
 
   {
@@ -97,8 +117,8 @@ TEST(Controller, ControllerGroupCheckOnlyForEnabled) {
         check[dev.idx()] = true;
         return 0;
       })
-      .set(0, autd3::modulation::Sine(150 * autd3::driver::Hz),
-           autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
+      .set(0, (autd3::modulation::Sine(150 * autd3::driver::Hz),
+               autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90))))
       .send();
 
   ASSERT_FALSE(check[0]);

@@ -1,5 +1,6 @@
 #pragma once
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
@@ -11,6 +12,7 @@ namespace autd3::driver {
 
 template <class M>
 class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
+                       public IntoDatagramTuple<M>,
                        public IntoDatagramWithSegmentTransition<native_methods::ModulationPtr, M>,
                        public driver::IntoDatagramWithTimeout<M>,
                        public driver::IntoDatagramWithParallelThreshold<M> {

@@ -77,7 +77,7 @@ void AUTDControllerFirmwareVersionListPointerDelete(FirmwareVersionListPtr p_inf
 
 void AUTDFirmwareLatest(char *latest);
 
-[[nodiscard]] ResultI32 AUTDControllerSend(ControllerPtr cnt, DatagramPtr d1, DatagramPtr d2);
+[[nodiscard]] ResultI32 AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
 
 [[nodiscard]] ControllerBuilderPtr AUTDControllerBuilder(const float *params, uint16_t len);
 
@@ -100,9 +100,10 @@ ResultI32 AUTDControllerGroup(ControllerPtr cnt,
                               ContextPtr context,
                               GeometryPtr geometry,
                               const int32_t *keys,
-                              const DatagramPtr *d1,
-                              const DatagramPtr *d2,
+                              const DatagramPtr *d,
                               uint16_t n);
+
+[[nodiscard]] DatagramPtr AUTDDatagramTuple(DatagramPtr d1, DatagramPtr d2);
 
 [[nodiscard]] DatagramPtr AUTDDatagramClear();
 
@@ -112,8 +113,6 @@ DatagramPtr AUTDDatagramDebugSettings(void* f,
                                       GeometryPtr geometry);
 
 [[nodiscard]] DatagramPtr AUTDDatagramForceFan(void* f, ContextPtr context, GeometryPtr geometry);
-
-[[nodiscard]] DatagramPtr AUTDDatagramWithParallelThreshold(DatagramPtr d, uint16_t threshold);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramPulseWidthEncoder(void* f,
@@ -220,6 +219,8 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegmentTransition(GainSTMPtr stm,
 [[nodiscard]] DatagramPtr AUTDSTMGainIntoDatagram(GainSTMPtr stm);
 
 [[nodiscard]] DatagramPtr AUTDDatagramSynchronize();
+
+[[nodiscard]] DatagramPtr AUTDDatagramWithParallelThreshold(DatagramPtr d, uint16_t threshold);
 
 [[nodiscard]] DatagramPtr AUTDDatagramWithTimeout(DatagramPtr d, uint64_t timeout_ns);
 

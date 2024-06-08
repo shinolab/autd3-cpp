@@ -2,6 +2,7 @@
 
 #include <concepts>
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/device.hpp"
@@ -32,7 +33,9 @@ concept _debug_settings_f = requires(F f, const geometry::Device& d, const nativ
 };
 
 template <_debug_settings_f F>
-class DebugSettings final : public IntoDatagramWithTimeout<DebugSettings<F>>, public IntoDatagramWithParallelThreshold<DebugSettings<F>> {
+class DebugSettings final : public IntoDatagramTuple<DebugSettings<F>>,
+                            public IntoDatagramWithTimeout<DebugSettings<F>>,
+                            public IntoDatagramWithParallelThreshold<DebugSettings<F>> {
   using native_f = void (*)(const void*, native_methods::GeometryPtr, uint16_t, native_methods::GPIOOut, native_methods::DebugTypeWrap*);
 
  public:

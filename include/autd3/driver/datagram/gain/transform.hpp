@@ -4,6 +4,7 @@
 
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/gain/cache.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
@@ -19,6 +20,7 @@ concept gain_transform_f = requires(F f, const driver::geometry::Device& dev, co
 
 template <class G, gain_transform_f F>
 class Transform final : public driver::GainBase,
+                        public driver::IntoDatagramTuple<G>,
                         public driver::IntoDatagramWithSegment<native_methods::GainPtr, Transform<G, F>>,
                         public driver::IntoGainCache<Transform<G, F>>,
                         public driver::IntoDatagramWithTimeout<Transform<G, F>>,

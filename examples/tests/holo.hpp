@@ -44,22 +44,22 @@ inline void holo_test(autd3::Controller<L>& autd) {
   };
   switch (idx) {
     case 0:
-      autd.send(m, autd3::gain::holo::SDP(backend, foci));
+      autd.send((m, autd3::gain::holo::SDP(backend, foci)));
       break;
     case 1:
-      autd.send(m, autd3::gain::holo::GS(backend, foci));
+      autd.send((m, autd3::gain::holo::GS(backend, foci)));
       break;
     case 2:
-      autd.send(m, autd3::gain::holo::GSPAT(backend, foci));
+      autd.send((m, autd3::gain::holo::GSPAT(backend, foci)));
       break;
     case 3:
-      autd.send(m, autd3::gain::holo::Naive(backend, foci));
+      autd.send((m, autd3::gain::holo::Naive(backend, foci)));
       break;
     case 4:
-      autd.send(m, autd3::gain::holo::LM(backend, foci));
+      autd.send((m, autd3::gain::holo::LM(backend, foci)));
       break;
     case 5:
-      autd.send(m, autd3::gain::holo::Greedy(foci));
+      autd.send((m, autd3::gain::holo::Greedy(foci)));
       break;
     default:
       break;

@@ -12,5 +12,5 @@ inline void plane_test(autd3::Controller<L>& autd) {
   const autd3::Vector3 direction = autd3::Vector3::UnitZ();
   autd3::gain::Plane g(direction);
 
-  autd.send(m, g);
+  autd.send((m, g));
 }

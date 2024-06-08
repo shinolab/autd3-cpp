@@ -1,5 +1,7 @@
 #pragma once
 
+#include <concepts>
+
 #include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/native_methods.hpp"
@@ -13,7 +15,7 @@ class Static final : public driver::ModulationBase<Static>,
  public:
   AUTD3_API Static() : _intensity(std::numeric_limits<uint8_t>::max()) {}
 
-  template <class I, std::enable_if_t<std::is_integral_v<I>>* = nullptr>
+  template <std::integral I>
   AUTD3_API [[nodiscard]] static Static with_intensity(const I intensity) {
     return Static(intensity);
   }

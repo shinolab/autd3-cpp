@@ -40,5 +40,5 @@ inline void advanced_test(autd3::Controller<L>& autd) {
   MyUniformGain g;
   BurstModulation m;
 
-  autd.send(m, g);
+  autd.send((m, g));
 }

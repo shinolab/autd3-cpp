@@ -1,5 +1,6 @@
 #pragma once
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
@@ -8,9 +9,13 @@
 
 namespace autd3::driver {
 
-class Silencer final : public IntoDatagramWithTimeout<Silencer>, public IntoDatagramWithParallelThreshold<Silencer> {
+class Silencer final : public IntoDatagramTuple<Silencer>,
+                       public IntoDatagramWithTimeout<Silencer>,
+                       public IntoDatagramWithParallelThreshold<Silencer> {
  public:
-  class FixedUpdateRate final : public IntoDatagramWithTimeout<FixedUpdateRate>, public IntoDatagramWithParallelThreshold<FixedUpdateRate> {
+  class FixedUpdateRate final : public IntoDatagramTuple<FixedUpdateRate>,
+                                public IntoDatagramWithTimeout<FixedUpdateRate>,
+                                public IntoDatagramWithParallelThreshold<FixedUpdateRate> {
    public:
     AUTD3_API explicit FixedUpdateRate(const uint16_t update_rate_intensity, const uint16_t update_rate_phase) noexcept
         : _update_rate_intensity(update_rate_intensity), _update_rate_phase(update_rate_phase) {}

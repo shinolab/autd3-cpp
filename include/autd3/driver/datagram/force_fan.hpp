@@ -2,6 +2,7 @@
 
 #include <concepts>
 
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/device.hpp"
@@ -16,7 +17,9 @@ concept _force_fan_f = requires(F f, const geometry::Device& d) {
 };
 
 template <_force_fan_f F>
-class ForceFan final : public IntoDatagramWithTimeout<ForceFan<F>>, public IntoDatagramWithParallelThreshold<ForceFan<F>> {
+class ForceFan final : public IntoDatagramTuple<ForceFan<F>>,
+                       public IntoDatagramWithTimeout<ForceFan<F>>,
+                       public IntoDatagramWithParallelThreshold<ForceFan<F>> {
   using native_f = bool (*)(const void*, native_methods::GeometryPtr, uint16_t);
 
  public:
