@@ -40,9 +40,9 @@ class IntoDatagramWithTimeout {
   IntoDatagramWithTimeout& operator=(IntoDatagramWithTimeout&& obj) = default;       // LCOV_EXCL_LINE
 
   template <typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::chrono::duration<Rep, Period> timeout) & {
-    return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);
-  }
+  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::chrono::duration<Rep, Period> timeout) & {  // LCOV_EXCL_LINE
+    return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);                                                  // LCOV_EXCL_LINE
+  }  // LCOV_EXCL_LINE
   template <typename Rep, typename Period>
   AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::chrono::duration<Rep, Period> timeout) && {
     return DatagramWithTimeout<D>(std::move(*static_cast<D*>(this)), timeout);
