@@ -66,13 +66,13 @@ class Geometry {
     std::ranges::for_each(devices(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
   }
 
-  AUTD3_API [[nodiscard]] std::vector<Device>::iterator begin() noexcept { return _devices.begin(); }
-  AUTD3_API [[nodiscard]] std::vector<Device>::iterator end() noexcept { return _devices.end(); }
-  AUTD3_API [[nodiscard]] std::vector<Device>::const_iterator cbegin() const noexcept { return _devices.cbegin(); }
-  AUTD3_API [[nodiscard]] std::vector<Device>::const_iterator cend() const noexcept { return _devices.cend(); }
-  AUTD3_API [[nodiscard]] const Device& operator[](const size_t i) const { return _devices[i]; }
-  AUTD3_API [[nodiscard]] Device& operator[](const size_t i) { return _devices[i]; }
-  AUTD3_API [[nodiscard]] native_methods::GeometryPtr ptr() const noexcept { return _ptr; }
+  [[nodiscard]] std::vector<Device>::iterator begin() noexcept { return _devices.begin(); }
+  [[nodiscard]] std::vector<Device>::iterator end() noexcept { return _devices.end(); }
+  [[nodiscard]] std::vector<Device>::const_iterator cbegin() const noexcept { return _devices.cbegin(); }
+  [[nodiscard]] std::vector<Device>::const_iterator cend() const noexcept { return _devices.cend(); }
+  [[nodiscard]] const Device& operator[](const size_t i) const { return _devices[i]; }
+  [[nodiscard]] Device& operator[](const size_t i) { return _devices[i]; }
+  [[nodiscard]] native_methods::GeometryPtr ptr() const noexcept { return _ptr; }
 
  private:
   native_methods::GeometryPtr _ptr;

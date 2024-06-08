@@ -213,9 +213,9 @@ class Visualizer final {
     return buf;
   }
 
-  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity> modulation(const native_methods::Segment segment) const {
+  AUTD3_API [[nodiscard]] std::vector<uint8_t> modulation(const native_methods::Segment segment) const {
     const auto size = AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, nullptr);
-    std::vector buf(size, driver::EmitIntensity(0));
+    std::vector<uint8_t> buf(size);
     AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }

@@ -20,6 +20,7 @@ class Mixer final : public driver::ModulationBase<Mixer>,
   AUTD3_API explicit Mixer(R&& iter) {
     for (Sine e : iter) _components.emplace_back(std::move(e));
   }
+  AUTD3_API explicit Mixer(const std::initializer_list<Sine> components) : _components(components) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry& geometry) const override {
     const auto idx = _components[0]._freq.index();

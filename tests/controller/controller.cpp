@@ -33,13 +33,13 @@ TEST(Controller, ControllerSendSingle) {
 
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
 
   autd.send(autd3::modulation::Static());
   for (auto& dev : autd.geometry()) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
 
   autd.link().down();
@@ -60,7 +60,7 @@ TEST(Controller, ControllerGroup) {
   {
     const auto m = autd.link().modulation(0, autd3::native_methods::Segment::S0);
     ASSERT_EQ(2, m.size());
-    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d.value() == 0xFF; }));
+    ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
     auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
   }

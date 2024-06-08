@@ -29,7 +29,7 @@ template <typename P>
 class DatagramWithSegmentTransition final : public IntoDatagramWithTimeout<DatagramWithSegmentTransition<P>>,
                                             public IntoDatagramWithParallelThreshold<DatagramWithSegmentTransition<P>> {
  public:
-  AUTD3_API explicit DatagramWithSegmentTransition(std::unique_ptr<DatagramST<P>> datagram, const native_methods::Segment segment,
+  AUTD3_API explicit DatagramWithSegmentTransition(std::shared_ptr<DatagramST<P>> datagram, const native_methods::Segment segment,
                                                    const std::optional<native_methods::TransitionModeWrap> transition_mode)
       : _datagram(std::move(datagram)), _segment(segment), _transition_mode(transition_mode) {}
   ~DatagramWithSegmentTransition() override = default;                                           // LCOV_EXCL_LINE
@@ -45,7 +45,7 @@ class DatagramWithSegmentTransition final : public IntoDatagramWithTimeout<Datag
   }
 
  private:
-  std::unique_ptr<DatagramST<P>> _datagram;
+  std::shared_ptr<DatagramST<P>> _datagram;
   native_methods::Segment _segment;
   std::optional<native_methods::TransitionModeWrap> _transition_mode;
 };
@@ -62,11 +62,11 @@ class IntoDatagramWithSegmentTransition {
 
   AUTD3_API [[nodiscard]] DatagramWithSegmentTransition<P> with_segment(const native_methods::Segment segment,
                                                                         std::optional<native_methods::TransitionModeWrap> transition_mode) & {
-    return DatagramWithSegmentTransition<P>(std::make_unique<D>(*static_cast<D*>(this)), segment, std::move(transition_mode));
+    return DatagramWithSegmentTransition<P>(std::make_shared<D>(*static_cast<D*>(this)), segment, std::move(transition_mode));
   }
   AUTD3_API [[nodiscard]] DatagramWithSegmentTransition<P> with_segment(const native_methods::Segment segment,
                                                                         std::optional<native_methods::TransitionModeWrap> transition_mode) && {
-    return DatagramWithSegmentTransition<P>(std::make_unique<D>(std::move(*static_cast<D*>(this))), segment, std::move(transition_mode));
+    return DatagramWithSegmentTransition<P>(std::make_shared<D>(std::move(*static_cast<D*>(this))), segment, std::move(transition_mode));
   }
 };
 

@@ -26,7 +26,7 @@ template <typename P>
 class DatagramWithSegment final : public IntoDatagramWithTimeout<DatagramWithSegment<P>>,
                                   public IntoDatagramWithParallelThreshold<DatagramWithSegment<P>> {
  public:
-  AUTD3_API explicit DatagramWithSegment(std::unique_ptr<DatagramS<P>> datagram, const native_methods::Segment segment, const bool transition)
+  AUTD3_API explicit DatagramWithSegment(std::shared_ptr<DatagramS<P>> datagram, const native_methods::Segment segment, const bool transition)
       : _datagram(std::move(datagram)), _segment(segment), _transition(transition) {}
   ~DatagramWithSegment() override = default;                                 // LCOV_EXCL_LINE
   DatagramWithSegment(const DatagramWithSegment& v) noexcept = default;      // LCOV_EXCL_LINE
@@ -40,7 +40,7 @@ class DatagramWithSegment final : public IntoDatagramWithTimeout<DatagramWithSeg
   }
 
  private:
-  std::unique_ptr<DatagramS<P>> _datagram;
+  std::shared_ptr<DatagramS<P>> _datagram;
   native_methods::Segment _segment;
   bool _transition;
 };
@@ -56,10 +56,10 @@ class IntoDatagramWithSegment {
   IntoDatagramWithSegment& operator=(IntoDatagramWithSegment&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) & {
-    return DatagramWithSegment<P>(std::make_unique<D>(*static_cast<D*>(this)), segment, transition);
+    return DatagramWithSegment<P>(std::make_shared<D>(*static_cast<D*>(this)), segment, transition);
   }
   AUTD3_API [[nodiscard]] DatagramWithSegment<P> with_segment(const native_methods::Segment segment, const bool transition) && {
-    return DatagramWithSegment<P>(std::make_unique<D>(std::move(*static_cast<D*>(this))), segment, transition);
+    return DatagramWithSegment<P>(std::make_shared<D>(std::move(*static_cast<D*>(this))), segment, transition);
   }
 };
 

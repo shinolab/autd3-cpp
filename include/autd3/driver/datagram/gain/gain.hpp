@@ -14,8 +14,8 @@ class Gain : public GainBase,
              public IntoDatagramWithSegment<native_methods::GainPtr, G>,
              public IntoGainCache<G>,
              public IntoGainTransform<G>,
-             public driver::IntoDatagramWithTimeout<G>,
-             public driver::IntoDatagramWithParallelThreshold<G> {
+             public IntoDatagramWithTimeout<G>,
+             public IntoDatagramWithParallelThreshold<G> {
  public:
   Gain() = default;                            // LCOV_EXCL_LINE
   Gain(const Gain& obj) = default;             // LCOV_EXCL_LINE

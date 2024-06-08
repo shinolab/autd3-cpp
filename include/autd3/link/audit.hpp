@@ -92,9 +92,9 @@ class Audit final {
 
   void deassert_thermal_sensor(const size_t idx) const { AUTDLinkAuditFpgaDeassertThermalSensor(_ptr, static_cast<uint16_t>(idx)); }
 
-  [[nodiscard]] std::vector<driver::EmitIntensity> modulation(const size_t idx, const native_methods::Segment segment) const {
+  [[nodiscard]] std::vector<uint8_t> modulation(const size_t idx, const native_methods::Segment segment) const {
     const auto n = AUTDLinkAuditFpgaModulationCycle(_ptr, segment, static_cast<uint16_t>(idx));
-    std::vector buf(n, driver::EmitIntensity(0));
+    std::vector<uint8_t> buf(n);
     AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint16_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
     return buf;
   }

@@ -27,7 +27,7 @@ void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>
   ASSERT_TRUE(std::ranges::all_of(phases, [](auto p) { return p.value() == 0x81; }));
   auto modulation = autd.link().modulation(autd3::native_methods::Segment::S0);
   ASSERT_EQ(modulation.size(), 2);
-  ASSERT_TRUE(std::ranges::all_of(modulation, [](auto m) { return m.value() == 0x82; }));
+  ASSERT_TRUE(std::ranges::all_of(modulation, [](auto m) { return m == 0x82; }));
 
   std::vector<autd3::driver::Vector3> points{center};
   (void)autd.link().calc_field(points, autd.geometry(), autd3::native_methods::Segment::S0, 0);
