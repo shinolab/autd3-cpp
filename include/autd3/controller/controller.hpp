@@ -54,6 +54,8 @@ class Controller {
   AUTD3_API [[nodiscard]] const driver::geometry::Geometry& geometry() const { return _geometry; }
   AUTD3_API [[nodiscard]] driver::geometry::Geometry& geometry() { return _geometry; }
 
+  AUTD3_API [[nodiscard]] uint16_t last_parallel_threshold() { return native_methods::AUTDControllerLastParallelThreshold(_ptr); }
+
   AUTD3_API [[nodiscard]] L& link() { return _link; }
   AUTD3_API [[nodiscard]] const L& link() const { return _link; }
 

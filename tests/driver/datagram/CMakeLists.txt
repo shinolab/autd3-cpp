@@ -9,6 +9,8 @@ target_sources(test_autd3 PRIVATE
   pulse_width_encoder.cpp
   with_segment.cpp
   with_segment_transition.cpp
+  with_timeout.cpp
+  with_parallel_threshold.cpp
 )
 
 add_subdirectory(gain)

@@ -65,6 +65,8 @@ extern "C" {
 
 ResultI32 AUTDControllerDelete(ControllerPtr cnt);
 
+[[nodiscard]] uint16_t AUTDControllerLastParallelThreshold(ControllerPtr cnt);
+
 [[nodiscard]] ResultI32 AUTDControllerFPGAState(ControllerPtr cnt, int32_t *out);
 
 [[nodiscard]] ResultFirmwareVersionList AUTDControllerFirmwareVersionListPointer(ControllerPtr cnt);

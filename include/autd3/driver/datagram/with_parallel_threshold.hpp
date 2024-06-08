@@ -38,10 +38,10 @@ class IntoDatagramWithParallelThreshold {
   IntoDatagramWithParallelThreshold(IntoDatagramWithParallelThreshold&& obj) = default;                  // LCOV_EXCL_LINE
   IntoDatagramWithParallelThreshold& operator=(IntoDatagramWithParallelThreshold&& obj) = default;       // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] DatagramWithParallelThreshold<D> with_ParallelThreshold(const size_t threshold) & {
+  AUTD3_API [[nodiscard]] DatagramWithParallelThreshold<D> with_parallel_threshold(const size_t threshold) & {
     return DatagramWithParallelThreshold<D>(*static_cast<D*>(this), threshold);
   }
-  AUTD3_API [[nodiscard]] DatagramWithParallelThreshold<D> with_ParallelThreshold(const size_t threshold) && {
+  AUTD3_API [[nodiscard]] DatagramWithParallelThreshold<D> with_parallel_threshold(const size_t threshold) && {
     return DatagramWithParallelThreshold<D>(std::move(*static_cast<D*>(this)), threshold);
   }
 };

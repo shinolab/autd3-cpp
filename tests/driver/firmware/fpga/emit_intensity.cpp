@@ -10,3 +10,10 @@ TEST(DriverFirmwareFPGA, EmitIntensity) {
     ASSERT_EQ(intensity.value(), i);
   }
 }
+
+TEST(DriverFirmwareFPGA, EmitIntensityDiv) {
+  for (int i = 0; i <= 0xFF; i++) {
+    const auto intensity = autd3::driver::EmitIntensity(static_cast<uint8_t>(i)) / 2;
+    ASSERT_EQ(intensity.value(), i / 2);
+  }
+}

@@ -307,8 +307,6 @@ def check_all_headers_is_tested():
         headers.remove("driver/link.hpp")
         headers.remove("driver/datagram/stm/stm.hpp")
         headers.remove("driver/datagram/datagram.hpp")
-        headers.remove("driver/datagram/with_timeout.hpp")
-        headers.remove("driver/datagram/with_parallel_threshold.hpp")
         headers.remove("driver/datagram/gain/base.hpp")
         headers.remove("driver/datagram/gain/gain.hpp")
         headers.remove("driver/datagram/modulation/base.hpp")
