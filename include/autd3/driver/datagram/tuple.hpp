@@ -12,11 +12,11 @@ template <datagram D1, datagram D2>
 class DatagramTuple : public IntoDatagramWithTimeout<DatagramTuple<D1, D2>>, public IntoDatagramWithParallelThreshold<DatagramTuple<D1, D2>> {
  public:
   DatagramTuple(D1 d1, D2 d2) : _d1(std::move(d1)), _d2(std::move(d2)) {}
-  ~DatagramTuple() = default;
-  DatagramTuple(const DatagramTuple& v) noexcept = default;
-  DatagramTuple& operator=(const DatagramTuple& obj) = default;
-  DatagramTuple(DatagramTuple&& obj) = default;
-  DatagramTuple& operator=(DatagramTuple&& obj) = default;
+  ~DatagramTuple() = default;                                    // LCOV_EXCL_LINE
+  DatagramTuple(const DatagramTuple& v) noexcept = default;      // LCOV_EXCL_LINE
+  DatagramTuple& operator=(const DatagramTuple& obj) = default;  // LCOV_EXCL_LINE
+  DatagramTuple(DatagramTuple&& obj) = default;                  // LCOV_EXCL_LINE
+  DatagramTuple& operator=(DatagramTuple&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return native_methods::AUTDDatagramTuple(_d1.ptr(geometry), _d2.ptr(geometry));
