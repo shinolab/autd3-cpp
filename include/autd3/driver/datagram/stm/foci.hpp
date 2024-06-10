@@ -45,7 +45,7 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
   }
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {
-    native_methods::FociSTMPtr ptr = std::visit([&](const auto s) { return s.focus_ptr<N>(_points); }, _sampling);
+    native_methods::FociSTMPtr ptr = std::visit([&](const auto s) { return s.template focus_ptr<N>(_points); }, _sampling);
     ptr = AUTDSTMFociWithLoopBehavior(ptr, N, _loop_behavior);
     return ptr;
   }

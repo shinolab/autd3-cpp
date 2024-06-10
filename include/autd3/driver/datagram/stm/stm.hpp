@@ -8,11 +8,9 @@
 
 namespace autd3::driver {
 
-template <uint8_t N>
-class ControlPoints;
-
 struct ControlPoint {
-  friend ControlPoints;
+  template <uint8_t N>
+  friend class ControlPoints;
 
   AUTD3_DEF_PROP(Vector3, point)
   AUTD3_DEF_PARAM_PHASE(ControlPoint, offset)
