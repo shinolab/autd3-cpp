@@ -5,10 +5,10 @@
 
 namespace autd3::modulation {
 
-class Custom : public driver::ModulationBase<Custom>,
-               public driver::IntoModulationCache<Custom>,
-               public driver::IntoRadiationPressure<Custom>,
-               public driver::IntoModulationTransform<Custom> {
+class Custom final : public driver::ModulationBase<Custom>,
+                     public driver::IntoModulationCache<Custom>,
+                     public driver::IntoRadiationPressure<Custom>,
+                     public driver::IntoModulationTransform<Custom> {
  public:
   explicit Custom(std::vector<uint8_t> buf, const native_methods::SamplingConfigWrap sampling_config)
       : _sampling_config(sampling_config), _buf(std::move(buf)) {}

@@ -13,7 +13,7 @@ namespace autd3::gain::holo {
 class Greedy final : public Holo<Greedy> {
  public:
   template <holo_foci_range R>
-  AUTD3_API Greedy(R&& iter)
+  AUTD3_API explicit Greedy(R&& iter)
       : Holo(EmissionConstraint::Uniform(std::numeric_limits<driver::EmitIntensity>::max()), std::forward<R>(iter)), _phase_div(16) {}
 
   AUTD3_DEF_PARAM(Greedy, uint8_t, phase_div)

@@ -1,8 +1,4 @@
-
 #pragma once
-
-#include <chrono>
-#include <memory>
 
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
@@ -10,15 +6,15 @@
 namespace autd3::driver {
 
 template <class D>
-class DatagramWithParallelThreshold {
+class DatagramWithParallelThreshold final {
  public:
   DatagramWithParallelThreshold(D datagram, const size_t threshold) : _datagram(std::move(datagram)), _threshold(threshold) {}
-  AUTD3_API virtual ~DatagramWithParallelThreshold() = default;                                  // LCOV_EXCL_LINE
+  ~DatagramWithParallelThreshold() = default;                                                    // LCOV_EXCL_LINE
   DatagramWithParallelThreshold(const DatagramWithParallelThreshold& v) noexcept = default;      // LCOV_EXCL_LINE
   DatagramWithParallelThreshold& operator=(const DatagramWithParallelThreshold& obj) = default;  // LCOV_EXCL_LINE
   DatagramWithParallelThreshold(DatagramWithParallelThreshold&& obj) = default;                  // LCOV_EXCL_LINE
   DatagramWithParallelThreshold& operator=(DatagramWithParallelThreshold&& obj) = default;       // LCOV_EXCL_LINE
-  AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
     const auto ptr = _datagram.ptr(g);
     return native_methods::AUTDDatagramWithParallelThreshold(ptr, static_cast<uint16_t>(_threshold));
   }

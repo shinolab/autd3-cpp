@@ -7,7 +7,6 @@
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
-#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -30,18 +29,18 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
   ~FociSTM() override = default;                     // LCOV_EXCL_LINE
 
   template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_freq(const Freq<float> freq, R&& iter) {
-    return FociSTM(STMSamplingModeFreq{freq}, std::forward<R>(iter));
+  AUTD3_API [[nodiscard]] static FociSTM from_freq(const Freq<float> freq, const R& iter) {
+    return FociSTM(STMSamplingModeFreq{freq}, iter);
   }
 
   template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_freq_nearest(const Freq<float> freq, R&& iter) {
-    return FociSTM(STMSamplingModeFreqNearest{freq}, std::forward<R>(iter));
+  AUTD3_API [[nodiscard]] static FociSTM from_freq_nearest(const Freq<float> freq, const R& iter) {
+    return FociSTM(STMSamplingModeFreqNearest{freq}, iter);
   }
 
   template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const native_methods::SamplingConfigWrap config, R&& iter) {
-    return FociSTM(STMSamplingModeSamplingConfig{config}, std::forward<R>(iter));
+  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const native_methods::SamplingConfigWrap config, const R& iter) {
+    return FociSTM(STMSamplingModeSamplingConfig{config}, iter);
   }
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {

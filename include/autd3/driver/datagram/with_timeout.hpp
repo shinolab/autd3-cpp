@@ -1,7 +1,6 @@
 #pragma once
 
 #include <chrono>
-#include <memory>
 
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
@@ -9,17 +8,17 @@
 namespace autd3::driver {
 
 template <class D>
-class DatagramWithTimeout {
+class DatagramWithTimeout final {
  public:
   template <typename Rep, typename Period>
   DatagramWithTimeout(D datagram, const std::chrono::duration<Rep, Period> timeout)
       : _datagram(std::move(datagram)), _timeout_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count()) {}
-  AUTD3_API virtual ~DatagramWithTimeout() = default;
+  ~DatagramWithTimeout() = default;
   DatagramWithTimeout(const DatagramWithTimeout& v) noexcept = default;
   DatagramWithTimeout& operator=(const DatagramWithTimeout& obj) = default;
   DatagramWithTimeout(DatagramWithTimeout&& obj) = default;
   DatagramWithTimeout& operator=(DatagramWithTimeout&& obj) = default;
-  AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
     const auto ptr = _datagram.ptr(g);
     return native_methods::AUTDDatagramWithTimeout(ptr, _timeout_ns);
   }

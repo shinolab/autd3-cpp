@@ -53,10 +53,10 @@ class ControllerBuilder {
 #endif
 
   template <device_range R>
-  AUTD3_API explicit ControllerBuilder(R r) {
+  AUTD3_API explicit ControllerBuilder(R iter) {
     std::vector<native_methods::Vector3> pos;
     std::vector<native_methods::Quaternion> rot;
-    for (const auto& device : r) {
+    for (const auto& device : iter) {
       const auto p = device.position();
       const auto r = device.rotation();
       pos.emplace_back(native_methods::Vector3{p.x(), p.y(), p.z()});

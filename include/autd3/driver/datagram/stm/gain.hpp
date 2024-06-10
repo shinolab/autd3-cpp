@@ -30,24 +30,24 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   ~GainSTM() override = default;                     // LCOV_EXCL_LINE
 
   template <gain_range R>
-  AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<float> freq, R&& iter) {
-    return GainSTM(STMSamplingModeFreq{freq}, std::forward<R>(iter));
+  AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<float> freq, const R& iter) {
+    return GainSTM(STMSamplingModeFreq{freq}, iter);
   }
   template <gain G>
   AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<float> freq, std::initializer_list<G> iter) {
     return GainSTM::from_freq(freq, std::vector(iter));
   }
   template <gain_range R>
-  AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<float> freq, R&& iter) {
-    return GainSTM(STMSamplingModeFreqNearest{freq}, std::forward<R>(iter));
+  AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<float> freq, const R& iter) {
+    return GainSTM(STMSamplingModeFreqNearest{freq}, iter);
   }
   template <gain G>
   AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<float> freq, std::initializer_list<G> iter) {
     return GainSTM::from_freq_nearest(freq, std::vector(iter));
   }
   template <gain_range R>
-  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const native_methods::SamplingConfigWrap config, R&& iter) {
-    return GainSTM(STMSamplingModeSamplingConfig{config}, std::forward<R>(iter));
+  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const native_methods::SamplingConfigWrap config, const R& iter) {
+    return GainSTM(STMSamplingModeSamplingConfig{config}, iter);
   }
   template <gain G>
   AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const native_methods::SamplingConfigWrap config, std::initializer_list<G> iter) {
@@ -81,7 +81,7 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
 
   AUTD3_API
   [[nodiscard]] DatagramWithSegmentTransition<native_methods::GainSTMPtr> with_segment(
-      const native_methods::Segment segment, const std::optional<native_methods::TransitionModeWrap> transition_mode) {
+      const native_methods::Segment segment, const std::optional<native_methods::TransitionModeWrap>& transition_mode) {
     return DatagramWithSegmentTransition<native_methods::GainSTMPtr>(std::make_unique<GainSTM>(std::move(*this)), segment, transition_mode);
   }
 

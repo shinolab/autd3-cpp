@@ -216,11 +216,11 @@ class Visualizer final {
   AUTD3_API [[nodiscard]] std::vector<uint8_t> modulation(const native_methods::Segment segment) const {
     const auto size = AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, nullptr);
     std::vector<uint8_t> buf(size);
-    AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, reinterpret_cast<uint8_t*>(buf.data()));
+    AUTDLinkVisualizerModulation(_ptr, _backend, _directivity, segment, buf.data());
     return buf;
   }
 
-  AUTD3_API [[nodiscard]] std::vector<std::complex<float>> calc_field(std::vector<driver::Vector3>& points,
+  AUTD3_API [[nodiscard]] std::vector<std::complex<float>> calc_field(const std::vector<driver::Vector3>& points,
                                                                       const driver::geometry::Geometry& geometry,
                                                                       const native_methods::Segment segment, const size_t idx) const {
     const auto points_len = static_cast<uint32_t>(points.size());

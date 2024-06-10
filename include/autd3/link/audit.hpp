@@ -4,6 +4,7 @@
 #include <array>
 #include <autd3/driver/firmware/fpga/drive.hpp>
 #include <chrono>
+#include <ranges>
 #include <utility>
 
 #include "autd3/native_methods.hpp"
@@ -53,7 +54,7 @@ class Audit final {
 
   [[nodiscard]] std::optional<std::chrono::nanoseconds> last_timeout() const {
     const auto ns = AUTDLinkAuditLastTimeoutNs(_ptr);
-    return ns < 0 ? std::nullopt : std::optional<std::chrono::nanoseconds>(std::chrono::nanoseconds(ns));
+    return ns < 0 ? std::nullopt : std::optional(std::chrono::nanoseconds(ns));
   }
 
   [[nodiscard]] bool is_force_fan(const size_t idx) const { return AUTDLinkAuditFpgaIsForceFan(_ptr, static_cast<uint16_t>(idx)); }
@@ -98,7 +99,7 @@ class Audit final {
   [[nodiscard]] std::vector<uint8_t> modulation(const size_t idx, const native_methods::Segment segment) const {
     const auto n = AUTDLinkAuditFpgaModulationCycle(_ptr, segment, static_cast<uint16_t>(idx));
     std::vector<uint8_t> buf(n);
-    AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint16_t>(idx), reinterpret_cast<uint8_t*>(buf.data()));
+    AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint16_t>(idx), buf.data());
     return buf;
   }
 

@@ -30,7 +30,7 @@ class DatagramWithSegmentTransition final : public IntoDatagramWithTimeout<Datag
                                             public IntoDatagramWithParallelThreshold<DatagramWithSegmentTransition<P>> {
  public:
   AUTD3_API explicit DatagramWithSegmentTransition(std::shared_ptr<DatagramST<P>> datagram, const native_methods::Segment segment,
-                                                   const std::optional<native_methods::TransitionModeWrap> transition_mode)
+                                                   const std::optional<native_methods::TransitionModeWrap>& transition_mode)
       : _datagram(std::move(datagram)), _segment(segment), _transition_mode(transition_mode) {}
   ~DatagramWithSegmentTransition() override = default;                                           // LCOV_EXCL_LINE
   DatagramWithSegmentTransition(const DatagramWithSegmentTransition& v) noexcept = default;      // LCOV_EXCL_LINE

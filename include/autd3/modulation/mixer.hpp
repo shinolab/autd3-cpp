@@ -17,7 +17,7 @@ class Mixer final : public driver::ModulationBase<Mixer>,
                     public driver::IntoModulationTransform<Mixer> {
  public:
   template <mixer_sine_range R>
-  AUTD3_API explicit Mixer(R&& iter) {
+  AUTD3_API explicit Mixer(const R& iter) {
     for (Sine e : iter) _components.emplace_back(std::move(e));
   }
   AUTD3_API explicit Mixer(const std::initializer_list<Sine> components) : _components(components) {}
