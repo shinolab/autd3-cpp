@@ -16,7 +16,7 @@ class Uniform final : public autd3::gain::Gain<Uniform> {
   Uniform& operator=(Uniform&& obj) = default;       // LCOV_EXCL_LINE
   ~Uniform() override = default;                     // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] autd3::gain::GainCalcResult calc(const autd3::driver::geometry::Geometry& geometry) const override {
+  AUTD3_API [[nodiscard]] autd3::gain::GainCalcResult calc(const autd3::driver::geometry::Geometry&) const override {
     return transform([&](const auto& dev) {
       _cnt->operator[](dev.idx()) = true;
       return [&](const auto&) { return autd3::driver::Drive{_phase, _intensity}; };

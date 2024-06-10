@@ -59,8 +59,8 @@ class ControllerBuilder {
     for (const auto& device : r) {
       const auto p = device.position();
       const auto r = device.rotation();
-      pos.emplace_back(p.x(), p.y(), p.z());
-      rot.emplace_back(r.x(), r.y(), r.z(), r.w());
+      pos.emplace_back(native_methods::Vector3{p.x(), p.y(), p.z()});
+      rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     _ptr = native_methods::AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()));
   }

@@ -35,7 +35,7 @@ class ForCacheTest final : public autd3::gain::Gain<ForCacheTest> {
   ~ForCacheTest() override = default;                          // LCOV_EXCL_LINE
   explicit ForCacheTest(size_t* cnt) : _cnt(cnt) {}
 
-  AUTD3_API [[nodiscard]] autd3::gain::GainCalcResult calc(const autd3::driver::geometry::Geometry& geometry) const override {
+  AUTD3_API [[nodiscard]] autd3::gain::GainCalcResult calc(const autd3::driver::geometry::Geometry&) const override {
     ++*_cnt;
     return transform(
         [](const auto&) { return [](const auto&) { return autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; }; });

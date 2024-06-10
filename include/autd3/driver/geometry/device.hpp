@@ -62,12 +62,12 @@ class Device {
 
   AUTD3_API void set_enable(const bool value) const { AUTDDeviceEnableSet(_ptr, value); }
 
-  AUTD3_API void translate(Vector3 t) const { AUTDDeviceTranslate(_ptr, native_methods::Vector3(t.x(), t.y(), t.z())); }
+  AUTD3_API void translate(Vector3 t) const { AUTDDeviceTranslate(_ptr, native_methods::Vector3{t.x(), t.y(), t.z()}); }
 
-  AUTD3_API void rotate(Quaternion r) const { AUTDDeviceRotate(_ptr, native_methods::Quaternion(r.x(), r.y(), r.z(), r.w())); }
+  AUTD3_API void rotate(Quaternion r) const { AUTDDeviceRotate(_ptr, native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()}); }
 
   AUTD3_API void affine(Vector3 t, Quaternion r) const {
-    AUTDDeviceAffine(_ptr, native_methods::Vector3(t.x(), t.y(), t.z()), native_methods::Quaternion(r.x(), r.y(), r.z(), r.w()));
+    AUTDDeviceAffine(_ptr, native_methods::Vector3{t.x(), t.y(), t.z()}, native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
   }
 
   AUTD3_API [[nodiscard]] float wavelength() const { return AUTDDeviceWavelength(_ptr); }
