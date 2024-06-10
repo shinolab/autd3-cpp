@@ -116,3 +116,36 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
   }
 }
+
+template <size_t N>
+void test_foci_stm_n() {
+  auto autd = create_controller();
+
+  autd.send(autd3::driver::Silencer::disable());
+
+  autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
+
+  const auto size = 2;
+  std::array<autd3::driver::Vector3, N> points;
+  points.fill(center);
+  auto stm = autd3::driver::FociSTM<N>::from_sampling_config(autd3::driver::SamplingConfig::Division(512),
+                                                             std::views::iota(0) | std::views::take(size) | std::views::transform([&](auto i) {
+                                                               return autd3::driver::ControlPoints<N>{points}.with_intensity(i);
+                                                             }));
+
+  autd.send(stm);
+  for (const auto& dev : autd.geometry()) {
+    for (int i = 0; i < size; i++) {
+      for (const auto& d : autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, i)) ASSERT_EQ(d.intensity.value(), i);
+    }
+  }
+}
+
+TEST(DriverDatagramSTM, FociSTM_N1) { test_foci_stm_n<1>(); }
+TEST(DriverDatagramSTM, FociSTM_N2) { test_foci_stm_n<2>(); }
+TEST(DriverDatagramSTM, FociSTM_N3) { test_foci_stm_n<3>(); }
+TEST(DriverDatagramSTM, FociSTM_N4) { test_foci_stm_n<4>(); }
+TEST(DriverDatagramSTM, FociSTM_N5) { test_foci_stm_n<5>(); }
+TEST(DriverDatagramSTM, FociSTM_N6) { test_foci_stm_n<6>(); }
+TEST(DriverDatagramSTM, FociSTM_N7) { test_foci_stm_n<7>(); }
+TEST(DriverDatagramSTM, FociSTM_N8) { test_foci_stm_n<8>(); }
