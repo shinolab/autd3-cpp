@@ -54,19 +54,15 @@ class ControllerBuilder {
 
   template <device_range R>
   AUTD3_API explicit ControllerBuilder(R r) {
-    std::vector<float> params;
+    std::vector<native_methods::Vector3> pos;
+    std::vector<native_methods::Quaternion> rot;
     for (const auto& device : r) {
-      const auto pos = device.position();
-      const auto rot = device.rotation();
-      params.push_back(pos.x());
-      params.push_back(pos.y());
-      params.push_back(pos.z());
-      params.push_back(rot.w());
-      params.push_back(rot.x());
-      params.push_back(rot.y());
-      params.push_back(rot.z());
+      const auto p = device.position();
+      const auto r = device.rotation();
+      pos.emplace_back(p.x(), p.y(), p.z());
+      rot.emplace_back(r.x(), r.y(), r.z(), r.w());
     }
-    _ptr = native_methods::AUTDControllerBuilder(params.data(), static_cast<uint16_t>(params.size() / 7));
+    _ptr = native_methods::AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()));
   }
 
   AUTD3_API explicit ControllerBuilder(const std::initializer_list<driver::AUTD3> r) : ControllerBuilder(std::vector(r)) {}

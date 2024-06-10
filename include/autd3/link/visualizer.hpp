@@ -224,7 +224,7 @@ class Visualizer final {
                                                                       const driver::geometry::Geometry& geometry,
                                                                       const native_methods::Segment segment, const size_t idx) const {
     const auto points_len = static_cast<uint32_t>(points.size());
-    const auto points_ptr = reinterpret_cast<float*>(points.data());
+    const auto points_ptr = reinterpret_cast<const native_methods::Vector3*>(points.data());
     std::vector<std::complex<float>> buf;
     buf.resize(points_len);
     validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment, static_cast<uint16_t>(idx),

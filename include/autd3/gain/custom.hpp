@@ -30,8 +30,7 @@ class Custom final : public driver::Gain<Custom<F>> {
   }
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
-    return AUTDGainCustom(const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
-                          native_methods::ContextPtr{const_cast<void*>(static_cast<const void*>(this))}, geometry.ptr());
+    return AUTDGainCustom(reinterpret_cast<const void*>(_f_native), native_methods::ContextPtr{static_cast<const void*>(this)}, geometry.ptr());
   }
 
  private:

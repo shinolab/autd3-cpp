@@ -14,7 +14,7 @@
 #include "autd3/driver/datagram/reads_fpga_state.hpp"
 #include "autd3/driver/datagram/segment.hpp"
 #include "autd3/driver/datagram/silencer.hpp"
-#include "autd3/driver/datagram/stm/focus.hpp"
+#include "autd3/driver/datagram/stm/foci.hpp"
 #include "autd3/driver/datagram/stm/gain.hpp"
 #include "autd3/driver/datagram/synchronize.hpp"
 #include "autd3/driver/defined/angle.hpp"
@@ -46,7 +46,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "25.0.1";
+static inline std::string version = "25.1.0";
 
 using autd3::driver::deg;
 using autd3::driver::Hz;

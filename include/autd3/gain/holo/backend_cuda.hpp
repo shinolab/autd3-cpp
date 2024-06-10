@@ -24,24 +24,25 @@ class CUDABackend final : public Backend {
   AUTD3_API [[nodiscard]] native_methods::GainPtr sdp(const float* foci, const float* amps, const uint32_t size, const float alpha,
                                                       const float lambda, const uint32_t repeat,
                                                       const native_methods::EmissionConstraintWrap constraint) const override {
-    return AUTDGainHoloCUDASDP(_ptr, foci, amps, size, alpha, lambda, repeat, constraint);
+    return AUTDGainHoloCUDASDP(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, alpha, lambda, repeat, constraint);
   }
   AUTD3_API [[nodiscard]] native_methods::GainPtr gs(const float* foci, const float* amps, const uint32_t size, const uint32_t repeat,
                                                      const native_methods::EmissionConstraintWrap constraint) const override {
-    return AUTDGainHoloCUDAGS(_ptr, foci, amps, size, repeat, constraint);
+    return AUTDGainHoloCUDAGS(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, repeat, constraint);
   }
   AUTD3_API [[nodiscard]] native_methods::GainPtr gspat(const float* foci, const float* amps, const uint32_t size, const uint32_t repeat,
                                                         const native_methods::EmissionConstraintWrap constraint) const override {
-    return AUTDGainHoloCUDAGSPAT(_ptr, foci, amps, size, repeat, constraint);
+    return AUTDGainHoloCUDAGSPAT(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, repeat, constraint);
   }
   AUTD3_API [[nodiscard]] native_methods::GainPtr naive(const float* foci, const float* amps, const uint32_t size,
                                                         const native_methods::EmissionConstraintWrap constraint) const override {
-    return AUTDGainHoloCUDANaive(_ptr, foci, amps, size, constraint);
+    return AUTDGainHoloCUDANaive(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, constraint);
   }
   AUTD3_API [[nodiscard]] native_methods::GainPtr lm(const float* foci, const float* amps, const uint32_t size, const float eps1, const float eps2,
                                                      const float tau, const uint32_t k_max, const float* initial, const uint32_t initial_size,
                                                      const native_methods::EmissionConstraintWrap constraint) const override {
-    return AUTDGainHoloCUDALM(_ptr, foci, amps, size, eps1, eps2, tau, k_max, constraint, initial, initial_size);
+    return AUTDGainHoloCUDALM(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, eps1, eps2, tau, k_max, constraint, initial,
+                              initial_size);
   }
 };
 

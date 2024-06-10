@@ -117,9 +117,9 @@ class Controller {
     }
 
     AUTD3_API void send() const {
-      validate(AUTDControllerGroup(_controller._ptr, const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
-                                   native_methods::ContextPtr{const_cast<void*>(static_cast<const void*>(this))}, _controller._geometry.ptr(),
-                                   _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size())));
+      validate(AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native),
+                                   native_methods::ContextPtr{static_cast<const void*>(this)}, _controller._geometry.ptr(), _keys.data(),
+                                   _datagrams.data(), static_cast<uint16_t>(_keys.size())));
     }
 
 #ifdef AUTD3_ASYNC_API

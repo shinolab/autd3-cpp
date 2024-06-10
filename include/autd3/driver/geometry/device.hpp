@@ -39,11 +39,7 @@ class Device {
 
   AUTD3_API [[nodiscard]] size_t num_transducers() const { return _transducers.size(); }
 
-  AUTD3_API [[nodiscard]] Vector3 center() const {
-    Vector3 v;
-    AUTDDeviceCenter(_ptr, v.data());
-    return v;
-  }
+  AUTD3_API [[nodiscard]] Vector3 center() const { return AUTDDeviceCenter(_ptr); }
 
   AUTD3_API [[nodiscard]] float sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
 
@@ -54,39 +50,25 @@ class Device {
     AUTDDeviceSetSoundSpeedFromTemp(_ptr, temp, k, r, m);
   }
 
-  AUTD3_API [[nodiscard]] Quaternion rotation() const noexcept {
-    float v[4];
-    AUTDDeviceRotation(_ptr, v);
-    return {v[0], v[1], v[2], v[3]};
-  }
+  AUTD3_API [[nodiscard]] Quaternion rotation() const noexcept { return AUTDDeviceRotation(_ptr); }
 
-  AUTD3_API [[nodiscard]] Vector3 x_direction() const {
-    Vector3 v;
-    AUTDDeviceDirectionX(_ptr, v.data());
-    return v;
-  }
+  AUTD3_API [[nodiscard]] Vector3 x_direction() const { return AUTDDeviceDirectionX(_ptr); }
 
-  AUTD3_API [[nodiscard]] Vector3 y_direction() const {
-    Vector3 v;
-    AUTDDeviceDirectionY(_ptr, v.data());
-    return v;
-  }
+  AUTD3_API [[nodiscard]] Vector3 y_direction() const { return AUTDDeviceDirectionY(_ptr); }
 
-  AUTD3_API [[nodiscard]] Vector3 axial_direction() const {
-    Vector3 v;
-    AUTDDeviceDirectionAxial(_ptr, v.data());
-    return v;
-  }
+  AUTD3_API [[nodiscard]] Vector3 axial_direction() const { return AUTDDeviceDirectionAxial(_ptr); }
 
   AUTD3_API [[nodiscard]] bool enable() const { return AUTDDeviceEnableGet(_ptr); }
 
   AUTD3_API void set_enable(const bool value) const { AUTDDeviceEnableSet(_ptr, value); }
 
-  AUTD3_API void translate(Vector3 t) const { AUTDDeviceTranslate(_ptr, t.x(), t.y(), t.z()); }
+  AUTD3_API void translate(Vector3 t) const { AUTDDeviceTranslate(_ptr, native_methods::Vector3(t.x(), t.y(), t.z())); }
 
-  AUTD3_API void rotate(Quaternion r) const { AUTDDeviceRotate(_ptr, r.w(), r.x(), r.y(), r.z()); }
+  AUTD3_API void rotate(Quaternion r) const { AUTDDeviceRotate(_ptr, native_methods::Quaternion(r.x(), r.y(), r.z(), r.w())); }
 
-  AUTD3_API void affine(Vector3 t, Quaternion r) const { AUTDDeviceAffine(_ptr, t.x(), t.y(), t.z(), r.w(), r.x(), r.y(), r.z()); }
+  AUTD3_API void affine(Vector3 t, Quaternion r) const {
+    AUTDDeviceAffine(_ptr, native_methods::Vector3(t.x(), t.y(), t.z()), native_methods::Quaternion(r.x(), r.y(), r.z(), r.w()));
+  }
 
   AUTD3_API [[nodiscard]] float wavelength() const { return AUTDDeviceWavelength(_ptr); }
   AUTD3_API [[nodiscard]] float wavenumber() const { return AUTDDeviceWavenumber(_ptr); }

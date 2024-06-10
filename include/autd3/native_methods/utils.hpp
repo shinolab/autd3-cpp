@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "autd3/exception.hpp"
@@ -40,6 +38,48 @@
  protected:                                                                               \
   PARAM_T _##PARAM_NAME;                                                                  \
                                                                                           \
+ public:
+
+#define AUTD3_DEF_PARAM_INTENSITY(T, PARAM_NAME)                                                               \
+  template <std::integral I>                                                                                   \
+  void with_##PARAM_NAME(I value)& {                                                                           \
+    _##PARAM_NAME = autd3::driver::EmitIntensity(value); /* LCOV_EXCL_LINE */                                  \
+  }                                                                                                            \
+  template <std::integral I>                                                                                   \
+  [[nodiscard]] T&& with_##PARAM_NAME(I value)&& {                                                             \
+    _##PARAM_NAME = autd3::driver::EmitIntensity(value); /* LCOV_EXCL_LINE */                                  \
+    return std::move(*static_cast<T*>(this));            /* LCOV_EXCL_LINE */                                  \
+  }                                                                                                            \
+  void with_##PARAM_NAME(autd3::driver::EmitIntensity value)& { _##PARAM_NAME = value; } /* LCOV_EXCL_LINE */  \
+  [[nodiscard]] T&& with_##PARAM_NAME(autd3::driver::EmitIntensity value)&& {                                  \
+    _##PARAM_NAME = value;                    /* LCOV_EXCL_LINE */                                             \
+    return std::move(*static_cast<T*>(this)); /* LCOV_EXCL_LINE */                                             \
+  }                                                                                                            \
+  [[nodiscard]] autd3::driver::EmitIntensity PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */ \
+ protected:                                                                                                    \
+  autd3::driver::EmitIntensity _##PARAM_NAME;                                                                  \
+                                                                                                               \
+ public:
+
+#define AUTD3_DEF_PARAM_PHASE(T, PARAM_NAME)                                                           \
+  template <std::integral I>                                                                           \
+  void with_##PARAM_NAME(I value)& {                                                                   \
+    _##PARAM_NAME = autd3::driver::Phase(value); /* LCOV_EXCL_LINE */                                  \
+  }                                                                                                    \
+  template <std::integral I>                                                                           \
+  [[nodiscard]] T&& with_##PARAM_NAME(I value)&& {                                                     \
+    _##PARAM_NAME = autd3::driver::Phase(value); /* LCOV_EXCL_LINE */                                  \
+    return std::move(*static_cast<T*>(this));    /* LCOV_EXCL_LINE */                                  \
+  }                                                                                                    \
+  void with_##PARAM_NAME(autd3::driver::Phase value)& { _##PARAM_NAME = value; } /* LCOV_EXCL_LINE */  \
+  [[nodiscard]] T&& with_##PARAM_NAME(autd3::driver::Phase value)&& {                                  \
+    _##PARAM_NAME = value;                    /* LCOV_EXCL_LINE */                                     \
+    return std::move(*static_cast<T*>(this)); /* LCOV_EXCL_LINE */                                     \
+  }                                                                                                    \
+  [[nodiscard]] autd3::driver::Phase PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */ \
+ protected:                                                                                            \
+  autd3::driver::Phase _##PARAM_NAME;                                                                  \
+                                                                                                       \
  public:
 
 namespace autd3::native_methods {

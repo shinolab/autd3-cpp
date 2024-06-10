@@ -33,7 +33,7 @@ class MyUniformGain final : public autd3::derive::Gain<MyUniformGain> {
 };
 
 template <typename L>
-inline void advanced_test(autd3::Controller<L>& autd) {
+inline void user_defined_test(autd3::Controller<L>& autd) {
   auto config = autd3::Silencer::disable();
   autd.send(config);
 

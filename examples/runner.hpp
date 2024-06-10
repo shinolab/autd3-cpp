@@ -9,7 +9,6 @@
 #include <vector>
 
 #include "autd3.hpp"
-#include "tests/advanced.hpp"
 #include "tests/bessel.hpp"
 #include "tests/custom.hpp"
 #include "tests/flag.hpp"
@@ -19,6 +18,7 @@
 #include "tests/mod_audio_file.hpp"
 #include "tests/plane.hpp"
 #include "tests/stm.hpp"
+#include "tests/user_defined.hpp"
 
 template <typename L>
 inline void run(autd3::Controller<L>& autd) {
@@ -30,7 +30,7 @@ inline void run(autd3::Controller<L>& autd) {
                                                   std::pair(F{focus_stm<L>}, "FociSTM test"),
                                                   std::pair(F{gain_stm<L>}, "GainSTM test"),
                                                   std::pair(F{holo_test<L>}, "Multiple foci test"),
-                                                  std::pair(F{advanced_test<L>}, "User-defined Gain & Modulation test"),
+                                                  std::pair(F{user_defined_test<L>}, "User-defined Gain & Modulation test"),
                                                   std::pair(F{flag_test<L>}, "Flag test"),
                                                   std::pair(F{custom<L>}, "Custom Gain test"),
                                                   std::pair(F{group_by_transducer_test<L>}, "Group (by Transducer) test")};

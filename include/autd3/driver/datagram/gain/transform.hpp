@@ -44,8 +44,8 @@ class Transform final : public driver::GainBase,
   ~Transform() override = default;                       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
-    return AUTDGainWithTransform(_g.gain_ptr(geometry), const_cast<void*>(reinterpret_cast<const void*>(_f_native)),
-                                 native_methods::ContextPtr{const_cast<void*>(static_cast<const void*>(this))}, geometry.ptr());
+    return AUTDGainWithTransform(_g.gain_ptr(geometry), reinterpret_cast<const void*>(_f_native),
+                                 native_methods::ContextPtr{static_cast<const void*>(this)}, geometry.ptr());
   }
 
  private:

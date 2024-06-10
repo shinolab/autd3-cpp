@@ -9,11 +9,7 @@ class Transducer {
  public:
   AUTD3_API Transducer(const uint8_t idx, const native_methods::DevicePtr ptr) : _ptr(AUTDTransducer(ptr, idx)), _idx(idx) {}
 
-  AUTD3_API [[nodiscard]] Vector3 position() const noexcept {
-    Vector3 v;
-    AUTDTransducerPosition(_ptr, v.data());
-    return v;
-  }
+  AUTD3_API [[nodiscard]] Vector3 position() const noexcept { return AUTDTransducerPosition(_ptr); }
 
   AUTD3_API [[nodiscard]] size_t idx() const noexcept { return _idx; }
 

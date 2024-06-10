@@ -19,7 +19,7 @@ inline void focus_stm(autd3::Controller<L>& autd) {
                                           iota(0) | take(points_num) | transform([&](auto i) {
                                             const auto theta = 2.0f * autd3::pi * static_cast<float>(i) / static_cast<float>(points_num);
                                             autd3::Vector3 p = center + autd3::Vector3(radius * std::cos(theta), radius * std::sin(theta), 0);
-                                            return std::array{p};
+                                            return p;
                                           }));
 
   autd.send((m, stm));
