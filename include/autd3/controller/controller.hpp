@@ -142,7 +142,7 @@ class Controller {
           AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), native_methods::ContextPtr{static_cast<const void*>(this)},
                               _controller._geometry.ptr(), _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()));
       auto ptr = co_await wait_future(_controller._runtime, std::move(future));
-      co_return validate(ptr);
+      validate(ptr);
     }
 #endif
 
@@ -165,11 +165,11 @@ class Controller {
   AUTD3_API [[nodiscard]] coro::task<void> close_async() const {
     auto future = AUTDControllerClose(_ptr);
     auto ptr = co_await wait_future(_runtime, std::move(future));
-    co_return validate(ptr);
+    validate(ptr);
   }
 
   AUTD3_API
-  [[nodiscard]] coro::task<std::vector<std::optional<driver::FPGAState>>> fpga_info_async() {
+  [[nodiscard]] coro::task<std::vector<std::optional<driver::FPGAState>>> fpga_state_async() {
     const size_t num_devices = geometry().num_devices();
     auto future = AUTDControllerFPGAState(_ptr);
     auto result = co_await wait_future(_runtime, std::move(future));
@@ -181,14 +181,14 @@ class Controller {
       ret.emplace_back(state < 0 ? std::nullopt : std::optional(driver::FPGAState(static_cast<uint8_t>(state))));
     }
     AUTDControllerFPGAStateDelete(p);
-    return ret;
+    co_return ret;
   }
 
   template <driver::datagram D>
   AUTD3_API [[nodiscard]] coro::task<void> send_async(const D& d) {
     auto future = AUTDControllerSend(_ptr, d.ptr(_geometry));
     auto result = co_await wait_future(_runtime, std::move(future));
-    co_return validate(result);
+    validate(result);
   }
 
   AUTD3_API [[nodiscard]] coro::task<std::vector<driver::FirmwareVersion>> firmware_version_async() {
@@ -204,7 +204,7 @@ class Controller {
       ret.emplace_back(std::string(info));
     }
     AUTDControllerFirmwareVersionListPointerDelete(handle);
-    return ret;
+    co_return ret;
   }
 #endif
 

@@ -25,6 +25,17 @@ class ControllerBuilder {
     return *this;
   }
 
+  AUTD3_API ControllerBuilder with_timer_resolution(const uint32_t resolution) {
+    _ptr = AUTDControllerBuilderWithTimerResolution(_ptr, resolution);
+    return *this;
+  }
+
+  template <typename Rep, typename Period>
+  AUTD3_API ControllerBuilder with_send_interval(const std::chrono::duration<Rep, Period> interval) {
+    _ptr = AUTDControllerBuilderWithSendInterval(_ptr, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(interval).count()));
+    return *this;
+  }
+
   template <driver::link_builder B, typename Rep, typename Period>
   AUTD3_API [[nodiscard]] Controller<typename B::Link> open_with_timeout(const B& link_builder, const std::chrono::duration<Rep, Period> timeout) {
     const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
@@ -54,7 +65,8 @@ class ControllerBuilder {
 
   template <driver::link_builder B>
   AUTD3_API [[nodiscard]] coro::task<Controller<typename B::Link>> open_async(const B& link_builder) {
-    co_return open_with_timeout_async(link_builder, std::chrono::nanoseconds(-1));
+    auto cnt = co_await open_with_timeout_async(link_builder, std::chrono::nanoseconds(-1));
+    co_return cnt;
   }
 #endif
 
