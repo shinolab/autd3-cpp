@@ -107,15 +107,15 @@ using driver::Vector3;
 using controller::Controller;
 using controller::ControllerBuilder;
 
-enum class LogLevel : uint8_t {
-  ERROR = native_methods::TRACE_LEVEL_ERROR,
-  WARN = native_methods::TRACE_LEVEL_WARN,
-  INFO = native_methods::TRACE_LEVEL_INFO,
-  DEBUG = native_methods::TRACE_LEVEL_DEBUG,
-  TRACE = native_methods::TRACE_LEVEL_TRACE,
+enum class Level : uint8_t {
+  Error = native_methods::TRACE_LEVEL_ERROR,
+  Warn = native_methods::TRACE_LEVEL_WARN,
+  Info = native_methods::TRACE_LEVEL_INFO,
+  Debug = native_methods::TRACE_LEVEL_DEBUG,
+  Trace = native_methods::TRACE_LEVEL_TRACE
 };
 
-void tracing_init(const Level level) { native_methods::AUTDTracingInit(static_cast<uint8_t>(level)); }
+inline void tracing_init(const Level level) { native_methods::AUTDTracingInit(static_cast<uint8_t>(level)); }
 
 namespace derive {
 using gain::Gain;
