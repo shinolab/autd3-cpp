@@ -13,11 +13,11 @@ constexpr const uint32_t NUM_TRANS_IN_X = 18;
 
 constexpr const uint32_t NUM_TRANS_IN_Y = 14;
 
-constexpr const float TRANS_SPACING_MM = 10.16;
+constexpr const float TRANS_SPACING_MM = 10.16f;
 
-constexpr const float DEVICE_HEIGHT_MM = 151.4;
+constexpr const float DEVICE_HEIGHT_MM = 151.4f;
 
-constexpr const float DEVICE_WIDTH_MM = 192.0;
+constexpr const float DEVICE_WIDTH_MM = 192.0f;
 
 constexpr const int32_t AUTD3_ERR = -1;
 

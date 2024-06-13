@@ -35,5 +35,6 @@ TEST(DriverDatagram, FPGAState) {
   {
     autd.link().break_down();
     ASSERT_THROW((void)autd.fpga_state(), autd3::AUTDException);
+    autd.link().repair();
   }
 }

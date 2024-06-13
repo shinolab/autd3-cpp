@@ -7,8 +7,38 @@
 
 namespace autd3::native_methods {
 
+constexpr const uint8_t TRACE_LEVEL_ERROR = 1;
+
+constexpr const uint8_t TRACE_LEVEL_WARN = 2;
+
+constexpr const uint8_t TRACE_LEVEL_INFO = 3;
+
+constexpr const uint8_t TRACE_LEVEL_DEBUG = 4;
+
+constexpr const uint8_t TRACE_LEVEL_TRACE = 5;
+
+struct RuntimePtr {
+  const void* _0;
+};
+
 struct ControllerPtr {
   const void* _0;
+};
+
+struct ResultController {
+  ControllerPtr result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct FPGAStateListPtr {
+  const void* _0;
+};
+
+struct ResultFPGAStateList {
+  FPGAStateListPtr result;
+  uint32_t err_len;
+  const void* err;
 };
 
 struct FirmwareVersionListPtr {
@@ -23,12 +53,6 @@ struct ResultFirmwareVersionList {
 
 struct ControllerBuilderPtr {
   const void* _0;
-};
-
-struct ResultController {
-  ControllerPtr result;
-  uint32_t err_len;
-  const void* err;
 };
 
 struct GainCalcDrivesMapPtr {
@@ -62,15 +86,44 @@ struct ResultModulationCalc {
 
 extern "C" {
 
-[[nodiscard]] ResultI32 AUTDControllerClose(ControllerPtr cnt);
+[[nodiscard]] RuntimePtr AUTDCreateRuntime();
 
-ResultI32 AUTDControllerDelete(ControllerPtr cnt);
+void AUTDDeleteRuntime(RuntimePtr runtime);
+
+[[nodiscard]] ResultI32 AUTDWaitResultI32(RuntimePtr runtime, FfiFutureResultI32 future);
+
+[[nodiscard]]
+ResultI32 AUTDWaitLocalResultI32(RuntimePtr runtime,
+                                 LocalFfiFutureResultI32 future);
+
+[[nodiscard]]
+ResultController AUTDWaitResultController(RuntimePtr runtime,
+                                          FfiFutureResultController future);
+
+[[nodiscard]]
+ResultFPGAStateList AUTDWaitResultFPGAStateList(RuntimePtr runtime,
+                                                FfiFutureResultFPGAStateList future);
+
+[[nodiscard]]
+ResultFirmwareVersionList AUTDWaitResultFirmwareVersionList(RuntimePtr runtime,
+                                                            FfiFutureResultFirmwareVersionList future);
+
+void AUTDTracingInit(uint8_t level);
+
+[[nodiscard]] FfiFutureResultI32 AUTDControllerClose(ControllerPtr cnt);
+
+void AUTDControllerDelete(ControllerPtr cnt);
 
 [[nodiscard]] uint16_t AUTDControllerLastParallelThreshold(ControllerPtr cnt);
 
-[[nodiscard]] ResultI32 AUTDControllerFPGAState(ControllerPtr cnt, int32_t *out);
+[[nodiscard]] FfiFutureResultFPGAStateList AUTDControllerFPGAState(ControllerPtr cnt);
 
-[[nodiscard]] ResultFirmwareVersionList AUTDControllerFirmwareVersionListPointer(ControllerPtr cnt);
+int16_t AUTDControllerFPGAStateGet(FPGAStateListPtr p, uint32_t idx);
+
+void AUTDControllerFPGAStateDelete(FPGAStateListPtr p);
+
+[[nodiscard]]
+FfiFutureResultFirmwareVersionList AUTDControllerFirmwareVersionListPointer(ControllerPtr cnt);
 
 void AUTDControllerFirmwareVersionGet(FirmwareVersionListPtr p_info_list, uint32_t idx, char *info);
 
@@ -78,7 +131,7 @@ void AUTDControllerFirmwareVersionListPointerDelete(FirmwareVersionListPtr p_inf
 
 void AUTDFirmwareLatest(char *latest);
 
-[[nodiscard]] ResultI32 AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
+[[nodiscard]] FfiFutureResultI32 AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
 
 [[nodiscard]]
 ControllerBuilderPtr AUTDControllerBuilder(const Vector3 *pos,
@@ -94,18 +147,26 @@ ControllerBuilderPtr AUTDControllerBuilderWithParallelThreshold(ControllerBuilde
                                                                 uint16_t parallel_threshold);
 
 [[nodiscard]]
-ResultController AUTDControllerOpen(ControllerBuilderPtr builder,
-                                    LinkBuilderPtr link_builder,
-                                    int64_t timeout_ns);
+ControllerBuilderPtr AUTDControllerBuilderWithSendInterval(ControllerBuilderPtr builder,
+                                                           uint64_t interval_ns);
 
 [[nodiscard]]
-ResultI32 AUTDControllerGroup(ControllerPtr cnt,
-                              const void* f,
-                              ContextPtr context,
-                              GeometryPtr geometry,
-                              const int32_t *keys,
-                              const DatagramPtr *d,
-                              uint16_t n);
+ControllerBuilderPtr AUTDControllerBuilderWithTimerResolution(ControllerBuilderPtr builder,
+                                                              uint32_t resolution);
+
+[[nodiscard]]
+FfiFutureResultController AUTDControllerOpen(ControllerBuilderPtr builder,
+                                               LinkBuilderPtr link_builder,
+                                               int64_t timeout_ns);
+
+[[nodiscard]]
+LocalFfiFutureResultI32 AUTDControllerGroup(ControllerPtr cnt,
+                                              const void* f,
+                                              ContextPtr context,
+                                              GeometryPtr geometry,
+                                              const int32_t *keys,
+                                              const DatagramPtr *d,
+                                              uint16_t n);
 
 [[nodiscard]] DatagramPtr AUTDDatagramTuple(DatagramPtr d1, DatagramPtr d2);
 
@@ -408,7 +469,11 @@ LinkAuditBuilderPtr AUTDLinkAuditWithTimeout(LinkAuditBuilderPtr audit,
 
 void AUTDLinkAuditDown(LinkPtr audit);
 
+void AUTDLinkAuditUp(LinkPtr audit);
+
 void AUTDLinkAuditBreakDown(LinkPtr audit);
+
+void AUTDLinkAuditRepair(LinkPtr audit);
 
 [[nodiscard]] uint32_t AUTDLinkAuditCpuNumTransducers(LinkPtr audit, uint16_t idx);
 

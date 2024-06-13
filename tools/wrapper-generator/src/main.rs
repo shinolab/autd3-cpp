@@ -87,7 +87,19 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
         .with_crate(crate_path)
         .with_config(config)
         .generate()?
-        .write_to_file(out_file);
+        .write_to_file(&out_file);
+
+    let content = std::fs::read_to_string(&out_file)?;
+
+    let re = regex::Regex::new(r"constexpr const float (.*) = (.*);").unwrap();
+    let content = re
+        .replace_all(&content, "constexpr const float $1 = ${2}f;")
+        .to_string();
+
+    let re = regex::Regex::new(r"FfiFuture<(.*)>").unwrap();
+    let content = re.replace_all(&content, "FfiFuture$1").to_string();
+
+    std::fs::write(&out_file, content)?;
 
     Ok(())
 }

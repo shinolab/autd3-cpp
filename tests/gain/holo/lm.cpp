@@ -16,9 +16,9 @@ TEST(GainHolo, LM) {
                                                        autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
                                                        return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                                      }))
-               .with_eps1(1e-3)
-               .with_eps2(1e-3)
-               .with_tau(1e-3)
+               .with_eps1(1e-3f)
+               .with_eps2(1e-3f)
+               .with_tau(1e-3f)
                .with_k_max(5)
                .with_initial(std::vector{1.0f})
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
@@ -53,9 +53,9 @@ TEST(GainHolo, LM_CUDA) {
                                                        autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
                                                        return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                                      }))
-               .with_eps1(1e-3)
-               .with_eps2(1e-3)
-               .with_tau(1e-3)
+               .with_eps1(1e-3f)
+               .with_eps2(1e-3f)
+               .with_tau(1e-3f)
                .with_k_max(5)
                .with_initial(std::vector{1.0f})
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));

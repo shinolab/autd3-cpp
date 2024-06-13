@@ -138,7 +138,9 @@ class Visualizer final {
                                const native_methods::Directivity directivity = native_methods::Directivity::Sphere)
         : _backend(backend), _directivity(directivity) {}
 
-    AUTD3_API [[nodiscard]] Visualizer resolve_link(const native_methods::LinkPtr link) const { return Visualizer{link, _backend, _directivity}; }
+    AUTD3_API [[nodiscard]] Visualizer resolve_link(native_methods::RuntimePtr, const native_methods::LinkPtr link) const {
+      return Visualizer{link, _backend, _directivity};
+    }
 
    public:
     using Link = Visualizer;

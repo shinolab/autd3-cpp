@@ -65,7 +65,7 @@ TEST(Link, VisualizerPlotters) {
     auto config = autd3::link::PlotConfig();
     config.fname = "test.png";
     config.figsize = std::make_pair(960, 640);
-    config.cbar_size = 0.15;
+    config.cbar_size = 0.15f;
     config.font_size = 24;
     config.label_area_size = 80;
     config.margin = 10;
@@ -92,7 +92,7 @@ TEST(Link, VisualizerPython) {
     config.cbar_size = "5%";
     config.cbar_pad = "3%";
     config.fontsize = 12;
-    config.ticks_step = 10.0;
+    config.ticks_step = 10.0f;
     config.cmap = "jet";
     config.show = false;
     visualizer_test_with(autd, config);

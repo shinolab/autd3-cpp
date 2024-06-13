@@ -16,8 +16,8 @@ TEST(GainHolo, SDP) {
                                                         autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
                                                         return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                                       }))
-               .with_alpha(1e-3)
-               .with_lambda(0.9)
+               .with_alpha(1e-3f)
+               .with_lambda(0.9f)
                .with_repeat(10)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
@@ -51,8 +51,8 @@ TEST(GainHolo, SDP_CUDA) {
                                                         autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
                                                         return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                                       }))
-               .with_alpha(1e-3)
-               .with_lambda(0.9)
+               .with_alpha(1e-3f)
+               .with_lambda(0.9f)
                .with_repeat(10)
                .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 

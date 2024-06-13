@@ -37,6 +37,7 @@ FetchContent_Declare(
   autd3
   SOURCE_DIR ${PROJECT_SOURCE_DIR}/..
 )
+set(AUTD3_ASYNC_API ON)
 FetchContent_MakeAvailable(autd3)
 
 add_executable(test_autd3 main.cpp)

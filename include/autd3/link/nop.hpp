@@ -9,7 +9,7 @@ class ControllerBuilder;
 namespace autd3::link {
 
 class Nop {
-  AUTD3_API explicit Nop(native_methods::LinkPtr) {}
+  Nop() = default;  // LCOV_EXCL_LINE
 
  public:
   class Builder final {
@@ -18,7 +18,7 @@ class Nop {
 
     AUTD3_API Builder() = default;  // LCOV_EXCL_LINE
 
-    AUTD3_API [[nodiscard]] static Nop resolve_link(const native_methods::LinkPtr link) { return Nop{link}; }
+    AUTD3_API [[nodiscard]] static Nop resolve_link(native_methods::RuntimePtr, const native_methods::LinkPtr) { return {}; }
 
    public:
     using Link = Nop;

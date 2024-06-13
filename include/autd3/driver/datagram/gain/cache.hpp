@@ -56,9 +56,9 @@ class Cache final : public driver::GainBase,
     init(geometry);
     return std::accumulate(geometry.devices().begin(), geometry.devices().end(), native_methods::AUTDGainRaw(),
                            [this](const native_methods::GainPtr acc, const driver::geometry::Device& dev) {
-                             return AUTDGainRawSet(acc, static_cast<uint32_t>(dev.idx()),
+                             return AUTDGainRawSet(acc, static_cast<uint16_t>(dev.idx()),
                                                    reinterpret_cast<native_methods::Drive*>(_cache->at(dev.idx()).data()),
-                                                   static_cast<uint32_t>(_cache->at(dev.idx()).size()));
+                                                   static_cast<uint8_t>(_cache->at(dev.idx()).size()));
                            });
   }
 

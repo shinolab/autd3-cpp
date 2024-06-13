@@ -55,7 +55,7 @@ class SOEM final {
 
     AUTD3_API Builder() : _ptr(native_methods::AUTDLinkSOEM()), _err_handler(nullptr) {}
 
-    [[nodiscard]] SOEM resolve_link(native_methods::LinkPtr) const { return SOEM{_native_err_handler, _err_handler}; }
+    [[nodiscard]] SOEM resolve_link(native_methods::RuntimePtr, native_methods::LinkPtr) const { return SOEM{_native_err_handler, _err_handler}; }
 
    public:
     using Link = SOEM;
@@ -148,7 +148,7 @@ class RemoteSOEM final {
 
     AUTD3_API explicit Builder(const std::string& addr) { _ptr = validate(native_methods::AUTDLinkRemoteSOEM(addr.c_str())); }
 
-    [[nodiscard]] static RemoteSOEM resolve_link(native_methods::LinkPtr) { return RemoteSOEM{}; }
+    [[nodiscard]] static RemoteSOEM resolve_link(native_methods::RuntimePtr, native_methods::LinkPtr) { return RemoteSOEM{}; }
 
    public:
     using Link = RemoteSOEM;

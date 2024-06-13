@@ -28,5 +28,6 @@ TEST(Driver, FirmwareVersion) {
   {
     autd.link().break_down();
     ASSERT_THROW((void)autd.firmware_version(), autd3::AUTDException);
+    autd.link().repair();
   }
 }

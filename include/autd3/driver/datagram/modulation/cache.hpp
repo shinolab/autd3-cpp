@@ -25,7 +25,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry& geometry) const override {
     const auto& buf = calc(geometry);
     return native_methods::AUTDModulationRaw(_sampling_config.value(), this->_loop_behavior, reinterpret_cast<const uint8_t*>(buf.data()),
-                                             static_cast<uint32_t>(buf.size()));
+                                             static_cast<uint16_t>(buf.size()));
   }
 
   AUTD3_API [[nodiscard]] const std::vector<driver::EmitIntensity>& buffer() const { return *_cache; }

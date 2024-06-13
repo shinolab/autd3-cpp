@@ -25,6 +25,7 @@ TEST(Controller, ControllerClose) {
     const auto autd = create_controller();
     autd.link().break_down();
     ASSERT_THROW(autd.close(), autd3::AUTDException);
+    autd.link().repair();
   }
 }
 
@@ -44,9 +45,11 @@ TEST(Controller, ControllerSendSingle) {
 
   autd.link().down();
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
+  autd.link().up();
 
   autd.link().break_down();
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
+  autd.link().repair();
 }
 
 TEST(Controller, ControllerSendTuple) {

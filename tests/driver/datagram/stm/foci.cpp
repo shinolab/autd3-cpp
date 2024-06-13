@@ -31,7 +31,6 @@ TEST(DriverDatagramSTM, FociSTM) {
   }
 
   {
-    autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
     auto stm = autd3::driver::FociSTM<1>::from_freq_nearest(
         1.0f * autd3::driver::Hz,
         std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }));

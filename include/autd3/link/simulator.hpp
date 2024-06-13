@@ -18,9 +18,10 @@ class ControllerBuilder;
 namespace autd3::link {
 
 class Simulator final {
+  native_methods::RuntimePtr _runtime;
   native_methods::LinkPtr _ptr;
 
-  explicit Simulator(const native_methods::LinkPtr ptr) : _ptr(ptr) {}
+  explicit Simulator(native_methods::RuntimePtr runtime, const native_methods::LinkPtr ptr) : _runtime(runtime), _ptr(ptr) {}
 
  public:
   class Builder final {
@@ -31,7 +32,9 @@ class Simulator final {
 
     AUTD3_API explicit Builder(const uint16_t port) : _ptr(native_methods::AUTDLinkSimulator(port)) {}
 
-    [[nodiscard]] static Simulator resolve_link(const native_methods::LinkPtr link) { return Simulator{link}; }
+    [[nodiscard]] static Simulator resolve_link(const native_methods::RuntimePtr runtime, const native_methods::LinkPtr link) {
+      return Simulator{runtime, link};
+    }
 
    public:
     using Link = Simulator;
@@ -54,11 +57,15 @@ class Simulator final {
   AUTD3_API [[nodiscard]] static Builder builder(const uint16_t port) { return Builder(port); }
 
   [[nodiscard]] bool update_geometry(const driver::geometry::Geometry& geometry) const {
-    return validate(AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr())) == native_methods::AUTD3_TRUE;
+    return validate(AUTDWaitResultI32(_runtime, AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr()))) == native_methods::AUTD3_TRUE;
   }
 
 #ifdef AUTD3_ASYNC_API
-  [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const { co_return update_geometry(geometry); }
+  [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const {
+    auto future = AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr());
+    auto result = co_await wait_future(_runtime, future);
+    co_return validate(result) == native_methods::AUTD3_TRUE;
+  }
 #endif
 };
 

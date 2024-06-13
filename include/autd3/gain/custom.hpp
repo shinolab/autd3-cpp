@@ -1,5 +1,3 @@
-
-
 #pragma once
 
 #include "autd3/driver/datagram/gain/gain.hpp"

@@ -31,7 +31,9 @@ LinkSimulatorBuilderPtr AUTDLinkSimulatorWithTimeout(LinkSimulatorBuilderPtr sim
 
 [[nodiscard]] LinkBuilderPtr AUTDLinkSimulatorIntoBuilder(LinkSimulatorBuilderPtr simulator);
 
-[[nodiscard]] ResultI32 AUTDLinkSimulatorUpdateGeometry(LinkPtr simulator, GeometryPtr geometry);
+[[nodiscard]]
+FfiFutureResultI32 AUTDLinkSimulatorUpdateGeometry(LinkPtr simulator,
+                                                     GeometryPtr geometry);
 
 } // extern "C"
 

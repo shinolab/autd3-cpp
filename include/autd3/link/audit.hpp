@@ -29,7 +29,7 @@ class Audit final {
 
     Builder() : _ptr(native_methods::AUTDLinkAudit()) {}
 
-    [[nodiscard]] static Audit resolve_link(const native_methods::LinkPtr link) { return Audit{link}; }
+    [[nodiscard]] static Audit resolve_link(native_methods::RuntimePtr, const native_methods::LinkPtr link) { return Audit{link}; }
 
    public:
     using Link = Audit;
@@ -47,6 +47,7 @@ class Audit final {
   static Builder builder() { return {}; }
 
   void down() const { AUTDLinkAuditDown(_ptr); }
+  void up() const { AUTDLinkAuditUp(_ptr); }
 
   [[nodiscard]] bool is_open() const { return AUTDLinkAuditIsOpen(_ptr); }
 
@@ -60,6 +61,7 @@ class Audit final {
   [[nodiscard]] bool is_force_fan(const size_t idx) const { return AUTDLinkAuditFpgaIsForceFan(_ptr, static_cast<uint16_t>(idx)); }
 
   void break_down() const { AUTDLinkAuditBreakDown(_ptr); }
+  void repair() const { AUTDLinkAuditRepair(_ptr); }
 
   [[nodiscard]] uint16_t silencer_update_rate_intensity(const size_t idx) const {
     return AUTDLinkAuditFpgaSilencerUpdateRateIntensity(_ptr, static_cast<uint16_t>(idx));

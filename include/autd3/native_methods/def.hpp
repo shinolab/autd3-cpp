@@ -4,6 +4,22 @@
 
 namespace autd3::native_methods {
 
+struct FfiFutureResultI32 {
+  uint8_t _data[24];
+};
+struct LocalFfiFutureResultI32 {
+  uint8_t _data[24];
+};
+struct FfiFutureResultFPGAStateList {
+  uint8_t _data[24];
+};
+struct FfiFutureResultFirmwareVersionList {
+  uint8_t _data[24];
+};
+struct FfiFutureResultController {
+  uint8_t _data[24];
+};
+
 struct Vector3 {
   float x;
   float y;

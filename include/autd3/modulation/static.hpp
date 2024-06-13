@@ -17,7 +17,7 @@ class Static final : public driver::ModulationBase<Static>,
 
   template <std::integral I>
   AUTD3_API [[nodiscard]] static Static with_intensity(const I intensity) {
-    return Static(intensity);
+    return Static(static_cast<uint8_t>(intensity));
   }
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
