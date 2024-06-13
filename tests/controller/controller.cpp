@@ -29,6 +29,7 @@ TEST(Controller, ControllerClose) {
   }
 }
 
+#ifdef AUTD3_ASYNC_API
 TEST(Controller, ControllerCloseAsync) {
   {
     const auto autd = create_controller();
@@ -45,6 +46,7 @@ TEST(Controller, ControllerCloseAsync) {
     autd.link().repair();
   }
 }
+#endif
 
 TEST(Controller, ControllerSendSingle) {
   auto autd = create_controller();
@@ -69,6 +71,7 @@ TEST(Controller, ControllerSendSingle) {
   autd.link().repair();
 }
 
+#ifdef AUTD3_ASYNC_API
 TEST(Controller, ControllerSendSingleAsync) {
   auto autd = create_controller();
 
@@ -91,6 +94,7 @@ TEST(Controller, ControllerSendSingleAsync) {
   ASSERT_THROW(sync_wait(autd.send_async(autd3::modulation::Static())), autd3::AUTDException);
   autd.link().repair();
 }
+#endif
 
 TEST(Controller, ControllerSendTuple) {
   auto autd = create_controller();
@@ -151,6 +155,7 @@ TEST(Controller, ControllerGroup) {
   }
 }
 
+#ifdef AUTD3_ASYNC_API
 TEST(Controller, ControllerGroupAsync) {
   auto autd = create_controller();
 
@@ -189,6 +194,7 @@ TEST(Controller, ControllerGroupAsync) {
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0; }));
   }
 }
+#endif
 
 TEST(Controller, ControllerGroupCheckOnlyForEnabled) {
   auto autd = create_controller();

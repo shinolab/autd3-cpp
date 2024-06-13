@@ -39,6 +39,7 @@ TEST(DriverDatagram, FPGAState) {
   }
 }
 
+#ifdef AUTD3_ASYNC_API
 TEST(DriverDatagram, FPGAStateAsync) {
   auto autd = create_controller();
 
@@ -71,3 +72,4 @@ TEST(DriverDatagram, FPGAStateAsync) {
     autd.link().repair();
   }
 }
+#endif

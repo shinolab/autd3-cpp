@@ -32,6 +32,7 @@ TEST(Driver, FirmwareVersion) {
   }
 }
 
+#ifdef AUTD3_ASYNC_API
 TEST(Driver, FirmwareVersionAsync) {
   auto autd = create_controller();
 
@@ -54,3 +55,4 @@ TEST(Driver, FirmwareVersionAsync) {
     autd.link().repair();
   }
 }
+#endif

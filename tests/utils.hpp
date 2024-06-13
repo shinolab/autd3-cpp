@@ -4,7 +4,10 @@
 #include <autd3/controller/controller.hpp>
 #include <autd3/driver/autd3_device.hpp>
 #include <autd3/link/audit.hpp>
+
+#ifdef AUTD3_ASYNC_API
 #include <coro/coro.hpp>
+#endif
 
 static inline autd3::controller::Controller<autd3::link::Audit> create_controller() {
   return autd3::controller::ControllerBuilder(
