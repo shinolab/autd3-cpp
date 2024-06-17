@@ -13,7 +13,6 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
-using native_methods::SyncMode;
 using native_methods::TimerStrategy;
 
 class EtherCATAdapter {
@@ -99,8 +98,17 @@ class SOEM final {
       return *this;
     }
 
-    AUTD3_API [[nodiscard]] Builder with_sync_mode(const SyncMode value) {
-      _ptr = AUTDLinkSOEMWithSyncMode(_ptr, value);
+    template <typename Rep, typename Period>
+    AUTD3_API [[nodiscard]] Builder with_sync_tolerance(const std::chrono::duration<Rep, Period> timeout) {
+      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
+      _ptr = AUTDLinkSOEMWithSyncTolerance(_ptr, static_cast<uint64_t>(ns));
+      return *this;
+    }
+
+    template <typename Rep, typename Period>
+    AUTD3_API [[nodiscard]] Builder with_sync_timeout(const std::chrono::duration<Rep, Period> timeout) {
+      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
+      _ptr = AUTDLinkSOEMWithSyncTimeout(_ptr, static_cast<uint64_t>(ns));
       return *this;
     }
 

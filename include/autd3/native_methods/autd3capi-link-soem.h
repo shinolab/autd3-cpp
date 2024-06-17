@@ -39,6 +39,8 @@ struct ResultLinkRemoteSOEMBuilder {
 
 extern "C" {
 
+void AUTDAUTDLinkSOEMTracingInit(uint8_t level);
+
 [[nodiscard]] EthernetAdaptersPtr AUTDAdapterPointer();
 
 [[nodiscard]] uint32_t AUTDAdapterGetSize(EthernetAdaptersPtr adapters);
@@ -63,7 +65,13 @@ LinkSOEMBuilderPtr AUTDLinkSOEMWithBufSize(LinkSOEMBuilderPtr soem,
 LinkSOEMBuilderPtr AUTDLinkSOEMWithTimerStrategy(LinkSOEMBuilderPtr soem,
                                                  TimerStrategy timer_strategy);
 
-[[nodiscard]] LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncMode(LinkSOEMBuilderPtr soem, SyncMode mode);
+[[nodiscard]]
+LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncTolerance(LinkSOEMBuilderPtr soem,
+                                                 uint64_t tolerance_ns);
+
+[[nodiscard]]
+LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncTimeout(LinkSOEMBuilderPtr soem,
+                                               uint64_t timeout_ns);
 
 [[nodiscard]]
 LinkSOEMBuilderPtr AUTDLinkSOEMWithIfname(LinkSOEMBuilderPtr soem,

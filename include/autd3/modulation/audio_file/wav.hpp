@@ -9,12 +9,15 @@
 
 namespace autd3::modulation::audio_file {
 
-class Wav final : public driver::Modulation<Wav> {
+class Wav final : public driver::ModulationBase<Wav>,
+                  public driver::IntoModulationCache<Wav>,
+                  public driver::IntoRadiationPressure<Wav>,
+                  public driver::IntoModulationTransform<Wav> {
  public:
-  AUTD3_API explicit Wav(std::filesystem::path path) : Modulation(driver::SamplingConfig::Division(5120)), _path(std::move(path)) {}
+  AUTD3_API explicit Wav(std::filesystem::path path) : _path(std::move(path)) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
-    return validate(AUTDModulationWav(_path.string().c_str(), _sampling_config, _loop_behavior));
+    return validate(AUTDModulationWav(_path.string().c_str(), _loop_behavior));
   }
 
  private:

@@ -9,10 +9,7 @@ namespace autd3::native_methods {
 
 extern "C" {
 
-[[nodiscard]]
-ResultModulation AUTDModulationWav(const char *path,
-                                   SamplingConfigWrap config,
-                                   LoopBehavior loop_behavior);
+[[nodiscard]] ResultModulation AUTDModulationWav(const char *path, LoopBehavior loop_behavior);
 
 [[nodiscard]] bool AUTDModulationWavIsDefault(ModulationPtr wav);
 

@@ -7,6 +7,8 @@
 #include "util.hpp"
 
 int main() try {
+  tracing_init(autd3::Level::Info);
+
   auto autd =
       autd3::ControllerBuilder(std::vector{autd3::AUTD3(autd3::Vector3::Zero())})
           .open(autd3::link::SOEM::builder().with_err_handler([](const uint16_t slave, const autd3::link::Status status, const std::string& msg) {
