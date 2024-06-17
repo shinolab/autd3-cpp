@@ -14,7 +14,8 @@ TEST(Link, SOEM) {
                   .with_sync0_cycle(2)
                   .with_err_handler([](const uint16_t, const autd3::link::Status, const std::string&) {})
                   .with_timer_strategy(autd3::native_methods::TimerStrategy::Sleep)
-                  .with_sync_mode(autd3::native_methods::SyncMode::FreeRun)
+                  .with_sync_tolerance(std::chrono::microseconds(1))
+                  .with_sync_timeout(std::chrono::seconds(10))
                   .with_state_check_interval(std::chrono::milliseconds(100))
                   .with_timeout(std::chrono::milliseconds(200));
 

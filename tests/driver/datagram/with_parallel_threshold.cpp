@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include <autd3/driver/datagram/with_parallel_threshold.hpp>
+#include <autd3/gain/null.hpp>
 #include <autd3/modulation/static.hpp>
 
 #include "utils.hpp"
@@ -10,7 +11,9 @@ TEST(DriverDatagram, WithParallelThreshold) {
                   std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero()), autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                   .with_parallel_threshold(0)
                   .open(autd3::link::Audit::builder());
+  ASSERT_EQ(0xFFFF, autd.last_parallel_threshold());
 
+  autd.send(autd3::gain::Null());
   ASSERT_EQ(0, autd.last_parallel_threshold());
 
   autd.send(autd3::modulation::Static());
