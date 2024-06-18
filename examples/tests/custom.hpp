@@ -1,6 +1,7 @@
 #pragma once
 
 #include <autd3.hpp>
+#include <autd3/gain/custom.hpp>
 
 template <typename L>
 inline void custom(autd3::Controller<L>& autd) {
