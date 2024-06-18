@@ -65,6 +65,8 @@ LinkSOEMBuilderPtr AUTDLinkSOEMWithBufSize(LinkSOEMBuilderPtr soem,
 LinkSOEMBuilderPtr AUTDLinkSOEMWithTimerStrategy(LinkSOEMBuilderPtr soem,
                                                  TimerStrategy timer_strategy);
 
+[[nodiscard]] LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncMode(LinkSOEMBuilderPtr soem, SyncMode mode);
+
 [[nodiscard]]
 LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncTolerance(LinkSOEMBuilderPtr soem,
                                                  uint64_t tolerance_ns);

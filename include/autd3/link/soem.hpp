@@ -13,6 +13,7 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
+using native_methods::SyncMode;
 using native_methods::TimerStrategy;
 
 class EtherCATAdapter {
@@ -95,6 +96,11 @@ class SOEM final {
 
     AUTD3_API [[nodiscard]] Builder with_timer_strategy(const native_methods::TimerStrategy value) {
       _ptr = AUTDLinkSOEMWithTimerStrategy(_ptr, value);
+      return *this;
+    }
+
+    AUTD3_API [[nodiscard]] Builder with_sync_mode(const native_methods::SyncMode mode) {
+      _ptr = AUTDLinkSOEMWithSyncMode(_ptr, mode);
       return *this;
     }
 

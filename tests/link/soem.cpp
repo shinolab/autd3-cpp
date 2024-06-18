@@ -16,6 +16,7 @@ TEST(Link, SOEM) {
                   .with_timer_strategy(autd3::native_methods::TimerStrategy::Sleep)
                   .with_sync_tolerance(std::chrono::microseconds(1))
                   .with_sync_timeout(std::chrono::seconds(10))
+                  .with_sync_mode(autd3::link::SyncMode::DC)
                   .with_state_check_interval(std::chrono::milliseconds(100))
                   .with_timeout(std::chrono::milliseconds(200));
 
