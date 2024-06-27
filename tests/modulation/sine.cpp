@@ -15,6 +15,7 @@ TEST(Modulation, Sine) {
     ASSERT_EQ(std::numeric_limits<uint8_t>::max() / 2, m.intensity());
     ASSERT_EQ(std::numeric_limits<uint8_t>::max() / 4, m.offset());
     ASSERT_EQ(autd3::driver::pi / 2 * autd3::driver::rad, m.phase());
+    ASSERT_EQ(5120, m.sampling_config().division());
     autd.send(m);
 
     for (auto& dev : autd.geometry()) {
@@ -31,6 +32,7 @@ TEST(Modulation, Sine) {
     const auto m = autd3::modulation::Sine(150 * autd3::driver::Hz)
                        .with_sampling_config(autd3::driver::SamplingConfig::Division(10240))
                        .with_loop_behavior(autd3::driver::LoopBehavior::Finite(10));
+    ASSERT_EQ(10240, m.sampling_config().division());
     autd.send(m);
     for (auto& dev : autd.geometry()) ASSERT_EQ(10240, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }

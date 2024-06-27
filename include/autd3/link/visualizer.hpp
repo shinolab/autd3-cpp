@@ -153,7 +153,7 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSpherePlotters(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Plotters(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:
+            default:                                    // LCOV_EXCL_LINE
               throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
           }
         case native_methods::Backend::Python:
@@ -162,7 +162,7 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSpherePython(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Python(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:
+            default:                                    // LCOV_EXCL_LINE
               throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
           }
         case native_methods::Backend::Null:
@@ -171,10 +171,10 @@ class Visualizer final {
               return native_methods::AUTDLinkVisualizerSphereNull(_gpu_idx.has_value(), _gpu_idx.value_or(0));
             case native_methods::Directivity::T4010A1:
               return native_methods::AUTDLinkVisualizerT4010A1Null(_gpu_idx.has_value(), _gpu_idx.value_or(0));
-            default:
+            default:                                    // LCOV_EXCL_LINE
               throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
           }
-        default:
+        default:                                    // LCOV_EXCL_LINE
           throw std::runtime_error("unreachable");  // LCOV_EXCL_LINE
       }
     }

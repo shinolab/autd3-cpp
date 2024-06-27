@@ -9,9 +9,7 @@
 namespace autd3::driver {
 
 struct SamplingConfig final {
-  AUTD3_API [[nodiscard]] static SamplingConfig Freq(const driver::Freq<uint32_t> f) {
-    return SamplingConfig{native_methods::AUTDSamplingConfigFromFreq(f.hz())};
-  }
+  AUTD3_API [[nodiscard]] static SamplingConfig Freq(const driver::Freq<uint32_t> f) { return SamplingConfig{f}; }
 
   AUTD3_API [[nodiscard]] static SamplingConfig FreqNearest(const driver::Freq<float> f) {
     return SamplingConfig{native_methods::AUTDSamplingConfigFromFreqNearest(f.hz())};
@@ -27,7 +25,7 @@ struct SamplingConfig final {
 
   template <typename Rep, typename P>
   AUTD3_API [[nodiscard]] static SamplingConfig Period(const std::chrono::duration<Rep, P> period) {
-    return SamplingConfig{native_methods::AUTDSamplingConfigFromPeriod(std::chrono::duration_cast<std::chrono::nanoseconds>(period).count())};
+    return SamplingConfig{period};
   }
 
   template <typename Rep, typename P>
@@ -41,6 +39,10 @@ struct SamplingConfig final {
   driver::Freq<float> freq() const { return validate(native_methods::AUTDSamplingConfigFreq(_inner)) * driver::Hz; }
   std::chrono::nanoseconds period() const { return std::chrono::nanoseconds(validate(native_methods::AUTDSamplingConfigPeriod(_inner))); }
 
+  SamplingConfig(const driver::Freq<uint32_t> f) : _inner(native_methods::AUTDSamplingConfigFromFreq(f.hz())) {}
+  template <typename Rep, typename P>
+  SamplingConfig(const std::chrono::duration<Rep, P> period)
+      : _inner(native_methods::AUTDSamplingConfigFromPeriod(std::chrono::duration_cast<std::chrono::nanoseconds>(period).count())) {}
   explicit SamplingConfig(native_methods::SamplingConfigWrap inner) : _inner(std::move(inner)) {}
 
  private:

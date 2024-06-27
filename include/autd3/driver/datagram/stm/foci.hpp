@@ -74,9 +74,9 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
 
   AUTD3_DEF_PARAM(FociSTM, native_methods::LoopBehavior, loop_behavior)
 
-  [[nodiscard]] Freq<float> freq() const { return _sampling.freq(_points.size()); }
-  [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(_points.size()); }
-  [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(_points.size()); }
+  AUTD3_API [[nodiscard]] Freq<float> freq() const { return _sampling.freq(_points.size()); }
+  AUTD3_API [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(_points.size()); }
+  AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(_points.size()); }
 
  private:
   template <foci_range_c<N> R>

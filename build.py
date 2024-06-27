@@ -408,7 +408,7 @@ def cpp_cov(args):
     with working_dir("tests"):
         os.makedirs("build", exist_ok=True)
         with working_dir("build"):
-            command = ["cmake", "..", "-DCOVERAGE=ON"]
+            command = ["cmake", "..", "-DCOVERAGE=ON", "-DAUTD3_USE_PCH=OFF"]
             if config.cmake_extra is not None:
                 for cmd in config.cmake_extra:
                     command.append(cmd)

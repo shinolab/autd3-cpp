@@ -3,9 +3,14 @@
 #include <autd3/driver/firmware/fpga/sampling_config.hpp>
 
 TEST(DriverFirmwareFPGA, SamplingConfigFreq) {
-  const autd3::native_methods::SamplingConfigWrap f = autd3::driver::SamplingConfig::Freq(4000 * autd3::driver::Hz);
-  ASSERT_EQ(f.tag, autd3::native_methods::SamplingConfigTag::Freq);
-  ASSERT_EQ(f.value.freq, 4000);
+  const auto f = autd3::driver::SamplingConfig::Freq(4000 * autd3::driver::Hz);
+  ASSERT_EQ(f.division(), 5120);
+  ASSERT_EQ(f.freq(), 4000.0f * autd3::driver::Hz);
+  ASSERT_EQ(f.period(), std::chrono::microseconds(250));
+
+  const autd3::native_methods::SamplingConfigWrap w = f;
+  ASSERT_EQ(w.tag, autd3::native_methods::SamplingConfigTag::Freq);
+  ASSERT_EQ(w.value.freq, 4000);
 }
 
 TEST(DriverFirmwareFPGA, SamplingConfigFreqNearest) {

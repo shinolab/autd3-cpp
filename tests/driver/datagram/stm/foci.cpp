@@ -22,6 +22,9 @@ TEST(DriverDatagramSTM, FociSTM) {
     auto stm = autd3::driver::FociSTM<1>::from_freq(
         1.0f * autd3::driver::Hz,
         std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{center}; }));
+    ASSERT_EQ(1.0f * autd3::driver::Hz, stm.freq());
+    ASSERT_EQ(std::chrono::seconds(1), stm.period());
+    ASSERT_EQ(10240000u, stm.sampling_config().division());
     autd.send(stm);
     for (const auto& dev : autd.geometry()) {
       ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));

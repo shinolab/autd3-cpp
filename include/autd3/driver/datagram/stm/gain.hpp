@@ -87,9 +87,9 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   AUTD3_DEF_PARAM(GainSTM, native_methods::LoopBehavior, loop_behavior)
   AUTD3_DEF_PARAM(GainSTM, native_methods::GainSTMMode, mode)
 
-  [[nodiscard]] Freq<float> freq() const { return _sampling.freq(_gains.size()); }
-  [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(_gains.size()); }
-  [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(_gains.size()); }
+  AUTD3_API [[nodiscard]] Freq<float> freq() const { return _sampling.freq(_gains.size()); }
+  AUTD3_API [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(_gains.size()); }
+  AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(_gains.size()); }
 
  private:
   template <gain_range R>
