@@ -24,13 +24,9 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
   ModulationBase& operator=(ModulationBase&& obj) = default;       // LCOV_EXCL_LINE
   ~ModulationBase() override = default;                            // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return AUTDModulationIntoDatagram(modulation_ptr(geometry));
-  }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const { return AUTDModulationIntoDatagram(modulation_ptr()); }
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr raw_ptr(const geometry::Geometry& geometry) const override {
-    return modulation_ptr(geometry);
-  }
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr raw_ptr(const geometry::Geometry&) const override { return modulation_ptr(); }
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::ModulationPtr p,
                                                                    const native_methods::Segment segment) const override {
     return AUTDModulationIntoDatagramWithSegment(p, segment);
@@ -40,7 +36,7 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
       const native_methods::TransitionModeWrap transition_mode) const override {
     return AUTDModulationIntoDatagramWithSegmentTransition(p, segment, transition_mode);
   }
-  AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr(const geometry::Geometry&) const = 0;
+  AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr() const = 0;
 
   void with_loop_behavior(const native_methods::LoopBehavior loop_behavior) & { _loop_behavior = loop_behavior; }
   AUTD3_API [[nodiscard]] M&& with_loop_behavior(const native_methods::LoopBehavior loop_behavior) && {

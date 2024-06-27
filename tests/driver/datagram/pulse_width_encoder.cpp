@@ -14,7 +14,7 @@ TEST(DriverDatagram, PulseWidthEncoder) {
   std::random_device seed_gen;
   std::mt19937 engine(seed_gen());
   std::uniform_int_distribution<uint16_t> dist(0, 256);
-  std::ranges::generate(buf, [&]() { return dist(engine); });
+  std::ranges::generate(buf, [&] { return dist(engine); });
   std::ranges::sort(buf);
 
   autd.send(autd3::driver::PulseWidthEncoder([&](const auto&) { return [&](auto i) { return buf[i]; }; }));

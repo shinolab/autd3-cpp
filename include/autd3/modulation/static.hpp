@@ -20,9 +20,7 @@ class Static final : public driver::ModulationBase<Static>,
     return Static(static_cast<uint8_t>(intensity));
   }
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
-    return AUTDModulationStatic(_intensity, _loop_behavior);
-  }
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override { return AUTDModulationStatic(_intensity, _loop_behavior); }
 
   AUTD3_DEF_PROP(uint8_t, intensity)
 

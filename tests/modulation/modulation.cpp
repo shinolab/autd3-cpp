@@ -7,7 +7,7 @@
 
 class BurstModulation final : public autd3::modulation::Modulation<BurstModulation> {
  public:
-  AUTD3_API [[nodiscard]] std::vector<uint8_t> calc(const autd3::driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] std::vector<uint8_t> calc() const override {
     std::vector buffer(10, std::numeric_limits<uint8_t>::min());
     buffer[0] = std::numeric_limits<uint8_t>::max();
     return buffer;

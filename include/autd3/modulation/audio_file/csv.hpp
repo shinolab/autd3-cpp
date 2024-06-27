@@ -17,8 +17,8 @@ class Csv final : public driver::ModulationBase<Csv>,
   AUTD3_API explicit Csv(std::filesystem::path path, const driver::Freq<uint32_t> sample_rate)
       : _deliminator(','), _sample_rate(sample_rate), _path(std::move(path)) {}
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
-    return validate(AUTDModulationCsv(_path.string().c_str(), _sample_rate.hz(), _deliminator, _loop_behavior));
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    return validate(AUTDModulationAudioFileCsv(_path.string().c_str(), _sample_rate.hz(), _deliminator, _loop_behavior));
   }
 
   AUTD3_DEF_PARAM(Csv, uint8_t, deliminator)

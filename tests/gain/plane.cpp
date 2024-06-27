@@ -19,6 +19,6 @@ TEST(Gain, Plane) {
 
 TEST(Gain, PlaneDefault) {
   auto autd = create_controller();
-  auto g = autd3::gain::Plane(autd3::driver::Vector3::UnitZ());
+  const auto g = autd3::gain::Plane(autd3::driver::Vector3::UnitZ());
   ASSERT_TRUE(autd3::native_methods::AUTDGainPlanelIsDefault(g.gain_ptr(autd.geometry())));
 }

@@ -8,7 +8,6 @@
 namespace autd3::native_methods {
 
 enum class EmissionConstraintTag : uint8_t {
-  DontCare = 0,
   Normalize = 1,
   Uniform = 2,
   Multiply = 3,
@@ -28,7 +27,7 @@ struct EmissionConstraintWrap {
 };
 
 struct BackendPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultBackend {
@@ -42,8 +41,6 @@ extern "C" {
 [[nodiscard]] float AUTDGainHoloSPLToPascal(float value);
 
 [[nodiscard]] float AUTDGainHoloPascalToSPL(float value);
-
-[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintDotCare();
 
 [[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintNormalize();
 

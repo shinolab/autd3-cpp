@@ -3,7 +3,6 @@
 #include <autd3/driver/datagram/reads_fpga_state.hpp>
 #include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
-#include <autd3/gain/gain.hpp>
 #include <autd3/gain/uniform.hpp>
 #include <autd3/modulation/static.hpp>
 

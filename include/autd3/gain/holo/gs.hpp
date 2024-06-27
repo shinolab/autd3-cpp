@@ -14,7 +14,7 @@ class GS final : public Holo<GS<B>> {
  public:
   template <holo_foci_range R>
   AUTD3_API explicit GS(std::shared_ptr<B> holo_backend, R&& iter)
-      : Holo<GS>(EmissionConstraint::DontCare, std::forward<R>(iter)), _repeat(100), _backend(std::move(holo_backend)) {}
+      : Holo<GS>(EmissionConstraint::Clamp(0x00, 0xFF), std::forward<R>(iter)), _repeat(100), _backend(std::move(holo_backend)) {}
 
   AUTD3_DEF_PARAM(GS, uint32_t, repeat)
 

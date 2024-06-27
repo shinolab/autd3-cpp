@@ -9,7 +9,7 @@ TEST(Modulation, FourierExact) {
   auto autd = create_controller();
 
   std::vector f{50, 100, 150, 200, 250};
-  auto m =
+  const auto m =
       autd3::modulation::Fourier(f | std::ranges::views::transform([](const uint32_t x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
 
   autd.send(m);
@@ -30,7 +30,7 @@ TEST(Modulation, FourierExactFloat) {
   auto autd = create_controller();
 
   std::vector f{50.f, 100.f, 150.f, 200.f, 250.f};
-  auto m =
+  const auto m =
       autd3::modulation::Fourier(f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
 
   autd.send(m);
@@ -51,13 +51,12 @@ TEST(Modulation, FourierNearest) {
   auto autd = create_controller();
 
   std::vector f{50.f, 100.f};
-  auto m = autd3::modulation::Fourier(
+  const auto m = autd3::modulation::Fourier(
       f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine::with_freq_nearest(x * autd3::driver::Hz); }));
   autd.send(m);
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    ;
     std::vector<uint8_t> mod_expect{127, 142, 156, 171, 184, 196, 207, 217, 225, 231, 236, 238, 239, 238, 235, 231, 225, 218, 209, 200,
                                     191, 180, 170, 160, 150, 141, 132, 124, 118, 112, 108, 105, 104, 103, 104, 106, 109, 113, 117, 122,
                                     127, 132, 136, 141, 145, 147, 149, 150, 150, 148, 146, 141, 136, 129, 121, 113, 104, 94,  83,  73,
@@ -70,6 +69,6 @@ TEST(Modulation, FourierNearest) {
 TEST(Modulation, FourierInvalidMix) {
   auto autd = create_controller();
 
-  auto m = autd3::modulation::Fourier({autd3::modulation::Sine(50 * autd3::driver::Hz), autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
+  const auto m = autd3::modulation::Fourier({autd3::modulation::Sine(50 * autd3::driver::Hz), autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
   ASSERT_THROW(autd.send(m), autd3::AUTDException);
 }

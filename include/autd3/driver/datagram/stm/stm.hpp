@@ -1,9 +1,7 @@
 #pragma once
 
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
-#include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
@@ -60,47 +58,6 @@ struct ControlPoints<1> {
   explicit ControlPoints(std::array<ControlPoint, 1> points, const EmitIntensity intensity) : _points(std::move(points)), _intensity(intensity) {}
   explicit ControlPoints(const std::array<Vector3, 1>& points, const EmitIntensity intensity) : _intensity(intensity) {
     for (size_t i = 0; i < 1; i++) this->_points[i] = ControlPoint(points[i]);
-  }
-};
-
-struct STMSamplingModeFreq {
-  Freq<float> freq;
-
-  template <uint8_t N>
-  [[nodiscard]] native_methods::FociSTMPtr focus_ptr(const std::vector<ControlPoints<N>>& points) const {
-    return validate(
-        native_methods::AUTDSTMFociFromFreq(freq.hz(), reinterpret_cast<const void*>(points.data()), static_cast<uint16_t>(points.size()), N));
-  }
-
-  [[nodiscard]] native_methods::GainSTMPtr gain_ptr(const std::vector<native_methods::GainPtr>& gains) const {
-    return validate(AUTDSTMGainFromFreq(freq.hz(), gains.data(), static_cast<uint16_t>(gains.size())));
-  }
-};
-
-struct STMSamplingModeFreqNearest {
-  Freq<float> freq;
-
-  template <uint8_t N>
-  [[nodiscard]] native_methods::FociSTMPtr focus_ptr(const std::vector<ControlPoints<N>>& points) const {
-    return validate(
-        native_methods::AUTDSTMFociFromFreqNearest(freq.hz(), reinterpret_cast<const void*>(points.data()), static_cast<uint16_t>(points.size()), N));
-  }
-
-  [[nodiscard]] native_methods::GainSTMPtr gain_ptr(const std::vector<native_methods::GainPtr>& gains) const {
-    return validate(AUTDSTMGainFromFreqNearest(freq.hz(), gains.data(), static_cast<uint16_t>(gains.size())));
-  }
-};
-
-struct STMSamplingModeSamplingConfig {
-  native_methods::SamplingConfigWrap config;
-
-  template <uint8_t N>
-  [[nodiscard]] native_methods::FociSTMPtr focus_ptr(const std::vector<ControlPoints<N>>& points) const {
-    return AUTDSTMFociFromSamplingConfig(config, reinterpret_cast<const void*>(points.data()), static_cast<uint16_t>(points.size()), N);
-  }
-
-  [[nodiscard]] native_methods::GainSTMPtr gain_ptr(const std::vector<native_methods::GainPtr>& gains) const {
-    return AUTDSTMGainFromSamplingConfig(config, gains.data(), static_cast<uint16_t>(gains.size()));
   }
 };
 

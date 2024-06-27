@@ -1,13 +1,13 @@
 #pragma once
 
 #include <ranges>
-#include <variant>
 
 #include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
+#include "autd3/driver/firmware/fpga/stm_sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
@@ -30,21 +30,22 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
 
   template <foci_range_c<N> R>
   AUTD3_API [[nodiscard]] static FociSTM from_freq(const Freq<float> freq, const R& iter) {
-    return FociSTM(STMSamplingModeFreq{freq}, iter);
+    return FociSTM(STMSamplingConfig::Freq(freq), iter);
   }
 
   template <foci_range_c<N> R>
   AUTD3_API [[nodiscard]] static FociSTM from_freq_nearest(const Freq<float> freq, const R& iter) {
-    return FociSTM(STMSamplingModeFreqNearest{freq}, iter);
+    return FociSTM(STMSamplingConfig::FreqNearest(freq), iter);
   }
 
   template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const native_methods::SamplingConfigWrap config, const R& iter) {
-    return FociSTM(STMSamplingModeSamplingConfig{config}, iter);
+  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const SamplingConfig config, const R& iter) {
+    return FociSTM(STMSamplingConfig::SamplingConfig(config), iter);
   }
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {
-    native_methods::FociSTMPtr ptr = std::visit([&](const auto s) { return s.template focus_ptr<N>(_points); }, _sampling);
+    native_methods::FociSTMPtr ptr =
+        validate(native_methods::AUTDSTMFoci(_sampling, reinterpret_cast<const void*>(_points.data()), static_cast<uint16_t>(_points.size()), N));
     ptr = AUTDSTMFociWithLoopBehavior(ptr, N, _loop_behavior);
     return ptr;
   }
@@ -75,14 +76,12 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
 
  private:
   template <foci_range_c<N> R>
-  AUTD3_API explicit FociSTM(const std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> sampling,
-                             const R& iter)
-      : _loop_behavior(LoopBehavior::Infinite), _sampling(sampling) {
+  AUTD3_API explicit FociSTM(const STMSamplingConfig sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite), _sampling(sampling) {
     for (auto e : iter) _points.push_back(ControlPoints<N>{std::move(e)});
   }
 
   std::vector<ControlPoints<N>> _points;
-  std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> _sampling;
+  STMSamplingConfig _sampling;
 };
 
 }  // namespace autd3::driver

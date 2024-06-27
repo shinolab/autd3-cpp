@@ -102,7 +102,6 @@ TEST(DriverGeomtry, TransducerLocal) {
 TEST(DriverGeomtry, DeviceRotation) {
   for (auto autd = create_controller(); auto& dev : autd.geometry()) {
     ASSERT_EQ(dev.rotation(), autd3::driver::Quaternion::Identity());
-    ;
   }
 }
 

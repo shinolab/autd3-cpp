@@ -31,7 +31,7 @@ TEST(DriverDatagramModulation, Cache) {
 
 class ForModulationCacheTest final : public autd3::modulation::Modulation<ForModulationCacheTest> {
  public:
-  AUTD3_API [[nodiscard]] std::vector<uint8_t> calc(const autd3::driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] std::vector<uint8_t> calc() const override {
     ++*_cnt;
     return {std::numeric_limits<uint8_t>::max(), std::numeric_limits<uint8_t>::max()};
   }
@@ -47,7 +47,7 @@ TEST(DriverDatagramModulation, CacheCheckOnce) {
 
   {
     size_t cnt = 0;
-    ForModulationCacheTest m(&cnt);
+    const ForModulationCacheTest m(&cnt);
     autd.send(m);
     ASSERT_EQ(cnt, 1);
     autd.send(m);
@@ -57,7 +57,7 @@ TEST(DriverDatagramModulation, CacheCheckOnce) {
   {
     size_t cnt = 0;
     ForModulationCacheTest g(&cnt);
-    auto gc = g.with_cache();
+    const auto gc = g.with_cache();
     autd.send(gc);
     ASSERT_EQ(cnt, 1);
     autd.send(gc);

@@ -26,9 +26,8 @@ class Transform final : public driver::ModulationBase<Transform<M, F>>,
     };
   }
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry& geometry) const override {
-    return native_methods::AUTDModulationWithTransform(_m.modulation_ptr(geometry), reinterpret_cast<const void*>(_f_native),
-                                                       static_cast<const void*>(this),
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    return native_methods::AUTDModulationWithTransform(_m.modulation_ptr(), reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this),
                                                        static_cast<native_methods::LoopBehavior>(this->_loop_behavior));
   }
 

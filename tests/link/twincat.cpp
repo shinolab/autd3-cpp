@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <autd3/controller/builder.hpp>
 #include <autd3/controller/controller.hpp>
 #include <autd3/link/twincat.hpp>
 

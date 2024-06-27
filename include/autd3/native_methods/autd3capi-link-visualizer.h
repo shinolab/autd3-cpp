@@ -35,19 +35,19 @@ enum class Directivity : uint8_t {
 };
 
 struct PlotRangePtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ConfigPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct NullPlotConfigPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct PlotConfigPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultPlotConfig {
@@ -57,7 +57,7 @@ struct ResultPlotConfig {
 };
 
 struct PyPlotConfigPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultPyPlotConfig {

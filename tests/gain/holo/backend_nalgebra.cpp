@@ -3,6 +3,6 @@
 #include <autd3/gain/holo/backend_nalgebra.hpp>
 
 TEST(GainHolo, BackendNewDelete) {
-  auto* backend = new autd3::gain::holo::NalgebraBackend;
+  const auto* backend = new autd3::gain::holo::NalgebraBackend;
   delete backend;
 }

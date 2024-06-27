@@ -15,11 +15,6 @@ concept device_range = std::ranges::viewable_range<R> && std::same_as<std::range
 
 class ControllerBuilder {
  public:
-  AUTD3_API ControllerBuilder with_ultrasound_freq(const driver::Freq<uint32_t> ultrasound_freq) {
-    _ptr = AUTDControllerBuilderWithUltrasoundFreq(_ptr, ultrasound_freq.hz());
-    return *this;
-  }
-
   AUTD3_API ControllerBuilder with_parallel_threshold(const size_t parallel_threshold) {
     _ptr = AUTDControllerBuilderWithParallelThreshold(_ptr, static_cast<uint16_t>(parallel_threshold));
     return *this;

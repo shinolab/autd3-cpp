@@ -132,15 +132,14 @@ class Controller {
     AUTD3_API void send() const {
       validate(AUTDWaitLocalResultI32(
           _controller._runtime,
-          AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), native_methods::ContextPtr{static_cast<const void*>(this)},
-                              _controller._geometry.ptr(), _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()))));
+          AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), _controller._geometry.ptr(),
+                              _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()))));
     }
 
 #ifdef AUTD3_ASYNC_API
     AUTD3_API [[nodiscard]] coro::task<void> send_async() {
-      auto future =
-          AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), native_methods::ContextPtr{static_cast<const void*>(this)},
-                              _controller._geometry.ptr(), _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()));
+      auto future = AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this),
+                                        _controller._geometry.ptr(), _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()));
       auto ptr = co_await wait_future(_controller._runtime, std::move(future));
       validate(ptr);
     }

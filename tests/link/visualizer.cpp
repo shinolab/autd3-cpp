@@ -29,7 +29,7 @@ void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>
   ASSERT_EQ(modulation.size(), 2);
   ASSERT_TRUE(std::ranges::all_of(modulation, [](auto m) { return m == 0x82; }));
 
-  std::vector<autd3::driver::Vector3> points{center};
+  const std::vector points{center};
   (void)autd.link().calc_field(points, autd.geometry(), autd3::native_methods::Segment::S0, 0);
 
   autd.close();

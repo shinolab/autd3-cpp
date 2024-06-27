@@ -20,10 +20,10 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
   Cache& operator=(Cache&& obj) noexcept = delete;
   ~Cache() noexcept override = default;  // LCOV_EXCL_LINE
 
-  AUTD3_API const std::vector<driver::EmitIntensity>& calc(const driver::geometry::Geometry& geometry) const { return init(geometry); }
+  AUTD3_API const std::vector<driver::EmitIntensity>& calc() const { return init(); }
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry& geometry) const override {
-    const auto& buf = calc(geometry);
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    const auto& buf = calc();
     return native_methods::AUTDModulationRaw(_sampling_config.value(), this->_loop_behavior, reinterpret_cast<const uint8_t*>(buf.data()),
                                              static_cast<uint16_t>(buf.size()));
   }
@@ -37,9 +37,9 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
   AUTD3_API [[nodiscard]] const driver::EmitIntensity& operator[](const size_t i) const { return _cache->at(i); }
 
  private:
-  AUTD3_API const std::vector<driver::EmitIntensity>& init(const driver::geometry::Geometry& geometry) const {
+  AUTD3_API const std::vector<driver::EmitIntensity>& init() const {
     if (_cache->size() == 0) {
-      const auto res = native_methods::AUTDModulationCalc(_m.modulation_ptr(geometry), geometry.ptr());
+      const auto res = native_methods::AUTDModulationCalc(_m.modulation_ptr());
       const auto ptr = validate(res);
       _cache->resize(native_methods::AUTDModulationCalcGetSize(ptr), driver::EmitIntensity(0));
       _sampling_config = res.config;

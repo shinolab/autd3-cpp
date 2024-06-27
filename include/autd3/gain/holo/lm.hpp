@@ -15,7 +15,7 @@ class LM final : public Holo<LM<B>> {
  public:
   template <holo_foci_range R>
   AUTD3_API explicit LM(std::shared_ptr<B> holo_backend, R&& iter)
-      : Holo<LM>(EmissionConstraint::DontCare, std::forward<R>(iter)),
+      : Holo<LM>(EmissionConstraint::Clamp(0x00, 0xFF), std::forward<R>(iter)),
         _eps1(1e-8f),
         _eps2(1e-8f),
         _tau(1e-3f),

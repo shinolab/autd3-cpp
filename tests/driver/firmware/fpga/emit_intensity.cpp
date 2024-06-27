@@ -2,7 +2,6 @@
 
 #include <autd3/driver/firmware/fpga/emit_intensity.hpp>
 #include <cmath>
-#include <numbers>
 
 TEST(DriverFirmwareFPGA, EmitIntensity) {
   for (int i = 0; i <= 0xFF; i++) {

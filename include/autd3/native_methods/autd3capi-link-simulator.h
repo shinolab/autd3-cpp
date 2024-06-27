@@ -8,7 +8,7 @@
 namespace autd3::native_methods {
 
 struct LinkSimulatorBuilderPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultLinkSimulatorBuilder {

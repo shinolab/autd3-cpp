@@ -53,7 +53,6 @@ TEST(Modulation, SineWithMode) {
 }
 
 TEST(Modulation, SineDefault) {
-  auto autd = create_controller();
   const autd3::modulation::Sine m(150.0f * autd3::driver::Hz);
-  ASSERT_TRUE(AUTDModulationSineIsDefault(m.modulation_ptr(autd.geometry())));
+  ASSERT_TRUE(AUTDModulationSineIsDefault(m.modulation_ptr()));
 }

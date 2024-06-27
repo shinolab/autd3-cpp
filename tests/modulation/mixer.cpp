@@ -9,7 +9,7 @@ TEST(Modulation, MixerExact) {
   auto autd = create_controller();
 
   std::vector f{50, 100, 150, 200, 250};
-  auto m =
+  const auto m =
       autd3::modulation::Mixer(f | std::ranges::views::transform([](const uint32_t x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
 
   autd.send(m);
@@ -28,7 +28,8 @@ TEST(Modulation, MixerExactFloat) {
   auto autd = create_controller();
 
   std::vector f{50.f, 100.f, 150.f, 200.f, 250.f};
-  auto m = autd3::modulation::Mixer(f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
+  const auto m =
+      autd3::modulation::Mixer(f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
 
   autd.send(m);
 
@@ -46,7 +47,7 @@ TEST(Modulation, MixerNearest) {
   auto autd = create_controller();
 
   std::vector f{50.f, 100.f};
-  auto m = autd3::modulation::Mixer(
+  const auto m = autd3::modulation::Mixer(
       f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine::with_freq_nearest(x * autd3::driver::Hz); }));
   autd.send(m);
 
@@ -64,6 +65,6 @@ TEST(Modulation, MixerNearest) {
 TEST(Modulation, MixerInvalidMix) {
   auto autd = create_controller();
 
-  auto m = autd3::modulation::Mixer({autd3::modulation::Sine(50 * autd3::driver::Hz), autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
+  const auto m = autd3::modulation::Mixer({autd3::modulation::Sine(50 * autd3::driver::Hz), autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
   ASSERT_THROW(autd.send(m), autd3::AUTDException);
 }

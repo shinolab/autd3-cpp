@@ -70,11 +70,21 @@ enum class GainSTMMode : uint8_t {
   PhaseHalf = 2,
 };
 
+enum class STMSamplingConfigTag : uint8_t {
+  Freq = 1,
+  FreqNearest = 2,
+  Period = 3,
+  PeriodNearest = 4,
+  SamplingConfig = 5,
+};
+
 enum class SamplingConfigTag : uint8_t {
   Division = 0,
   DivisionRaw = 1,
   Freq = 2,
   FreqNearest = 3,
+  Period = 4,
+  PeriodNearest = 5,
 };
 
 enum class Segment : uint8_t {
@@ -95,10 +105,6 @@ enum class TransitionModeTag : uint8_t {
   Immediate = 4,
 };
 
-struct ContextPtr {
-  const void* _0;
-};
-
 struct LoopBehavior {
   uint32_t rep;
 };
@@ -112,6 +118,7 @@ union SamplingConfigValue {
   uint32_t div;
   uint32_t freq;
   float freq_nearest;
+  uint64_t period_ns;
 };
 
 struct SamplingConfigWrap {
@@ -120,39 +127,57 @@ struct SamplingConfigWrap {
 };
 
 struct DevicePtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct TransducerPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct GeometryPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ModulationPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct GainPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct LinkPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct DatagramPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct LinkBuilderPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultI32 {
   int32_t result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct ResultU32 {
+  uint32_t result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct ResultF32 {
+  float result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct ResultU64 {
+  uint64_t result;
   uint32_t err_len;
   const void* err;
 };
@@ -175,11 +200,11 @@ struct Drive {
 };
 
 struct GainSTMPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct FociSTMPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultGainSTM {
@@ -197,6 +222,23 @@ struct ResultFociSTM {
 struct DebugTypeWrap {
   DebugTypeTag ty;
   uint16_t value;
+};
+
+union STMSamplingConfigValue {
+  float freq;
+  uint64_t period_ns;
+  SamplingConfigWrap sampling_config;
+};
+
+struct STMSamplingConfigWrap {
+  STMSamplingConfigTag tag;
+  STMSamplingConfigValue value;
+};
+
+struct ResultSamplingConfigWrap {
+  SamplingConfigWrap result;
+  uint32_t err_len;
+  const void* err;
 };
 
 } // namespace autd3::native_methods

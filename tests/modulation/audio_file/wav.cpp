@@ -20,9 +20,3 @@ TEST(Modulation, Wav) {
     ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
-
-TEST(Modulation, WavDefault) {
-  auto autd = create_controller();
-  const auto m = autd3::modulation::audio_file::Wav(std::filesystem::path(""));
-  ASSERT_TRUE(AUTDModulationWavIsDefault(m.modulation_ptr(autd.geometry())));
-}

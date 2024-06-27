@@ -13,14 +13,14 @@ TEST(DriverDatagram, Silencer) {
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  autd.send(autd3::driver::Silencer::fixed_completion_steps(1, 2));
+  autd.send(autd3::driver::Silencer::from_completion_steps(1, 2));
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(1, autd.link().silencer_completion_steps_intensity(dev.idx()));
     ASSERT_EQ(2, autd.link().silencer_completion_steps_phase(dev.idx()));
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  autd.send(autd3::driver::Silencer::fixed_update_rate(10, 20));
+  autd.send(autd3::driver::Silencer::from_update_rate(10, 20));
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(10, autd.link().silencer_update_rate_intensity(dev.idx()));
     ASSERT_EQ(20, autd.link().silencer_update_rate_phase(dev.idx()));

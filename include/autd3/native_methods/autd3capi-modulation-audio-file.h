@@ -9,20 +9,20 @@ namespace autd3::native_methods {
 
 extern "C" {
 
-[[nodiscard]] ResultModulation AUTDModulationWav(const char *path, LoopBehavior loop_behavior);
-
-[[nodiscard]] bool AUTDModulationWavIsDefault(ModulationPtr wav);
+[[nodiscard]]
+ResultModulation AUTDModulationAudioFileWav(const char *path,
+                                            LoopBehavior loop_behavior);
 
 [[nodiscard]]
-ResultModulation AUTDModulationRawPCM(const char *path,
-                                      uint32_t sample_rate,
-                                      LoopBehavior loop_behavior);
+ResultModulation AUTDModulationAudioFileRawPCM(const char *path,
+                                               uint32_t sample_rate,
+                                               LoopBehavior loop_behavior);
 
 [[nodiscard]]
-ResultModulation AUTDModulationCsv(const char *path,
-                                   uint32_t sample_rate,
-                                   uint8_t deliminator,
-                                   LoopBehavior loop_behavior);
+ResultModulation AUTDModulationAudioFileCsv(const char *path,
+                                            uint32_t sample_rate,
+                                            uint8_t deliminator,
+                                            LoopBehavior loop_behavior);
 
 } // extern "C"
 

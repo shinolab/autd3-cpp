@@ -15,7 +15,7 @@ class SDP final : public Holo<SDP<B>> {
  public:
   template <holo_foci_range R>
   AUTD3_API explicit SDP(std::shared_ptr<B> holo_backend, R&& iter)
-      : Holo<SDP>(EmissionConstraint::DontCare, std::forward<R>(iter)),
+      : Holo<SDP>(EmissionConstraint::Clamp(0x00, 0xFF), std::forward<R>(iter)),
         _alpha(1e-3f),
         _repeat(100),
         _lambda(0.9f),

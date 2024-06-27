@@ -37,7 +37,6 @@ TEST(Modulation, SquareWithMode) {
 }
 
 TEST(Modulation, SquareDefault) {
-  auto autd = create_controller();
   const auto m = autd3::modulation::Square(150.0f * autd3::driver::Hz);
-  ASSERT_TRUE(AUTDModulationSquareIsDefault(m.modulation_ptr(autd.geometry())));
+  ASSERT_TRUE(AUTDModulationSquareIsDefault(m.modulation_ptr()));
 }

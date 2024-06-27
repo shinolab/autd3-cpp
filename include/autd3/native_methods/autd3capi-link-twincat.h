@@ -8,11 +8,11 @@
 namespace autd3::native_methods {
 
 struct LinkTwinCATBuilderPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct LinkRemoteTwinCATBuilderPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultLinkRemoteTwinCATBuilder {

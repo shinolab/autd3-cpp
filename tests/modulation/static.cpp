@@ -7,7 +7,7 @@
 TEST(Modulation, Static) {
   auto autd = create_controller();
 
-  auto m = autd3::modulation::Static::with_intensity(32);
+  const auto m = autd3::modulation::Static::with_intensity(32);
   autd.send(m);
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -18,7 +18,6 @@ TEST(Modulation, Static) {
 }
 
 TEST(Modulation, StaticDefault) {
-  auto autd = create_controller();
   const auto m = autd3::modulation::Static();
-  ASSERT_TRUE(AUTDModulationStaticIsDefault(m.modulation_ptr(autd.geometry())));
+  ASSERT_TRUE(AUTDModulationStaticIsDefault(m.modulation_ptr()));
 }

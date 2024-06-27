@@ -50,7 +50,7 @@ TEST(DriverDatagramGain, CacheCheckOnce) {
 
   {
     size_t cnt = 0;
-    ForCacheTest g(&cnt);
+    const ForCacheTest g(&cnt);
     autd.send(g);
     ASSERT_EQ(cnt, 1);
     autd.send(g);
@@ -60,7 +60,7 @@ TEST(DriverDatagramGain, CacheCheckOnce) {
   {
     size_t cnt = 0;
     ForCacheTest g(&cnt);
-    auto gc = g.with_cache();
+    const auto gc = g.with_cache();
     ASSERT_EQ(cnt, 0);
     gc.init(autd.geometry());
     ASSERT_EQ(cnt, 1);
@@ -76,7 +76,7 @@ TEST(DriverDatagramGain, CacheCheckOnlyForEnabled) {
   autd.geometry()[0].set_enable(false);
 
   size_t cnt = 0;
-  auto g = ForCacheTest(&cnt).with_cache();
+  const auto g = ForCacheTest(&cnt).with_cache();
   autd.send(g);
 
   ASSERT_FALSE(g.drives().contains(0));

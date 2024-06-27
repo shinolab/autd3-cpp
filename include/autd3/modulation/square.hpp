@@ -27,7 +27,7 @@ class Square final : public driver::Modulation<Square> {
   AUTD3_DEF_PARAM_INT(Square, uint8_t, low)
   AUTD3_DEF_PARAM_INT(Square, uint8_t, high)
   AUTD3_DEF_PARAM(Square, float, duty)
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     return std::visit([&](const auto& f) { return f.square_ptr(_sampling_config, _low, _high, _duty, _loop_behavior); }, _freq);
   }
 

@@ -30,6 +30,6 @@ TEST(GainHolo, Greedy) {
 TEST(GainHolo, GreedyDefault) {
   auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
-  auto g = autd3::gain::holo::Greedy(foci);
+  const auto g = autd3::gain::holo::Greedy(foci);
   ASSERT_TRUE(autd3::native_methods::AUTDGainGreedyIsDefault(g.gain_ptr(autd.geometry())));
 }

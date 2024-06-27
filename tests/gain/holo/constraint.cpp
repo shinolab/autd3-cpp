@@ -12,8 +12,8 @@ TEST(GainHolo, ConstraintUniform) {
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
       {autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.geometry().center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
-  auto g = autd3::gain::holo::Naive(std::move(backend), foci)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
+  const auto g = autd3::gain::holo::Naive(std::move(backend), foci)
+                     .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   autd.send(g);
 
@@ -31,7 +31,7 @@ TEST(GainHolo, ConstraintNormalize) {
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
       {autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.geometry().center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
-  auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::Normalize);
+  const auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::Normalize);
 
   autd.send(g);
 
@@ -49,32 +49,15 @@ TEST(GainHolo, ConstraintClamp) {
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
       {autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.geometry().center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
-  auto g = autd3::gain::holo::Naive(std::move(backend), foci)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(autd3::driver::EmitIntensity(67), autd3::driver::EmitIntensity(85)));
+  const auto g =
+      autd3::gain::holo::Naive(std::move(backend), foci)
+          .with_constraint(autd3::gain::holo::EmissionConstraint::Clamp(autd3::driver::EmitIntensity(67), autd3::driver::EmitIntensity(85)));
 
   autd.send(g);
 
   for (auto& dev : autd.geometry()) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return 67 <= d.intensity.value() && d.intensity.value() <= 85; }));
-    ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
-  }
-}
-
-TEST(GainHolo, ConstraintDontCare) {
-  auto autd = create_controller();
-
-  auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
-      {autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
-      {autd.geometry().center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
-  auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::DontCare);
-
-  autd.send(g);
-
-  for (auto& dev : autd.geometry()) {
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.intensity.value() != 0; }));
     ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
   }
 }
@@ -86,7 +69,7 @@ TEST(GainHolo, ConstraintMultiply) {
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
       {autd.geometry().center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.geometry().center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
-  auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::Multiply(0));
+  const auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::Multiply(0));
 
   autd.send(g);
 

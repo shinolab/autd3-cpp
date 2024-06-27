@@ -3,7 +3,6 @@
 #include <filesystem>
 
 #include "autd3/driver/datagram/modulation/modulation.hpp"
-#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
@@ -16,8 +15,8 @@ class Wav final : public driver::ModulationBase<Wav>,
  public:
   AUTD3_API explicit Wav(std::filesystem::path path) : _path(std::move(path)) {}
 
-  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr(const driver::geometry::Geometry&) const override {
-    return validate(AUTDModulationWav(_path.string().c_str(), _loop_behavior));
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    return validate(AUTDModulationAudioFileWav(_path.string().c_str(), _loop_behavior));
   }
 
  private:

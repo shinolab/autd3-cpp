@@ -1,6 +1,5 @@
 #pragma once
 
-#include <memory>
 #include <optional>
 #include <shared_mutex>
 #include <unordered_map>
@@ -43,8 +42,7 @@ class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
   PulseWidthEncoder(PulseWidthEncoder&& other) noexcept : _f(std::move(other._f)), _f_native(other._f_native) {}  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return _f.has_value() ? AUTDDatagramPulseWidthEncoder(reinterpret_cast<const void*>(_f_native),
-                                                          native_methods::ContextPtr{static_cast<const void*>(this)}, geometry.ptr())
+    return _f.has_value() ? AUTDDatagramPulseWidthEncoder(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr())
                           : native_methods::AUTDDatagramPulseWidthEncoderDefault();
   }
 

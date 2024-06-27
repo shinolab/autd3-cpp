@@ -2,14 +2,13 @@
 
 #include <memory>
 #include <ranges>
-#include <variant>
 
 #include "autd3/driver/datagram/gain/base.hpp"
-#include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
+#include "autd3/driver/firmware/fpga/stm_sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
@@ -31,7 +30,7 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
 
   template <gain_range R>
   AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<float> freq, const R& iter) {
-    return GainSTM(STMSamplingModeFreq{freq}, iter);
+    return GainSTM(STMSamplingConfig::Freq(freq), iter);
   }
   template <gain G>
   AUTD3_API [[nodiscard]] static GainSTM from_freq(const Freq<float> freq, std::initializer_list<G> iter) {
@@ -39,18 +38,18 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   }
   template <gain_range R>
   AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<float> freq, const R& iter) {
-    return GainSTM(STMSamplingModeFreqNearest{freq}, iter);
+    return GainSTM(STMSamplingConfig::FreqNearest(freq), iter);
   }
   template <gain G>
   AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<float> freq, std::initializer_list<G> iter) {
     return GainSTM::from_freq_nearest(freq, std::vector(iter));
   }
   template <gain_range R>
-  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const native_methods::SamplingConfigWrap config, const R& iter) {
-    return GainSTM(STMSamplingModeSamplingConfig{config}, iter);
+  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const SamplingConfig config, const R& iter) {
+    return GainSTM(STMSamplingConfig::SamplingConfig(config), iter);
   }
   template <gain G>
-  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const native_methods::SamplingConfigWrap config, std::initializer_list<G> iter) {
+  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const SamplingConfig config, std::initializer_list<G> iter) {
     return GainSTM::from_sampling_config(config, std::vector(iter));
   }
 
@@ -58,7 +57,7 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
     std::vector<native_methods::GainPtr> gains;
     gains.reserve(_gains.size());
     std::ranges::transform(_gains, std::back_inserter(gains), [&](const auto& gain) { return gain->gain_ptr(geometry); });
-    native_methods::GainSTMPtr ptr = std::visit([&](const auto s) { return s.gain_ptr(gains); }, _sampling);
+    native_methods::GainSTMPtr ptr = validate(AUTDSTMGain(_sampling, gains.data(), static_cast<uint16_t>(gains.size())));
     ptr = AUTDSTMGainWithMode(ptr, _mode);
     ptr = AUTDSTMGainWithLoopBehavior(ptr, _loop_behavior);
     return ptr;
@@ -90,15 +89,14 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
 
  private:
   template <gain_range R>
-  AUTD3_API explicit GainSTM(const std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> sampling,
-                             const R& iter)
+  AUTD3_API explicit GainSTM(const STMSamplingConfig sampling, const R& iter)
       : _loop_behavior(LoopBehavior::Infinite), _mode(native_methods::GainSTMMode::PhaseIntensityFull), _sampling(sampling) {
     for (auto e : iter)
       _gains.emplace_back(std::make_shared<std::remove_reference_t<std::ranges::range_value_t<R>>>(std::forward<std::ranges::range_value_t<R>>(e)));
   }
 
   std::vector<std::shared_ptr<GainBase>> _gains;
-  std::variant<STMSamplingModeFreq, STMSamplingModeFreqNearest, STMSamplingModeSamplingConfig> _sampling;
+  STMSamplingConfig _sampling;
 };
 
 }  // namespace autd3::driver

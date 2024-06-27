@@ -20,15 +20,15 @@ enum class TimerStrategy : uint8_t {
 };
 
 struct EthernetAdaptersPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct LinkSOEMBuilderPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct LinkRemoteSOEMBuilderPtr {
-  const void* _0;
+  const void *_0;
 };
 
 struct ResultLinkRemoteSOEMBuilder {

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <autd3/gain/holo/amplitude.hpp>
-#include <numbers>
 
 TEST(GainHolo, AmplitudeDB) {
   const auto amp = 121.5 * autd3::gain::holo::dB;

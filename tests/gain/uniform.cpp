@@ -17,6 +17,6 @@ TEST(Gain, Uniform) {
 
 TEST(Gain, UniformDefault) {
   auto autd = create_controller();
-  auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00));
+  const auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00));
   ASSERT_TRUE(autd3::native_methods::AUTDGainUniformIsDefault(g.gain_ptr(autd.geometry())));
 }

@@ -1,7 +1,6 @@
 #include <gtest/gtest.h>
 
 #include <autd3/driver/geometry/geometry.hpp>
-#include <ranges>
 
 #include "utils.hpp"
 

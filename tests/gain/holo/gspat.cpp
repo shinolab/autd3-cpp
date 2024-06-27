@@ -12,12 +12,13 @@ TEST(GainHolo, GSPAT) {
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<float> p{-30, 30};
-  auto g = autd3::gain::holo::GSPAT(std::move(backend), p | std::ranges::views::transform([&](auto x) {
-                                                          autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                                                          return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
-                                                        }))
-               .with_repeat(100)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
+  const auto g = autd3::gain::holo::GSPAT(std::move(backend), p | std::ranges::views::transform([&](auto x) {
+                                                                autd3::driver::Vector3 p =
+                                                                    autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                                                return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
+                                                              }))
+                     .with_repeat(100)
+                     .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   autd.send(g);
 
@@ -32,7 +33,7 @@ TEST(GainHolo, GSPATDefault) {
   auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
-  auto g = autd3::gain::holo::GSPAT(std::move(backend), foci);
+  const auto g = autd3::gain::holo::GSPAT(std::move(backend), foci);
   ASSERT_TRUE(autd3::native_methods::AUTDGainGSPATIsDefault(g.gain_ptr(autd.geometry())));
 }
 
@@ -45,12 +46,13 @@ TEST(GainHolo, GSPAT_CUDA) {
 
   auto backend = std::make_shared<autd3::gain::holo::CUDABackend>();
   std::vector<float> p{-30, 30};
-  auto g = autd3::gain::holo::GSPAT(std::move(backend), p | std::ranges::views::transform([&](auto x) {
-                                                          autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
-                                                          return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
-                                                        }))
-               .with_repeat(100)
-               .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
+  const auto g = autd3::gain::holo::GSPAT(std::move(backend), p | std::ranges::views::transform([&](auto x) {
+                                                                autd3::driver::Vector3 p =
+                                                                    autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                                                return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
+                                                              }))
+                     .with_repeat(100)
+                     .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
 
   autd.send(g);
 

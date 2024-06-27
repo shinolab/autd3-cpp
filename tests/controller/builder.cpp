@@ -23,11 +23,3 @@ TEST(Controller, BuilderAsync) {
   sync_wait(autd.close_async());
 }
 #endif
-
-TEST(Controller, BuilderWithUltrasoundFreq) {
-  auto autd = autd3::controller::ControllerBuilder(std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
-                  .with_ultrasound_freq(41 * autd3::driver::kHz)
-                  .open(autd3::link::Audit::builder());
-  ASSERT_EQ(41000, autd.link().ultrasound_freq(0));
-  autd.close();
-}

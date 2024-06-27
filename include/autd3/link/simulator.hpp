@@ -21,7 +21,7 @@ class Simulator final {
   native_methods::RuntimePtr _runtime;
   native_methods::LinkPtr _ptr;
 
-  explicit Simulator(native_methods::RuntimePtr runtime, const native_methods::LinkPtr ptr) : _runtime(runtime), _ptr(ptr) {}
+  explicit Simulator(const native_methods::RuntimePtr runtime, const native_methods::LinkPtr ptr) : _runtime(runtime), _ptr(ptr) {}
 
  public:
   class Builder final {
@@ -62,8 +62,8 @@ class Simulator final {
 
 #ifdef AUTD3_ASYNC_API
   [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const {
-    auto future = AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr());
-    auto result = co_await wait_future(_runtime, future);
+    const auto future = AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr());
+    const auto result = co_await wait_future(_runtime, future);
     co_return validate(result) == native_methods::AUTD3_TRUE;
   }
 #endif

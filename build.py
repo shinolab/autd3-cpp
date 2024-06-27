@@ -255,6 +255,9 @@ def cpp_test(args):
             if config.release:
                 command.append("--config")
                 command.append("Release")
+            if config.is_windows():
+                command.append("--")
+                command.append("/maxcpucount:8")
             subprocess.run(command).check_returncode()
 
             target_dir = "."

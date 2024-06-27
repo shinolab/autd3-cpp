@@ -32,7 +32,7 @@ class Gain : public driver::Gain<G> {
           const driver::geometry::Transducer tr(tr_idx, dev_ptr);
           *dst = static_cast<const Gain*>(context)->_f(dev)(tr);
         };
-    return AUTDGainCustom(reinterpret_cast<const void*>(_f_native), native_methods::ContextPtr{static_cast<const void*>(this)}, geometry.ptr());
+    return AUTDGainCustom(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
   }
 
   template <gain_transform Fn>

@@ -48,8 +48,7 @@ class DebugSettings final : public IntoDatagramTuple<DebugSettings<F>>,
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return AUTDDatagramDebugSettings(reinterpret_cast<const void*>(_f_native), native_methods::ContextPtr{static_cast<const void*>(this)},
-                                     geometry.ptr());
+    return AUTDDatagramDebugSettings(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
   }
 
  private:

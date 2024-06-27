@@ -33,7 +33,7 @@ TEST(DriverDatagramSTM, FociSTM) {
   {
     auto stm = autd3::driver::FociSTM<1>::from_freq_nearest(
         1.0f * autd3::driver::Hz,
-        std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }));
+        std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints{std::array{center}}; }));
     autd.send(stm);
     for (const auto& dev : autd.geometry()) {
       ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
@@ -78,7 +78,7 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::FociSTM<1>::from_freq(
       1.0f * autd3::driver::Hz,
-      std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }));
+      std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints{std::array{center}}; }));
 
   autd.send(stm);
   infos = autd.fpga_state();
@@ -98,7 +98,7 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
 
   autd.send(autd3::driver::FociSTM<1>::from_freq(1.0f * autd3::driver::Hz,
                                                  std::views::iota(0) | std::views::take(2) |
-                                                     std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }))
+                                                     std::views::transform([&](auto) { return autd3::driver::ControlPoints{std::array{center}}; }))
                 .with_segment(Segment::S0, std::nullopt));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
@@ -124,7 +124,7 @@ void test_foci_stm_n() {
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
 
-  const auto size = 2;
+  constexpr auto size = 2;
   std::array<autd3::driver::Vector3, N> points;
   points.fill(center);
   auto stm = autd3::driver::FociSTM<N>::from_sampling_config(autd3::driver::SamplingConfig::Division(512),

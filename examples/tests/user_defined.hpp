@@ -7,14 +7,13 @@
 
 class BurstModulation final : public autd3::derive::Modulation<BurstModulation> {
  public:
-  [[nodiscard]] autd3::derive::ModulationCalcResult calc(const autd3::Geometry&) const override {
+  [[nodiscard]] autd3::derive::ModulationCalcResult calc() const override {
     std::vector<uint8_t> buffer(_buf_size, std::numeric_limits<uint8_t>::min());
     buffer[_buf_size - 1] = std::numeric_limits<uint8_t>::max();
     return buffer;
   }
 
-  explicit BurstModulation(const size_t buf_size = 4000,
-                           const autd3::native_methods::SamplingConfigWrap config = autd3::SamplingConfig::Freq(4000 * autd3::Hz)) noexcept
+  explicit BurstModulation(const size_t buf_size = 4000, const autd3::SamplingConfig config = autd3::SamplingConfig::Freq(4000 * autd3::Hz)) noexcept
       : Modulation(config), _buf_size(buf_size) {}
 
  private:
