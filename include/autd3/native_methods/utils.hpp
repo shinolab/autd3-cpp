@@ -88,12 +88,9 @@
 
 namespace autd3::native_methods {
 
-template <class T>
-concept result_ptr = requires(T& x) { x.result._0; };
-
-template <result_ptr T>
+template <typename T>
 constexpr auto validate(T res) {
-  if (res.result._0 == nullptr) {
+  if (res.err_len != 0) {
     const std::string err(res.err_len, ' ');
     AUTDGetErr(res.err, const_cast<char*>(err.c_str()));
     throw AUTDException(err);

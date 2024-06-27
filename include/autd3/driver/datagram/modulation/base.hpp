@@ -5,6 +5,7 @@
 #include "autd3/driver/datagram/with_segment_transition.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -45,6 +46,10 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
   }
 
   AUTD3_API [[nodiscard]] native_methods::LoopBehavior loop_behavior() const noexcept { return _loop_behavior; }
+
+  AUTD3_API [[nodiscard]] driver::SamplingConfig sampling_config() const {
+    return driver::SamplingConfig{AUTDModulationSamplingConfig(modulation_ptr())};
+  }
 
  protected:
   native_methods::LoopBehavior _loop_behavior;
