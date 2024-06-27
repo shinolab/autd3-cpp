@@ -4,6 +4,7 @@
 
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/native_methods.hpp"
+#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
 
