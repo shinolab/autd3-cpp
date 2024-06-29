@@ -44,13 +44,15 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   AUTD3_API [[nodiscard]] static GainSTM from_freq_nearest(const Freq<float> freq, std::initializer_list<G> iter) {
     return GainSTM::from_freq_nearest(freq, std::vector(iter));
   }
-  template <gain_range R>
-  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const SamplingConfig config, const R& iter) {
-    return GainSTM(STMSamplingConfig::SamplingConfig(config), iter);
+  template <gain_range R, typename T>
+    requires std::constructible_from<SamplingConfig, T>
+  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const T config, const R& iter) {
+    return GainSTM(STMSamplingConfig::SamplingConfig(SamplingConfig(config)), iter);
   }
-  template <gain G>
-  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const SamplingConfig config, std::initializer_list<G> iter) {
-    return GainSTM::from_sampling_config(config, std::vector(iter));
+  template <gain G, typename T>
+    requires std::constructible_from<SamplingConfig, T>
+  AUTD3_API [[nodiscard]] static GainSTM from_sampling_config(const T config, std::initializer_list<G> iter) {
+    return GainSTM::from_sampling_config(SamplingConfig(config), std::vector(iter));
   }
 
   AUTD3_API [[nodiscard]] native_methods::GainSTMPtr raw_ptr(const geometry::Geometry& geometry) const override {

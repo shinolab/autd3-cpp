@@ -38,9 +38,10 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
     return FociSTM(STMSamplingConfig::FreqNearest(freq), iter);
   }
 
-  template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const SamplingConfig config, const R& iter) {
-    return FociSTM(STMSamplingConfig::SamplingConfig(config), iter);
+  template <foci_range_c<N> R, typename T>
+    requires std::constructible_from<SamplingConfig, T>
+  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const T config, const R& iter) {
+    return FociSTM(STMSamplingConfig::SamplingConfig(SamplingConfig(config)), iter);
   }
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {
