@@ -98,7 +98,7 @@ ResultFPGAStateList AUTDWaitResultFPGAStateList(RuntimePtr runtime,
 ResultFirmwareVersionList AUTDWaitResultFirmwareVersionList(RuntimePtr runtime,
                                                             FfiFutureResultFirmwareVersionList future);
 
-void AUTDTracingInit(uint8_t level);
+void AUTDTracingInit();
 
 [[nodiscard]] FfiFutureResultI32 AUTDControllerClose(ControllerPtr cnt);
 

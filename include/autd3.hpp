@@ -44,7 +44,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "26.0.0-rc.0";
+static inline std::string version = "26.0.0";
 
 using autd3::driver::deg;
 using autd3::driver::Hz;
@@ -105,15 +105,7 @@ using driver::Vector3;
 using controller::Controller;
 using controller::ControllerBuilder;
 
-enum class Level : uint8_t {
-  Error = native_methods::TRACE_LEVEL_ERROR,
-  Warn = native_methods::TRACE_LEVEL_WARN,
-  Info = native_methods::TRACE_LEVEL_INFO,
-  Debug = native_methods::TRACE_LEVEL_DEBUG,
-  Trace = native_methods::TRACE_LEVEL_TRACE
-};
-
-inline void tracing_init(const Level level) { native_methods::AUTDTracingInit(static_cast<uint8_t>(level)); }
+inline void tracing_init() { native_methods::AUTDTracingInit(); }
 
 namespace derive {
 using gain::Gain;

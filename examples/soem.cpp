@@ -1,5 +1,7 @@
 #include "autd3/link/soem.hpp"
 
+#include <stdlib.h>
+
 #include <iostream>
 
 #include "autd3.hpp"
@@ -7,7 +9,13 @@
 #include "util.hpp"
 
 int main() try {
-  tracing_init(autd3::Level::Info);
+#ifdef WIN32
+  _putenv_s("RUST_LOG", "autd3=INFO");
+#else
+  setenv("RUST_LOG", "autd3=INFO", false);
+#endif
+
+  autd3::tracing_init();
 
   auto autd =
       autd3::ControllerBuilder(std::vector{autd3::AUTD3(autd3::Vector3::Zero())})

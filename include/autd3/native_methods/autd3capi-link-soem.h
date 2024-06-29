@@ -39,7 +39,7 @@ struct ResultLinkRemoteSOEMBuilder {
 
 extern "C" {
 
-void AUTDAUTDLinkSOEMTracingInit(uint8_t level);
+void AUTDAUTDLinkSOEMTracingInit();
 
 [[nodiscard]] EthernetAdaptersPtr AUTDAdapterPointer();
 

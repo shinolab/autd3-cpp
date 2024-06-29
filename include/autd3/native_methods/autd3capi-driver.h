@@ -7,16 +7,6 @@
 
 namespace autd3::native_methods {
 
-constexpr const uint8_t TRACE_LEVEL_ERROR = 1;
-
-constexpr const uint8_t TRACE_LEVEL_WARN = 2;
-
-constexpr const uint8_t TRACE_LEVEL_INFO = 3;
-
-constexpr const uint8_t TRACE_LEVEL_DEBUG = 4;
-
-constexpr const uint8_t TRACE_LEVEL_TRACE = 5;
-
 constexpr const uint32_t NUM_TRANS_IN_UNIT = 249;
 
 constexpr const uint32_t NUM_TRANS_IN_X = 18;
