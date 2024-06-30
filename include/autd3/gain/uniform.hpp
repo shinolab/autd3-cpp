@@ -12,7 +12,11 @@ namespace autd3::gain {
 
 class Uniform final : public driver::Gain<Uniform> {
  public:
-  AUTD3_API explicit Uniform(const driver::EmitIntensity intensity) : _intensity(intensity), _phase(driver::Phase(0)) {}
+  template <std::integral I>
+  AUTD3_API explicit Uniform(const I intensity)
+      : Uniform(driver::EmitIntensity(intensity)) {}
+  AUTD3_API explicit Uniform(const driver::EmitIntensity intensity)
+      : _intensity(intensity), _phase(driver::Phase(0)) {}
   Uniform() = delete;
   Uniform(const Uniform& obj) = default;             // LCOV_EXCL_LINE
   Uniform& operator=(const Uniform& obj) = default;  // LCOV_EXCL_LINE
@@ -23,7 +27,8 @@ class Uniform final : public driver::Gain<Uniform> {
   AUTD3_DEF_PROP(driver::EmitIntensity, intensity)
   AUTD3_DEF_PARAM_PHASE(Uniform, phase)
 
-  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
+  AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(
+      const driver::geometry::Geometry&) const override {
     return native_methods::AUTDGainUniform(_intensity.value(), _phase.value());
   }
 };
