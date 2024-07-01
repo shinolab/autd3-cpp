@@ -9,20 +9,28 @@ TEST(Modulation, FourierExact) {
   auto autd = create_controller();
 
   std::vector f{50, 100, 150, 200, 250};
-  const auto m =
-      autd3::modulation::Fourier(f | std::ranges::views::transform([](const uint32_t x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
+  const auto m = autd3::modulation::Fourier(
+      f | std::ranges::views::transform([](const uint32_t x) {
+        return autd3::modulation::Sine(x * autd3::driver::Hz);
+      }));
 
   autd.send(m);
 
   for (auto& dev : autd.geometry()) {
-    auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
+    auto mod =
+        autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{
-        127, 156, 183, 205, 220, 227, 226, 219, 205, 188, 170, 153, 139, 129, 124, 123, 127, 133, 140, 147, 152, 155, 154, 151, 145, 138, 131,
-        125, 120, 118, 119, 122, 127, 132, 137, 140, 141, 141, 137, 133, 127, 121, 116, 113, 112, 113, 117, 121, 127, 131, 134, 135, 133, 129,
-        122, 115, 108, 102, 99,  99,  101, 106, 113, 120, 127, 130, 129, 124, 115, 100, 83,  65,  48,  35,  27,  26,  34,  48,  70,  97,
+        127, 156, 183, 205, 220, 227, 226, 219, 205, 188, 170, 153, 139, 129,
+        124, 123, 127, 133, 140, 147, 152, 155, 154, 151, 145, 138, 131, 125,
+        120, 118, 119, 122, 127, 132, 137, 140, 141, 141, 137, 133, 127, 121,
+        116, 113, 112, 113, 117, 121, 127, 131, 134, 135, 133, 129, 122, 115,
+        108, 102, 99,  99,  101, 106, 113, 120, 127, 130, 129, 124, 115, 100,
+        83,  65,  48,  35,  27,  26,  34,  48,  70,  97,
     };
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_TRUE(std::ranges::equal(
+        mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
+    ASSERT_EQ(5120, autd.link().modulation_freq_division(
+                        dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -30,20 +38,28 @@ TEST(Modulation, FourierExactFloat) {
   auto autd = create_controller();
 
   std::vector f{50.f, 100.f, 150.f, 200.f, 250.f};
-  const auto m =
-      autd3::modulation::Fourier(f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine(x * autd3::driver::Hz); }));
+  const auto m = autd3::modulation::Fourier(
+      f | std::ranges::views::transform([](const float x) {
+        return autd3::modulation::Sine(x * autd3::driver::Hz);
+      }));
 
   autd.send(m);
 
   for (auto& dev : autd.geometry()) {
-    auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
+    auto mod =
+        autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{
-        127, 156, 183, 205, 220, 227, 226, 219, 205, 188, 170, 153, 139, 129, 124, 123, 127, 133, 140, 147, 152, 155, 154, 151, 145, 138, 131,
-        125, 120, 118, 119, 122, 127, 132, 137, 140, 141, 141, 137, 133, 127, 121, 116, 113, 112, 113, 117, 121, 127, 131, 134, 135, 133, 129,
-        122, 115, 108, 102, 99,  99,  101, 106, 113, 120, 127, 130, 129, 124, 115, 100, 83,  65,  48,  35,  27,  26,  34,  48,  70,  97,
+        127, 156, 183, 205, 220, 227, 226, 219, 205, 188, 170, 153, 139, 129,
+        124, 123, 127, 133, 140, 147, 152, 155, 154, 151, 145, 138, 131, 125,
+        120, 118, 119, 122, 127, 132, 137, 140, 141, 141, 137, 133, 127, 121,
+        116, 113, 112, 113, 117, 121, 127, 131, 134, 135, 133, 129, 122, 115,
+        108, 102, 99,  99,  101, 106, 113, 120, 127, 130, 129, 124, 115, 100,
+        83,  65,  48,  35,  27,  26,  34,  48,  70,  97,
     };
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_TRUE(std::ranges::equal(
+        mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
+    ASSERT_EQ(5120, autd.link().modulation_freq_division(
+                        dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -52,23 +68,34 @@ TEST(Modulation, FourierNearest) {
 
   std::vector f{50.f, 100.f};
   const auto m = autd3::modulation::Fourier(
-      f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine::with_freq_nearest(x * autd3::driver::Hz); }));
+      f | std::ranges::views::transform([](const float x) {
+        return autd3::modulation::Sine::from_freq_nearest(x *
+                                                          autd3::driver::Hz);
+      }));
   autd.send(m);
 
   for (auto& dev : autd.geometry()) {
-    auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
-    std::vector<uint8_t> mod_expect{127, 142, 156, 171, 184, 196, 207, 217, 225, 231, 236, 238, 239, 238, 235, 231, 225, 218, 209, 200,
-                                    191, 180, 170, 160, 150, 141, 132, 124, 118, 112, 108, 105, 104, 103, 104, 106, 109, 113, 117, 122,
-                                    127, 132, 136, 141, 145, 147, 149, 150, 150, 148, 146, 141, 136, 129, 121, 113, 104, 94,  83,  73,
-                                    63,  53,  44,  36,  29,  23,  18,  15,  15,  15,  18,  22,  29,  36,  46,  57,  70,  83,  97,  112};
-    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(5120, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    auto mod =
+        autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
+    std::vector<uint8_t> mod_expect{
+        127, 142, 156, 171, 184, 196, 207, 217, 225, 231, 236, 238, 239, 238,
+        235, 231, 225, 218, 209, 200, 191, 180, 170, 160, 150, 141, 132, 124,
+        118, 112, 108, 105, 104, 103, 104, 106, 109, 113, 117, 122, 127, 132,
+        136, 141, 145, 147, 149, 150, 150, 148, 146, 141, 136, 129, 121, 113,
+        104, 94,  83,  73,  63,  53,  44,  36,  29,  23,  18,  15,  15,  15,
+        18,  22,  29,  36,  46,  57,  70,  83,  97,  112};
+    ASSERT_TRUE(std::ranges::equal(
+        mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
+    ASSERT_EQ(5120, autd.link().modulation_freq_division(
+                        dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
 TEST(Modulation, FourierInvalidMix) {
   auto autd = create_controller();
 
-  const auto m = autd3::modulation::Fourier({autd3::modulation::Sine(50 * autd3::driver::Hz), autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
+  const auto m = autd3::modulation::Fourier(
+      {autd3::modulation::Sine(50 * autd3::driver::Hz),
+       autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
   ASSERT_THROW(autd.send(m), autd3::AUTDException);
 }
