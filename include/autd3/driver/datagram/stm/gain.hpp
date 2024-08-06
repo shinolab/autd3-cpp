@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <optional>
 #include <ranges>
 
 #include "autd3/driver/datagram/gain/base.hpp"
@@ -108,6 +109,9 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   AUTD3_API [[nodiscard]] Freq<float> freq() const { return _sampling.freq(); }
   AUTD3_API [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(); }
   AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(); }
+
+  AUTD3_API [[nodiscard]] std::optional<SamplingConfig> sampling_config_intensity() const { return sampling_config(); }
+  AUTD3_API [[nodiscard]] std::optional<SamplingConfig> sampling_config_phase() const { return sampling_config(); }
 
  private:
   AUTD3_API explicit GainSTM(const STMSamplingConfig sampling, std::vector<std::shared_ptr<GainBase>> gains)

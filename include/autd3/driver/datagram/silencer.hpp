@@ -1,15 +1,23 @@
 #pragma once
 
 #include <chrono>
+#include <optional>
 
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
+#include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
+
+template <class C>
+concept with_samplng_config = requires(const C& c) {
+  { c.sampling_config_intensity() } -> std::same_as<std::optional<SamplingConfig>>;
+  { c.sampling_config_phase() } -> std::same_as<std::optional<SamplingConfig>>;
+};
 
 class Silencer final : public IntoDatagramTuple<Silencer>,
                        public IntoDatagramWithTimeout<Silencer>,
@@ -25,6 +33,12 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
     AUTD3_DEF_PROP(uint16_t, update_rate_intensity)
     AUTD3_DEF_PROP(uint16_t, update_rate_phase)
     AUTD3_DEF_PARAM(FixedUpdateRate, native_methods::SilencerTarget, target)
+
+    template <with_samplng_config C>
+    AUTD3_API [[nodiscard]] bool is_valid(const C& c) const noexcept {
+      return native_methods::AUTDDatagramSilencerFixedUpdateRateIsValid(ptr(), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
+                                                                        c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+    }
 
     AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
       return native_methods::AUTDDatagramSilencerFromUpdateRate(_update_rate_intensity, _update_rate_phase, _target);
@@ -51,6 +65,12 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
   AUTD3_DEF_PROP(std::chrono::nanoseconds, completion_time_phase)
   AUTD3_DEF_PARAM(Silencer, bool, strict_mode)
   AUTD3_DEF_PARAM(Silencer, native_methods::SilencerTarget, target)
+
+  template <with_samplng_config C>
+  AUTD3_API [[nodiscard]] bool is_valid(const C& c) const noexcept {
+    return native_methods::AUTDDatagramSilencerFixedCompletionTimeIsValid(ptr(), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
+                                                                          c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+  }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
     return native_methods::AUTDDatagramSilencerFromCompletionTime(_completion_time_intensity.count(), _completion_time_phase.count(), _strict_mode,

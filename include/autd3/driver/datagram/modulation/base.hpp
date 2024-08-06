@@ -51,6 +51,9 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
     return driver::SamplingConfig{AUTDModulationSamplingConfig(modulation_ptr())};
   }
 
+  AUTD3_API [[nodiscard]] std::optional<SamplingConfig> sampling_config_intensity() const { return sampling_config(); }
+  AUTD3_API [[nodiscard]] std::optional<SamplingConfig> sampling_config_phase() const { return std::nullopt; }
+
  protected:
   native_methods::LoopBehavior _loop_behavior;
 };

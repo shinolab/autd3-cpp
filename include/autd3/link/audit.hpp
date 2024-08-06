@@ -84,6 +84,10 @@ class Audit final {
 
   [[nodiscard]] bool silencer_strict_mode(const size_t idx) const { return AUTDLinkAuditCpuSilencerStrictMode(_ptr, static_cast<uint16_t>(idx)); }
 
+  [[nodiscard]] native_methods::SilencerTarget silencer_target(const size_t idx) const {
+    return AUTDLinkAuditFpgaSilencerTarget(_ptr, static_cast<uint16_t>(idx));
+  }
+
   [[nodiscard]] std::array<uint8_t, 4> debug_types(const size_t idx) const {
     std::array<uint8_t, 4> ty{};
     AUTDLinkAuditFpgaDebugTypes(_ptr, static_cast<uint16_t>(idx), ty.data());
