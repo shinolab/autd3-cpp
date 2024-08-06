@@ -230,27 +230,24 @@ class Visualizer final {
   }
 
   AUTD3_API [[nodiscard]] std::vector<std::complex<float>> calc_field(const std::vector<driver::Vector3>& points,
-                                                                      const driver::geometry::Geometry& geometry,
                                                                       const native_methods::Segment segment, const size_t idx) const {
     const auto points_len = static_cast<uint32_t>(points.size());
     const auto points_ptr = reinterpret_cast<const native_methods::Vector3*>(points.data());
     std::vector<std::complex<float>> buf;
     buf.resize(points_len);
-    validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, geometry.ptr(), segment, static_cast<uint16_t>(idx),
+    validate(AUTDLinkVisualizerCalcField(_ptr, _backend, _directivity, points_ptr, points_len, segment, static_cast<uint16_t>(idx),
                                          reinterpret_cast<float*>(buf.data())));
     return buf;
   }
 
-  AUTD3_API void plot_field(const Config& config, const PlotRange& range, const driver::geometry::Geometry& geometry,
-                            const native_methods::Segment segment, const size_t idx) const {
+  AUTD3_API void plot_field(const Config& config, const PlotRange& range, const native_methods::Segment segment, const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
-    validate(AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), geometry.ptr(), segment, static_cast<uint16_t>(idx)));
+    validate(AUTDLinkVisualizerPlotField(_ptr, _backend, _directivity, config_ptr, range.ptr(), segment, static_cast<uint16_t>(idx)));
   }
 
-  AUTD3_API void plot_phase(const Config& config, const driver::geometry::Geometry& geometry, const native_methods::Segment segment,
-                            const size_t idx) const {
+  AUTD3_API void plot_phase(const Config& config, const native_methods::Segment segment, const size_t idx) const {
     const auto config_ptr = get_plot_config(config);
-    validate(AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, geometry.ptr(), segment, static_cast<uint16_t>(idx)));
+    validate(AUTDLinkVisualizerPlotPhase(_ptr, _backend, _directivity, config_ptr, segment, static_cast<uint16_t>(idx)));
   }
 
   AUTD3_API void plot_modulation(const Config& config, const native_methods::Segment segment) const {

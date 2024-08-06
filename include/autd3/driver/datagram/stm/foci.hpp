@@ -28,20 +28,20 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
   FociSTM& operator=(FociSTM&& obj) = default;       // LCOV_EXCL_LINE
   ~FociSTM() override = default;                     // LCOV_EXCL_LINE
 
-  template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_freq(const Freq<float> freq, const R& iter) {
-    return FociSTM(STMSamplingConfig::Freq(freq), iter);
+  template <stm_sampling_config T, foci_range_c<N> R>
+  AUTD3_API explicit FociSTM(const T sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite) {
+    for (auto e : iter) _points.push_back(ControlPoints<N>{std::move(e)});
+    _sampling = STMSamplingConfig(sampling, static_cast<uint32_t>(_points.size()));
   }
 
   template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM from_freq_nearest(const Freq<float> freq, const R& iter) {
-    return FociSTM(STMSamplingConfig::FreqNearest(freq), iter);
+  AUTD3_API [[nodiscard]] static FociSTM nearest(const Freq<float> freq, const R& iter) {
+    return FociSTM(STMSamplingConfig::nearest(freq), iter);
   }
 
-  template <foci_range_c<N> R, typename T>
-    requires std::constructible_from<SamplingConfig, T>
-  AUTD3_API [[nodiscard]] static FociSTM from_sampling_config(const T config, const R& iter) {
-    return FociSTM(STMSamplingConfig::SamplingConfig(SamplingConfig(config)), iter);
+  template <typename Rep, typename P, foci_range_c<N> R>
+  AUTD3_API [[nodiscard]] static FociSTM nearest(const std::chrono::duration<Rep, P> period, const R& iter) {
+    return FociSTM(STMSamplingConfig::nearest(period), iter);
   }
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {
@@ -80,11 +80,6 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
   AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(_points.size()); }
 
  private:
-  template <foci_range_c<N> R>
-  AUTD3_API explicit FociSTM(const STMSamplingConfig sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite), _sampling(sampling) {
-    for (auto e : iter) _points.push_back(ControlPoints<N>{std::move(e)});
-  }
-
   std::vector<ControlPoints<N>> _points;
   STMSamplingConfig _sampling;
 };

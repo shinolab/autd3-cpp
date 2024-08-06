@@ -13,7 +13,7 @@ class BurstModulation final : public autd3::derive::Modulation<BurstModulation> 
     return buffer;
   }
 
-  explicit BurstModulation(const size_t buf_size = 4000, const autd3::SamplingConfig config = autd3::SamplingConfig::Freq(4000 * autd3::Hz)) noexcept
+  explicit BurstModulation(const size_t buf_size = 4000, const autd3::SamplingConfig config = 4000u * autd3::Hz) noexcept
       : Modulation(config), _buf_size(buf_size) {}
 
  private:

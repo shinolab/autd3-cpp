@@ -15,12 +15,12 @@ namespace autd3::driver {
 class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
                                 public IntoDatagramWithTimeout<PulseWidthEncoder>,
                                 public IntoDatagramWithParallelThreshold<PulseWidthEncoder> {
-  using native_f = uint16_t (*)(const void*, native_methods::GeometryPtr, uint16_t, uint16_t);
+  using native_f = uint8_t (*)(const void*, native_methods::GeometryPtr, uint16_t, uint8_t);
 
  public:
   AUTD3_API PulseWidthEncoder() : _f(std::nullopt) {}
-  AUTD3_API explicit PulseWidthEncoder(std::function<std::function<uint16_t(size_t)>(const geometry::Device&)> f) : _f(std::move(f)) {
-    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint16_t i) -> uint16_t {
+  AUTD3_API explicit PulseWidthEncoder(std::function<std::function<uint8_t(uint8_t)>(const geometry::Device&)> f) : _f(std::move(f)) {
+    _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint8_t i) -> uint8_t {
       auto* self = static_cast<PulseWidthEncoder*>(const_cast<void*>(context));
       bool contains;
       {
@@ -28,7 +28,7 @@ class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
         contains = self->_cache.contains(dev_idx);
       }
       if (contains) return self->_cache[dev_idx](i);
-      auto f = self->_f.value()(geometry::Device(dev_idx, AUTDDevice(geometry_ptr, dev_idx)));  // LCOV_EXCL_LINE
+      auto f = self->_f.value()(geometry::Device(dev_idx, geometry_ptr));  // LCOV_EXCL_LINE
       const auto res = f(i);
       {
         std::lock_guard lock(self->_mtx);
@@ -47,10 +47,10 @@ class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
   }
 
  private:
-  std::optional<std::function<std::function<uint16_t(size_t)>(const geometry::Device&)>> _f;
+  std::optional<std::function<std::function<uint8_t(uint8_t)>(const geometry::Device&)>> _f;
   native_f _f_native = nullptr;
   std::shared_mutex _mtx;
-  std::unordered_map<uint16_t, std::function<uint16_t(size_t)>> _cache;
+  std::unordered_map<uint16_t, std::function<uint8_t(uint8_t)>> _cache;
 };
 
 }  // namespace autd3::driver

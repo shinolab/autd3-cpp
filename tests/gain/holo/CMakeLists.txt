@@ -6,6 +6,5 @@ target_sources(test_autd3 PRIVATE
   gspat.cpp
   lm.cpp
   naive.cpp
-  sdp.cpp
   amplitude.cpp
 )

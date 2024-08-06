@@ -51,7 +51,7 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
 
   M _m;
   mutable std::shared_ptr<std::vector<driver::EmitIntensity>> _cache;
-  mutable std::optional<native_methods::SamplingConfigWrap> _sampling_config;
+  mutable std::optional<native_methods::SamplingConfig> _sampling_config;
 };
 
 }  // namespace autd3::modulation

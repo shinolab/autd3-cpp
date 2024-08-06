@@ -22,11 +22,11 @@ class Device {
   };
 
  public:
-  AUTD3_API explicit Device(const size_t idx, const native_methods::DevicePtr ptr) : _idx(idx), _ptr(ptr) {
+  AUTD3_API explicit Device(const uint16_t idx, const native_methods::GeometryPtr ptr) : _idx(static_cast<size_t>(idx)), _geo_ptr(ptr) {
+    _ptr = AUTDDevice(ptr, idx);
     const auto size = static_cast<size_t>(AUTDDeviceNumTransducers(_ptr));
-    _transducers.clear();
     _transducers.reserve(size);
-    for (uint32_t i = 0; i < size; i++) _transducers.emplace_back(i, _ptr);
+    for (uint8_t i = 0; i < size; i++) _transducers.emplace_back(i, _ptr);
   }
 
   ~Device() = default;                             // LCOV_EXCL_LINE
@@ -43,11 +43,11 @@ class Device {
 
   AUTD3_API [[nodiscard]] float sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
 
-  AUTD3_API void set_sound_speed(const float value) const { AUTDDeviceSetSoundSpeed(_ptr, value); }
+  AUTD3_API void set_sound_speed(const float value) const { AUTDDeviceSetSoundSpeed(_geo_ptr, static_cast<uint16_t>(_idx), value); }
 
   AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f,
                                            const float m = 28.9647e-3f) const {
-    AUTDDeviceSetSoundSpeedFromTemp(_ptr, temp, k, r, m);
+    AUTDDeviceSetSoundSpeedFromTemp(_geo_ptr, static_cast<uint16_t>(_idx), temp, k, r, m);
   }
 
   AUTD3_API [[nodiscard]] Quaternion rotation() const noexcept { return AUTDDeviceRotation(_ptr); }
@@ -60,14 +60,19 @@ class Device {
 
   AUTD3_API [[nodiscard]] bool enable() const { return AUTDDeviceEnableGet(_ptr); }
 
-  AUTD3_API void set_enable(const bool value) const { AUTDDeviceEnableSet(_ptr, value); }
+  AUTD3_API void set_enable(const bool value) const { AUTDDeviceEnableSet(_geo_ptr, static_cast<uint16_t>(_idx), value); }
 
-  AUTD3_API void translate(Vector3 t) const { AUTDDeviceTranslate(_ptr, native_methods::Vector3{t.x(), t.y(), t.z()}); }
+  AUTD3_API void translate(Vector3 t) const {
+    AUTDDeviceTranslate(_geo_ptr, static_cast<uint16_t>(_idx), native_methods::Vector3{t.x(), t.y(), t.z()});
+  }
 
-  AUTD3_API void rotate(Quaternion r) const { AUTDDeviceRotate(_ptr, native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()}); }
+  AUTD3_API void rotate(Quaternion r) const {
+    AUTDDeviceRotate(_geo_ptr, static_cast<uint16_t>(_idx), native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
+  }
 
   AUTD3_API void affine(Vector3 t, Quaternion r) const {
-    AUTDDeviceAffine(_ptr, native_methods::Vector3{t.x(), t.y(), t.z()}, native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
+    AUTDDeviceAffine(_geo_ptr, static_cast<uint16_t>(_idx), native_methods::Vector3{t.x(), t.y(), t.z()},
+                     native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
   }
 
   AUTD3_API [[nodiscard]] float wavelength() const { return AUTDDeviceWavelength(_ptr); }
@@ -87,6 +92,7 @@ class Device {
  private:
   size_t _idx;
   native_methods::DevicePtr _ptr;
+  native_methods::GeometryPtr _geo_ptr;
   std::vector<Transducer> _transducers{};
 };
 

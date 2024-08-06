@@ -3,10 +3,6 @@
 #include <chrono>
 #include <string>
 
-#ifdef AUTD3_ASYNC_API
-#include <coro/coro.hpp>
-#endif
-
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
@@ -30,7 +26,7 @@ class Simulator final {
 
     native_methods::LinkSimulatorBuilderPtr _ptr;
 
-    AUTD3_API explicit Builder(const uint16_t port) : _ptr(native_methods::AUTDLinkSimulator(port)) {}
+    AUTD3_API explicit Builder(const std::string& ip) : _ptr(validate(native_methods::AUTDLinkSimulator(ip.c_str()))) {}
 
     [[nodiscard]] static Simulator resolve_link(const native_methods::RuntimePtr runtime, const native_methods::LinkPtr link) {
       return Simulator{runtime, link};
@@ -41,11 +37,6 @@ class Simulator final {
 
     [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSimulatorIntoBuilder(_ptr); }
 
-    AUTD3_API [[nodiscard]] Builder with_server_ip(const std::string& ip) {
-      _ptr = validate(AUTDLinkSimulatorWithAddr(_ptr, ip.c_str()));
-      return *this;
-    }
-
     template <typename Rep, typename Period>
     AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {
       const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
@@ -54,19 +45,7 @@ class Simulator final {
     }
   };
 
-  AUTD3_API [[nodiscard]] static Builder builder(const uint16_t port) { return Builder(port); }
-
-  [[nodiscard]] bool update_geometry(const driver::geometry::Geometry& geometry) const {
-    return validate(AUTDWaitResultI32(_runtime, AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr()))) == native_methods::AUTD3_TRUE;
-  }
-
-#ifdef AUTD3_ASYNC_API
-  [[nodiscard]] coro::task<bool> update_geometry_async(const driver::geometry::Geometry& geometry) const {
-    const auto future = AUTDLinkSimulatorUpdateGeometry(_ptr, geometry.ptr());
-    const auto result = co_await wait_future(_runtime, future);
-    co_return validate(result) == native_methods::AUTD3_TRUE;
-  }
-#endif
+  AUTD3_API [[nodiscard]] static Builder builder(const std::string& ip) { return Builder(ip); }
 };
 
 }  // namespace autd3::link

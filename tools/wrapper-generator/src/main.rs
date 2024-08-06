@@ -19,7 +19,6 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
     config.namespace = Some("autd3::native_methods".to_string());
     config.no_includes = true;
     config.sys_includes = vec!["cstdint".to_string()];
-    config.includes = vec!["autd3/native_methods/def.hpp".to_string()];
     config.sort_by = cbindgen::SortKey::None;
     config.usize_is_size_t = true;
     config.export = cbindgen::ExportConfig {
@@ -33,7 +32,6 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "TimerStrategy".to_string(),
             "GainSTMMode".to_string(),
             "ControllerPtr".to_string(),
-            "SamplingConfigWrap".to_string(),
             "EmissionConstraintWrap".to_string(),
             "FirmwareVersionListPtr".to_string(),
             "GroupKVMapPtr".to_string(),
@@ -52,9 +50,7 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "GainCalcDrivesMapPtr".to_string(),
             "LinkBuilderPtr".to_string(),
             "ResultI32".to_string(),
-            "ResultU32".to_string(),
             "ResultF32".to_string(),
-            "ResultU64".to_string(),
             "ResultModulation".to_string(),
             "ResultBackend".to_string(),
             "ResultController".to_string(),
@@ -68,8 +64,9 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "ResultGainSTM".to_string(),
             "ResultFociSTM".to_string(),
             "DebugTypeWrap".to_string(),
-            "STMSamplingConfigWrap".to_string(),
-            "ResultSamplingConfigWrap".to_string(),
+            "SamplingConfig".to_string(),
+            "ResultSamplingConfig".to_string(),
+            "SilencerTarget".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]
