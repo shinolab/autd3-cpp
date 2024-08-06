@@ -4,7 +4,6 @@
 #include <array>
 #include <autd3/driver/firmware/fpga/drive.hpp>
 #include <chrono>
-#include <ranges>
 #include <utility>
 
 #include "autd3/native_methods.hpp"

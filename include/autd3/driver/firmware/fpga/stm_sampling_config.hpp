@@ -8,7 +8,7 @@
 namespace autd3::driver {
 
 struct STMSamplingConfig final {
-  STMSamplingConfig() : _inner(SamplingConfig(0)), _n(0) {};
+  STMSamplingConfig() : _inner(SamplingConfig(0)), _n(0) {}
 
   operator native_methods::SamplingConfig() const { return _inner; }
 

@@ -3,7 +3,6 @@
 #include <chrono>
 #include <string>
 
-#include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
