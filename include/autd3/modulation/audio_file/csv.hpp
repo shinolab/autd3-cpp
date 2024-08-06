@@ -14,8 +14,7 @@ class Csv final : public driver::ModulationBase<Csv>,
                   public driver::IntoRadiationPressure<Csv>,
                   public driver::IntoModulationTransform<Csv> {
  public:
-  template <typename T>
-    requires std::convertible_to<T, driver::SamplingConfig>
+  template <driver::sampling_config T>
   AUTD3_API explicit Csv(std::filesystem::path path, const T config) : _deliminator(','), _config(config), _path(std::move(path)) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {

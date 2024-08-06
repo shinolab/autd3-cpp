@@ -14,8 +14,7 @@ class RawPCM final : public driver::ModulationBase<RawPCM>,
                      public driver::IntoRadiationPressure<RawPCM>,
                      public driver::IntoModulationTransform<RawPCM> {
  public:
-  template <typename T>
-    requires std::convertible_to<T, driver::SamplingConfig>
+  template <driver::sampling_config T>
   AUTD3_API explicit RawPCM(std::filesystem::path path, const T config) : _config(config), _path(std::move(path)) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {

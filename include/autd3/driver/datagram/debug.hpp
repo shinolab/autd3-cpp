@@ -42,7 +42,7 @@ class DebugSettings final : public IntoDatagramTuple<DebugSettings<F>>,
   AUTD3_API explicit DebugSettings(F f) : _f(std::move(f)) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const native_methods::GPIOOut gpio,
                     native_methods::DebugTypeWrap* res) {
-      const geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
+      const geometry::Device dev(dev_idx, geometry_ptr);
       *res = static_cast<const DebugSettings*>(context)->_f(dev, gpio);
     };
   }

@@ -31,8 +31,13 @@ struct SamplingConfig final {
   explicit SamplingConfig(uint16_t div) : _inner(native_methods::AUTDSamplingConfigFromDivision(div)) {}
   explicit SamplingConfig(native_methods::SamplingConfig inner) : _inner(std::move(inner)) {}
 
+  bool operator==(const SamplingConfig& other) const { return _inner._div == other._inner._div; }
+
  private:
   native_methods::SamplingConfig _inner;
 };
+
+template <class C>
+concept sampling_config = std::is_convertible_v<C, SamplingConfig>;
 
 }  // namespace autd3::driver

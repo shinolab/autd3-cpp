@@ -15,9 +15,9 @@ void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>
 
   autd.send((m, g));
 
-  autd.link().plot_phase(config, autd.geometry(), autd3::native_methods::Segment::S0, 0);
+  autd.link().plot_phase(config, autd3::native_methods::Segment::S0, 0);
   autd.link().plot_field(config, autd3::link::PlotRange(center[0] - 50, center[0] + 50, center[1], center[1], center[2], center[2], 1),
-                         autd.geometry(), autd3::native_methods::Segment::S0, 0);
+                         autd3::native_methods::Segment::S0, 0);
 
   autd.link().plot_modulation(config, autd3::native_methods::Segment::S0);
 
@@ -30,7 +30,7 @@ void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>
   ASSERT_TRUE(std::ranges::all_of(modulation, [](auto m) { return m == 0x82; }));
 
   const std::vector points{center};
-  (void)autd.link().calc_field(points, autd.geometry(), autd3::native_methods::Segment::S0, 0);
+  (void)autd.link().calc_field(points, autd3::native_methods::Segment::S0, 0);
 
   autd.close();
 }

@@ -13,7 +13,7 @@ namespace autd3::modulation {
 
 class Square final : public driver::Modulation<Square> {
   AUTD3_API explicit Square(const std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> freq)
-      : Modulation(driver::SamplingConfig(5120)),
+      : Modulation(driver::SamplingConfig(10)),
         _low(std::numeric_limits<uint8_t>::min()),
         _high(std::numeric_limits<uint8_t>::max()),
         _duty(0.5),
