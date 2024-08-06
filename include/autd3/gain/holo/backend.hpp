@@ -16,8 +16,6 @@ class Backend {
 
   [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
 
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr sdp(const float* foci, const float* amps, uint32_t size, float alpha, float lambda,
-                                                              uint32_t repeat, native_methods::EmissionConstraintWrap constraint) const = 0;
   AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gs(const float* foci, const float* amps, uint32_t size, uint32_t repeat,
                                                              native_methods::EmissionConstraintWrap constraint) const = 0;
   AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gspat(const float* foci, const float* amps, uint32_t size, uint32_t repeat,

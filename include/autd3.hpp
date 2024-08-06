@@ -44,7 +44,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "26.0.0";
+static inline std::string version = "27.0.0-rc.6";
 
 using autd3::driver::deg;
 using autd3::driver::Hz;
@@ -68,6 +68,7 @@ using driver::TransitionMode;
 using native_methods::GPIOIn;
 using native_methods::GPIOOut;
 using native_methods::Segment;
+using native_methods::SilencerTarget;
 
 using driver::Clear;
 using driver::ControlPoint;

@@ -21,12 +21,11 @@ inline void holo_test(autd3::Controller<L>& autd) {
 
   std::cout << "Select Optimization Method (default is GSPAT)" << std::endl;
 
-  std::cout << "[0]: SDP" << std::endl;
-  std::cout << "[1]: GS" << std::endl;
-  std::cout << "[2]: GSPAT" << std::endl;
-  std::cout << "[3]: Naive" << std::endl;
-  std::cout << "[4]: LM" << std::endl;
-  std::cout << "[5]: Greedy" << std::endl;
+  std::cout << "[0]: GS" << std::endl;
+  std::cout << "[1]: GSPAT" << std::endl;
+  std::cout << "[2]: Naive" << std::endl;
+  std::cout << "[3]: LM" << std::endl;
+  std::cout << "[4]: Greedy" << std::endl;
   std::cout << "[Others]: GS-PAT" << std::endl;
   std::cout << "Choose number: ";
 
@@ -34,7 +33,7 @@ inline void holo_test(autd3::Controller<L>& autd) {
   size_t idx;
   getline(std::cin, in);
   std::stringstream s(in);
-  if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= 6 || is_empty) idx = 2;
+  if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= 5 || is_empty) idx = 1;
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto amp = 5e3 * autd3::gain::holo::Pa;
@@ -44,21 +43,18 @@ inline void holo_test(autd3::Controller<L>& autd) {
   };
   switch (idx) {
     case 0:
-      autd.send((m, autd3::gain::holo::SDP(backend, foci)));
-      break;
-    case 1:
       autd.send((m, autd3::gain::holo::GS(backend, foci)));
       break;
-    case 2:
+    case 1:
       autd.send((m, autd3::gain::holo::GSPAT(backend, foci)));
       break;
-    case 3:
+    case 2:
       autd.send((m, autd3::gain::holo::Naive(backend, foci)));
       break;
-    case 4:
+    case 3:
       autd.send((m, autd3::gain::holo::LM(backend, foci)));
       break;
-    case 5:
+    case 4:
       autd.send((m, autd3::gain::holo::Greedy(foci)));
       break;
     default:

@@ -8,5 +8,4 @@
 #include "autd3/gain/holo/gspat.hpp"
 #include "autd3/gain/holo/lm.hpp"
 #include "autd3/gain/holo/naive.hpp"
-#include "autd3/gain/holo/sdp.hpp"
 #include "autd3/native_methods.hpp"

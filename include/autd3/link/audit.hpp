@@ -155,15 +155,11 @@ class Audit final {
     return AUTDLinkAuditFpgaCurrentModSegment(_ptr, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] std::vector<uint16_t> pulse_width_encoder_table(const size_t idx) const {
-    std::vector<uint8_t> buf(32768);
-    const auto full_width_start = AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), buf.data());
-    std::vector<uint16_t> table(32768);
-    std::ranges::for_each(std::views::iota(0, 32768), [&](auto i) { table[i] = i < full_width_start / 2 ? buf[i] : 0x100 | buf[i]; });
-    return table;
+  [[nodiscard]] std::vector<uint8_t> pulse_width_encoder_table(const size_t idx) const {
+    std::vector<uint8_t> buf(256);
+    AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), buf.data());
+    return buf;
   }
-
-  [[nodiscard]] uint32_t ultrasound_freq(const size_t idx) const { return AUTDLinkAuditFpgaUltrasoundFreq(_ptr, static_cast<uint16_t>(idx)); }
 };
 
 }  // namespace autd3::link

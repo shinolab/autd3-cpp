@@ -111,7 +111,7 @@ class Controller {
 
     AUTD3_API explicit GroupGuard(F map, Controller& controller) : _controller(controller), _map(std::move(map)) {
       _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx) -> int32_t {
-        const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
+        const driver::geometry::Device dev(dev_idx, geometry_ptr);
         const auto* self = static_cast<const GroupGuard*>(context);
         const auto key = self->_map(dev);
         const auto& keymap = self->_keymap;

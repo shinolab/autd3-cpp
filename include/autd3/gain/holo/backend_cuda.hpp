@@ -21,11 +21,6 @@ class CUDABackend final : public Backend {
   CUDABackend(CUDABackend&& obj) = default;             // LCOV_EXCL_LINE
   CUDABackend& operator=(CUDABackend&& obj) = default;  // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::GainPtr sdp(const float* foci, const float* amps, const uint32_t size, const float alpha,
-                                                      const float lambda, const uint32_t repeat,
-                                                      const native_methods::EmissionConstraintWrap constraint) const override {
-    return AUTDGainHoloCUDASDP(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, alpha, lambda, repeat, constraint);
-  }
   AUTD3_API [[nodiscard]] native_methods::GainPtr gs(const float* foci, const float* amps, const uint32_t size, const uint32_t repeat,
                                                      const native_methods::EmissionConstraintWrap constraint) const override {
     return AUTDGainHoloCUDAGS(_ptr, reinterpret_cast<const native_methods::Vector3*>(foci), amps, size, repeat, constraint);

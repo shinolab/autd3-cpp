@@ -29,7 +29,7 @@ class Geometry {
     const auto size = AUTDGeometryNumDevices(_ptr);
     _devices.clear();
     _devices.reserve(size);
-    for (uint16_t i = 0; i < size; i++) _devices.emplace_back(static_cast<size_t>(i), AUTDDevice(_ptr, i));
+    for (uint16_t i = 0; i < size; i++) _devices.emplace_back(i, _ptr);
   }
 
   ~Geometry() = default;                               // LCOV_EXCL_LINE

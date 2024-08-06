@@ -27,9 +27,8 @@ class Gain : public driver::Gain<G> {
     _f = calc(geometry);
     _f_native =
         +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint8_t tr_idx, driver::Drive* dst) {
-          const auto dev_ptr = AUTDDevice(geometry_ptr, dev_idx);
-          const driver::geometry::Device dev(dev_idx, dev_ptr);
-          const driver::geometry::Transducer tr(tr_idx, dev_ptr);
+          const driver::geometry::Device dev(dev_idx, geometry_ptr);
+          const driver::geometry::Transducer tr(tr_idx, dev.ptr());
           *dst = static_cast<const Gain*>(context)->_f(dev)(tr);
         };
     return AUTDGainCustom(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
