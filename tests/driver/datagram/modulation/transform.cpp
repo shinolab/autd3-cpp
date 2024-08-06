@@ -17,6 +17,6 @@ TEST(DriverDatagramModulation, Transform) {
     std::ranges::transform(mod_expect, mod_expect.begin(), [](const uint8_t x) { return x / 2; });
     auto mod = autd2.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
-    ASSERT_EQ(5120, autd2.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd2.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

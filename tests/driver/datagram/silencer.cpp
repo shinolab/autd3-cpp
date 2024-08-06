@@ -13,13 +13,6 @@ TEST(DriverDatagram, Silencer) {
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  autd.send(autd3::driver::Silencer::from_completion_steps(1, 2));
-  for (auto& dev : autd.geometry()) {
-    ASSERT_EQ(1, autd.link().silencer_completion_steps_intensity(dev.idx()));
-    ASSERT_EQ(2, autd.link().silencer_completion_steps_phase(dev.idx()));
-    ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
-  }
-
   autd.send(autd3::driver::Silencer::from_completion_time(std::chrono::microseconds(25 * 3), std::chrono::microseconds(25 * 4)));
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(3, autd.link().silencer_completion_steps_intensity(dev.idx()));
@@ -48,5 +41,5 @@ TEST(DriverDatagram, Silencer) {
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionStepsIsDefault(autd3::driver::Silencer().ptr(autd.geometry())));
+  ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionTimeIsDefault(autd3::driver::Silencer().ptr(autd.geometry())));
 }

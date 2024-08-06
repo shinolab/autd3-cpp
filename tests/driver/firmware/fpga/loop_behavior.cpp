@@ -5,7 +5,7 @@
 
 TEST(DriverFirmwareFPGA, LoopBehaviorInfinite) {
   const auto [rep] = autd3::driver::LoopBehavior::Infinite;
-  ASSERT_EQ(0xFFFFFFFF, rep);
+  ASSERT_EQ(0xFFFF, rep);
 }
 
 TEST(DriverFirmwareFPGA, LoopBehaviorFinite) {

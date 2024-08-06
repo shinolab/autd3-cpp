@@ -31,7 +31,7 @@ class Transform final : public driver::GainBase,
   AUTD3_API Transform(G g, F f) : _g(std::move(g)), _f(std::move(f)) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint8_t tr_idx,
                     driver::Drive drive, driver::Drive* dst) {
-      const driver::geometry::Device dev(dev_idx, AUTDDevice(geometry_ptr, dev_idx));
+      const driver::geometry::Device dev(dev_idx, geometry_ptr);
       const driver::geometry::Transducer tr(tr_idx, dev.ptr());
       *dst = static_cast<const Transform*>(context)->_f(dev)(tr, drive);
     };

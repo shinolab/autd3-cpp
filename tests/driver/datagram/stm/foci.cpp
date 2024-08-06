@@ -19,22 +19,22 @@ TEST(DriverDatagramSTM, FociSTM) {
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
   {
-    auto stm = autd3::driver::FociSTM<1>::from_freq(
-        1.0f * autd3::driver::Hz,
-        std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{center}; }));
+    auto stm = autd3::driver::FociSTM<1>(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
+                                                                     return autd3::driver::ControlPoints<1>{center};
+                                                                   }));
     ASSERT_EQ(1.0f * autd3::driver::Hz, stm.freq());
     ASSERT_EQ(std::chrono::seconds(1), stm.period());
-    ASSERT_EQ(10240000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().division());
     autd.send(stm);
     for (const auto& dev : autd.geometry()) {
       ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
     }
 
-    for (const auto& dev : autd.geometry()) ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd.geometry()) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   {
-    auto stm = autd3::driver::FociSTM<1>::from_freq_nearest(
+    auto stm = autd3::driver::FociSTM<1>::nearest(
         1.0f * autd3::driver::Hz,
         std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }));
     autd.send(stm);
@@ -42,17 +42,17 @@ TEST(DriverDatagramSTM, FociSTM) {
       ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
     }
 
-    for (const auto& dev : autd.geometry()) ASSERT_EQ(10240000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd.geometry()) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   {
-    auto stm = autd3::driver::FociSTM<1>::from_sampling_config(autd3::driver::SamplingConfig::Division(512),
-                                                               std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto i) {
-                                                                 return autd3::driver::ControlPoints<1>{center}.with_intensity(i);
-                                                               }));
+    auto stm =
+        autd3::driver::FociSTM<1>(autd3::driver::SamplingConfig(1), std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto i) {
+                                                                      return autd3::driver::ControlPoints<1>{center}.with_intensity(i);
+                                                                    }));
 
     autd.send(stm);
-    for (const auto& dev : autd.geometry()) ASSERT_EQ(512u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd.geometry()) ASSERT_EQ(1u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 
     for (const auto& dev : autd.geometry()) {
       ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
@@ -79,9 +79,9 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
   }
 
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
-  auto stm = autd3::driver::FociSTM<1>::from_freq(
-      1.0f * autd3::driver::Hz,
-      std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }));
+  auto stm = autd3::driver::FociSTM<1>(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
+                                                                   return autd3::driver::ControlPoints<1>{std::array{center}};
+                                                                 }));
 
   autd.send(stm);
   infos = autd.fpga_state();
@@ -99,9 +99,9 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
     ASSERT_EQ(Segment::S1, autd.link().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::FociSTM<1>::from_freq(1.0f * autd3::driver::Hz,
-                                                 std::views::iota(0) | std::views::take(2) |
-                                                     std::views::transform([&](auto) { return autd3::driver::ControlPoints<1>{std::array{center}}; }))
+  autd.send(autd3::driver::FociSTM<1>(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
+                                                                  return autd3::driver::ControlPoints<1>{std::array{center}};
+                                                                }))
                 .with_segment(Segment::S0, std::nullopt));
   infos = autd.fpga_state();
   for (auto& dev : autd.geometry()) {
@@ -130,10 +130,9 @@ void test_foci_stm_n() {
   constexpr auto size = 2;
   std::array<autd3::driver::Vector3, N> points;
   points.fill(center);
-  auto stm = autd3::driver::FociSTM<N>::from_sampling_config(autd3::driver::SamplingConfig::Division(512),
-                                                             std::views::iota(0) | std::views::take(size) | std::views::transform([&](auto i) {
-                                                               return autd3::driver::ControlPoints<N>{points}.with_intensity(i);
-                                                             }));
+  auto stm = autd3::driver::FociSTM<N>(autd3::driver::SamplingConfig(1),
+                                       std::views::iota(0) | std::views::take(size) |
+                                           std::views::transform([&](auto i) { return autd3::driver::ControlPoints<N>{points}.with_intensity(i); }));
 
   autd.send(stm);
   for (const auto& dev : autd.geometry()) {

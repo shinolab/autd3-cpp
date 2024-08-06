@@ -13,7 +13,7 @@ class BurstModulation final : public autd3::modulation::Modulation<BurstModulati
     return buffer;
   }
 
-  explicit BurstModulation() noexcept : Modulation(autd3::driver::SamplingConfig::Division(5120)) {}
+  explicit BurstModulation() noexcept : Modulation(autd3::driver::SamplingConfig(5120)) {}
 };
 
 TEST(DriverDatagramModulation, Modulation) {

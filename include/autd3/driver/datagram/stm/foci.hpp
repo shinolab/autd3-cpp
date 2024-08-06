@@ -30,18 +30,24 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
 
   template <stm_sampling_config T, foci_range_c<N> R>
   AUTD3_API explicit FociSTM(const T sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite) {
-    for (auto e : iter) _points.push_back(ControlPoints<N>{std::move(e)});
+    for (auto e : iter) _points.emplace_back(ControlPoints<N>{std::move(e)});
     _sampling = STMSamplingConfig(sampling, static_cast<uint32_t>(_points.size()));
   }
 
   template <foci_range_c<N> R>
   AUTD3_API [[nodiscard]] static FociSTM nearest(const Freq<float> freq, const R& iter) {
-    return FociSTM(STMSamplingConfig::nearest(freq), iter);
+    std::vector<ControlPoints<N>> points;
+    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});
+    const auto n = static_cast<uint32_t>(points.size());
+    return FociSTM(STMSamplingConfig::nearest(freq, n), std::move(points));
   }
 
   template <typename Rep, typename P, foci_range_c<N> R>
   AUTD3_API [[nodiscard]] static FociSTM nearest(const std::chrono::duration<Rep, P> period, const R& iter) {
-    return FociSTM(STMSamplingConfig::nearest(period), iter);
+    std::vector<ControlPoints<N>> points;
+    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});
+    const auto n = static_cast<uint32_t>(points.size());
+    return FociSTM(STMSamplingConfig::nearest(period, n), std::move(points));
   }
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {
@@ -75,11 +81,14 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
 
   AUTD3_DEF_PARAM(FociSTM, native_methods::LoopBehavior, loop_behavior)
 
-  AUTD3_API [[nodiscard]] Freq<float> freq() const { return _sampling.freq(_points.size()); }
-  AUTD3_API [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(_points.size()); }
-  AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(_points.size()); }
+  AUTD3_API [[nodiscard]] Freq<float> freq() const { return _sampling.freq(); }
+  AUTD3_API [[nodiscard]] std::chrono::nanoseconds period() const { return _sampling.period(); }
+  AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(); }
 
  private:
+  AUTD3_API explicit FociSTM(const STMSamplingConfig sampling, std::vector<ControlPoints<N>> points)
+      : _loop_behavior(LoopBehavior::Infinite), _points(std::move(points)), _sampling(sampling) {}
+
   std::vector<ControlPoints<N>> _points;
   STMSamplingConfig _sampling;
 };

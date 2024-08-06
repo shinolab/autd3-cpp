@@ -44,19 +44,31 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
 
   template <gain_range R>
   AUTD3_API [[nodiscard]] static GainSTM nearest(const Freq<float> freq, const R& iter) {
-    return GainSTM(STMSamplingConfig::nearest(freq), iter);
+    std::vector<std::shared_ptr<GainBase>> gains;
+    for (auto e : iter) gains.emplace_back(std::make_shared<std::remove_reference_t<std::ranges::range_value_t<R>>>(e));
+    const auto n = static_cast<uint32_t>(gains.size());
+    return GainSTM(STMSamplingConfig::nearest(freq, n), std::move(gains));
   }
   template <gain G>
   AUTD3_API [[nodiscard]] static GainSTM nearest(const Freq<float> freq, std::initializer_list<G> iter) {
-    return GainSTM(STMSamplingConfig::nearest(freq), iter);
+    std::vector<std::shared_ptr<GainBase>> gains;
+    for (auto e : iter) gains.emplace_back(std::make_shared<G>(e));
+    const auto n = static_cast<uint32_t>(gains.size());
+    return GainSTM(STMSamplingConfig::nearest(freq, n), std::move(gains));
   }
   template <typename Rep, typename P, gain_range R>
   AUTD3_API [[nodiscard]] static GainSTM nearest(const std::chrono::duration<Rep, P> period, const R& iter) {
-    return GainSTM(STMSamplingConfig::nearest(period), iter);
+    std::vector<std::shared_ptr<GainBase>> gains;
+    for (auto e : iter) gains.emplace_back(std::make_shared<std::remove_reference_t<std::ranges::range_value_t<R>>>(e));
+    const auto n = static_cast<uint32_t>(gains.size());
+    return GainSTM(STMSamplingConfig::nearest(period, n), std::move(gains));
   }
   template <typename Rep, typename P, gain G>
   AUTD3_API [[nodiscard]] static GainSTM nearest(const std::chrono::duration<Rep, P> period, std::initializer_list<G> iter) {
-    return GainSTM(STMSamplingConfig::nearest(period), iter);
+    std::vector<std::shared_ptr<GainBase>> gains;
+    for (auto e : iter) gains.emplace_back(std::make_shared<G>(e));
+    const auto n = static_cast<uint32_t>(gains.size());
+    return GainSTM(STMSamplingConfig::nearest(period, n), std::move(gains));
   }
 
   AUTD3_API [[nodiscard]] native_methods::GainSTMPtr raw_ptr(const geometry::Geometry& geometry) const override {
@@ -98,6 +110,12 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return _sampling.sampling_config(); }
 
  private:
+  AUTD3_API explicit GainSTM(const STMSamplingConfig sampling, std::vector<std::shared_ptr<GainBase>> gains)
+      : _loop_behavior(LoopBehavior::Infinite),
+        _mode(native_methods::GainSTMMode::PhaseIntensityFull),
+        _gains(std::move(gains)),
+        _sampling(sampling) {}
+
   std::vector<std::shared_ptr<GainBase>> _gains;
   STMSamplingConfig _sampling;
 };

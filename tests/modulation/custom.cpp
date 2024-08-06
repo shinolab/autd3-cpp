@@ -11,7 +11,7 @@ TEST(DriverDatagramModulation, Custom) {
   std::vector buffer(10, std::numeric_limits<uint8_t>::min());
   buffer[0] = std::numeric_limits<uint8_t>::max();
 
-  autd.send(autd3::modulation::Custom(buffer, autd3::driver::SamplingConfig::Division(5120)));
+  autd.send(autd3::modulation::Custom(buffer, autd3::driver::SamplingConfig(5120)));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
