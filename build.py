@@ -307,6 +307,7 @@ def check_all_headers_is_tested():
         ]
         headers.remove("exception.hpp")
         headers.remove("def.hpp")
+        headers.remove("controller/builder.hpp")
         headers.remove("driver/link.hpp")
         headers.remove("driver/datagram/stm/stm.hpp")
         headers.remove("driver/datagram/datagram.hpp")
