@@ -28,11 +28,11 @@ class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
         contains = self->_cache.contains(dev_idx);
       }
       if (contains) return self->_cache[dev_idx](i);
-      auto f = self->_f.value()(geometry::Device(dev_idx, geometry_ptr));  // LCOV_EXCL_LINE
-      const auto res = f(i);
+      auto h = self->_f.value()(geometry::Device(dev_idx, geometry_ptr));  // LCOV_EXCL_LINE
+      const auto res = h(i);
       {
         std::lock_guard lock(self->_mtx);
-        self->_cache[dev_idx] = std::move(f);
+        self->_cache[dev_idx] = std::move(h);
       }
       return res;
     };

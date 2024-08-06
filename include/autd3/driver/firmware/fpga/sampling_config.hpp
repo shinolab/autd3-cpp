@@ -28,7 +28,7 @@ struct SamplingConfig final {
   template <typename Rep, typename P>
   SamplingConfig(const std::chrono::duration<Rep, P> period)
       : _inner(validate(native_methods::AUTDSamplingConfigFromPeriod(std::chrono::duration_cast<std::chrono::nanoseconds>(period).count()))) {}
-  explicit SamplingConfig(uint16_t div) : _inner(native_methods::AUTDSamplingConfigFromDivision(div)) {}
+  explicit SamplingConfig(const uint16_t div) : _inner(native_methods::AUTDSamplingConfigFromDivision(div)) {}
   explicit SamplingConfig(native_methods::SamplingConfig inner) : _inner(std::move(inner)) {}
 
   bool operator==(const SamplingConfig& other) const { return _inner._div == other._inner._div; }
