@@ -12,21 +12,18 @@ namespace autd3::driver {
 template <class M>
 class Modulation : public ModulationBase<M>, public IntoModulationCache<M>, public IntoRadiationPressure<M>, public IntoModulationTransform<M> {
  public:
-  template <typename T>
-    requires std::constructible_from<SamplingConfig, T>
+  template <sampling_config T>
   void with_sampling_config(const T value) & {
     this->_sampling_config = std::move(SamplingConfig(value));
   } /* LCOV_EXCL_LINE */
-  template <typename T>
-    requires std::constructible_from<SamplingConfig, T>
+  template <sampling_config T>
   [[nodiscard]] M&& with_sampling_config(const T value) && {   /* LCOV_EXCL_LINE */
     this->_sampling_config = std::move(SamplingConfig(value)); /* LCOV_EXCL_LINE */
     return std::move(*static_cast<M*>(this));                  /* LCOV_EXCL_LINE */
   } /* LCOV_EXCL_LINE */
 
  protected:
-  template <typename T>
-    requires std::constructible_from<SamplingConfig, T>
+  template <sampling_config T>
   AUTD3_API explicit Modulation(const T sampling_config) : _sampling_config(SamplingConfig(sampling_config)) {}
 
   SamplingConfig _sampling_config;

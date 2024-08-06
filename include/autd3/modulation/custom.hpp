@@ -10,8 +10,7 @@ class Custom final : public driver::ModulationBase<Custom>,
                      public driver::IntoRadiationPressure<Custom>,
                      public driver::IntoModulationTransform<Custom> {
  public:
-  template <typename T>
-    requires std::constructible_from<driver::SamplingConfig, T>
+  template <driver::sampling_config T>
   explicit Custom(std::vector<uint8_t> buf, const T sampling_config)
       : _sampling_config(driver::SamplingConfig(sampling_config)), _buf(std::move(buf)) {}
 
