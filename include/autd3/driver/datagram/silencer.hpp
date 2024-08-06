@@ -36,11 +36,14 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
 
     template <with_samplng_config C>
     AUTD3_API [[nodiscard]] bool is_valid(const C& c) const noexcept {
-      return native_methods::AUTDDatagramSilencerFixedUpdateRateIsValid(ptr(), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
+      return native_methods::AUTDDatagramSilencerFixedUpdateRateIsValid(raw_ptr(), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
                                                                         c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
     }
 
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const noexcept { return raw_ptr(); }
+
+   private:
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr() const noexcept {
       return native_methods::AUTDDatagramSilencerFromUpdateRate(_update_rate_intensity, _update_rate_phase, _target);
     }
   };
@@ -68,14 +71,11 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
 
   template <with_samplng_config C>
   AUTD3_API [[nodiscard]] bool is_valid(const C& c) const noexcept {
-    return native_methods::AUTDDatagramSilencerFixedCompletionTimeIsValid(ptr(), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
+    return native_methods::AUTDDatagramSilencerFixedCompletionTimeIsValid(raw_ptr(), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
                                                                           c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
   }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
-    return native_methods::AUTDDatagramSilencerFromCompletionTime(_completion_time_intensity.count(), _completion_time_phase.count(), _strict_mode,
-                                                                  _target);
-  }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const noexcept { return raw_ptr(); }
 
  private:
   Silencer(const std::chrono::nanoseconds completion_time_intensity, const std::chrono::nanoseconds completion_time_phase)
@@ -83,6 +83,11 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
         _completion_time_phase(completion_time_phase),
         _strict_mode(true),
         _target(native_methods::SilencerTarget::Intensity) {}
+
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr() const noexcept {
+    return native_methods::AUTDDatagramSilencerFromCompletionTime(_completion_time_intensity.count(), _completion_time_phase.count(), _strict_mode,
+                                                                  _target);
+  }
 };
 
 }  // namespace autd3::driver
