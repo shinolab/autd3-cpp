@@ -1,6 +1,10 @@
 #include <gtest/gtest.h>
 
 #include <autd3/driver/datagram/silencer.hpp>
+#include <autd3/driver/datagram/stm/foci.hpp>
+#include <autd3/driver/datagram/stm/gain.hpp>
+#include <autd3/gain/null.hpp>
+#include <autd3/modulation/sine.hpp>
 
 #include "utils.hpp"
 
@@ -42,4 +46,11 @@ TEST(DriverDatagram, Silencer) {
   }
 
   ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionTimeIsDefault(autd3::driver::Silencer().ptr(autd.geometry())));
+}
+
+TEST(DriverDatagram, SilencerIsValid) {
+  ASSERT_TRUE(autd3::driver::Silencer().is_valid(autd3::modulation::Sine(150u * autd3::driver::Hz)));
+  ASSERT_TRUE(autd3::driver::Silencer().is_valid(
+      autd3::driver::FociSTM<1>(1.0f * autd3::driver::Hz, std::vector{autd3::driver::Vector3::Zero(), autd3::driver::Vector3::Zero()})));
+  ASSERT_TRUE(autd3::driver::Silencer().is_valid(autd3::driver::GainSTM(1.0f * autd3::driver::Hz, {autd3::gain::Null(), autd3::gain::Null()})));
 }
