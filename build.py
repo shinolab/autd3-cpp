@@ -179,8 +179,8 @@ def copy_lib(config: Config):
     if config.is_windows():
         if config.arch == "x64":
             url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-x64-static.zip"
-        elif config.arch == "arm64":
-            url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-arm-static.zip"
+        elif config.arch == "aarch64":
+            url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-aarch64-static.zip"
         else:
             err(f"Unsupported platform: {platform.machine()}")
             sys.exit(-1)
