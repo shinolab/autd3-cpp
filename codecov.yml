@@ -16,16 +16,7 @@ coverage:
     changes: false
     default_rules:
       flag_coverage_not_uploaded_behavior: include
-    patch:
-      default:
-        target: 100%
-        threshold: 0%
-        base: auto
-        branches: 
-          - main
-        if_ci_failed: error
-        informational: false
-        only_pulls: false
+    patch: true
     project:
       default:
         target: 100%
