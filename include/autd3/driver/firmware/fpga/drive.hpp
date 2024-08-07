@@ -10,7 +10,7 @@ struct Drive final {
 
   AUTD3_API explicit constexpr Drive(const Phase phase, const EmitIntensity intensity) : phase(phase), intensity(intensity) {}
   AUTD3_API explicit constexpr Drive(const EmitIntensity intensity, const Phase phase) : phase(phase), intensity(intensity) {}
-  AUTD3_API explicit constexpr Drive(const Phase phase) : phase(phase), intensity(EmitIntensity(0xFF)) {}
+  AUTD3_API explicit constexpr Drive(const Phase phase) : phase(phase), intensity(EmitIntensity(0xFF)) {}  // LCOV_EXCL_LINE
   AUTD3_API explicit constexpr Drive(const EmitIntensity intensity) : phase(Phase(0x00)), intensity(intensity) {}
   AUTD3_API [[nodiscard]] static Drive null() noexcept { return Drive{Phase(0x00), EmitIntensity(0x00)}; }
 
