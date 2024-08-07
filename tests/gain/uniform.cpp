@@ -7,7 +7,7 @@
 TEST(Gain, Uniform) {
   auto autd = create_controller();
 
-  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)));
+  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)));
 
   for (auto& dev : autd.geometry()) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);

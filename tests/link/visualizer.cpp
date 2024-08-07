@@ -10,7 +10,7 @@
 void visualizer_test_with(autd3::controller::Controller<autd3::link::Visualizer>& autd, const autd3::link::Config& config) {
   autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
 
-  const auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x81));
+  const auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x81));
   const auto m = autd3::modulation::Static::with_intensity(0x82);
 
   autd.send((m, g));
