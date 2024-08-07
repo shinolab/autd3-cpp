@@ -8,8 +8,7 @@
 TEST(DriverDatagramGain, Transform) {
   auto autd = create_controller();
 
-  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))
-                .with_phase(autd3::driver::Phase(128))
+  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(128))
                 .with_transform([](const autd3::driver::geometry::Device& dev) {
                   return [&](const autd3::driver::geometry::Transducer&, const autd3::driver::Drive d) {
                     if (dev.idx() == 0) {
@@ -35,8 +34,7 @@ TEST(DriverDatagramGain, TransformCheckOnlyForEnabled) {
   autd.geometry()[0].set_enable(false);
 
   std::vector cnt(autd.geometry().num_devices(), false);
-  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))
-                .with_phase(autd3::driver::Phase(0x90))
+  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90))
                 .with_transform([&cnt](const autd3::driver::geometry::Device& dev) {
                   cnt[dev.idx()] = true;
                   return [](const autd3::driver::geometry::Transducer&, const autd3::driver::Drive d) { return d; };

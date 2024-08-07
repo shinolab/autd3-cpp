@@ -17,7 +17,7 @@ TEST(Gain, Group) {
                 return "null";
               };
             })
-                .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
+                .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
                 .set("null", autd3::gain::Null()));
   for (auto& dev : autd.geometry()) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -37,7 +37,7 @@ TEST(Gain, Group) {
                 if (tr.position().x() < cx) return "uniform";
                 return std::nullopt;
               };
-            }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81)).with_phase(autd3::driver::Phase(0x91))));
+            }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81), autd3::driver::Phase(0x91))));
   for (auto& dev : autd.geometry()) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
@@ -65,7 +65,7 @@ TEST(Gain, GroupWithParallel) {
                   };
                 },
                 true)
-                .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
+                .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
                 .set("null", autd3::gain::Null()));
   for (auto& dev : autd.geometry()) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -87,7 +87,7 @@ TEST(Gain, GroupUnkownKey) {
   bool caught_err = false;
   try {
     autd.send(autd3::gain::Group([](const auto&) { return [](const auto&) -> std::optional<const char*> { return "null"; }; })
-                  .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90)))
+                  .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
                   .set("null", autd3::gain::Null()));
   } catch (autd3::AUTDException& e) {
     caught_err = true;
@@ -107,7 +107,7 @@ TEST(Gain, GroupCheckOnlyForEnabled) {
                 check[dev.idx()] = true;
                 return 0;
               };
-            }).set(0, autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80)).with_phase(autd3::driver::Phase(0x90))));
+            }).set(0, autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90))));
 
   ASSERT_FALSE(check[0]);
   ASSERT_TRUE(check[1]);
