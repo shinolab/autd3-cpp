@@ -16,11 +16,30 @@ namespace autd3::driver {
 template <class R, uint8_t N>
 concept foci_range_c = std::ranges::viewable_range<R> && std::is_constructible_v<ControlPoints<N>, std::ranges::range_value_t<R>>;
 
-template <uint8_t N>
-class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
+class FociSTM final : public IntoDatagramTuple<FociSTM>,
                       public DatagramST<native_methods::FociSTMPtr>,
-                      public IntoDatagramWithTimeout<FociSTM<N>>,
-                      public IntoDatagramWithParallelThreshold<FociSTM<N>> {
+                      public IntoDatagramWithTimeout<FociSTM>,
+                      public IntoDatagramWithParallelThreshold<FociSTM> {
+  struct IControlPointsArray {
+    virtual ~IControlPointsArray() = default;
+    virtual native_methods::FociSTMPtr ptr(native_methods::SamplingConfig config) const = 0;
+    virtual uint8_t n() const = 0;
+  };
+
+  template <uint8_t N>
+  struct ControlPointsArray final : IControlPointsArray {
+   private:
+    std::vector<ControlPoints<N>> _points;
+
+   public:
+    ~ControlPointsArray() override = default;
+    explicit ControlPointsArray(std::vector<ControlPoints<N>> points) : _points(std::move(points)) {}
+    native_methods::FociSTMPtr ptr(native_methods::SamplingConfig config) const override {
+      return validate(native_methods::AUTDSTMFoci(config, reinterpret_cast<const void*>(_points.data()), static_cast<uint16_t>(_points.size()), N));
+    }
+    uint8_t n() const override { return N; }
+  };
+
  public:
   FociSTM() = delete;
   FociSTM(const FociSTM& obj) = default;             // LCOV_EXCL_LINE
@@ -29,48 +48,57 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
   FociSTM& operator=(FociSTM&& obj) = default;       // LCOV_EXCL_LINE
   ~FociSTM() override = default;                     // LCOV_EXCL_LINE
 
-  template <stm_sampling_config T, foci_range_c<N> R>
-  AUTD3_API explicit FociSTM(const T sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite) {
-    for (auto e : iter) _points.emplace_back(ControlPoints<N>{std::move(e)});
-    _sampling = STMSamplingConfig(sampling, static_cast<uint32_t>(_points.size()));
+#define AUTD3_FOCI_STM_CONSTRUCTOR(N)                                                                                  \
+  template <stm_sampling_config T, foci_range_c<N> R>                                                                  \
+  AUTD3_API explicit FociSTM(const T sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite) {               \
+    std::vector<ControlPoints<N>> points;                                                                              \
+    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});                                           \
+    _sampling = STMSamplingConfig(sampling, static_cast<uint32_t>(points.size()));                                     \
+    _points = std::make_shared<ControlPointsArray<N>>(std::move(points));                                              \
+  }                                                                                                                    \
+  template <foci_range_c<N> R>                                                                                         \
+  AUTD3_API [[nodiscard]] static FociSTM nearest(const Freq<float> freq, const R& iter) {                              \
+    std::vector<ControlPoints<N>> points;                                                                              \
+    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});                                           \
+    const auto n = static_cast<uint32_t>(points.size());                                                               \
+    return FociSTM(STMSamplingConfig::nearest(freq, n), std::make_shared<ControlPointsArray<N>>(std::move(points)));   \
+  }                                                                                                                    \
+  template <typename Rep, typename P, foci_range_c<N> R>                                                               \
+  AUTD3_API [[nodiscard]] static FociSTM nearest(const std::chrono::duration<Rep, P> period, const R& iter) {          \
+    std::vector<ControlPoints<N>> points;                                                                              \
+    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});                                           \
+    const auto n = static_cast<uint32_t>(points.size());                                                               \
+    return FociSTM(STMSamplingConfig::nearest(period, n), std::make_shared<ControlPointsArray<N>>(std::move(points))); \
   }
-
-  template <foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM nearest(const Freq<float> freq, const R& iter) {
-    std::vector<ControlPoints<N>> points;
-    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});
-    const auto n = static_cast<uint32_t>(points.size());
-    return FociSTM(STMSamplingConfig::nearest(freq, n), std::move(points));
-  }
-
-  template <typename Rep, typename P, foci_range_c<N> R>
-  AUTD3_API [[nodiscard]] static FociSTM nearest(const std::chrono::duration<Rep, P> period, const R& iter) {
-    std::vector<ControlPoints<N>> points;
-    for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});
-    const auto n = static_cast<uint32_t>(points.size());
-    return FociSTM(STMSamplingConfig::nearest(period, n), std::move(points));
-  }
+  AUTD3_FOCI_STM_CONSTRUCTOR(1)
+  AUTD3_FOCI_STM_CONSTRUCTOR(2)
+  AUTD3_FOCI_STM_CONSTRUCTOR(3)
+  AUTD3_FOCI_STM_CONSTRUCTOR(4)
+  AUTD3_FOCI_STM_CONSTRUCTOR(5)
+  AUTD3_FOCI_STM_CONSTRUCTOR(6)
+  AUTD3_FOCI_STM_CONSTRUCTOR(7)
+  AUTD3_FOCI_STM_CONSTRUCTOR(8)
+#undef AUTD3_FOCI_STM_CONSTRUCTOR
 
   AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const override {
-    native_methods::FociSTMPtr ptr =
-        validate(native_methods::AUTDSTMFoci(_sampling, reinterpret_cast<const void*>(_points.data()), static_cast<uint16_t>(_points.size()), N));
-    ptr = AUTDSTMFociWithLoopBehavior(ptr, N, _loop_behavior);
+    native_methods::FociSTMPtr ptr = _points->ptr(_sampling);
+    ptr = AUTDSTMFociWithLoopBehavior(ptr, _points->n(), _loop_behavior);
     return ptr;
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::FociSTMPtr p,
                                                                    const native_methods::Segment segment) const override {
-    return AUTDSTMFociIntoDatagramWithSegment(p, N, segment);
+    return AUTDSTMFociIntoDatagramWithSegment(p, _points->n(), segment);
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(
       const native_methods::FociSTMPtr p, const native_methods::Segment segment,
       const native_methods::TransitionModeWrap transition_mode) const override {
-    return AUTDSTMFociIntoDatagramWithSegmentTransition(p, N, segment, transition_mode);
+    return AUTDSTMFociIntoDatagramWithSegmentTransition(p, _points->n(), segment, transition_mode);
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return AUTDSTMFociIntoDatagram(raw_ptr(geometry), N);
+    return AUTDSTMFociIntoDatagram(raw_ptr(geometry), _points->n());
   }
 
   AUTD3_API
@@ -90,10 +118,10 @@ class FociSTM final : public IntoDatagramTuple<FociSTM<N>>,
   AUTD3_API [[nodiscard]] std::optional<SamplingConfig> sampling_config_phase() const { return sampling_config(); }
 
  private:
-  AUTD3_API explicit FociSTM(const STMSamplingConfig sampling, std::vector<ControlPoints<N>> points)
+  AUTD3_API explicit FociSTM(const STMSamplingConfig sampling, std::shared_ptr<IControlPointsArray> points)
       : _loop_behavior(LoopBehavior::Infinite), _points(std::move(points)), _sampling(sampling) {}
 
-  std::vector<ControlPoints<N>> _points;
+  std::shared_ptr<IControlPointsArray> _points;
   STMSamplingConfig _sampling;
 };
 

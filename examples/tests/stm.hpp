@@ -15,11 +15,11 @@ inline void focus_stm(autd3::Controller<L>& autd) {
   const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0, 0, 150);
   constexpr size_t points_num = 200;
   constexpr auto radius = 30.0f;
-  autd3::FociSTM<1> stm(1.0f * autd3::Hz, iota(0) | take(points_num) | transform([&](auto i) {
-                                            const auto theta = 2.0f * autd3::pi * static_cast<float>(i) / static_cast<float>(points_num);
-                                            autd3::Vector3 p = center + autd3::Vector3(radius * std::cos(theta), radius * std::sin(theta), 0);
-                                            return p;
-                                          }));
+  autd3::FociSTM stm(1.0f * autd3::Hz, iota(0) | take(points_num) | transform([&](auto i) {
+                                         const auto theta = 2.0f * autd3::pi * static_cast<float>(i) / static_cast<float>(points_num);
+                                         autd3::Vector3 p = center + autd3::Vector3(radius * std::cos(theta), radius * std::sin(theta), 0);
+                                         return p;
+                                       }));
 
   autd.send((m, stm));
 }
