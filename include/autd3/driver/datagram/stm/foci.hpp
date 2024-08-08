@@ -53,21 +53,21 @@ class FociSTM final : public IntoDatagramTuple<FociSTM>,
   AUTD3_API explicit FociSTM(const T sampling, const R& iter) : _loop_behavior(LoopBehavior::Infinite) {               \
     std::vector<ControlPoints<N>> points;                                                                              \
     for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});                                           \
-    _sampling = STMSamplingConfig(sampling, static_cast<uint32_t>(points.size()));                                     \
+    _sampling = STMSamplingConfig(sampling, static_cast<uint16_t>(points.size()));                                     \
     _points = std::make_shared<ControlPointsArray<N>>(std::move(points));                                              \
   }                                                                                                                    \
   template <foci_range_c<N> R>                                                                                         \
   AUTD3_API [[nodiscard]] static FociSTM nearest(const Freq<float> freq, const R& iter) {                              \
     std::vector<ControlPoints<N>> points;                                                                              \
     for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});                                           \
-    const auto n = static_cast<uint32_t>(points.size());                                                               \
+    const auto n = static_cast<uint16_t>(points.size());                                                               \
     return FociSTM(STMSamplingConfig::nearest(freq, n), std::make_shared<ControlPointsArray<N>>(std::move(points)));   \
   }                                                                                                                    \
   template <typename Rep, typename P, foci_range_c<N> R>                                                               \
   AUTD3_API [[nodiscard]] static FociSTM nearest(const std::chrono::duration<Rep, P> period, const R& iter) {          \
     std::vector<ControlPoints<N>> points;                                                                              \
     for (auto e : iter) points.emplace_back(ControlPoints<N>{std::move(e)});                                           \
-    const auto n = static_cast<uint32_t>(points.size());                                                               \
+    const auto n = static_cast<uint16_t>(points.size());                                                               \
     return FociSTM(STMSamplingConfig::nearest(period, n), std::make_shared<ControlPointsArray<N>>(std::move(points))); \
   }
   AUTD3_FOCI_STM_CONSTRUCTOR(1)

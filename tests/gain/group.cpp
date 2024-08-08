@@ -57,14 +57,13 @@ TEST(Gain, GroupWithParallel) {
 
   const auto cx = autd.geometry().center().x();
 
-  autd.send(autd3::gain::Group(
-                [cx](const auto&) {
-                  return [cx](const auto& tr) -> std::optional<const char*> {
-                    if (tr.position().x() < cx) return "uniform";
-                    return "null";
-                  };
-                },
-                true)
+  autd.send(autd3::gain::Group([cx](const auto&) {
+              return [cx](const auto& tr) -> std::optional<const char*> {
+                if (tr.position().x() < cx) return "uniform";
+                return "null";
+              };
+            })
+                .with_parallel(true)
                 .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
                 .set("null", autd3::gain::Null()));
   for (auto& dev : autd.geometry()) {
