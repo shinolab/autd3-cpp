@@ -48,7 +48,7 @@ TEST(Modulation, MixerNearest) {
 
   std::vector f{50.f, 100.f};
   const auto m = autd3::modulation::Mixer(
-      f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine::from_freq_nearest(x * autd3::driver::Hz); }));
+      f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine::nearest(x * autd3::driver::Hz); }));
   autd.send(m);
 
   for (auto& dev : autd.geometry()) {

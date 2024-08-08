@@ -24,7 +24,7 @@ TEST(Modulation, Square) {
 TEST(Modulation, SquareWithMode) {
   auto autd = create_controller();
 
-  autd.send(autd3::modulation::Square::from_freq_nearest(150.f * autd3::driver::Hz));
+  autd.send(autd3::modulation::Square::nearest(150.f * autd3::driver::Hz));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -33,7 +33,7 @@ TEST(Modulation, SquareWithMode) {
   }
 
   ASSERT_THROW(autd.send(autd3::modulation::Square(100.1f * autd3::driver::Hz)), autd3::AUTDException);
-  autd.send(autd3::modulation::Square::from_freq_nearest(100.1f * autd3::driver::Hz));
+  autd.send(autd3::modulation::Square::nearest(100.1f * autd3::driver::Hz));
 }
 
 TEST(Modulation, SquareDefault) {

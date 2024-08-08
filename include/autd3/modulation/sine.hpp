@@ -30,7 +30,7 @@ class Sine final : public driver::Modulation<Sine> {
 
   AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq) : Sine(SamplingModeExact{freq}) {}
   AUTD3_API explicit Sine(const driver::Freq<float> freq) : Sine(SamplingModeExactFloat{freq}) {}
-  AUTD3_API [[nodiscard]] static Sine from_freq_nearest(const driver::Freq<float> freq) { return Sine(SamplingModeNearest{freq}); }
+  AUTD3_API [[nodiscard]] static Sine nearest(const driver::Freq<float> freq) { return Sine(SamplingModeNearest{freq}); }
 
   AUTD3_DEF_PARAM_INT(Sine, uint8_t, intensity)
   AUTD3_DEF_PARAM_INT(Sine, uint8_t, offset)
