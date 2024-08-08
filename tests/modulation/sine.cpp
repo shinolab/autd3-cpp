@@ -41,7 +41,7 @@ TEST(Modulation, Sine) {
 TEST(Modulation, SineWithMode) {
   auto autd = create_controller();
 
-  autd.send(autd3::modulation::Sine::from_freq_nearest(150.f * autd3::driver::Hz));
+  autd.send(autd3::modulation::Sine::nearest(150.f * autd3::driver::Hz));
 
   for (auto& dev : autd.geometry()) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -51,7 +51,7 @@ TEST(Modulation, SineWithMode) {
   }
 
   ASSERT_THROW(autd.send(autd3::modulation::Sine(100.1f * autd3::driver::Hz)), autd3::AUTDException);
-  autd.send(autd3::modulation::Sine::from_freq_nearest(100.1f * autd3::driver::Hz));
+  autd.send(autd3::modulation::Sine::nearest(100.1f * autd3::driver::Hz));
 }
 
 TEST(Modulation, SineDefault) {

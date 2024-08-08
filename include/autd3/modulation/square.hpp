@@ -22,7 +22,7 @@ class Square final : public driver::Modulation<Square> {
  public:
   AUTD3_API explicit Square(const driver::Freq<uint32_t> freq) : Square(SamplingModeExact{freq}) {}
   AUTD3_API explicit Square(const driver::Freq<float> freq) : Square(SamplingModeExactFloat{freq}) {}
-  AUTD3_API [[nodiscard]] static Square from_freq_nearest(const driver::Freq<float> freq) { return Square(SamplingModeNearest{freq}); }
+  AUTD3_API [[nodiscard]] static Square nearest(const driver::Freq<float> freq) { return Square(SamplingModeNearest{freq}); }
 
   AUTD3_DEF_PARAM_INT(Square, uint8_t, low)
   AUTD3_DEF_PARAM_INT(Square, uint8_t, high)
