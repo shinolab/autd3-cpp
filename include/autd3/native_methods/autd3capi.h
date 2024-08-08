@@ -224,9 +224,9 @@ bool AUTDDatagramSilencerFixedCompletionTimeIsValid(DatagramPtr silencer,
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromPeriodNearest(uint64_t p, uint16_t n);
 
-[[nodiscard]] float AUTDSTMFreq(SamplingConfig c, uint32_t n);
+[[nodiscard]] float AUTDSTMFreq(SamplingConfig c, uint16_t n);
 
-[[nodiscard]] uint64_t AUTDSTMPeriod(SamplingConfig c, uint32_t n);
+[[nodiscard]] uint64_t AUTDSTMPeriod(SamplingConfig c, uint16_t n);
 
 [[nodiscard]]
 ResultFociSTM AUTDSTMFoci(SamplingConfig config,
