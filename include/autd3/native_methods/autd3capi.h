@@ -309,7 +309,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegmentTransition(GainSTMPtr stm,
 
 [[nodiscard]] float AUTDPhaseToRad(uint8_t value);
 
-[[nodiscard]] SamplingConfig AUTDSamplingConfigFromDivision(uint16_t div);
+[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivision(uint16_t div);
 
 [[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromFreq(uint32_t f);
 
