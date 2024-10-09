@@ -15,32 +15,30 @@ TEST(Controller, ControllerClose) {
     ASSERT_TRUE(autd.link().is_open());
 
     autd.close();
-    ASSERT_FALSE(autd.link().is_open());
+    autd.close();
   }
 
   {
     auto autd = create_controller();
     autd.link().break_down();
     ASSERT_THROW(autd.close(), autd3::AUTDException);
-    autd.link().repair();
   }
 }
 
 #ifdef AUTD3_ASYNC_API
 TEST(Controller, ControllerCloseAsync) {
   {
-    const auto autd = create_controller();
+    auto autd = create_controller();
     ASSERT_TRUE(autd.link().is_open());
 
     sync_wait(autd.close_async());
-    ASSERT_FALSE(autd.link().is_open());
+    sync_wait(autd.close_async());
   }
 
   {
-    const auto autd = create_controller();
+    auto autd = create_controller();
     autd.link().break_down();
     ASSERT_THROW(sync_wait(autd.close_async()), autd3::AUTDException);
-    autd.link().repair();
   }
 }
 #endif

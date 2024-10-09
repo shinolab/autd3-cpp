@@ -14,7 +14,7 @@ TEST(DriverDatagram, WithTimeout) {
   ASSERT_EQ(std::chrono::milliseconds(200), autd.link().last_timeout());
 
   autd.send(autd3::gain::Null());
-  ASSERT_EQ(std::nullopt, autd.link().last_timeout());
+  ASSERT_EQ(std::chrono::nanoseconds::zero(), autd.link().last_timeout());
 
   autd.send(autd3::gain::Null().with_timeout(std::chrono::milliseconds(100)));
   ASSERT_EQ(std::chrono::milliseconds(100), autd.link().last_timeout());
