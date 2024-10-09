@@ -53,7 +53,12 @@ class Controller {
     return *this;
   }
 
-  ~Controller() noexcept { close(); }
+  ~Controller() noexcept {
+    try {
+      close();
+    } catch (...) {
+    }
+  }
 
   AUTD3_API [[nodiscard]] const driver::geometry::Geometry& geometry() const { return _geometry; }
   AUTD3_API [[nodiscard]] driver::geometry::Geometry& geometry() { return _geometry; }
@@ -62,9 +67,10 @@ class Controller {
   AUTD3_API [[nodiscard]] const L& link() const { return _link; }
 
   AUTD3_API void close() {
-    if (_handle._0 == nullptr) return;
-    validate(AUTDWaitResultI32(_handle, AUTDControllerClose(_ptr)));
+    if (_ptr._0 == nullptr) return;
+    auto res = AUTDWaitResultI32(_handle, AUTDControllerClose(_ptr));
     _ptr._0 = nullptr;
+    validate(res);
     AUTDDeleteRuntime(_runtime);
     _runtime._0 = nullptr;
     _handle._0 = nullptr;
@@ -160,10 +166,15 @@ class Controller {
   }
 
 #ifdef AUTD3_ASYNC_API
-  AUTD3_API [[nodiscard]] coro::task<void> close_async() const {
+  AUTD3_API [[nodiscard]] coro::task<void> close_async() {
+    if (_ptr._0 == nullptr) co_return;
     auto future = AUTDControllerClose(_ptr);
-    auto ptr = co_await wait_future(_handle, std::move(future));
-    validate(ptr);
+    auto res = co_await wait_future(_handle, std::move(future));
+    _ptr._0 = nullptr;
+    validate(res);
+    AUTDDeleteRuntime(_runtime);
+    _runtime._0 = nullptr;
+    _handle._0 = nullptr;
   }
 
   AUTD3_API
