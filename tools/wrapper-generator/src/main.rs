@@ -67,6 +67,9 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
             "SamplingConfig".to_string(),
             "ResultSamplingConfig".to_string(),
             "SilencerTarget".to_string(),
+            "RuntimePtr".to_string(),
+            "HandlePtr".to_string(),
+            "DynSincInterpolator".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]

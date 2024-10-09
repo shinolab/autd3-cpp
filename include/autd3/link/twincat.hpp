@@ -24,7 +24,7 @@ class TwinCAT final {
 
     AUTD3_API Builder() : _ptr(native_methods::AUTDLinkTwinCAT()) {}
 
-    [[nodiscard]] static TwinCAT resolve_link(native_methods::RuntimePtr, native_methods::LinkPtr) { return {}; }
+    [[nodiscard]] static TwinCAT resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return {}; }
 
    public:
     using Link = TwinCAT;
@@ -56,7 +56,7 @@ class RemoteTwinCAT final {
       _ptr = validate(native_methods::AUTDLinkRemoteTwinCAT(server_ams_net_id.c_str()));
     }
 
-    [[nodiscard]] static RemoteTwinCAT resolve_link(native_methods::RuntimePtr, native_methods::LinkPtr) { return {}; }
+    [[nodiscard]] static RemoteTwinCAT resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return {}; }
 
    public:
     using Link = RemoteTwinCAT;

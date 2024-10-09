@@ -13,11 +13,6 @@ class ControllerBuilder;
 namespace autd3::link {
 
 class Simulator final {
-  native_methods::RuntimePtr _runtime;
-  native_methods::LinkPtr _ptr;
-
-  explicit Simulator(const native_methods::RuntimePtr runtime, const native_methods::LinkPtr ptr) : _runtime(runtime), _ptr(ptr) {}
-
  public:
   class Builder final {
     friend class Simulator;
@@ -27,9 +22,7 @@ class Simulator final {
 
     AUTD3_API explicit Builder(const std::string& ip) : _ptr(validate(native_methods::AUTDLinkSimulator(ip.c_str()))) {}
 
-    [[nodiscard]] static Simulator resolve_link(const native_methods::RuntimePtr runtime, const native_methods::LinkPtr link) {
-      return Simulator{runtime, link};
-    }
+    [[nodiscard]] static Simulator resolve_link(const native_methods::HandlePtr, const native_methods::LinkPtr) { return Simulator{}; }
 
    public:
     using Link = Simulator;

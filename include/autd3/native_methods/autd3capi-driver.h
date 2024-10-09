@@ -37,6 +37,12 @@ enum class DebugTypeTag : uint8_t {
   IsStmMode = 9,
   PwmOut = 10,
   Direct = 11,
+  SysTimeEq = 12,
+};
+
+enum class DynWindow : uint32_t {
+  Rectangular = 0,
+  Blackman = 1,
 };
 
 enum class GPIOIn : uint8_t {
@@ -89,6 +95,10 @@ struct LoopBehavior {
 struct TransitionModeWrap {
   TransitionModeTag tag;
   uint64_t value;
+};
+
+struct ControllerPtr {
+  const void *_0;
 };
 
 struct DevicePtr {
@@ -168,13 +178,26 @@ struct ResultFociSTM {
 
 struct DebugTypeWrap {
   DebugTypeTag ty;
-  uint16_t value;
+  uint64_t value;
 };
 
 struct ResultSamplingConfig {
   SamplingConfig result;
   uint32_t err_len;
   const void* err;
+};
+
+struct RuntimePtr {
+  const void *_0;
+};
+
+struct HandlePtr {
+  const void *_0;
+};
+
+struct DynSincInterpolator {
+  DynWindow window;
+  uint32_t window_size;
 };
 
 } // namespace autd3::native_methods

@@ -35,8 +35,9 @@ class Sine final : public driver::Modulation<Sine> {
   AUTD3_DEF_PARAM_INT(Sine, uint8_t, intensity)
   AUTD3_DEF_PARAM_INT(Sine, uint8_t, offset)
   AUTD3_DEF_PARAM(Sine, driver::Angle, phase)
+  AUTD3_DEF_PARAM(Sine, bool, clamp)
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    return std::visit([&](const auto& f) { return f.sine_ptr(_sampling_config, _intensity, _offset, _phase, _loop_behavior); }, _freq);
+    return std::visit([&](const auto& f) { return f.sine_ptr(_sampling_config, _intensity, _offset, _phase, _clamp, _loop_behavior); }, _freq);
   }
 
  private:

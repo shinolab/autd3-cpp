@@ -5,7 +5,6 @@ target_sources(test_autd3 PRIVATE
   static.cpp
   modulation.cpp
   custom.cpp
-  mixer.cpp
 )
 
 add_subdirectory(audio_file)

@@ -127,9 +127,6 @@ class Config:
     def exe_ext(self):
         return ".exe" if self.is_windows() else ""
 
-    def is_cuda_available(self):
-        return shutil.which("nvcc") is not None
-
     def is_pcap_available(self):
         if not self.is_windows():
             return True
@@ -248,8 +245,6 @@ def cpp_test(args):
             if config.cmake_extra is not None:
                 for cmd in config.cmake_extra:
                     command.append(cmd)
-            if config.is_cuda_available():
-                command.append("-DRUN_BACKEND_CUDA=ON")
             subprocess.run(command).check_returncode()
             command = ["cmake", "--build", ".", "--parallel", "8"]
             if config.release:
@@ -318,7 +313,6 @@ def check_all_headers_is_tested():
         headers.remove("driver/datagram/modulation/modulation.hpp")
         headers.remove("gain/holo.hpp")
         headers.remove("gain/holo/holo.hpp")
-        headers.remove("gain/holo/backend_cuda.hpp")
         headers.remove("gain/holo/backend.hpp")
         headers.remove("modulation/audio_file.hpp")
         headers.remove("modulation/sampling_mode.hpp")
@@ -413,8 +407,6 @@ def cpp_cov(args):
             if config.cmake_extra is not None:
                 for cmd in config.cmake_extra:
                     command.append(cmd)
-            if config.is_cuda_available():
-                command.append("-DRUN_BACKEND_CUDA=ON")
             subprocess.run(command).check_returncode()
             command = ["cmake", "--build", ".", "--parallel", "8"]
             if config.release:
@@ -473,7 +465,6 @@ def cpp_cov(args):
                         "*/_deps/*",
                         "*/usr/*",
                         "*/tests/*",
-                        "*/gain/holo/backend_cuda.hpp",
                         "--ignore-errors",
                         "unused",
                         "-o",
