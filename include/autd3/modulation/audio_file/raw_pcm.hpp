@@ -8,10 +8,7 @@
 
 namespace autd3::modulation::audio_file {
 
-class RawPCM final : public driver::ModulationBase<RawPCM>,
-                     public driver::IntoModulationCache<RawPCM>,
-                     public driver::IntoRadiationPressure<RawPCM>,
-                     public driver::IntoModulationTransform<RawPCM> {
+class RawPCM final : public driver::ModulationBase<RawPCM>, public driver::IntoModulationCache<RawPCM>, public driver::IntoRadiationPressure<RawPCM> {
  public:
   template <driver::sampling_config T>
   AUTD3_API explicit RawPCM(std::filesystem::path path, const T config) : _config(config), _path(std::move(path)) {}

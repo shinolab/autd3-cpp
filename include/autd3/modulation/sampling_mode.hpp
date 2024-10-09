@@ -12,18 +12,14 @@ struct SamplingModeExact {
   driver::Freq<uint32_t> freq;
 
   [[nodiscard]] native_methods::ModulationPtr sine_ptr(const native_methods::SamplingConfig config, const uint8_t intensity, const uint8_t offset,
-                                                       const driver::Angle phase, const native_methods::LoopBehavior loop_behavior) const {
-    return validate(AUTDModulationSineExact(freq.hz(), config, intensity, offset, phase.radian(), loop_behavior));
+                                                       const driver::Angle phase, const bool clamp,
+                                                       const native_methods::LoopBehavior loop_behavior) const {
+    return validate(AUTDModulationSineExact(freq.hz(), config, intensity, offset, phase.radian(), clamp, loop_behavior));
   }
 
-  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components,
-                                                                 const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationFourierExact(components.data(), static_cast<uint32_t>(components.size()), loop_behavior));
-  }
-
-  [[nodiscard]] static native_methods::ModulationPtr mixer_ptr(const std::vector<native_methods::ModulationPtr>& components,
-                                                               const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationMixerExact(components.data(), static_cast<uint32_t>(components.size()), loop_behavior));
+  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
+                                                                 const float scale_factor, const native_methods::LoopBehavior loop_behavior) {
+    return validate(AUTDModulationFourierExact(components.data(), static_cast<uint32_t>(components.size()), clamp, scale_factor, loop_behavior));
   }
 
   [[nodiscard]] native_methods::ModulationPtr square_ptr(const native_methods::SamplingConfig config, const uint8_t low, const uint8_t high,
@@ -44,18 +40,14 @@ struct SamplingModeExactFloat {
   driver::Freq<float> freq;
 
   [[nodiscard]] native_methods::ModulationPtr sine_ptr(const native_methods::SamplingConfig config, const uint8_t intensity, const uint8_t offset,
-                                                       const driver::Angle phase, const native_methods::LoopBehavior loop_behavior) const {
-    return validate(AUTDModulationSineExactFloat(freq.hz(), config, intensity, offset, phase.radian(), loop_behavior));
+                                                       const driver::Angle phase, const bool clamp,
+                                                       const native_methods::LoopBehavior loop_behavior) const {
+    return validate(AUTDModulationSineExactFloat(freq.hz(), config, intensity, offset, phase.radian(), clamp, loop_behavior));
   }
 
-  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components,
-                                                                 const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationFourierExactFloat(components.data(), static_cast<uint32_t>(components.size()), loop_behavior));
-  }
-
-  [[nodiscard]] static native_methods::ModulationPtr mixer_ptr(const std::vector<native_methods::ModulationPtr>& components,
-                                                               const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationMixerExactFloat(components.data(), static_cast<uint32_t>(components.size()), loop_behavior));
+  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
+                                                                 const float scale_factor, const native_methods::LoopBehavior loop_behavior) {
+    return validate(AUTDModulationFourierExactFloat(components.data(), static_cast<uint32_t>(components.size()), clamp, scale_factor, loop_behavior));
   }
 
   [[nodiscard]] native_methods::ModulationPtr square_ptr(const native_methods::SamplingConfig config, const uint8_t low, const uint8_t high,
@@ -72,18 +64,14 @@ struct SamplingModeNearest {
   driver::Freq<float> freq;
 
   [[nodiscard]] native_methods::ModulationPtr sine_ptr(const native_methods::SamplingConfig config, const uint8_t intensity, const uint8_t offset,
-                                                       const driver::Angle phase, const native_methods::LoopBehavior loop_behavior) const {
-    return validate(AUTDModulationSineNearest(freq.hz(), config, intensity, offset, phase.radian(), loop_behavior));
+                                                       const driver::Angle phase, const bool clamp,
+                                                       const native_methods::LoopBehavior loop_behavior) const {
+    return validate(AUTDModulationSineNearest(freq.hz(), config, intensity, offset, phase.radian(), clamp, loop_behavior));
   }
 
-  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components,
-                                                                 const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationFourierNearest(components.data(), static_cast<uint32_t>(components.size()), loop_behavior));
-  }
-
-  [[nodiscard]] static native_methods::ModulationPtr mixer_ptr(const std::vector<native_methods::ModulationPtr>& components,
-                                                               const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationMixerNearest(components.data(), static_cast<uint32_t>(components.size()), loop_behavior));
+  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
+                                                                 const float scale_factor, const native_methods::LoopBehavior loop_behavior) {
+    return validate(AUTDModulationFourierNearest(components.data(), static_cast<uint32_t>(components.size()), clamp, scale_factor, loop_behavior));
   }
 
   [[nodiscard]] native_methods::ModulationPtr square_ptr(const native_methods::SamplingConfig config, const uint8_t low, const uint8_t high,

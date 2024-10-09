@@ -28,7 +28,7 @@ class Audit final {
 
     Builder() : _ptr(native_methods::AUTDLinkAudit()) {}
 
-    [[nodiscard]] static Audit resolve_link(native_methods::RuntimePtr, const native_methods::LinkPtr link) { return Audit{link}; }
+    [[nodiscard]] static Audit resolve_link(native_methods::HandlePtr, const native_methods::LinkPtr link) { return Audit{link}; }
 
    public:
     using Link = Audit;
@@ -56,6 +56,8 @@ class Audit final {
     const auto ns = AUTDLinkAuditLastTimeoutNs(_ptr);
     return ns < 0 ? std::nullopt : std::optional(std::chrono::nanoseconds(ns));
   }
+
+  [[nodiscard]] uint64_t last_parallel_threshold() const { return AUTDLinkAuditLastParallelThreshold(_ptr); }
 
   [[nodiscard]] bool is_force_fan(const size_t idx) const { return AUTDLinkAuditFpgaIsForceFan(_ptr, static_cast<uint16_t>(idx)); }
 
@@ -93,8 +95,8 @@ class Audit final {
     return ty;
   }
 
-  [[nodiscard]] std::array<uint16_t, 4> debug_values(const size_t idx) const {
-    std::array<uint16_t, 4> value{};
+  [[nodiscard]] std::array<uint64_t, 4> debug_values(const size_t idx) const {
+    std::array<uint64_t, 4> value{};
     AUTDLinkAuditFpgaDebugValues(_ptr, static_cast<uint16_t>(idx), value.data());
     return value;
   }
@@ -106,7 +108,7 @@ class Audit final {
   [[nodiscard]] std::vector<uint8_t> modulation(const size_t idx, const native_methods::Segment segment) const {
     const auto n = AUTDLinkAuditFpgaModulationCycle(_ptr, segment, static_cast<uint16_t>(idx));
     std::vector<uint8_t> buf(n);
-    AUTDLinkAuditFpgaModulation(_ptr, segment, static_cast<uint16_t>(idx), buf.data());
+    AUTDLinkAuditFpgaModulationBuffer(_ptr, segment, static_cast<uint16_t>(idx), buf.data(), n);
     return buf;
   }
 
@@ -120,13 +122,9 @@ class Audit final {
 
   [[nodiscard]] std::vector<driver::Drive> drives(const size_t idx, const native_methods::Segment segment, const int stm_idx) const {
     const auto n = AUTDLinkAuditCpuNumTransducers(_ptr, static_cast<uint16_t>(idx));
-    std::vector<uint8_t> duties(n);
-    std::vector<uint8_t> phases(n);
-    AUTDLinkAuditFpgaDrives(_ptr, segment, static_cast<uint16_t>(idx), static_cast<uint16_t>(stm_idx), duties.data(), phases.data());
-    std::vector<driver::Drive> drives;
-    drives.reserve(n);
-    std::transform(duties.cbegin(), duties.cend(), phases.cbegin(), std::back_inserter(drives),
-                   [](const auto& i, const auto& p) { return driver::Drive(driver::Phase(p), driver::EmitIntensity(i)); });
+    std::vector<driver::Drive> drives(n);
+    AUTDLinkAuditFpgaDrivesAt(_ptr, segment, static_cast<uint16_t>(idx), static_cast<uint16_t>(stm_idx),
+                              reinterpret_cast<native_methods::Drive*>(drives.data()));
     return drives;
   }
 

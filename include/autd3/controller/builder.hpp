@@ -35,9 +35,11 @@ class ControllerBuilder {
   AUTD3_API [[nodiscard]] Controller<typename B::Link> open_with_timeout(const B& link_builder, const std::chrono::duration<Rep, Period> timeout) {
     const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
     auto runtime = native_methods::AUTDCreateRuntime();
-    auto ptr = validate(AUTDWaitResultController(runtime, AUTDControllerOpen(_ptr, link_builder.ptr(), timeout_ns)));
+    auto handle = native_methods::AUTDGetRuntimeHandle(runtime);
+    auto ptr = validate(AUTDWaitResultController(handle, AUTDControllerOpen(_ptr, link_builder.ptr(), timeout_ns)));
     driver::geometry::Geometry geometry(AUTDGeometry(ptr));
-    return Controller<typename B::Link>{std::move(geometry), runtime, ptr, link_builder.resolve_link(runtime, native_methods::AUTDLinkGet(ptr))};
+    return Controller<typename B::Link>{std::move(geometry), runtime, handle, ptr,
+                                        link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
   }
 
   template <driver::link_builder B>
@@ -51,11 +53,13 @@ class ControllerBuilder {
                                                                                            const std::chrono::duration<Rep, Period> timeout) {
     const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
     auto runtime = native_methods::AUTDCreateRuntime();
+    auto handle = native_methods::AUTDGetRuntimeHandle(runtime);
     auto future = AUTDControllerOpen(_ptr, link_builder.ptr(), timeout_ns);
-    const auto result = co_await wait_future(runtime, future);
+    const auto result = co_await wait_future(handle, future);
     auto ptr = validate(result);
     driver::geometry::Geometry geometry(AUTDGeometry(ptr));
-    co_return Controller<typename B::Link>{std::move(geometry), runtime, ptr, link_builder.resolve_link(runtime, native_methods::AUTDLinkGet(ptr))};
+    co_return Controller<typename B::Link>{std::move(geometry), runtime, handle, ptr,
+                                           link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
   }
 
   template <driver::link_builder B>

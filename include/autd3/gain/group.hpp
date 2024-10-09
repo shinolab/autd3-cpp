@@ -41,8 +41,8 @@ class Group final : public driver::Gain<Group<F>> {
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     std::unordered_map<key_type, int32_t> keymap;
 
-    auto view = geometry.devices() | std::views::transform([](const driver::geometry::Device& dev) { return static_cast<uint32_t>(dev.idx()); });
-    const std::vector<uint32_t> device_indices(view.begin(), view.end());
+    auto view = geometry.devices() | std::views::transform([](const driver::geometry::Device& dev) { return static_cast<uint16_t>(dev.idx()); });
+    const std::vector<uint16_t> device_indices(view.begin(), view.end());
 
     auto map = native_methods::AUTDGainGroupCreateMap(device_indices.data(), static_cast<uint16_t>(device_indices.size()));
     int32_t k = 0;

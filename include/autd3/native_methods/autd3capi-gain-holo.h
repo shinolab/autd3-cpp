@@ -70,7 +70,7 @@ GainPtr AUTDGainHoloGSSphere(BackendPtr backend,
                              const Vector3 *points,
                              const float *amps,
                              uint32_t size,
-                             uint32_t repeat,
+                             uint32_t repeat_nonzero,
                              EmissionConstraintWrap constraint);
 
 [[nodiscard]]
@@ -78,7 +78,7 @@ GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
                               const Vector3 *points,
                               const float *amps,
                               uint32_t size,
-                              uint32_t repeat,
+                              uint32_t repeat_nonzero,
                               EmissionConstraintWrap constraint);
 
 [[nodiscard]] bool AUTDGainGSIsDefault(GainPtr gs);
@@ -88,7 +88,7 @@ GainPtr AUTDGainHoloGSPATSphere(BackendPtr backend,
                                 const Vector3 *points,
                                 const float *amps,
                                 uint32_t size,
-                                uint32_t repeat,
+                                uint32_t repeat_nonzero,
                                 EmissionConstraintWrap constraint);
 
 [[nodiscard]]
@@ -96,7 +96,7 @@ GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
                                  const Vector3 *points,
                                  const float *amps,
                                  uint32_t size,
-                                 uint32_t repeat,
+                                 uint32_t repeat_nonzero,
                                  EmissionConstraintWrap constraint);
 
 [[nodiscard]] bool AUTDGainGSPATIsDefault(GainPtr gs);
@@ -109,7 +109,7 @@ GainPtr AUTDGainHoloLMSphere(BackendPtr backend,
                              float eps_1,
                              float eps_2,
                              float tau,
-                             uint32_t k_max,
+                             uint32_t k_max_nonzero,
                              const float *initial_ptr,
                              uint32_t initial_len,
                              EmissionConstraintWrap constraint);
@@ -122,7 +122,7 @@ GainPtr AUTDGainHoloLMT4010A1(BackendPtr backend,
                               float eps_1,
                               float eps_2,
                               float tau,
-                              uint32_t k_max,
+                              uint32_t k_max_nonzero,
                               const float *initial_ptr,
                               uint32_t initial_len,
                               EmissionConstraintWrap constraint);

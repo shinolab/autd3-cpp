@@ -5,10 +5,7 @@
 
 namespace autd3::modulation {
 
-class Custom final : public driver::ModulationBase<Custom>,
-                     public driver::IntoModulationCache<Custom>,
-                     public driver::IntoRadiationPressure<Custom>,
-                     public driver::IntoModulationTransform<Custom> {
+class Custom final : public driver::ModulationBase<Custom>, public driver::IntoModulationCache<Custom>, public driver::IntoRadiationPressure<Custom> {
  public:
   template <driver::sampling_config T>
   explicit Custom(std::vector<uint8_t> buf, const T sampling_config)
@@ -16,7 +13,7 @@ class Custom final : public driver::ModulationBase<Custom>,
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     const auto size = _buf.size();
-    return native_methods::AUTDModulationRaw(this->_sampling_config, this->_loop_behavior, _buf.data(), static_cast<uint16_t>(size));
+    return native_methods::AUTDModulationCustom(this->_sampling_config, this->_loop_behavior, _buf.data(), static_cast<uint16_t>(size));
   }
 
  private:

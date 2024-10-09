@@ -110,24 +110,24 @@ constexpr T validate(ResultI32 res) {
 }
 
 #ifdef AUTD3_ASYNC_API
-inline coro::task<ResultI32> wait_future(const RuntimePtr runtime, FfiFutureResultI32 future) {
-  co_return AUTDWaitResultI32(runtime, std::move(future));
+inline coro::task<ResultI32> wait_future(const HandlePtr handle, FfiFutureResultI32 future) {
+  co_return AUTDWaitResultI32(handle, std::move(future));
 }
 
-inline coro::task<ResultI32> wait_future(const RuntimePtr runtime, LocalFfiFutureResultI32 future) {
-  co_return AUTDWaitLocalResultI32(runtime, std::move(future));
+inline coro::task<ResultI32> wait_future(const HandlePtr handle, LocalFfiFutureResultI32 future) {
+  co_return AUTDWaitLocalResultI32(handle, std::move(future));
 }
 
-inline coro::task<ResultFPGAStateList> wait_future(const RuntimePtr runtime, FfiFutureResultFPGAStateList future) {
-  co_return AUTDWaitResultFPGAStateList(runtime, std::move(future));
+inline coro::task<ResultFPGAStateList> wait_future(const HandlePtr handle, FfiFutureResultFPGAStateList future) {
+  co_return AUTDWaitResultFPGAStateList(handle, std::move(future));
 }
 
-inline coro::task<ResultFirmwareVersionList> wait_future(const RuntimePtr runtime, FfiFutureResultFirmwareVersionList future) {
-  co_return AUTDWaitResultFirmwareVersionList(runtime, std::move(future));
+inline coro::task<ResultFirmwareVersionList> wait_future(const HandlePtr handle, FfiFutureResultFirmwareVersionList future) {
+  co_return AUTDWaitResultFirmwareVersionList(handle, std::move(future));
 }
 
-inline coro::task<ResultController> wait_future(const RuntimePtr runtime, FfiFutureResultController future) {
-  co_return AUTDWaitResultController(runtime, std::move(future));
+inline coro::task<ResultController> wait_future(const HandlePtr handle, FfiFutureResultController future) {
+  co_return AUTDWaitResultController(handle, std::move(future));
 }
 #endif
 

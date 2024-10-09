@@ -5,7 +5,7 @@
 #include <autd3/link/nop.hpp>
 
 TEST(Link, Nop) {
-  const auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Nop::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Nop::builder());
 
   autd.close();
 }

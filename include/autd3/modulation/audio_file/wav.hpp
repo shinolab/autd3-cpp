@@ -8,10 +8,7 @@
 
 namespace autd3::modulation::audio_file {
 
-class Wav final : public driver::ModulationBase<Wav>,
-                  public driver::IntoModulationCache<Wav>,
-                  public driver::IntoRadiationPressure<Wav>,
-                  public driver::IntoModulationTransform<Wav> {
+class Wav final : public driver::ModulationBase<Wav>, public driver::IntoModulationCache<Wav>, public driver::IntoRadiationPressure<Wav> {
  public:
   AUTD3_API explicit Wav(std::filesystem::path path) : _path(std::move(path)) {}
 

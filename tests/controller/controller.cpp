@@ -11,7 +11,7 @@
 
 TEST(Controller, ControllerClose) {
   {
-    const auto autd = create_controller();
+    auto autd = create_controller();
     ASSERT_TRUE(autd.link().is_open());
 
     autd.close();
@@ -19,7 +19,7 @@ TEST(Controller, ControllerClose) {
   }
 
   {
-    const auto autd = create_controller();
+    auto autd = create_controller();
     autd.link().break_down();
     ASSERT_THROW(autd.close(), autd3::AUTDException);
     autd.link().repair();

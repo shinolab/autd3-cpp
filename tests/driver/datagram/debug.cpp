@@ -9,7 +9,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
 
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x00, 0x00, 0x00, 0x00};
-    std::array<uint16_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
+    std::array<uint64_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
@@ -29,7 +29,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
   }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x00, 0x01, 0x02, 0x03};
-    std::array<uint16_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
+    std::array<uint64_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
@@ -49,7 +49,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
   }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x10, 0x20, 0x21, 0x50};
-    std::array<uint16_t, 4> value{0x0000, 0x0000, 0x0001, 0x0000};
+    std::array<uint64_t, 4> value{0x0000, 0x0000, 0x0001, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
@@ -69,7 +69,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
   }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x51, 0x52, 0xE0, 0xF0};
-    std::array<uint16_t, 4> value{0x0002, 0x0000, 0x0003, 0x0001};
+    std::array<uint64_t, 4> value{0x0002, 0x0000, 0x0003, 0x0001};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }

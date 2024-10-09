@@ -6,14 +6,6 @@
 
 namespace autd3::native_methods {
 
-struct RuntimePtr {
-  const void *_0;
-};
-
-struct ControllerPtr {
-  const void *_0;
-};
-
 struct ResultController {
   ControllerPtr result;
   uint32_t err_len;
@@ -44,12 +36,12 @@ struct ControllerBuilderPtr {
   const void *_0;
 };
 
-struct GainCalcDrivesMapPtr {
+struct GainCalcPtr {
   const void *_0;
 };
 
 struct ResultGainCalcDrivesMap {
-  GainCalcDrivesMapPtr result;
+  GainCalcPtr result;
   uint32_t err_len;
   const void* err;
 };
@@ -77,33 +69,29 @@ extern "C" {
 
 [[nodiscard]] RuntimePtr AUTDCreateRuntime();
 
+[[nodiscard]] HandlePtr AUTDGetRuntimeHandle(RuntimePtr runtime);
+
 void AUTDDeleteRuntime(RuntimePtr runtime);
 
-[[nodiscard]] ResultI32 AUTDWaitResultI32(RuntimePtr runtime, FfiFutureResultI32 future);
+[[nodiscard]] ResultI32 AUTDWaitResultI32(HandlePtr handle, FfiFutureResultI32 future);
+
+[[nodiscard]] ResultI32 AUTDWaitLocalResultI32(HandlePtr handle, LocalFfiFutureResultI32 future);
 
 [[nodiscard]]
-ResultI32 AUTDWaitLocalResultI32(RuntimePtr runtime,
-                                 LocalFfiFutureResultI32 future);
-
-[[nodiscard]]
-ResultController AUTDWaitResultController(RuntimePtr runtime,
+ResultController AUTDWaitResultController(HandlePtr handle,
                                           FfiFutureResultController future);
 
 [[nodiscard]]
-ResultFPGAStateList AUTDWaitResultFPGAStateList(RuntimePtr runtime,
+ResultFPGAStateList AUTDWaitResultFPGAStateList(HandlePtr handle,
                                                 FfiFutureResultFPGAStateList future);
 
 [[nodiscard]]
-ResultFirmwareVersionList AUTDWaitResultFirmwareVersionList(RuntimePtr runtime,
+ResultFirmwareVersionList AUTDWaitResultFirmwareVersionList(HandlePtr handle,
                                                             FfiFutureResultFirmwareVersionList future);
 
 void AUTDTracingInit();
 
 [[nodiscard]] FfiFutureResultI32 AUTDControllerClose(ControllerPtr cnt);
-
-void AUTDControllerDelete(ControllerPtr cnt);
-
-[[nodiscard]] uint16_t AUTDControllerLastParallelThreshold(ControllerPtr cnt);
 
 [[nodiscard]] FfiFutureResultFPGAStateList AUTDControllerFPGAState(ControllerPtr cnt);
 
@@ -134,6 +122,10 @@ ControllerBuilderPtr AUTDControllerBuilderWithParallelThreshold(ControllerBuilde
 [[nodiscard]]
 ControllerBuilderPtr AUTDControllerBuilderWithSendInterval(ControllerBuilderPtr builder,
                                                            uint64_t interval_ns);
+
+[[nodiscard]]
+ControllerBuilderPtr AUTDControllerBuilderWithReceiveInterval(ControllerBuilderPtr builder,
+                                                              uint64_t interval_ns);
 
 [[nodiscard]]
 ControllerBuilderPtr AUTDControllerBuilderWithTimerResolution(ControllerBuilderPtr builder,
@@ -168,6 +160,11 @@ DatagramPtr AUTDDatagramForceFan(const void* f,
                                  GeometryPtr geometry);
 
 [[nodiscard]]
+DatagramPtr AUTDDatagramPhaseCorr(const void* f,
+                                  const void* context,
+                                  GeometryPtr geometry);
+
+[[nodiscard]]
 DatagramPtr AUTDDatagramPulseWidthEncoder(const void* f,
                                           const void* context,
                                           GeometryPtr geometry);
@@ -194,8 +191,8 @@ DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
 [[nodiscard]] DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromUpdateRate(uint8_t value_intensity,
-                                               uint8_t value_phase,
+DatagramPtr AUTDDatagramSilencerFromUpdateRate(uint16_t value_intensity,
+                                               uint16_t value_phase,
                                                SilencerTarget target);
 
 [[nodiscard]]
@@ -299,6 +296,8 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegmentTransition(GainSTMPtr stm,
 
 [[nodiscard]] DebugTypeWrap AUTDDebugTypeDirect(bool value);
 
+[[nodiscard]] DebugTypeWrap AUTDDebugTypeSysTimeEq(uint64_t sys_time);
+
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
 
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorFinite(uint16_t v);
@@ -346,9 +345,11 @@ DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
 
 [[nodiscard]] ResultGainCalcDrivesMap AUTDGainCalc(GainPtr gain, GeometryPtr geometry);
 
-void AUTDGainCalcGetResult(GainCalcDrivesMapPtr src, Drive *dst, DevicePtr device);
+void AUTDGainFree(GainPtr gain);
 
-void AUTDGainCalcFreeResult(GainCalcDrivesMapPtr src);
+void AUTDGainCalcGetResult(GainCalcPtr src, Drive *dst, DevicePtr device);
+
+void AUTDGainCalcFreeResult(GainCalcPtr src);
 
 [[nodiscard]]
 GainPtr AUTDGainBessel(Vector3 p,
@@ -366,7 +367,7 @@ GainPtr AUTDGainBessel(Vector3 p,
 [[nodiscard]] bool AUTDGainFocusIsDefault(GainPtr focus);
 
 [[nodiscard]]
-GroupGainMapPtr AUTDGainGroupCreateMap(const uint32_t *device_indices_ptr,
+GroupGainMapPtr AUTDGainGroupCreateMap(const uint16_t *device_indices_ptr,
                                        uint16_t num_devices);
 
 [[nodiscard]]
@@ -466,7 +467,9 @@ LinkAuditBuilderPtr AUTDLinkAuditWithTimeout(LinkAuditBuilderPtr audit,
 
 [[nodiscard]] uint64_t AUTDLinkAuditTimeoutNs(LinkPtr audit);
 
-[[nodiscard]] int64_t AUTDLinkAuditLastTimeoutNs(LinkPtr audit);
+[[nodiscard]] uint64_t AUTDLinkAuditLastTimeoutNs(LinkPtr audit);
+
+[[nodiscard]] uint64_t AUTDLinkAuditLastParallelThreshold(LinkPtr audit);
 
 void AUTDLinkAuditDown(LinkPtr audit);
 
@@ -492,15 +495,15 @@ void AUTDLinkAuditFpgaDeassertThermalSensor(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]] bool AUTDLinkAuditCpuSilencerStrictMode(LinkPtr audit, uint16_t idx);
 
-[[nodiscard]] uint8_t AUTDLinkAuditFpgaSilencerUpdateRateIntensity(LinkPtr audit, uint16_t idx);
+[[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerUpdateRateIntensity(LinkPtr audit, uint16_t idx);
 
-[[nodiscard]] uint8_t AUTDLinkAuditFpgaSilencerUpdateRatePhase(LinkPtr audit, uint16_t idx);
+[[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerUpdateRatePhase(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]]
-uint8_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
-                                                          uint16_t idx);
+uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
+                                                           uint16_t idx);
 
-[[nodiscard]] uint8_t AUTDLinkAuditFpgaSilencerCompletionStepsPhase(LinkPtr audit, uint16_t idx);
+[[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsPhase(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]] bool AUTDLinkAuditFpgaSilencerFixedCompletionStepsMode(LinkPtr audit, uint16_t idx);
 
@@ -508,7 +511,7 @@ uint8_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
 
 void AUTDLinkAuditFpgaDebugTypes(LinkPtr audit, uint16_t idx, uint8_t *ty);
 
-void AUTDLinkAuditFpgaDebugValues(LinkPtr audit, uint16_t idx, uint16_t *value);
+void AUTDLinkAuditFpgaDebugValues(LinkPtr audit, uint16_t idx, uint64_t *value);
 
 [[nodiscard]]
 uint16_t AUTDLinkAuditFpgaStmFreqDivision(LinkPtr audit,
@@ -534,19 +537,22 @@ uint16_t AUTDLinkAuditFpgaModulationCycle(LinkPtr audit,
                                           Segment segment,
                                           uint16_t idx);
 
-void AUTDLinkAuditFpgaModulation(LinkPtr audit, Segment segment, uint16_t idx, uint8_t *data);
+void AUTDLinkAuditFpgaModulationBuffer(LinkPtr audit,
+                                       Segment segment,
+                                       uint16_t idx,
+                                       uint8_t *data,
+                                       uint32_t size);
 
 [[nodiscard]]
 LoopBehavior AUTDLinkAuditFpgaModulationLoopBehavior(LinkPtr audit,
                                                      Segment segment,
                                                      uint16_t idx);
 
-void AUTDLinkAuditFpgaDrives(LinkPtr audit,
-                             Segment segment,
-                             uint16_t idx,
-                             uint16_t stm_idx,
-                             uint8_t *intensities,
-                             uint8_t *phases);
+void AUTDLinkAuditFpgaDrivesAt(LinkPtr audit,
+                               Segment segment,
+                               uint16_t idx,
+                               uint16_t stm_idx,
+                               Drive *drive);
 
 void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint8_t *dst);
 
@@ -572,44 +578,49 @@ uint16_t AUTDModulationCalcGetSize(ModulationCalcPtr src);
 void AUTDModulationCalcFreeResult(ModulationCalcPtr src);
 
 [[nodiscard]]
+ModulationPtr AUTDModulationCustom(SamplingConfig config,
+                                   LoopBehavior loop_behavior,
+                                   const uint8_t *ptr,
+                                   uint16_t len);
+
+[[nodiscard]]
+ModulationPtr AUTDModulationCustomWithResample(LoopBehavior loop_behavior,
+                                               const uint8_t *ptr,
+                                               uint16_t len,
+                                               float src,
+                                               SamplingConfig target,
+                                               DynSincInterpolator resample);
+
+[[nodiscard]]
+ModulationPtr AUTDModulationWithFir(ModulationPtr m,
+                                    LoopBehavior loop_behavior,
+                                    const float *coef,
+                                    uint32_t n_tap);
+
+[[nodiscard]]
 ResultModulation AUTDModulationFourierExact(const ModulationPtr *components,
                                             uint32_t size,
+                                            bool clamp,
+                                            float scale_factor,
                                             LoopBehavior loop_behavior);
 
 [[nodiscard]]
 ResultModulation AUTDModulationFourierExactFloat(const ModulationPtr *components,
                                                  uint32_t size,
+                                                 bool clamp,
+                                                 float scale_factor,
                                                  LoopBehavior loop_behavior);
 
 [[nodiscard]]
 ResultModulation AUTDModulationFourierNearest(const ModulationPtr *components,
                                               uint32_t size,
+                                              bool clamp,
+                                              float scale_factor,
                                               LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ResultModulation AUTDModulationMixerExact(const ModulationPtr *components,
-                                          uint32_t size,
-                                          LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ResultModulation AUTDModulationMixerExactFloat(const ModulationPtr *components,
-                                               uint32_t size,
-                                               LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ResultModulation AUTDModulationMixerNearest(const ModulationPtr *components,
-                                            uint32_t size,
-                                            LoopBehavior loop_behavior);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationWithRadiationPressure(ModulationPtr m,
                                                   LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ModulationPtr AUTDModulationRaw(SamplingConfig config,
-                                LoopBehavior loop_behavior,
-                                const uint8_t *ptr,
-                                uint16_t len);
 
 [[nodiscard]]
 ResultModulation AUTDModulationSineExact(uint32_t freq,
@@ -617,6 +628,7 @@ ResultModulation AUTDModulationSineExact(uint32_t freq,
                                          uint8_t intensity,
                                          uint8_t offset,
                                          float phase,
+                                         bool clamp,
                                          LoopBehavior loop_behavior);
 
 [[nodiscard]]
@@ -625,6 +637,7 @@ ResultModulation AUTDModulationSineExactFloat(float freq,
                                               uint8_t intensity,
                                               uint8_t offset,
                                               float phase,
+                                              bool clamp,
                                               LoopBehavior loop_behavior);
 
 [[nodiscard]]
@@ -633,6 +646,7 @@ ResultModulation AUTDModulationSineNearest(float freq,
                                            uint8_t intensity,
                                            uint8_t offset,
                                            float phase,
+                                           bool clamp,
                                            LoopBehavior loop_behavior);
 
 [[nodiscard]] uint32_t AUTDModulationSineExactFreq(ModulationPtr sine);
@@ -678,12 +692,6 @@ ResultModulation AUTDModulationSquareNearest(float freq,
 [[nodiscard]] ModulationPtr AUTDModulationStatic(uint8_t intensity, LoopBehavior loop_behavior);
 
 [[nodiscard]] bool AUTDModulationStaticIsDefault(ModulationPtr s);
-
-[[nodiscard]]
-ModulationPtr AUTDModulationWithTransform(ModulationPtr m,
-                                          const void* f,
-                                          const void* context,
-                                          LoopBehavior loop_behavior);
 
 void AUTDGetErr(const void* src, char *dst);
 

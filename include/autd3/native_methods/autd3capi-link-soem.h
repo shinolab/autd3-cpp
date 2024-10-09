@@ -15,7 +15,6 @@ enum class Status : uint8_t {
 enum class TimerStrategy : uint8_t {
   Sleep = 0,
   BusyWait = 1,
-  NativeTimer = 2,
 };
 
 struct EthernetAdaptersPtr {

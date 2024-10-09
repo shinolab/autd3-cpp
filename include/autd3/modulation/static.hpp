@@ -8,10 +8,7 @@
 
 namespace autd3::modulation {
 
-class Static final : public driver::ModulationBase<Static>,
-                     public driver::IntoModulationCache<Static>,
-                     public driver::IntoRadiationPressure<Static>,
-                     public driver::IntoModulationTransform<Static> {
+class Static final : public driver::ModulationBase<Static>, public driver::IntoModulationCache<Static>, public driver::IntoRadiationPressure<Static> {
  public:
   AUTD3_API Static() : _intensity(std::numeric_limits<uint8_t>::max()) {}
 
