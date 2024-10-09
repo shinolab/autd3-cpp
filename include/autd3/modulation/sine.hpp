@@ -20,8 +20,9 @@ class Sine final : public driver::Modulation<Sine> {
   AUTD3_API explicit Sine(const std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> freq)
       : Modulation(driver::SamplingConfig(10)),
         _intensity(std::numeric_limits<uint8_t>::max()),
-        _offset(std::numeric_limits<uint8_t>::max() / 2),
+        _offset(std::numeric_limits<uint8_t>::max()),
         _phase(0.0 * driver::rad),
+        _clamp(false),
         _freq(freq) {}
 
  public:
