@@ -7,6 +7,7 @@
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
+#include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/geometry/transducer.hpp"
@@ -29,19 +30,16 @@ class PhaseCorrection final : public IntoDatagramTuple<PhaseCorrection>,
         contains = self->_cache.contains(dev_idx);
       }
       geometry::Transducer tr(tr_idx, native_methods::AUTDDevice(geometry_ptr, dev_idx));
-      if (contains) return self->_cache[dev_idx](tr);
-      auto h = self->_f.value()(geometry::Device(dev_idx, geometry_ptr));  // LCOV_EXCL_LINE
+      if (contains) return (self->_cache[dev_idx](tr)).value();
+      auto h = (self->_f)(geometry::Device(dev_idx, geometry_ptr));
       const auto res = h(tr);
       {
         std::lock_guard lock(self->_mtx);
         self->_cache[dev_idx] = std::move(h);
       }
-      return res;
+      return res.value();
     };
   }
-
-  PhaseCorrection(const PhaseCorrection& other) noexcept : _f(other._f), _f_native(other._f_native) {}        // LCOV_EXCL_LINE
-  PhaseCorrection(PhaseCorrection&& other) noexcept : _f(std::move(other._f)), _f_native(other._f_native) {}  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
     return AUTDDatagramPhaseCorr(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
