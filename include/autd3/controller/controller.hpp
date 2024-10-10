@@ -70,10 +70,10 @@ class Controller {
     if (_ptr._0 == nullptr) return;
     const auto res = AUTDWaitResultI32(_handle, AUTDControllerClose(_ptr));
     _ptr._0 = nullptr;
-    validate(res);
     AUTDDeleteRuntime(_runtime);
     _runtime._0 = nullptr;
     _handle._0 = nullptr;
+    validate(res);
   }
 
   AUTD3_API [[nodiscard]] std::vector<std::optional<driver::FPGAState>> fpga_state() {
@@ -171,10 +171,10 @@ class Controller {
     auto future = AUTDControllerClose(_ptr);
     auto res = co_await wait_future(_handle, std::move(future));
     _ptr._0 = nullptr;
-    validate(res);
     AUTDDeleteRuntime(_runtime);
     _runtime._0 = nullptr;
     _handle._0 = nullptr;
+    validate(res);
   }
 
   AUTD3_API
