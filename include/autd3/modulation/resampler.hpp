@@ -28,9 +28,8 @@ class SincInterpolation {
   explicit SincInterpolation(std::variant<BlackMan, Rectangular> window) : _window(std::move(window)) {}
 
   [[nodiscard]] native_methods::DynSincInterpolator dyn_resampler() const {
-    const auto window = std::visit([](const auto& w) { return w.window(); }, _window);
-    const auto window_size = std::visit([](const auto& w) { return w.window_size; }, _window);
-    return native_methods::DynSincInterpolator{.window{static_cast<uint32_t>(window)}, .window_size = window_size};
+    return native_methods::DynSincInterpolator{.window{std::visit([](const auto& w) { return w.window(); }, _window)},
+                                               .window_size{std::visit([](const auto& w) { return w.window_size; }, _window)}};
   }
 
  private:
