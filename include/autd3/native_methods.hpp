@@ -9,8 +9,9 @@
 #endif
 
 #include "autd3/native_methods/def.hpp"
+// def.hpp must be included first
 #include "autd3/native_methods/autd3capi-driver.h"
-// autd3capi-def must be include first
+// then autd3capi-driver.h
 #include "autd3/native_methods/autd3capi-gain-holo.h"
 #include "autd3/native_methods/autd3capi-link-simulator.h"
 #include "autd3/native_methods/autd3capi-link-soem.h"
