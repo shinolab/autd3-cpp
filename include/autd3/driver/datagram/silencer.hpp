@@ -2,6 +2,7 @@
 
 #include <chrono>
 #include <optional>
+#include <variant>
 
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
