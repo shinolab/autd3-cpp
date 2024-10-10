@@ -17,9 +17,9 @@ class Csv final : public driver::ModulationBase<Csv>,
   template <driver::sampling_config T>
   AUTD3_API explicit Csv(std::filesystem::path path, const T config) : _deliminator(','), _config(config), _path(std::move(path)) {}
 
-  template <driver::sampling_config T, window W>
-  AUTD3_API explicit Csv(std::filesystem::path path, const float source, const T target, const SincInterpolation<W> resampler)
-      : _deliminator(','), _config(target), _path(std::move(path)), _resample(std::make_tuple(source, resampler.dyn_resampler())) {}
+  template <driver::sampling_config T>
+  AUTD3_API explicit Csv(std::filesystem::path path, const driver::Freq<float> source, const T target, const SincInterpolation resampler)
+      : _deliminator(','), _config(target), _path(std::move(path)), _resample(std::make_tuple(source.hz(), resampler.dyn_resampler())) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     return validate(_resample.has_value()

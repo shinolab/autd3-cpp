@@ -25,7 +25,7 @@ TEST(DriverDatagram, Silencer) {
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  autd.send(autd3::driver::Silencer(autd3::driver::FixedUpdateRate{.intensity{10}, .phase{20}}));
+  autd.send(autd3::driver::Silencer(autd3::driver::FixedUpdateRate{.intensity = 10, .phase = 20}));
   for (auto& dev : autd.geometry()) {
     ASSERT_EQ(10, autd.link().silencer_update_rate_intensity(dev.idx()));
     ASSERT_EQ(20, autd.link().silencer_update_rate_phase(dev.idx()));
@@ -50,6 +50,8 @@ TEST(DriverDatagram, Silencer) {
 }
 
 TEST(DriverDatagram, SilencerIsValid) {
+  ASSERT_TRUE(autd3::driver::Silencer(autd3::driver::FixedUpdateRate{.intensity = 1, .phase = 1})
+                  .is_valid(autd3::modulation::Sine(150u * autd3::driver::Hz)));
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(autd3::modulation::Sine(150u * autd3::driver::Hz)));
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(
       autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::vector{autd3::driver::Vector3::Zero(), autd3::driver::Vector3::Zero()})));

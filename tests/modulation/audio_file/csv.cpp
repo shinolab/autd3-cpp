@@ -20,3 +20,17 @@ TEST(Modulation, Csv) {
     ASSERT_EQ(10, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
+
+TEST(Modulation, CsvResampler) {
+  auto autd = create_controller();
+
+  const std::filesystem::path path = std::filesystem::path(AUTD3_TEST_AUDIOFILE_RESOURCE_PATH).append("custom.csv");
+  autd.send(autd3::modulation::audio_file::Csv(path, 2.0f * autd3::driver::kHz, 4u * autd3::driver::kHz, autd3::modulation::SincInterpolation()));
+
+  for (auto& dev : autd.geometry()) {
+    auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
+    std::vector<uint8_t> mod_expect{127, 217, 255, 217, 127, 37, 0, 37};
+    ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
+    ASSERT_EQ(10, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+  }
+}

@@ -17,9 +17,9 @@ class RawPCM final : public driver::ModulationBase<RawPCM>,
   template <driver::sampling_config T>
   AUTD3_API explicit RawPCM(std::filesystem::path path, const T config) : _config(config), _path(std::move(path)) {}
 
-  template <driver::sampling_config T, window W>
-  AUTD3_API explicit RawPCM(std::filesystem::path path, const float source, const T target, const SincInterpolation<W> resampler)
-      : _config(target), _path(std::move(path)), _resample(std::make_tuple(source, resampler.dyn_resampler())) {}
+  template <driver::sampling_config T>
+  AUTD3_API explicit RawPCM(std::filesystem::path path, const driver::Freq<float> source, const T target, const SincInterpolation resampler)
+      : _config(target), _path(std::move(path)), _resample(std::make_tuple(source.hz(), resampler.dyn_resampler())) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     return validate(_resample.has_value()
