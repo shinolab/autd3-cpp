@@ -39,7 +39,7 @@ class IntoFir {
     return modulation::Fir(*static_cast<M*>(this), std::vector(coef.begin(), coef.end()));
   }
   AUTD3_API [[nodiscard]] modulation::Fir<M> with_fir(const std::initializer_list<float> coef) & {
-    return modulation::Fir(*static_cast<M*>(this, coef));
+    return modulation::Fir(*static_cast<M*>(this), coef);
   }
   template <fir_coef_range R>
   AUTD3_API [[nodiscard]] modulation::Fir<M> with_fir(const R& coef) && {
