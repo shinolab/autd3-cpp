@@ -19,9 +19,7 @@ jobs:
         with:
           python-version: "3.13"
       - run: |
-          python3 -m pip install -U numpy matplotlib
           sudo apt update && sudo apt -y install lcov
-      - run: |
           sudo rm /usr/bin/gcov
           sudo ln -s /usr/bin/gcov-12 /usr/bin/gcov
           python3 build.py cov --cmake-extra="-DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12"
