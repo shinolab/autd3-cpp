@@ -52,10 +52,7 @@ class Audit final {
 
   [[nodiscard]] std::chrono::nanoseconds timeout() const { return std::chrono::nanoseconds(AUTDLinkAuditTimeoutNs(_ptr)); }
 
-  [[nodiscard]] std::optional<std::chrono::nanoseconds> last_timeout() const {
-    const auto ns = AUTDLinkAuditLastTimeoutNs(_ptr);
-    return ns < 0 ? std::nullopt : std::optional(std::chrono::nanoseconds(ns));
-  }
+  [[nodiscard]] std::chrono::nanoseconds last_timeout() const { return std::chrono::nanoseconds(AUTDLinkAuditLastTimeoutNs(_ptr)); }
 
   [[nodiscard]] uint64_t last_parallel_threshold() const { return AUTDLinkAuditLastParallelThreshold(_ptr); }
 
