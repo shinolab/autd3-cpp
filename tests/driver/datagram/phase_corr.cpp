@@ -14,7 +14,7 @@ TEST(DriverDatagram, PhaseCorr) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (const auto& tr : dev) {
       ASSERT_EQ(drives[tr.idx()].intensity.value(), 0x00);
-      ASSERT_EQ(drives[tr.idx()].phase.value(), dev.idx() + tr.idx());
+      ASSERT_EQ(drives[tr.idx()].phase.value(), static_cast<uint8_t>(dev.idx() + tr.idx()));
     }
   }
 }
