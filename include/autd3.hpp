@@ -10,6 +10,7 @@
 #include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/datagram/debug.hpp"
 #include "autd3/driver/datagram/force_fan.hpp"
+#include "autd3/driver/datagram/phase_corr.hpp"
 #include "autd3/driver/datagram/pulse_width_encoder.hpp"
 #include "autd3/driver/datagram/reads_fpga_state.hpp"
 #include "autd3/driver/datagram/segment.hpp"
@@ -78,6 +79,7 @@ using driver::DebugType;
 using driver::FociSTM;
 using driver::ForceFan;
 using driver::GainSTM;
+using driver::PhaseCorrection;
 using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;
 using driver::Silencer;

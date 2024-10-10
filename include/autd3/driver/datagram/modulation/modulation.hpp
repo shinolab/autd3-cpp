@@ -2,6 +2,7 @@
 
 #include "autd3/driver/datagram/modulation/base.hpp"
 #include "autd3/driver/datagram/modulation/cache.hpp"
+#include "autd3/driver/datagram/modulation/fir.hpp"
 #include "autd3/driver/datagram/modulation/radiation_pressure.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/native_methods.hpp"
@@ -9,7 +10,7 @@
 namespace autd3::driver {
 
 template <class M>
-class Modulation : public ModulationBase<M>, public IntoModulationCache<M>, public IntoRadiationPressure<M> {
+class Modulation : public ModulationBase<M>, public IntoModulationCache<M>, public IntoRadiationPressure<M>, public IntoFir<M> {
  public:
   template <sampling_config T>
   void with_sampling_config(const T value) & {

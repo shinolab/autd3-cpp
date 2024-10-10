@@ -114,6 +114,9 @@ fn main() -> Result<()> {
     for entry in glob(&format!("{}/capi/*/Cargo.toml", home))? {
         let entry = entry?;
         let crate_path = Path::new(&entry).parent().unwrap();
+        if crate_path.file_name() == Some("autd3capi-emulator".as_ref()) {
+            continue;
+        }
         gen_c(&crate_path, "../../include/autd3/native_methods")?;
     }
     Ok(())

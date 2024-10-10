@@ -14,7 +14,9 @@ static inline autd3::controller::Controller<autd3::link::Audit> create_controlle
              std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero()), autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
       .with_parallel_threshold(0)
       .with_send_interval(std::chrono::milliseconds(1))
+#ifdef WIN32
       .with_timer_resolution(1)
+#endif
       .open(autd3::link::Audit::builder());
 }
 
