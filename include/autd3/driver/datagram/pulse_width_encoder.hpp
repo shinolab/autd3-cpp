@@ -27,8 +27,9 @@ class PulseWidthEncoder final : public IntoDatagramTuple<PulseWidthEncoder>,
         std::shared_lock lock(self->_mtx);
         contains = self->_cache.contains(dev_idx);
       }
+      const geometry::Device dev(dev_idx, geometry_ptr);
       if (contains) return self->_cache[dev_idx](i);
-      auto h = self->_f.value()(geometry::Device(dev_idx, geometry_ptr));  // LCOV_EXCL_LINE
+      auto h = self->_f.value()(dev);  // LCOV_EXCL_LINE
       const auto res = h(i);
       {
         std::lock_guard lock(self->_mtx);
