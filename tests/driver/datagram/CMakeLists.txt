@@ -7,6 +7,7 @@ target_sources(test_autd3 PRIVATE
   synchronize.cpp
   segment.cpp
   pulse_width_encoder.cpp
+  phase_corr.cpp
   with_segment.cpp
   with_segment_transition.cpp
   with_timeout.cpp

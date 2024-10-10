@@ -5,6 +5,7 @@
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
+#include "autd3/driver/ethercat/dc_sys_time.hpp"
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/geometry/transducer.hpp"
@@ -23,6 +24,9 @@ struct DebugType {
   AUTD3_API static inline const native_methods::DebugTypeWrap StmSegment = native_methods::AUTDDebugTypeStmSegment();
   AUTD3_API static native_methods::DebugTypeWrap StmIdx(const uint16_t idx) { return native_methods::AUTDDebugTypeStmIdx(idx); }
   AUTD3_API static inline const native_methods::DebugTypeWrap IsStmMode = native_methods::AUTDDebugTypeIsStmMode();
+  AUTD3_API static native_methods::DebugTypeWrap SysTimeEq(const DcSysTime sys_time) {
+    return native_methods::AUTDDebugTypeSysTimeEq(sys_time.sys_time());
+  }
   AUTD3_API static native_methods::DebugTypeWrap PwmOut(const geometry::Transducer* tr) { return AUTDDebugTypePwmOut(tr->ptr()); }
   AUTD3_API static native_methods::DebugTypeWrap Direct(const bool v) { return native_methods::AUTDDebugTypeDirect(v); }
 };

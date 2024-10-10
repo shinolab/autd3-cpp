@@ -20,14 +20,23 @@ class ControllerBuilder {
     return *this;
   }
 
-  AUTD3_API ControllerBuilder with_timer_resolution(const uint32_t resolution) {
-    _ptr = AUTDControllerBuilderWithTimerResolution(_ptr, resolution);
+#ifdef WIN32
+  AUTD3_API ControllerBuilder with_timer_resolution(const std::optional<uint32_t> resolution) {
+    _ptr = AUTDControllerBuilderWithTimerResolution(_ptr, resolution.value_or(0));
     return *this;
   }
+#endif
 
   template <typename Rep, typename Period>
   AUTD3_API ControllerBuilder with_send_interval(const std::chrono::duration<Rep, Period> interval) {
     _ptr = AUTDControllerBuilderWithSendInterval(_ptr, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(interval).count()));
+    return *this;
+  }
+
+  template <typename Rep, typename Period>
+  AUTD3_API ControllerBuilder with_receive_interval(const std::chrono::duration<Rep, Period> interval) {
+    _ptr =
+        AUTDControllerBuilderWithReceiveInterval(_ptr, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(interval).count()));
     return *this;
   }
 

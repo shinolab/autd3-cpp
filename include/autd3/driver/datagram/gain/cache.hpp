@@ -41,7 +41,8 @@ class Cache final : public driver::GainBase,
     if (std::vector<uint32_t> device_indices(view.begin(), view.end());
         _cache->size() != device_indices.size() ||
         std::any_of(device_indices.begin(), device_indices.end(), [this](const uint32_t idx) { return !_cache->contains(idx); })) {
-      const auto res = validate(native_methods::AUTDGainCalc(_g.gain_ptr(geometry), geometry.ptr()));
+      auto gain_ptr = _g.gain_ptr(geometry);
+      const auto res = validate(native_methods::AUTDGainCalc(gain_ptr, geometry.ptr()));
       for (const auto& dev : geometry.devices()) {
         std::vector<driver::Drive> drives;
         drives.resize(dev.num_transducers(), driver::Drive::null());
@@ -49,6 +50,7 @@ class Cache final : public driver::GainBase,
         _cache->emplace(dev.idx(), std::move(drives));
       }
       native_methods::AUTDGainCalcFreeResult(res);
+      native_methods::AUTDGainFree(gain_ptr);
     }
   }
 

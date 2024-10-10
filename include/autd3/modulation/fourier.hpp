@@ -13,7 +13,8 @@ concept fourier_sine_range = std::ranges::viewable_range<R> && std::same_as<std:
 
 class Fourier final : public driver::ModulationBase<Fourier>,
                       public driver::IntoModulationCache<Fourier>,
-                      public driver::IntoRadiationPressure<Fourier> {
+                      public driver::IntoRadiationPressure<Fourier>,
+                      public driver::IntoFir<Fourier> {
  public:
   template <fourier_sine_range R>
   AUTD3_API explicit Fourier(const R& iter) : _clamp(false), _scale_factor(std::nullopt) {

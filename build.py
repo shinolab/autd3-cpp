@@ -298,7 +298,9 @@ def check_all_headers_is_tested():
     with working_dir("include/autd3"):
         headers = glob("**/*.hpp", recursive=True)
         headers = [
-            header for header in headers if not header.startswith("native_methods")
+            header.replace("\\", "/")
+            for header in headers
+            if not header.startswith("native_methods")
         ]
         headers.remove("exception.hpp")
         headers.remove("def.hpp")
@@ -315,6 +317,7 @@ def check_all_headers_is_tested():
         headers.remove("gain/holo/holo.hpp")
         headers.remove("gain/holo/backend.hpp")
         headers.remove("modulation/audio_file.hpp")
+        headers.remove("modulation/resampler.hpp")
         headers.remove("modulation/sampling_mode.hpp")
         headers = set([header.replace(".hpp", ".cpp") for header in headers])
 
@@ -343,7 +346,7 @@ def check_all_headers_is_tested():
 
     with working_dir("tests"):
         base_path = pathlib.Path(".")
-        tested = load_sources(base_path)
+        tested = [tested.replace("\\", "/") for tested in load_sources(base_path)]
 
         untested_headers = headers.difference(tested)
         if len(untested_headers) > 0:
