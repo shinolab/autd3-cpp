@@ -1,6 +1,5 @@
 #pragma once
 
-#include "autd3/driver/datagram/modulation/modulation.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
@@ -8,7 +7,7 @@ namespace autd3::modulation {
 template <class W>
 concept window = requires(W w) {
   { w.window_size } -> std::same_as<uint32_t>;
-  { w.window() } -> std::same_as<native_methods::DynWindow>;
+  { W::window() } -> std::same_as<native_methods::DynWindow>;
 };
 
 template <window W>
@@ -27,17 +26,17 @@ class SincInterpolation {
 struct BlackMan {
   uint32_t window_size;
 
-  explicit BlackMan(uint32_t window_size) : window_size(window_size) {}
+  explicit BlackMan(const uint32_t window_size) : window_size(window_size) {}
 
-  [[nodiscard]] native_methods::DynWindow window() const { return native_methods::DynWindow::Blackman; }
+  [[nodiscard]] static native_methods::DynWindow window() { return native_methods::DynWindow::Blackman; }
 };
 
 struct Rectangular {
   uint32_t window_size;
 
-  explicit Rectangular(uint32_t window_size) : window_size(window_size) {}
+  explicit Rectangular(const uint32_t window_size) : window_size(window_size) {}
 
-  [[nodiscard]] native_methods::DynWindow window() const { return native_methods::DynWindow::Rectangular; }
+  [[nodiscard]] static native_methods::DynWindow window() { return native_methods::DynWindow::Rectangular; }
 };
 
 }  // namespace autd3::modulation

@@ -1,7 +1,5 @@
 #pragma once
 
-#include <algorithm>
-
 #include "autd3/driver/datagram/gain/gain.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/geometry/geometry.hpp"

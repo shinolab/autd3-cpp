@@ -30,13 +30,9 @@ struct SamplingModeExact {
     return validate(AUTDModulationSquareExact(freq.hz(), config, low, high, duty, loop_behavior));
   }
 
-  [[nodiscard]] float sine_freq(native_methods::ModulationPtr ptr) const {
-    return static_cast<float>(native_methods::AUTDModulationSineExactFreq(ptr));
-  }
+  [[nodiscard]] float sine_freq(const native_methods::ModulationPtr ptr) const { return static_cast<float>(AUTDModulationSineExactFreq(ptr)); }
 
-  [[nodiscard]] float square_freq(native_methods::ModulationPtr ptr) const {
-    return static_cast<float>(native_methods::AUTDModulationSquareExactFreq(ptr));
-  }
+  [[nodiscard]] float square_freq(const native_methods::ModulationPtr ptr) const { return static_cast<float>(AUTDModulationSquareExactFreq(ptr)); }
 };
 
 struct SamplingModeExactFloat {
@@ -60,9 +56,9 @@ struct SamplingModeExactFloat {
     return validate(AUTDModulationSquareExactFloat(freq.hz(), config, low, high, duty, loop_behavior));
   }
 
-  [[nodiscard]] float sine_freq(native_methods::ModulationPtr ptr) const { return native_methods::AUTDModulationSineExactFloatFreq(ptr); }
+  [[nodiscard]] float sine_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSineExactFloatFreq(ptr); }
 
-  [[nodiscard]] float square_freq(native_methods::ModulationPtr ptr) const { return native_methods::AUTDModulationSquareExactFloatFreq(ptr); }
+  [[nodiscard]] float square_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSquareExactFloatFreq(ptr); }
 };
 
 struct SamplingModeNearest {
@@ -86,9 +82,9 @@ struct SamplingModeNearest {
     return validate(AUTDModulationSquareNearest(freq.hz(), config, low, high, duty, loop_behavior));
   }
 
-  [[nodiscard]] float sine_freq(native_methods::ModulationPtr ptr) const { return native_methods::AUTDModulationSineNearestFreq(ptr); }
+  [[nodiscard]] float sine_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSineNearestFreq(ptr); }
 
-  [[nodiscard]] float square_freq(native_methods::ModulationPtr ptr) const { return native_methods::AUTDModulationSquareNearestFreq(ptr); }
+  [[nodiscard]] float square_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSquareNearestFreq(ptr); }
 };
 
 }  // namespace autd3::modulation
