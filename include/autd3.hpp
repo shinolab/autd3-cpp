@@ -76,6 +76,8 @@ using driver::ControlPoint;
 using driver::ControlPoints;
 using driver::DebugSettings;
 using driver::DebugType;
+using driver::FixedCompletionTime;
+using driver::FixedUpdateRate;
 using driver::FociSTM;
 using driver::ForceFan;
 using driver::GainSTM;
