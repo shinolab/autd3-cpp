@@ -14,9 +14,9 @@ class Custom final : public driver::ModulationBase<Custom>,
   template <driver::sampling_config T>
   explicit Custom(std::vector<uint8_t> buf, const T sampling_config) : _sampling_config(sampling_config), _buf(std::move(buf)) {}
 
-  template <driver::sampling_config T, window W>
-  explicit Custom(std::vector<uint8_t> buf, const float source, const T target, const SincInterpolation<W> resampler)
-      : _sampling_config(target), _buf(std::move(buf)), _resample(std::make_tuple(source, resampler.dyn_resampler())) {}
+  template <driver::sampling_config T>
+  explicit Custom(std::vector<uint8_t> buf, const driver::Freq<float> source, const T target, const SincInterpolation resampler)
+      : _sampling_config(target), _buf(std::move(buf)), _resample(std::make_tuple(source.hz(), resampler.dyn_resampler())) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     const auto size = _buf.size();

@@ -56,15 +56,15 @@ class Controller {
   ~Controller() noexcept {
     try {
       close();
-    } catch (...) {
-    }
+    } catch (...) {  // LCOV_EXCL_LINE
+    }  // LCOV_EXCL_LINE
   }
 
   AUTD3_API [[nodiscard]] const driver::geometry::Geometry& geometry() const { return _geometry; }
   AUTD3_API [[nodiscard]] driver::geometry::Geometry& geometry() { return _geometry; }
 
   AUTD3_API [[nodiscard]] L& link() { return _link; }
-  AUTD3_API [[nodiscard]] const L& link() const { return _link; }
+  AUTD3_API [[nodiscard]] const L& link() const { return _link; }  // LCOV_EXCL_LINE
 
   AUTD3_API void close() {
     if (_ptr._0 == nullptr) return;

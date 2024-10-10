@@ -16,8 +16,8 @@ class Wav final : public driver::ModulationBase<Wav>,
  public:
   AUTD3_API explicit Wav(std::filesystem::path path) : _path(std::move(path)) {}
 
-  template <driver::sampling_config T, window W>
-  AUTD3_API explicit Wav(std::filesystem::path path, const T target, const SincInterpolation<W> resampler)
+  template <driver::sampling_config T>
+  AUTD3_API explicit Wav(std::filesystem::path path, const T target, const SincInterpolation resampler)
       : _path(std::move(path)), _resample(std::make_tuple(target, resampler.dyn_resampler())) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
