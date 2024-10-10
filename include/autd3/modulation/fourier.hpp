@@ -21,7 +21,7 @@ class Fourier final : public driver::ModulationBase<Fourier>,
     for (Sine e : iter) _components.emplace_back(std::move(e));
   }
 
-  AUTD3_API explicit Fourier(const std::initializer_list<Sine> components) : _components(components), _clamp(false), _scale_factor(std::nullopt) {}
+  AUTD3_API explicit Fourier(const std::initializer_list<Sine> components) : _clamp(false), _scale_factor(std::nullopt), _components(components) {}
 
   AUTD3_DEF_PARAM(Fourier, bool, clamp)
   AUTD3_DEF_PARAM(Fourier, std::optional<float>, scale_factor)

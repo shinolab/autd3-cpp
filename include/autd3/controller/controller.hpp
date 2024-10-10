@@ -68,7 +68,7 @@ class Controller {
 
   AUTD3_API void close() {
     if (_ptr._0 == nullptr) return;
-    auto res = AUTDWaitResultI32(_handle, AUTDControllerClose(_ptr));
+    const auto res = AUTDWaitResultI32(_handle, AUTDControllerClose(_ptr));
     _ptr._0 = nullptr;
     validate(res);
     AUTDDeleteRuntime(_runtime);

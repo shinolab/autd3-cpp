@@ -22,8 +22,8 @@ class FociSTM final : public IntoDatagramTuple<FociSTM>,
                       public IntoDatagramWithParallelThreshold<FociSTM> {
   struct IControlPointsArray {
     virtual ~IControlPointsArray() = default;
-    virtual native_methods::FociSTMPtr ptr(native_methods::SamplingConfig config) const = 0;
-    virtual uint8_t n() const = 0;
+    [[nodiscard]] virtual native_methods::FociSTMPtr ptr(native_methods::SamplingConfig config) const = 0;
+    [[nodiscard]] virtual uint8_t n() const = 0;
   };
 
   template <uint8_t N>
@@ -34,10 +34,10 @@ class FociSTM final : public IntoDatagramTuple<FociSTM>,
    public:
     ~ControlPointsArray() override = default;
     explicit ControlPointsArray(std::vector<ControlPoints<N>> points) : _points(std::move(points)) {}
-    native_methods::FociSTMPtr ptr(native_methods::SamplingConfig config) const override {
-      return validate(native_methods::AUTDSTMFoci(config, reinterpret_cast<const void*>(_points.data()), static_cast<uint16_t>(_points.size()), N));
+    [[nodiscard]] native_methods::FociSTMPtr ptr(const native_methods::SamplingConfig config) const override {
+      return validate(AUTDSTMFoci(config, reinterpret_cast<const void*>(_points.data()), static_cast<uint16_t>(_points.size()), N));
     }
-    uint8_t n() const override { return N; }
+    [[nodiscard]] uint8_t n() const override { return N; }
   };
 
  public:
@@ -103,9 +103,8 @@ class FociSTM final : public IntoDatagramTuple<FociSTM>,
 
   AUTD3_API
   [[nodiscard]] DatagramWithSegmentTransition<native_methods::FociSTMPtr> with_segment(
-      const native_methods::Segment segment, std::optional<native_methods::TransitionModeWrap> transition_mode) {
-    return DatagramWithSegmentTransition<native_methods::FociSTMPtr>(std::make_unique<FociSTM>(std::move(*this)), segment,
-                                                                     std::move(transition_mode));
+      const native_methods::Segment segment, const std::optional<native_methods::TransitionModeWrap>& transition_mode) {
+    return DatagramWithSegmentTransition<native_methods::FociSTMPtr>(std::make_unique<FociSTM>(std::move(*this)), segment, transition_mode);
   }
 
   AUTD3_DEF_PARAM(FociSTM, native_methods::LoopBehavior, loop_behavior)

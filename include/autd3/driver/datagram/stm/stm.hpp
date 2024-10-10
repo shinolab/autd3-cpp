@@ -26,7 +26,7 @@ struct ControlPoints {
   std::array<ControlPoint, N> _points = {};
 
  public:
-  const std::array<ControlPoint, N>& points() const { return _points; }
+  [[nodiscard]] const std::array<ControlPoint, N>& points() const { return _points; }
 
   AUTD3_DEF_PARAM_INTENSITY(ControlPoints<N>, intensity)
 
