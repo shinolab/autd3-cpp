@@ -29,8 +29,9 @@ class PhaseCorrection final : public IntoDatagramTuple<PhaseCorrection>,
         contains = self->_cache.contains(dev_idx);
       }
       const geometry::Transducer tr(tr_idx, AUTDDevice(geometry_ptr, dev_idx));
+      const geometry::Device dev(dev_idx, geometry_ptr);
       if (contains) return self->_cache[dev_idx](tr).value();
-      auto h = self->_f(geometry::Device(dev_idx, geometry_ptr));
+      auto h = self->_f(dev);
       const auto res = h(tr);
       {
         std::lock_guard lock(self->_mtx);
