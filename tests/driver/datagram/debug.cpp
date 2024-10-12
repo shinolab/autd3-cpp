@@ -90,7 +90,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
   }));
   for (auto& dev : autd.geometry()) {
     std::array<uint8_t, 4> ty{0x60, 0x00, 0x00, 0x00};
-    std::array<uint64_t, 4> value{(sys_time.sys_time() / 50000) << 9, 0x0000, 0x0000, 0x0000};
+    std::array<uint64_t, 4> value{(sys_time.sys_time() / 25000) << 8, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
     ASSERT_EQ(value, autd.link().debug_values(dev.idx()));
   }
