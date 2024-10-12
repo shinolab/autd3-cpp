@@ -11,7 +11,7 @@ struct ControlPoint {
   friend struct ControlPoints;
 
   AUTD3_DEF_PROP(Vector3, point)
-  AUTD3_DEF_PARAM_PHASE(ControlPoint, offset)
+  AUTD3_DEF_PARAM_PHASE(ControlPoint, phase_offset)
 
   explicit ControlPoint(Vector3 point) : ControlPoint(std::move(point), Phase(0)) {}
 
