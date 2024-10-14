@@ -12,14 +12,8 @@ TEST(DriverDatagramGain, Cache) {
 
   const auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)).with_cache();
 
-  g.init(autd.geometry());
-
   autd.send(g);
   for (auto& dev : autd.geometry()) {
-    ASSERT_TRUE(std::ranges::all_of(
-        g[dev], [](auto d) { return d == autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; }));
-    ASSERT_TRUE(std::ranges::all_of(
-        g.drives().at(dev.idx()), [](auto d) { return d == autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::EmitIntensity(0x80)}; }));
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0x90; }));
   }
@@ -62,8 +56,6 @@ TEST(DriverDatagramGain, CacheCheckOnce) {
     ForCacheTest g(&cnt);
     const auto gc = g.with_cache();
     ASSERT_EQ(cnt, 0);
-    gc.init(autd.geometry());
-    ASSERT_EQ(cnt, 1);
     autd.send(gc);
     ASSERT_EQ(cnt, 1);
     autd.send(gc);
@@ -78,9 +70,6 @@ TEST(DriverDatagramGain, CacheCheckOnlyForEnabled) {
   size_t cnt = 0;
   const auto g = ForCacheTest(&cnt).with_cache();
   autd.send(g);
-
-  ASSERT_FALSE(g.drives().contains(0));
-  ASSERT_TRUE(g.drives().contains(1));
 
   {
     auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);

@@ -36,33 +36,12 @@ struct ControllerBuilderPtr {
   const void *_0;
 };
 
-struct GainCalcPtr {
-  const void *_0;
-};
-
-struct ResultGainCalcDrivesMap {
-  GainCalcPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 struct GroupGainMapPtr {
   const void *_0;
 };
 
 struct LinkAuditBuilderPtr {
   const void *_0;
-};
-
-struct ModulationCalcPtr {
-  const void *_0;
-};
-
-struct ResultModulationCalc {
-  ModulationCalcPtr result;
-  SamplingConfig config;
-  uint32_t err_len;
-  const void* err;
 };
 
 extern "C" {
@@ -343,14 +322,6 @@ DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
 
 [[nodiscard]] DatagramPtr AUTDGainIntoDatagram(GainPtr gain);
 
-[[nodiscard]] ResultGainCalcDrivesMap AUTDGainCalc(GainPtr gain, GeometryPtr geometry);
-
-void AUTDGainFree(GainPtr gain);
-
-void AUTDGainCalcGetResult(GainCalcPtr src, Drive *dst, DevicePtr device);
-
-void AUTDGainCalcFreeResult(GainCalcPtr src);
-
 [[nodiscard]]
 GainPtr AUTDGainBessel(Vector3 p,
                        Vector3 n,
@@ -359,6 +330,12 @@ GainPtr AUTDGainBessel(Vector3 p,
                        uint8_t phase_offset);
 
 [[nodiscard]] bool AUTDGainBesselIsDefault(GainPtr bessel);
+
+[[nodiscard]] GainPtr AUTDGainCache(GainPtr g);
+
+[[nodiscard]] GainPtr AUTDGainCacheClone(GainPtr g);
+
+void AUTDGainCacheFree(GainPtr g);
 
 [[nodiscard]] GainPtr AUTDGainCustom(const void* f, const void* context, GeometryPtr geometry);
 
@@ -387,14 +364,6 @@ GainPtr AUTDGainGroup(GroupGainMapPtr map,
 [[nodiscard]] GainPtr AUTDGainPlane(Vector3 n, uint8_t intensity, uint8_t phase_offset);
 
 [[nodiscard]] bool AUTDGainPlanelIsDefault(GainPtr plane);
-
-[[nodiscard]] GainPtr AUTDGainRaw();
-
-[[nodiscard]]
-GainPtr AUTDGainRawSet(GainPtr custom,
-                       uint16_t dev_idx,
-                       const Drive *ptr,
-                       uint8_t len);
 
 [[nodiscard]]
 GainPtr AUTDGainWithTransform(GainPtr g,
@@ -569,13 +538,11 @@ DatagramPtr AUTDModulationIntoDatagramWithSegmentTransition(ModulationPtr m,
 
 [[nodiscard]] DatagramPtr AUTDModulationIntoDatagram(ModulationPtr m);
 
-[[nodiscard]] ResultModulationCalc AUTDModulationCalc(ModulationPtr m);
+[[nodiscard]] ModulationPtr AUTDModulationCache(ModulationPtr m);
 
-void AUTDModulationCalcGetResult(ModulationCalcPtr src, uint8_t *dst);
+[[nodiscard]] ModulationPtr AUTDModulationCacheClone(ModulationPtr m, LoopBehavior loop_behavior);
 
-uint16_t AUTDModulationCalcGetSize(ModulationCalcPtr src);
-
-void AUTDModulationCalcFreeResult(ModulationCalcPtr src);
+void AUTDModulationCacheFree(ModulationPtr m);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationCustom(SamplingConfig config,

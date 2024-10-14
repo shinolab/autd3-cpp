@@ -26,23 +26,23 @@ elseif(WIN32)
   if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "AMD64|IA64")
     FetchContent_Declare(
       autd3
-      URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.0/autd3-v28.0.0-win-x64.zip
+      URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.1/autd3-v28.0.1-win-x64.zip
     )
   elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "ARM64")
     FetchContent_Declare(
       autd3
-      URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.0/autd3-v28.0.0-win-arm.zip
+      URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.1/autd3-v28.0.1-win-arm.zip
     )
   endif()
 elseif(APPLE)
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.0/autd3-v28.0.0-macos-aarch64.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.1/autd3-v28.0.1-macos-aarch64.tar.gz
   )
 else()
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.0/autd3-v28.0.0-linux-x64.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v28.0.1/autd3-v28.0.1-linux-x64.tar.gz
   )
 endif()
 FetchContent_MakeAvailable(autd3)

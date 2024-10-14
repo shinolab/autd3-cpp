@@ -17,10 +17,6 @@ TEST(DriverDatagramModulation, Cache) {
   autd1.send(m1);
   autd2.send(m2);
 
-  ASSERT_TRUE(std::ranges::all_of(m2.buffer(), [](auto d) { return d.value() == 0x80; }));
-  for (const auto& m : m2) ASSERT_EQ(0x80, m.value());
-  std::ranges::for_each(m2.cbegin(), m2.cend(), [](const auto& m) { ASSERT_EQ(0x80, m.value()); });
-  for (size_t i = 0; i < 2; i++) ASSERT_EQ(0x80, m2[i].value());
   for (auto& dev : autd1.geometry()) {
     auto mod = autd2.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     auto mod_expect = autd1.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
