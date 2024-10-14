@@ -17,7 +17,7 @@ struct ControlPoint {
 
  private:
   ControlPoint() : ControlPoint(Vector3::Zero()) {}
-  explicit ControlPoint(Vector3 point, const Phase offset) : _point(std::move(point)), _offset(offset) {}
+  explicit ControlPoint(Vector3 point, const Phase offset) : _point(std::move(point)), _phase_offset(offset) {}
 };
 
 template <uint8_t N>

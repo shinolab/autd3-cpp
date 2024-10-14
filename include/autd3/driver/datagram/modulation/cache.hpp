@@ -11,47 +11,25 @@ namespace autd3::modulation {
 template <class M>
 class Cache final : public driver::ModulationBase<Cache<M>> {
  public:
-  AUTD3_API explicit Cache(M m) : _m(std::move(m)), _cache(std::make_shared<std::vector<driver::EmitIntensity>>()) {
-    this->_loop_behavior = _m.loop_behavior();
-  }
+  AUTD3_API explicit Cache(M m) : _m(std::move(m)), _ptr(nullptr) { this->_loop_behavior = _m.loop_behavior(); }
   Cache(const Cache& v) = default;  // LCOV_EXCL_LINE
   Cache& operator=(const Cache& obj) = delete;
   Cache(Cache&& obj) noexcept = default;  // LCOV_EXCL_LINE
   Cache& operator=(Cache&& obj) noexcept = delete;
   ~Cache() noexcept override = default;  // LCOV_EXCL_LINE
 
-  AUTD3_API const std::vector<driver::EmitIntensity>& calc() const { return init(); }
-
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    const auto& buf = calc();
-    return native_methods::AUTDModulationCustom(_sampling_config.value(), this->_loop_behavior, reinterpret_cast<const uint8_t*>(buf.data()),
-                                                static_cast<uint16_t>(buf.size()));
-  }
-
-  AUTD3_API [[nodiscard]] const std::vector<driver::EmitIntensity>& buffer() const { return *_cache; }
-
-  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity>::const_iterator cbegin() const noexcept { return _cache->cbegin(); }
-  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity>::const_iterator cend() const noexcept { return _cache->cend(); }
-  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity>::const_iterator begin() const noexcept { return _cache->begin(); }
-  AUTD3_API [[nodiscard]] std::vector<driver::EmitIntensity>::const_iterator end() const noexcept { return _cache->end(); }
-  AUTD3_API [[nodiscard]] const driver::EmitIntensity& operator[](const size_t i) const { return _cache->at(i); }
-
- private:
-  AUTD3_API const std::vector<driver::EmitIntensity>& init() const {
-    if (_cache->size() == 0) {
-      const auto res = native_methods::AUTDModulationCalc(_m.modulation_ptr());
-      const auto ptr = validate(res);
-      _cache->resize(native_methods::AUTDModulationCalcGetSize(ptr), driver::EmitIntensity(0));
-      _sampling_config = res.config;
-      native_methods::AUTDModulationCalcGetResult(ptr, reinterpret_cast<uint8_t*>(_cache->data()));
-      native_methods::AUTDModulationCalcFreeResult(ptr);
+    if (!_ptr) {
+      _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDModulationCache(_m.modulation_ptr())._0), [](void* ptr) {
+        if (!ptr) return;
+        native_methods::AUTDModulationCacheFree(native_methods::ModulationPtr{ptr});
+      });
     }
-    return *_cache;
+    return native_methods::AUTDModulationCacheClone(native_methods::ModulationPtr{_ptr.get()}, this->_loop_behavior);
   }
 
   M _m;
-  mutable std::shared_ptr<std::vector<driver::EmitIntensity>> _cache;
-  mutable std::optional<native_methods::SamplingConfig> _sampling_config;
+  mutable std::shared_ptr<void> _ptr;
 };
 
 }  // namespace autd3::modulation
