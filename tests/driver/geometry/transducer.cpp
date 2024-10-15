@@ -11,6 +11,11 @@ TEST(DriverGeomtry, TransducerIdx) {
   }
 }
 
+TEST(DriverGeomtry, TransducerDevIdx) {
+  for (auto autd = create_controller(); auto& dev : autd.geometry())
+    for (auto& tr : dev) ASSERT_EQ(tr.dev_idx(), dev.idx());
+}
+
 TEST(DriverGeomtry, TransducerPosition) {
   auto autd = create_controller();
 
