@@ -6,6 +6,14 @@
 #include <autd3/controller/controller.hpp>
 #include <autd3/link/soem.hpp>
 
+TEST(Link, ThreadPriority) {
+  (void)autd3::link::ThreadPriority::Max;
+  (void)autd3::link::ThreadPriority::Min;
+  (void)autd3::link::ThreadPriority::Crossplarform(0);
+  (void)autd3::link::ThreadPriority::Crossplarform(99);
+  ASSERT_THROW((void)autd3::link::ThreadPriority::Crossplarform(100), std::invalid_argument);
+}
+
 TEST(Link, SOEM) {
   auto link = autd3::link::SOEM::builder()
                   .with_ifname("")
