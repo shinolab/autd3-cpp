@@ -26,7 +26,7 @@ class Device {
     _ptr = AUTDDevice(ptr, idx);
     const auto size = static_cast<size_t>(AUTDDeviceNumTransducers(_ptr));
     _transducers.reserve(size);
-    for (uint8_t i = 0; i < size; i++) _transducers.emplace_back(i, _ptr);
+    for (uint8_t i = 0; i < size; i++) _transducers.emplace_back(i, idx, _ptr);
   }
 
   ~Device() = default;                             // LCOV_EXCL_LINE

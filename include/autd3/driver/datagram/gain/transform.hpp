@@ -32,7 +32,7 @@ class Transform final : public driver::GainBase,
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint8_t tr_idx,
                     driver::Drive drive, driver::Drive* dst) {
       const driver::geometry::Device dev(dev_idx, geometry_ptr);
-      const driver::geometry::Transducer tr(tr_idx, dev.ptr());
+      const driver::geometry::Transducer tr(tr_idx, dev_idx, dev.ptr());
       *dst = static_cast<const Transform*>(context)->_f(dev)(tr, drive);
     };
   }
