@@ -13,7 +13,9 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
+#ifdef WIN32
 using native_methods::ProcessPriority;
+#endif
 using native_methods::Status;
 using native_methods::SyncMode;
 using native_methods::TimerStrategy;
@@ -140,10 +142,12 @@ class SOEM final {
       return *this;
     }
 
+#ifdef WIN32
     AUTD3_API [[nodiscard]] Builder with_process_priority(const native_methods::ProcessPriority value) {
       _ptr = AUTDLinkSOEMWithProcessPriority(_ptr, value);
       return *this;
     }
+#endif
 
     template <typename Rep, typename Period>
     AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {

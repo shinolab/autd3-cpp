@@ -27,7 +27,9 @@ TEST(Link, SOEM) {
                   .with_sync_mode(autd3::link::SyncMode::DC)
                   .with_state_check_interval(std::chrono::milliseconds(100))
                   .with_thread_priority(autd3::link::ThreadPriority::Max)
+#ifdef WIN32
                   .with_process_priority(autd3::link::ProcessPriority::High)
+#endif
                   .with_timeout(std::chrono::milliseconds(200));
 
 #ifdef RUN_LINK_SOEM
