@@ -274,6 +274,9 @@ def check_if_all_native_methods_called():
                     defined_methods.add(result.group(1))
     defined_methods = set(filter(lambda x: not x.endswith("T4010A1"), defined_methods))
     defined_methods.remove("AUTDAUTDLinkSOEMTracingInit")
+    defined_methods.remove("AUTDModulationAudioFileTracingInit")
+    defined_methods.remove("AUTDLinkSimulatorTracingInit")
+    defined_methods.remove("AUTDAUTDLinkTwinCATTracingInit")
 
     used_methods = set()
     pattern = re.compile(r".*(AUTD.*?)[\(|,|\)].*")
