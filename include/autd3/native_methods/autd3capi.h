@@ -416,7 +416,9 @@ Vector3 AUTDDeviceDirectionY(DevicePtr dev);
 
 Vector3 AUTDDeviceDirectionAxial(DevicePtr dev);
 
-Quaternion AUTDRotationFromEulerZYZ(float x, float y, float z);
+Quaternion AUTDRotationFromEulerXYZ(float x, float y, float z);
+
+Quaternion AUTDRotationFromEulerZYZ(float z1, float y, float z2);
 
 [[nodiscard]] TransducerPtr AUTDTransducer(DevicePtr dev, uint8_t idx);
 
@@ -569,6 +571,7 @@ ResultModulation AUTDModulationFourierExact(const ModulationPtr *components,
                                             uint32_t size,
                                             bool clamp,
                                             float scale_factor,
+                                            uint8_t offset,
                                             LoopBehavior loop_behavior);
 
 [[nodiscard]]
@@ -576,6 +579,7 @@ ResultModulation AUTDModulationFourierExactFloat(const ModulationPtr *components
                                                  uint32_t size,
                                                  bool clamp,
                                                  float scale_factor,
+                                                 uint8_t offset,
                                                  LoopBehavior loop_behavior);
 
 [[nodiscard]]
@@ -583,6 +587,7 @@ ResultModulation AUTDModulationFourierNearest(const ModulationPtr *components,
                                               uint32_t size,
                                               bool clamp,
                                               float scale_factor,
+                                              uint8_t offset,
                                               LoopBehavior loop_behavior);
 
 [[nodiscard]]

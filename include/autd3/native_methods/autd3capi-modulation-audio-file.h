@@ -8,6 +8,8 @@ namespace autd3::native_methods {
 
 extern "C" {
 
+void AUTDModulationAudioFileTracingInit();
+
 [[nodiscard]]
 ResultModulation AUTDModulationAudioFileWav(const char *path,
                                             LoopBehavior loop_behavior);

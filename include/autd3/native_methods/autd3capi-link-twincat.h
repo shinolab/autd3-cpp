@@ -22,6 +22,8 @@ struct ResultLinkRemoteTwinCATBuilder {
 
 extern "C" {
 
+void AUTDAUTDLinkTwinCATTracingInit();
+
 [[nodiscard]] LinkTwinCATBuilderPtr AUTDLinkTwinCAT();
 
 [[nodiscard]]

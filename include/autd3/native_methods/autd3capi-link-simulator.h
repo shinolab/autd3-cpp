@@ -18,6 +18,8 @@ struct ResultLinkSimulatorBuilder {
 
 extern "C" {
 
+void AUTDLinkSimulatorTracingInit();
+
 [[nodiscard]] ResultLinkSimulatorBuilder AUTDLinkSimulator(const char *addr);
 
 [[nodiscard]]
