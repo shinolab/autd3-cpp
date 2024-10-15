@@ -21,7 +21,44 @@ autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::dri
 }
 }  // namespace
 
-TEST(DriverGeomtry, WithRotation) {
+TEST(DriverGeomtry, WithRotationXYZ) {
+  using autd3::driver::deg;
+  using autd3::driver::Vector3;
+  using autd3::driver::geometry::EulerAngles;
+
+  {
+    const auto autd = open_rotation(EulerAngles::XYZ(90.0 * deg, 0.0 * deg, 0.0 * deg));
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitY(), autd.geometry()[0].axial_direction(), 1e-6);
+  }
+  {
+    const auto autd = open_rotation(EulerAngles::XYZ(0.0 * deg, 90.0 * deg, 0.0 * deg));
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+  }
+  {
+    const auto autd = open_rotation(EulerAngles::XYZ(0.0 * deg, 0.0 * deg, 90.0 * deg));
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].axial_direction(), 1e-6);
+  }
+  {
+    const auto autd = open_rotation(EulerAngles::XYZ(0.0 * deg, 90.0 * deg, 90.0 * deg));
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+  }
+  {
+    const auto autd = open_rotation(EulerAngles::XYZ(90.0 * deg, 90.0 * deg, 0.0 * deg));
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+  }
+}
+
+TEST(DriverGeomtry, WithRotationZYZ) {
   using autd3::driver::deg;
   using autd3::driver::Vector3;
   using autd3::driver::geometry::EulerAngles;

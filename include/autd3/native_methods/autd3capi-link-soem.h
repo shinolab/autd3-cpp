@@ -6,6 +6,15 @@
 
 namespace autd3::native_methods {
 
+enum class ProcessPriority : uint8_t {
+  Idle = 0,
+  BelowNormal = 1,
+  Normal = 2,
+  AboveNormal = 3,
+  High = 4,
+  Realtime = 5,
+};
+
 enum class Status : uint8_t {
   Error = 0,
   StateChanged = 1,
@@ -17,11 +26,15 @@ enum class TimerStrategy : uint8_t {
   BusyWait = 1,
 };
 
-struct EthernetAdaptersPtr {
+struct LinkSOEMBuilderPtr {
   const void *_0;
 };
 
-struct LinkSOEMBuilderPtr {
+struct ThreadPriorityPtr {
+  const void *_0;
+};
+
+struct EthernetAdaptersPtr {
   const void *_0;
 };
 
@@ -38,14 +51,6 @@ struct ResultLinkRemoteSOEMBuilder {
 extern "C" {
 
 void AUTDAUTDLinkSOEMTracingInit();
-
-[[nodiscard]] EthernetAdaptersPtr AUTDAdapterPointer();
-
-[[nodiscard]] uint32_t AUTDAdapterGetSize(EthernetAdaptersPtr adapters);
-
-void AUTDAdapterGetAdapter(EthernetAdaptersPtr adapters, uint32_t idx, char *desc, char *name);
-
-void AUTDAdapterPointerDelete(EthernetAdaptersPtr adapters);
 
 [[nodiscard]] LinkSOEMBuilderPtr AUTDLinkSOEM();
 
@@ -92,7 +97,23 @@ LinkSOEMBuilderPtr AUTDLinkSOEMWithErrHandler(LinkSOEMBuilderPtr soem,
 LinkSOEMBuilderPtr AUTDLinkSOEMWithTimeout(LinkSOEMBuilderPtr soem,
                                            uint64_t timeout_ns);
 
+[[nodiscard]]
+LinkSOEMBuilderPtr AUTDLinkSOEMWithProcessPriority(LinkSOEMBuilderPtr soem,
+                                                   ProcessPriority priority);
+
+[[nodiscard]]
+LinkSOEMBuilderPtr AUTDLinkSOEMWithThreadPriority(LinkSOEMBuilderPtr soem,
+                                                  ThreadPriorityPtr priority);
+
 [[nodiscard]] LinkBuilderPtr AUTDLinkSOEMIntoBuilder(LinkSOEMBuilderPtr soem);
+
+[[nodiscard]] EthernetAdaptersPtr AUTDAdapterPointer();
+
+[[nodiscard]] uint32_t AUTDAdapterGetSize(EthernetAdaptersPtr adapters);
+
+void AUTDAdapterGetAdapter(EthernetAdaptersPtr adapters, uint32_t idx, char *desc, char *name);
+
+void AUTDAdapterPointerDelete(EthernetAdaptersPtr adapters);
 
 [[nodiscard]] ResultLinkRemoteSOEMBuilder AUTDLinkRemoteSOEM(const char *addr);
 
@@ -101,6 +122,12 @@ LinkRemoteSOEMBuilderPtr AUTDLinkRemoteSOEMWithTimeout(LinkRemoteSOEMBuilderPtr 
                                                        uint64_t timeout_ns);
 
 [[nodiscard]] LinkBuilderPtr AUTDLinkRemoteSOEMIntoBuilder(LinkRemoteSOEMBuilderPtr soem);
+
+[[nodiscard]] ThreadPriorityPtr AUTDLinkSOEMThreadPriorityMin();
+
+[[nodiscard]] ThreadPriorityPtr AUTDLinkSOEMThreadPriorityCrossplatform(uint8_t value);
+
+[[nodiscard]] ThreadPriorityPtr AUTDLinkSOEMThreadPriorityMax();
 
 } // extern "C"
 

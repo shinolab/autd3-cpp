@@ -19,10 +19,10 @@ struct SamplingModeExact {
   }
 
   [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
-                                                                 const std::optional<float> scale_factor,
+                                                                 const std::optional<float> scale_factor, const uint8_t offset,
                                                                  const native_methods::LoopBehavior loop_behavior) {
     return validate(AUTDModulationFourierExact(components.data(), static_cast<uint32_t>(components.size()), clamp,
-                                               scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), loop_behavior));
+                                               scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), offset, loop_behavior));
   }
 
   [[nodiscard]] native_methods::ModulationPtr square_ptr(const native_methods::SamplingConfig config, const uint8_t low, const uint8_t high,
@@ -45,10 +45,10 @@ struct SamplingModeExactFloat {
   }
 
   [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
-                                                                 const std::optional<float> scale_factor,
+                                                                 const std::optional<float> scale_factor, const uint8_t offset,
                                                                  const native_methods::LoopBehavior loop_behavior) {
     return validate(AUTDModulationFourierExactFloat(components.data(), static_cast<uint32_t>(components.size()), clamp,
-                                                    scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), loop_behavior));
+                                                    scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), offset, loop_behavior));
   }
 
   [[nodiscard]] native_methods::ModulationPtr square_ptr(const native_methods::SamplingConfig config, const uint8_t low, const uint8_t high,
@@ -71,10 +71,10 @@ struct SamplingModeNearest {
   }
 
   [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
-                                                                 const std::optional<float> scale_factor,
+                                                                 const std::optional<float> scale_factor, const uint8_t offset,
                                                                  const native_methods::LoopBehavior loop_behavior) {
     return validate(AUTDModulationFourierNearest(components.data(), static_cast<uint32_t>(components.size()), clamp,
-                                                 scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), loop_behavior));
+                                                 scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), offset, loop_behavior));
   }
 
   [[nodiscard]] native_methods::ModulationPtr square_ptr(const native_methods::SamplingConfig config, const uint8_t low, const uint8_t high,

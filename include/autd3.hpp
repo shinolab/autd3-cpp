@@ -45,7 +45,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "28.0.1";
+static inline std::string version = "28.1.0";
 
 using autd3::driver::deg;
 using autd3::driver::Hz;

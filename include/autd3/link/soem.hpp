@@ -13,6 +13,8 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
+using native_methods::ProcessPriority;
+using native_methods::Status;
 using native_methods::SyncMode;
 using native_methods::TimerStrategy;
 
@@ -27,7 +29,15 @@ class EtherCATAdapter {
   [[nodiscard]] const std::string& name() const { return _name; }
 };
 
-using native_methods::Status;
+class ThreadPriority {
+ public:
+  AUTD3_API static inline const native_methods::ThreadPriorityPtr Min = native_methods::AUTDLinkSOEMThreadPriorityMin();
+  AUTD3_API static inline const native_methods::ThreadPriorityPtr Max = native_methods::AUTDLinkSOEMThreadPriorityMax();
+  AUTD3_API [[nodiscard]] static native_methods::ThreadPriorityPtr Crossplarform(const uint8_t value) {
+    if (value > 99) throw std::invalid_argument("value must be between 0 and 99");
+    return native_methods::AUTDLinkSOEMThreadPriorityCrossplatform(value);
+  }
+};
 
 template <class F>
 concept soem_err_handler_f = requires(F f, const uint16_t slave, const Status status, const std::string& msg) {
@@ -122,6 +132,16 @@ class SOEM final {
     AUTD3_API [[nodiscard]] Builder with_state_check_interval(const std::chrono::duration<Rep, Period> value) {
       const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(value).count();
       _ptr = AUTDLinkSOEMWithStateCheckInterval(_ptr, static_cast<uint32_t>(ms));
+      return *this;
+    }
+
+    AUTD3_API [[nodiscard]] Builder with_thread_priority(const native_methods::ThreadPriorityPtr value) {
+      _ptr = AUTDLinkSOEMWithThreadPriority(_ptr, value);
+      return *this;
+    }
+
+    AUTD3_API [[nodiscard]] Builder with_process_priority(const native_methods::ProcessPriority value) {
+      _ptr = AUTDLinkSOEMWithProcessPriority(_ptr, value);
       return *this;
     }
 
