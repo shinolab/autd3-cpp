@@ -24,23 +24,14 @@ class Audit final {
     friend class Audit;
     friend class controller::ControllerBuilder;
 
-    native_methods::LinkAuditBuilderPtr _ptr;
-
-    Builder() : _ptr(native_methods::AUTDLinkAudit()) {}
+    Builder() {}
 
     [[nodiscard]] static Audit resolve_link(native_methods::HandlePtr, const native_methods::LinkPtr link) { return Audit{link}; }
 
    public:
     using Link = Audit;
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkAuditIntoBuilder(_ptr); }
-
-    template <typename Rep, typename Period>
-    Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {
-      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
-      _ptr = AUTDLinkAuditWithTimeout(_ptr, static_cast<uint64_t>(ns));
-      return std::move(*this);
-    }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return native_methods::AUTDLinkAudit(); }
   };
 
   static Builder builder() { return {}; }
@@ -49,12 +40,6 @@ class Audit final {
   void up() const { AUTDLinkAuditUp(_ptr); }
 
   [[nodiscard]] bool is_open() const { return AUTDLinkAuditIsOpen(_ptr); }
-
-  [[nodiscard]] std::chrono::nanoseconds timeout() const { return std::chrono::nanoseconds(AUTDLinkAuditTimeoutNs(_ptr)); }
-
-  [[nodiscard]] std::chrono::nanoseconds last_timeout() const { return std::chrono::nanoseconds(AUTDLinkAuditLastTimeoutNs(_ptr)); }
-
-  [[nodiscard]] uint64_t last_parallel_threshold() const { return AUTDLinkAuditLastParallelThreshold(_ptr); }
 
   [[nodiscard]] bool is_force_fan(const size_t idx) const { return AUTDLinkAuditFpgaIsForceFan(_ptr, static_cast<uint16_t>(idx)); }
 

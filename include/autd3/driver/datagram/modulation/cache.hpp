@@ -22,10 +22,10 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
     if (!_ptr) {
       _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDModulationCache(_m.modulation_ptr())._0), [](void* ptr) {
         if (!ptr) return;
-        native_methods::AUTDModulationCacheFree(native_methods::ModulationPtr{ptr});
+        native_methods::AUTDModulationCacheFree(native_methods::ModulationCachePtr{ptr});
       });
     }
-    return native_methods::AUTDModulationCacheClone(native_methods::ModulationPtr{_ptr.get()}, this->_loop_behavior);
+    return native_methods::AUTDModulationCacheClone(native_methods::ModulationCachePtr{_ptr.get()}, this->_loop_behavior);
   }
 
   M _m;

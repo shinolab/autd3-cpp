@@ -5,6 +5,7 @@
 
 #include "autd3/driver/datagram/gain/gain.hpp"
 #include "autd3/gain/holo/amplitude.hpp"
+#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::gain::holo {
 
@@ -22,16 +23,11 @@ class Holo : public driver::Gain<H> {
     }
   }
 
-  AUTD3_API void with_constraint(const native_methods::EmissionConstraintWrap value) & { _constraint = value; }
-  AUTD3_API [[nodiscard]] H with_constraint(const native_methods::EmissionConstraintWrap value) && {
-    _constraint = value;
-    return std::move(*static_cast<H*>(this));
-  }
+  AUTD3_DEF_PARAM(H, native_methods::EmissionConstraintWrap, constraint)
 
  protected:
   std::vector<driver::Vector3> _foci;
   std::vector<Amplitude> _amps;
-  native_methods::EmissionConstraintWrap _constraint;
 };
 
 }  // namespace autd3::gain::holo

@@ -38,10 +38,10 @@ class Cache final : public driver::GainBase,
     if (!_ptr) {
       _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDGainCache(_g.gain_ptr(geometry))._0), [](void* ptr) {
         if (!ptr) return;
-        native_methods::AUTDGainCacheFree(native_methods::GainPtr{ptr});
+        native_methods::AUTDGainCacheFree(native_methods::GainCachePtr{ptr});
       });
     }
-    return native_methods::AUTDGainCacheClone(native_methods::GainPtr{_ptr.get()});
+    return native_methods::AUTDGainCacheClone(native_methods::GainCachePtr{_ptr.get()});
   }
 
  private:

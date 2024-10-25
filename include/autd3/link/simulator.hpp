@@ -18,23 +18,16 @@ class Simulator final {
     friend class Simulator;
     friend class controller::ControllerBuilder;
 
-    native_methods::LinkSimulatorBuilderPtr _ptr;
-
-    AUTD3_API explicit Builder(const std::string& ip) : _ptr(validate(native_methods::AUTDLinkSimulator(ip.c_str()))) {}
+    AUTD3_API explicit Builder(std::string ip) : _ip(std::move(ip)) {}
 
     [[nodiscard]] static Simulator resolve_link(const native_methods::HandlePtr, const native_methods::LinkPtr) { return Simulator{}; }
 
    public:
     using Link = Simulator;
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSimulatorIntoBuilder(_ptr); }
+    AUTD3_DEF_PROP(std::string, ip)
 
-    template <typename Rep, typename Period>
-    AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {
-      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
-      _ptr = AUTDLinkSimulatorWithTimeout(_ptr, static_cast<uint64_t>(ns));
-      return *this;
-    }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return validate(native_methods::AUTDLinkSimulator(_ip.c_str())); }
   };
 
   AUTD3_API [[nodiscard]] static Builder builder(const std::string& ip) { return Builder(ip); }

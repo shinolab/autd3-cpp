@@ -6,47 +6,18 @@
 
 namespace autd3::native_methods {
 
-struct LinkTwinCATBuilderPtr {
-  const void *_0;
-};
-
-struct LinkRemoteTwinCATBuilderPtr {
-  const void *_0;
-};
-
-struct ResultLinkRemoteTwinCATBuilder {
-  LinkRemoteTwinCATBuilderPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 extern "C" {
 
 void AUTDAUTDLinkTwinCATTracingInit();
 
-[[nodiscard]] LinkTwinCATBuilderPtr AUTDLinkTwinCAT();
+ResultStatus AUTDAUTDLinkTwinCATTracingInitWithFile(const char *path);
+
+[[nodiscard]] LinkBuilderPtr AUTDLinkTwinCAT();
 
 [[nodiscard]]
-LinkTwinCATBuilderPtr AUTDLinkTwinCATWithTimeout(LinkTwinCATBuilderPtr twincat,
-                                                 uint64_t timeout_ns);
-
-[[nodiscard]] LinkBuilderPtr AUTDLinkTwinCATIntoBuilder(LinkTwinCATBuilderPtr twincat);
-
-[[nodiscard]] ResultLinkRemoteTwinCATBuilder AUTDLinkRemoteTwinCAT(const char *server_ams_net_id);
-
-[[nodiscard]]
-LinkRemoteTwinCATBuilderPtr AUTDLinkRemoteTwinCATWithServerIP(LinkRemoteTwinCATBuilderPtr twincat,
-                                                              const char *addr);
-
-[[nodiscard]]
-LinkRemoteTwinCATBuilderPtr AUTDLinkRemoteTwinCATWithClientAmsNetId(LinkRemoteTwinCATBuilderPtr twincat,
-                                                                    const char *id);
-
-[[nodiscard]]
-LinkRemoteTwinCATBuilderPtr AUTDLinkRemoteTwinCATWithTimeout(LinkRemoteTwinCATBuilderPtr twincat,
-                                                             uint64_t timeout_ns);
-
-[[nodiscard]] LinkBuilderPtr AUTDLinkRemoteTwinCATIntoBuilder(LinkRemoteTwinCATBuilderPtr twincat);
+ResultLinkBuilder AUTDLinkRemoteTwinCAT(const char *server_ams_net_id,
+                                        const char *server_ip,
+                                        const char *client_ams_net_id);
 
 } // extern "C"
 

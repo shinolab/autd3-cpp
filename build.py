@@ -18,9 +18,7 @@ from typing import List, Optional
 def fetch_submodule():
     if shutil.which("git") is not None:
         with working_dir(os.path.dirname(os.path.abspath(__file__))):
-            subprocess.run(
-                ["git", "submodule", "update", "--init", "--recursive"]
-            ).check_returncode()
+            subprocess.run(["git", "submodule", "update", "--init"]).check_returncode()
     else:
         err("git is not installed. Skip fetching submodules.")
 
@@ -273,10 +271,19 @@ def check_if_all_native_methods_called():
                 if result:
                     defined_methods.add(result.group(1))
     defined_methods = set(filter(lambda x: not x.endswith("T4010A1"), defined_methods))
-    defined_methods.remove("AUTDAUTDLinkSOEMTracingInit")
+    defined_methods = set(
+        filter(lambda x: not x.endswith("TracingInitWithFile"), defined_methods)
+    )
+    defined_methods.remove("AUTDLinkSOEMTracingInit")
     defined_methods.remove("AUTDModulationAudioFileTracingInit")
     defined_methods.remove("AUTDLinkSimulatorTracingInit")
     defined_methods.remove("AUTDAUTDLinkTwinCATTracingInit")
+    defined_methods.remove("AUTDModulationSquareNearestFreq")
+    defined_methods.remove("AUTDModulationSineExactFreq")
+    defined_methods.remove("AUTDModulationSquareExactFreq")
+    defined_methods.remove("AUTDModulationSineExactFloatFreq")
+    defined_methods.remove("AUTDModulationSineNearestFreq")
+    defined_methods.remove("AUTDModulationSquareExactFloatFreq")
 
     used_methods = set()
     pattern = re.compile(r".*(AUTD.*?)[\(|,|\)].*")

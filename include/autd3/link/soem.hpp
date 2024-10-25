@@ -13,12 +13,32 @@ class ControllerBuilder;
 
 namespace autd3::link {
 
-#ifdef WIN32
 using native_methods::ProcessPriority;
-#endif
-using native_methods::Status;
 using native_methods::SyncMode;
 using native_methods::TimerStrategy;
+
+class Status {
+  native_methods::Status _inner;
+  std::string _msg;
+
+  explicit Status(const native_methods::Status inner, std::string msg) : _inner(inner), _msg(std::move(msg)) {}
+
+ public:
+  friend class SOEM;
+
+  static Status Lost() { return Status(native_methods::Status::Lost, ""); }
+  static Status Error(const std::string& msg) { return Status(native_methods::Status::Error, msg); }
+  static Status StateChanged(const std::string& msg) { return Status(native_methods::Status::StateChanged, msg); }
+
+  bool operator==(const Status& that) const { return _inner == that._inner && _msg == that._msg; }
+
+  friend std::ostream& operator<<(std::ostream& os, const Status& s);
+};
+
+inline std::ostream& operator<<(std::ostream& os, const Status& s) {
+  os << s._msg;
+  return os;
+};
 
 class EtherCATAdapter {
   std::string _desc;
@@ -42,13 +62,13 @@ class ThreadPriority {
 };
 
 template <class F>
-concept soem_err_handler_f = requires(F f, const uint16_t slave, const Status status, const std::string& msg) {
-  { f(slave, status, msg) } -> std::same_as<void>;
+concept soem_err_handler_f = requires(F f, const uint16_t slave, const Status status) {
+  { f(slave, status) } -> std::same_as<void>;
 };
 
 class SOEM final {
-  using native_err_handler_t = void (*)(const void*, uint32_t, Status);
-  using err_handler_t = void (*)(uint16_t, Status, const std::string&);
+  using native_err_handler_t = void (*)(const void*, uint32_t, native_methods::Status);
+  using err_handler_t = void (*)(uint16_t, Status);
 
   explicit SOEM(const native_err_handler_t native_err_handler, const err_handler_t err_handler)
       : _native_err_handler(native_err_handler), _err_handler(err_handler) {}
@@ -61,99 +81,60 @@ class SOEM final {
     friend class SOEM;
     friend class controller::ControllerBuilder;
 
-    native_methods::LinkSOEMBuilderPtr _ptr;
     native_err_handler_t _native_err_handler = nullptr;
-    err_handler_t _err_handler;
 
-    AUTD3_API Builder() : _ptr(native_methods::AUTDLinkSOEM()), _err_handler(nullptr) {}
+    AUTD3_API Builder()
+        : _buf_size(0),
+          _send_cycle(std::chrono::milliseconds(1)),
+          _sync0_cycle(std::chrono::milliseconds(1)),
+          _timer_strategy(TimerStrategy::SpinSleep),
+          _sync_mode(SyncMode::DC),
+          _sync_tolerance(std::chrono::microseconds(100)),
+          _sync_timeout(std::chrono::seconds(10)),
+          _state_check_interval(std::chrono::milliseconds(100)),
+          _thread_priority(ThreadPriority::Max),
+          _process_priority(ProcessPriority::High),
+          _err_handler(nullptr) {}
 
     [[nodiscard]] SOEM resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) const { return SOEM{_native_err_handler, _err_handler}; }
 
    public:
     using Link = SOEM;
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkSOEMIntoBuilder(_ptr); }
+    AUTD3_DEF_PARAM(Builder, std::string, ifname)
+    AUTD3_DEF_PARAM(Builder, size_t, buf_size)
+    AUTD3_DEF_PARAM_CHRONO(Builder, send_cycle)
+    AUTD3_DEF_PARAM_CHRONO(Builder, sync0_cycle)
+    AUTD3_DEF_PARAM(Builder, TimerStrategy, timer_strategy)
+    AUTD3_DEF_PARAM(Builder, SyncMode, sync_mode)
+    AUTD3_DEF_PARAM_CHRONO(Builder, sync_tolerance)
+    AUTD3_DEF_PARAM_CHRONO(Builder, sync_timeout)
+    AUTD3_DEF_PARAM_CHRONO(Builder, state_check_interval)
+    AUTD3_DEF_PARAM(Builder, native_methods::ThreadPriorityPtr, thread_priority)
+    AUTD3_DEF_PARAM(Builder, ProcessPriority, process_priority)
 
-    AUTD3_API [[nodiscard]] Builder with_ifname(const std::string& ifname) {
-      _ptr = AUTDLinkSOEMWithIfname(_ptr, ifname.c_str());
-      return *this;
-    }
+    err_handler_t _err_handler;
 
-    AUTD3_API [[nodiscard]] Builder with_buf_size(const size_t value) {
-      _ptr = AUTDLinkSOEMWithBufSize(_ptr, static_cast<uint32_t>(value));
-      return *this;
-    }
-
-    AUTD3_API [[nodiscard]] Builder with_send_cycle(const uint16_t value) {
-      _ptr = AUTDLinkSOEMWithSendCycle(_ptr, value);
-      return *this;
-    }
-
-    AUTD3_API [[nodiscard]] Builder with_sync0_cycle(const uint16_t value) {
-      _ptr = AUTDLinkSOEMWithSync0Cycle(_ptr, value);
-      return *this;
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const {
+      return validate(
+          AUTDLinkSOEM(_ifname.c_str(), static_cast<uint32_t>(_buf_size),
+                       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_send_cycle).count()),
+                       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync0_cycle).count()),
+                       reinterpret_cast<void*>(_native_err_handler), reinterpret_cast<void*>(_err_handler), _sync_mode, _process_priority,
+                       _thread_priority, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_state_check_interval).count()),
+                       _timer_strategy, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync_tolerance).count()),
+                       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync_timeout).count())));
     }
 
     template <soem_err_handler_f F>
-    AUTD3_API [[nodiscard]] Builder with_err_handler(F value) {
+    AUTD3_API [[nodiscard]] Builder&& with_err_handler(F value) && {
       _err_handler = static_cast<err_handler_t>(value);
-      _native_err_handler = +[](const void* context, const uint32_t slave, const Status status) {
-        const std::string msg(128, ' ');                                                                            // LCOV_EXCL_LINE
-        AUTDLinkSOEMStatusGetMsg(status, const_cast<char*>(msg.c_str()));                                           // LCOV_EXCL_LINE
-        (*reinterpret_cast<err_handler_t>(const_cast<void*>(context)))(static_cast<uint16_t>(slave), status, msg);  // LCOV_EXCL_LINE
+      _native_err_handler = +[](const void* context, const uint32_t slave, const native_methods::Status status) {
+        const std::string msg(128, ' ');                                                                                    // LCOV_EXCL_LINE
+        (void)AUTDLinkSOEMStatusGetMsg(status, const_cast<char*>(msg.c_str()));                                             // LCOV_EXCL_LINE
+        (*reinterpret_cast<err_handler_t>(const_cast<void*>(context)))(static_cast<uint16_t>(slave), Status(status, msg));  // LCOV_EXCL_LINE
       };  // LCOV_EXCL_LINE
-      _ptr = AUTDLinkSOEMWithErrHandler(_ptr, reinterpret_cast<void*>(_native_err_handler), reinterpret_cast<void*>(_err_handler));
-      return *this;
-    }
-
-    AUTD3_API [[nodiscard]] Builder with_timer_strategy(const native_methods::TimerStrategy value) {
-      _ptr = AUTDLinkSOEMWithTimerStrategy(_ptr, value);
-      return *this;
-    }
-
-    AUTD3_API [[nodiscard]] Builder with_sync_mode(const native_methods::SyncMode mode) {
-      _ptr = AUTDLinkSOEMWithSyncMode(_ptr, mode);
-      return *this;
-    }
-
-    template <typename Rep, typename Period>
-    AUTD3_API [[nodiscard]] Builder with_sync_tolerance(const std::chrono::duration<Rep, Period> timeout) {
-      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
-      _ptr = AUTDLinkSOEMWithSyncTolerance(_ptr, static_cast<uint64_t>(ns));
-      return *this;
-    }
-
-    template <typename Rep, typename Period>
-    AUTD3_API [[nodiscard]] Builder with_sync_timeout(const std::chrono::duration<Rep, Period> timeout) {
-      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
-      _ptr = AUTDLinkSOEMWithSyncTimeout(_ptr, static_cast<uint64_t>(ns));
-      return *this;
-    }
-
-    template <typename Rep, typename Period>
-    AUTD3_API [[nodiscard]] Builder with_state_check_interval(const std::chrono::duration<Rep, Period> value) {
-      const auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(value).count();
-      _ptr = AUTDLinkSOEMWithStateCheckInterval(_ptr, static_cast<uint32_t>(ms));
-      return *this;
-    }
-
-    AUTD3_API [[nodiscard]] Builder with_thread_priority(const native_methods::ThreadPriorityPtr value) {
-      _ptr = AUTDLinkSOEMWithThreadPriority(_ptr, value);
-      return *this;
-    }
-
-#ifdef WIN32
-    AUTD3_API [[nodiscard]] Builder with_process_priority(const native_methods::ProcessPriority value) {
-      _ptr = AUTDLinkSOEMWithProcessPriority(_ptr, value);
-      return *this;
-    }
-#endif
-
-    template <typename Rep, typename Period>
-    AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {
-      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
-      _ptr = AUTDLinkSOEMWithTimeout(_ptr, static_cast<uint64_t>(ns));
-      return *this;
+      return std::move(*this);
     }
   };
 
@@ -182,23 +163,16 @@ class RemoteSOEM final {
     friend class RemoteSOEM;
     friend class controller::ControllerBuilder;
 
-    native_methods::LinkRemoteSOEMBuilderPtr _ptr;
-
-    AUTD3_API explicit Builder(const std::string& addr) { _ptr = validate(native_methods::AUTDLinkRemoteSOEM(addr.c_str())); }
+    AUTD3_API explicit Builder(const std::string& addr) {}
 
     [[nodiscard]] static RemoteSOEM resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return RemoteSOEM{}; }
 
    public:
     using Link = RemoteSOEM;
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return AUTDLinkRemoteSOEMIntoBuilder(_ptr); }
+    AUTD3_DEF_PROP(std::string, addr)
 
-    template <typename Rep, typename Period>
-    AUTD3_API [[nodiscard]] Builder with_timeout(const std::chrono::duration<Rep, Period> timeout) {
-      const auto ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
-      _ptr = AUTDLinkRemoteSOEMWithTimeout(_ptr, static_cast<uint64_t>(ns));
-      return std::move(*this);
-    }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return validate(native_methods::AUTDLinkRemoteSOEM(_addr.c_str())); }
   };
 
   AUTD3_API [[nodiscard]] static Builder builder(const std::string& addr) { return Builder(addr); }

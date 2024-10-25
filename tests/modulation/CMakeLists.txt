@@ -3,7 +3,6 @@ target_sources(test_autd3 PRIVATE
   sine.cpp
   square.cpp
   static.cpp
-  modulation.cpp
   custom.cpp
 )
 

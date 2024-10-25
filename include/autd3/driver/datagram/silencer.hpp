@@ -30,10 +30,11 @@ struct FixedCompletionTime {
 
  private:
   template <with_samplng_config C>
-  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool strict_mode, const native_methods::SilencerTarget target) const noexcept {
-    return AUTDDatagramSilencerFixedCompletionTimeIsValid(raw_ptr(strict_mode, target),
-                                                          c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
-                                                          c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool strict_mode) const noexcept {
+    return native_methods::AUTDDatagramSilencerFixedCompletionTimeIsValid(
+        static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(intensity).count()),
+        static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(phase).count()), strict_mode,
+        c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)), c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr(const bool strict_mode, const native_methods::SilencerTarget target) const noexcept {
@@ -49,9 +50,9 @@ struct FixedUpdateRate {
 
  private:
   template <with_samplng_config C>
-  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool strict_mode, const native_methods::SilencerTarget target) const noexcept {
-    return AUTDDatagramSilencerFixedUpdateRateIsValid(raw_ptr(strict_mode, target), c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
-                                                      c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool) const noexcept {
+    return native_methods::AUTDDatagramSilencerFixedUpdateRateIsValid(
+        intensity, phase, c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)), c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr(const bool, const native_methods::SilencerTarget target) const noexcept {
@@ -83,11 +84,16 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
 
   template <with_samplng_config C>
   AUTD3_API [[nodiscard]] bool is_valid(const C& c) const noexcept {
-    return std::visit([this, &c](const auto& s) { return s.is_valid(c, _strict_mode, _target); }, _inner);
+    return std::visit([this, &c](const auto& s) { return s.is_valid(c, _strict_mode); }, _inner);
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const noexcept {
     return std::visit([this](const auto& s) { return s.raw_ptr(_strict_mode, _target); }, _inner);
+  }
+
+  [[nodiscard]]
+  std::variant<FixedCompletionTime, FixedUpdateRate> inner() const {
+    return _inner;
   }
 
  private:

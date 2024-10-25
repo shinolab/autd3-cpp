@@ -6,27 +6,13 @@
 
 namespace autd3::native_methods {
 
-enum class ProcessPriority : uint8_t {
-  Idle = 0,
-  BelowNormal = 1,
-  Normal = 2,
-  AboveNormal = 3,
-  High = 4,
-  Realtime = 5,
-};
-
 enum class Status : uint8_t {
   Error = 0,
   StateChanged = 1,
   Lost = 2,
 };
 
-enum class TimerStrategy : uint8_t {
-  Sleep = 0,
-  BusyWait = 1,
-};
-
-struct LinkSOEMBuilderPtr {
+struct EthernetAdaptersPtr {
   const void *_0;
 };
 
@@ -34,78 +20,7 @@ struct ThreadPriorityPtr {
   const void *_0;
 };
 
-struct EthernetAdaptersPtr {
-  const void *_0;
-};
-
-struct LinkRemoteSOEMBuilderPtr {
-  const void *_0;
-};
-
-struct ResultLinkRemoteSOEMBuilder {
-  LinkRemoteSOEMBuilderPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 extern "C" {
-
-void AUTDAUTDLinkSOEMTracingInit();
-
-[[nodiscard]] LinkSOEMBuilderPtr AUTDLinkSOEM();
-
-[[nodiscard]] LinkSOEMBuilderPtr AUTDLinkSOEMWithSendCycle(LinkSOEMBuilderPtr soem, uint64_t cycle);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithSync0Cycle(LinkSOEMBuilderPtr soem,
-                                              uint64_t cycle);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithBufSize(LinkSOEMBuilderPtr soem,
-                                           uint32_t buf_size);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithTimerStrategy(LinkSOEMBuilderPtr soem,
-                                                 TimerStrategy timer_strategy);
-
-[[nodiscard]] LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncMode(LinkSOEMBuilderPtr soem, SyncMode mode);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncTolerance(LinkSOEMBuilderPtr soem,
-                                                 uint64_t tolerance_ns);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithSyncTimeout(LinkSOEMBuilderPtr soem,
-                                               uint64_t timeout_ns);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithIfname(LinkSOEMBuilderPtr soem,
-                                          const char *ifname);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithStateCheckInterval(LinkSOEMBuilderPtr soem,
-                                                      uint32_t interval_ms);
-
-uint32_t AUTDLinkSOEMStatusGetMsg(Status src, char *dst);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithErrHandler(LinkSOEMBuilderPtr soem,
-                                              const void* handler,
-                                              const void* context);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithTimeout(LinkSOEMBuilderPtr soem,
-                                           uint64_t timeout_ns);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithProcessPriority(LinkSOEMBuilderPtr soem,
-                                                   ProcessPriority priority);
-
-[[nodiscard]]
-LinkSOEMBuilderPtr AUTDLinkSOEMWithThreadPriority(LinkSOEMBuilderPtr soem,
-                                                  ThreadPriorityPtr priority);
-
-[[nodiscard]] LinkBuilderPtr AUTDLinkSOEMIntoBuilder(LinkSOEMBuilderPtr soem);
 
 [[nodiscard]] EthernetAdaptersPtr AUTDAdapterPointer();
 
@@ -115,13 +30,40 @@ void AUTDAdapterGetAdapter(EthernetAdaptersPtr adapters, uint32_t idx, char *des
 
 void AUTDAdapterPointerDelete(EthernetAdaptersPtr adapters);
 
-[[nodiscard]] ResultLinkRemoteSOEMBuilder AUTDLinkRemoteSOEM(const char *addr);
+void AUTDLinkSOEMTracingInit();
+
+ResultStatus AUTDLinkSOEMTracingInitWithFile(const char *path);
 
 [[nodiscard]]
-LinkRemoteSOEMBuilderPtr AUTDLinkRemoteSOEMWithTimeout(LinkRemoteSOEMBuilderPtr soem,
-                                                       uint64_t timeout_ns);
+ResultSyncLinkBuilder AUTDLinkSOEM(const char *ifname,
+                                   uint32_t buf_size,
+                                   uint64_t send_cycle_ns,
+                                   uint64_t sync0_cycle_ns,
+                                   const void* err_handler,
+                                   const void* err_context,
+                                   SyncMode mode,
+                                   ProcessPriority process_priority,
+                                   ThreadPriorityPtr thread_priority,
+                                   uint64_t state_check_interval_ns,
+                                   TimerStrategy timer_strategy,
+                                   uint64_t tolerance_ns,
+                                   uint64_t sync_timeout_ns);
 
-[[nodiscard]] LinkBuilderPtr AUTDLinkRemoteSOEMIntoBuilder(LinkRemoteSOEMBuilderPtr soem);
+[[nodiscard]]
+bool AUTDLinkSOEMIsDefault(uint32_t buf_size,
+                           uint64_t send_cycle_ns,
+                           uint64_t sync0_cycle_ns,
+                           SyncMode mode,
+                           ProcessPriority process_priority,
+                           ThreadPriorityPtr thread_priority,
+                           uint64_t state_check_interval_ns,
+                           TimerStrategy timer_strategy,
+                           uint64_t tolerance_ns,
+                           uint64_t sync_timeout_ns);
+
+[[nodiscard]] uint32_t AUTDLinkSOEMStatusGetMsg(Status src, char *dst);
+
+[[nodiscard]] ResultSyncLinkBuilder AUTDLinkRemoteSOEM(const char *addr);
 
 [[nodiscard]] ThreadPriorityPtr AUTDLinkSOEMThreadPriorityMin();
 

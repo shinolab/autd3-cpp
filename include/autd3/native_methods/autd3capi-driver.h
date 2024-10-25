@@ -18,11 +18,11 @@ constexpr const float DEVICE_HEIGHT_MM = 151.4f;
 
 constexpr const float DEVICE_WIDTH_MM = 192.0f;
 
-constexpr const int32_t AUTD3_ERR = -1;
-
-constexpr const int32_t AUTD3_TRUE = 1;
-
-constexpr const int32_t AUTD3_FALSE = 0;
+enum class AUTDStatus : uint8_t {
+  True = 0,
+  False = 1,
+  Err = 2,
+};
 
 enum class DebugTypeTag : uint8_t {
   None = 0,
@@ -45,39 +45,16 @@ enum class DynWindow : uint32_t {
   Blackman = 1,
 };
 
-enum class GPIOIn : uint8_t {
-  I0 = 0,
-  I1 = 1,
-  I2 = 2,
-  I3 = 3,
+enum class SpinStrategyTag : uint8_t {
+  YieldThread = 0,
+  SpinLoopHint = 1,
 };
 
-enum class GPIOOut : uint8_t {
-  O0 = 0,
-  O1 = 1,
-  O2 = 2,
-  O3 = 3,
-};
-
-enum class GainSTMMode : uint8_t {
-  PhaseIntensityFull = 0,
-  PhaseFull = 1,
-  PhaseHalf = 2,
-};
-
-enum class Segment : uint8_t {
-  S0 = 0,
-  S1 = 1,
-};
-
-enum class SilencerTarget : uint8_t {
-  Intensity = 0,
-  PulseWidth = 1,
-};
-
-enum class SyncMode : uint8_t {
-  FreeRun = 0,
-  DC = 1,
+enum class TimerStrategyTag : uint8_t {
+  Std = 0,
+  Spin = 1,
+  Async = 2,
+  Waitable = 3,
 };
 
 enum class TransitionModeTag : uint8_t {
@@ -86,34 +63,10 @@ enum class TransitionModeTag : uint8_t {
   Gpio = 2,
   Ext = 3,
   Immediate = 4,
+  None = 255,
 };
 
-struct LoopBehavior {
-  uint16_t rep;
-};
-
-struct TransitionModeWrap {
-  TransitionModeTag tag;
-  uint64_t value;
-};
-
-struct ControllerPtr {
-  const void *_0;
-};
-
-struct DevicePtr {
-  const void *_0;
-};
-
-struct TransducerPtr {
-  const void *_0;
-};
-
-struct GeometryPtr {
-  const void *_0;
-};
-
-struct ModulationPtr {
+struct DatagramPtr {
   const void *_0;
 };
 
@@ -121,70 +74,57 @@ struct GainPtr {
   const void *_0;
 };
 
-struct LinkPtr {
+struct DynSincInterpolator {
+  DynWindow window;
+  uint32_t window_size;
+};
+
+struct ModulationPtr {
   const void *_0;
 };
 
-struct DatagramPtr {
-  const void *_0;
+struct ResultModulation {
+  ModulationPtr result;
+  uint32_t err_len;
+  const void *err;
+};
+
+struct ResultSamplingConfig {
+  SamplingConfig result;
+  uint32_t err_len;
+  const void *err;
+};
+
+struct TimerStrategyWrap {
+  TimerStrategyTag tag;
+  uint32_t value;
+  SpinStrategyTag spin_strategy;
+};
+
+struct ResultStatus {
+  AUTDStatus result;
+  uint32_t err_len;
+  const void *err;
 };
 
 struct LinkBuilderPtr {
   const void *_0;
 };
 
-struct ResultI32 {
-  int32_t result;
+struct ResultSyncLinkBuilder {
+  LinkBuilderPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
-struct ResultModulation {
-  ModulationPtr result;
+struct ResultLinkBuilder {
+  LinkBuilderPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
-struct ResultDatagram {
-  DatagramPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct Drive {
-  uint8_t phase;
-  uint8_t intensity;
-};
-
-struct GainSTMPtr {
+struct ControllerPtr {
   const void *_0;
-};
-
-struct FociSTMPtr {
-  const void *_0;
-};
-
-struct ResultGainSTM {
-  GainSTMPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct ResultFociSTM {
-  FociSTMPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct DebugTypeWrap {
-  DebugTypeTag ty;
-  uint64_t value;
-};
-
-struct ResultSamplingConfig {
-  SamplingConfig result;
-  uint32_t err_len;
-  const void* err;
 };
 
 struct RuntimePtr {
@@ -195,9 +135,50 @@ struct HandlePtr {
   const void *_0;
 };
 
-struct DynSincInterpolator {
-  DynWindow window;
-  uint32_t window_size;
+struct TransitionModeWrap {
+  TransitionModeTag tag;
+  uint64_t value;
 };
 
-} // namespace autd3::native_methods
+struct TransducerPtr {
+  const void *_0;
+};
+
+struct DevicePtr {
+  const void *_0;
+};
+
+struct GeometryPtr {
+  const void *_0;
+};
+
+struct LinkPtr {
+  const void *_0;
+};
+
+struct DebugTypeWrap {
+  DebugTypeTag ty;
+  uint64_t value;
+};
+
+struct FociSTMPtr {
+  const void *_0;
+};
+
+struct GainSTMPtr {
+  const void *_0;
+};
+
+struct ResultFociSTM {
+  FociSTMPtr result;
+  uint32_t err_len;
+  const void *err;
+};
+
+struct ResultGainSTM {
+  GainSTMPtr result;
+  uint32_t err_len;
+  const void *err;
+};
+
+}  // namespace autd3::native_methods

@@ -18,10 +18,17 @@ struct SamplingModeExact {
     return validate(AUTDModulationSineExact(freq.hz(), config, intensity, offset, phase.radian(), clamp, loop_behavior));
   }
 
-  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
-                                                                 const std::optional<float> scale_factor, const uint8_t offset,
+  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<SamplingModeExact>& sine_freq,
+                                                                 const std::vector<native_methods::SamplingConfig>& sine_config,
+                                                                 const std::vector<uint8_t>& sine_intensity, const std::vector<uint8_t>& sine_offset,
+                                                                 const std::vector<float>& sine_phase, const std::unique_ptr<bool[]>& sine_clamp,
+                                                                 const bool clamp, const std::optional<float> scale_factor, const uint8_t offset,
                                                                  const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationFourierExact(components.data(), static_cast<uint32_t>(components.size()), clamp,
+    std::vector<uint32_t> freq;
+    freq.reserve(sine_freq.size());
+    std::ranges::transform(sine_freq, std::back_inserter(freq), [&](const auto& m) { return m.freq.hz(); });
+    return validate(AUTDModulationFourierExact(freq.data(), sine_config.data(), sine_intensity.data(), sine_offset.data(), sine_phase.data(),
+                                               sine_clamp.get(), static_cast<uint32_t>(sine_freq.size()), clamp,
                                                scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), offset, loop_behavior));
   }
 
@@ -29,10 +36,6 @@ struct SamplingModeExact {
                                                          const float duty, const native_methods::LoopBehavior loop_behavior) const {
     return validate(AUTDModulationSquareExact(freq.hz(), config, low, high, duty, loop_behavior));
   }
-
-  [[nodiscard]] float sine_freq(const native_methods::ModulationPtr ptr) const { return static_cast<float>(AUTDModulationSineExactFreq(ptr)); }
-
-  [[nodiscard]] float square_freq(const native_methods::ModulationPtr ptr) const { return static_cast<float>(AUTDModulationSquareExactFreq(ptr)); }
 };
 
 struct SamplingModeExactFloat {
@@ -44,10 +47,17 @@ struct SamplingModeExactFloat {
     return validate(AUTDModulationSineExactFloat(freq.hz(), config, intensity, offset, phase.radian(), clamp, loop_behavior));
   }
 
-  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
-                                                                 const std::optional<float> scale_factor, const uint8_t offset,
+  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<SamplingModeExactFloat>& sine_freq,
+                                                                 const std::vector<native_methods::SamplingConfig>& sine_config,
+                                                                 const std::vector<uint8_t>& sine_intensity, const std::vector<uint8_t>& sine_offset,
+                                                                 const std::vector<float>& sine_phase, const std::unique_ptr<bool[]>& sine_clamp,
+                                                                 const bool clamp, const std::optional<float> scale_factor, const uint8_t offset,
                                                                  const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationFourierExactFloat(components.data(), static_cast<uint32_t>(components.size()), clamp,
+    std::vector<float> freq;
+    freq.reserve(sine_freq.size());
+    std::ranges::transform(sine_freq, std::back_inserter(freq), [&](const auto& m) { return m.freq.hz(); });
+    return validate(AUTDModulationFourierExactFloat(freq.data(), sine_config.data(), sine_intensity.data(), sine_offset.data(), sine_phase.data(),
+                                                    sine_clamp.get(), static_cast<uint32_t>(sine_freq.size()), clamp,
                                                     scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), offset, loop_behavior));
   }
 
@@ -55,10 +65,6 @@ struct SamplingModeExactFloat {
                                                          const float duty, const native_methods::LoopBehavior loop_behavior) const {
     return validate(AUTDModulationSquareExactFloat(freq.hz(), config, low, high, duty, loop_behavior));
   }
-
-  [[nodiscard]] float sine_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSineExactFloatFreq(ptr); }
-
-  [[nodiscard]] float square_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSquareExactFloatFreq(ptr); }
 };
 
 struct SamplingModeNearest {
@@ -70,10 +76,17 @@ struct SamplingModeNearest {
     return validate(AUTDModulationSineNearest(freq.hz(), config, intensity, offset, phase.radian(), clamp, loop_behavior));
   }
 
-  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<native_methods::ModulationPtr>& components, const bool clamp,
-                                                                 const std::optional<float> scale_factor, const uint8_t offset,
+  [[nodiscard]] static native_methods::ModulationPtr fourier_ptr(const std::vector<SamplingModeNearest>& sine_freq,
+                                                                 const std::vector<native_methods::SamplingConfig>& sine_config,
+                                                                 const std::vector<uint8_t>& sine_intensity, const std::vector<uint8_t>& sine_offset,
+                                                                 const std::vector<float>& sine_phase, const std::unique_ptr<bool[]>& sine_clamp,
+                                                                 const bool clamp, const std::optional<float> scale_factor, const uint8_t offset,
                                                                  const native_methods::LoopBehavior loop_behavior) {
-    return validate(AUTDModulationFourierNearest(components.data(), static_cast<uint32_t>(components.size()), clamp,
+    std::vector<float> freq;
+    freq.reserve(sine_freq.size());
+    std::ranges::transform(sine_freq, std::back_inserter(freq), [&](const auto& m) { return m.freq.hz(); });
+    return validate(AUTDModulationFourierNearest(freq.data(), sine_config.data(), sine_intensity.data(), sine_offset.data(), sine_phase.data(),
+                                                 sine_clamp.get(), static_cast<uint32_t>(sine_freq.size()), clamp,
                                                  scale_factor.value_or(std::numeric_limits<float>::quiet_NaN()), offset, loop_behavior));
   }
 
@@ -81,10 +94,6 @@ struct SamplingModeNearest {
                                                          const float duty, const native_methods::LoopBehavior loop_behavior) const {
     return validate(AUTDModulationSquareNearest(freq.hz(), config, low, high, duty, loop_behavior));
   }
-
-  [[nodiscard]] float sine_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSineNearestFreq(ptr); }
-
-  [[nodiscard]] float square_freq(const native_methods::ModulationPtr ptr) const { return AUTDModulationSquareNearestFreq(ptr); }
 };
 
 }  // namespace autd3::modulation

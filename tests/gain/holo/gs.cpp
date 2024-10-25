@@ -33,5 +33,5 @@ TEST(GainHolo, GSDefault) {
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
   const auto g = autd3::gain::holo::GS(std::move(backend), foci);
-  ASSERT_TRUE(autd3::native_methods::AUTDGainGSIsDefault(g.gain_ptr(autd.geometry())));
+  ASSERT_TRUE(autd3::native_methods::AUTDGainGSIsDefault(g.constraint(), g.repeat()));
 }

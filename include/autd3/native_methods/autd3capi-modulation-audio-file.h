@@ -10,6 +10,8 @@ extern "C" {
 
 void AUTDModulationAudioFileTracingInit();
 
+ResultStatus AUTDModulationAudioFileTracingInitWithFile(const char *path);
+
 [[nodiscard]]
 ResultModulation AUTDModulationAudioFileWav(const char *path,
                                             LoopBehavior loop_behavior);

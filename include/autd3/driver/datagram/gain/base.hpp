@@ -21,8 +21,8 @@ class GainBase : public DatagramS<native_methods::GainPtr> {
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr raw_ptr(const geometry::Geometry& geometry) const override { return gain_ptr(geometry); }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::GainPtr p, const native_methods::Segment segment,
-                                                                   const bool transition) const override {
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(const native_methods::GainPtr p, const native_methods::Segment segment,
+                                                                              const native_methods::TransitionModeWrap transition) const override {
     return AUTDGainIntoDatagramWithSegment(p, segment, transition);
   }
 

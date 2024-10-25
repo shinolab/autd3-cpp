@@ -22,8 +22,8 @@ class Custom final : public driver::Gain<Custom<F>> {
       const driver::geometry::Device dev(dev_idx, geometry_ptr);
       const driver::geometry::Transducer tr(tr_idx, dev_idx, dev.ptr());
       const auto d = static_cast<const Custom*>(context)->_f(dev)(tr);
-      raw->phase = d.phase.value();
-      raw->intensity = d.intensity.value();
+      raw->phase.value = d.phase.value();
+      raw->intensity.value = d.intensity.value();
     };
   }
 
