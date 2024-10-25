@@ -84,12 +84,12 @@ class SOEM final {
     native_err_handler_t _native_err_handler = nullptr;
 
     AUTD3_API Builder()
-        : _buf_size(0),
+        : _buf_size(32),
           _send_cycle(std::chrono::milliseconds(1)),
           _sync0_cycle(std::chrono::milliseconds(1)),
           _timer_strategy(TimerStrategy::SpinSleep),
           _sync_mode(SyncMode::DC),
-          _sync_tolerance(std::chrono::microseconds(100)),
+          _sync_tolerance(std::chrono::microseconds(1)),
           _sync_timeout(std::chrono::seconds(10)),
           _state_check_interval(std::chrono::milliseconds(100)),
           _thread_priority(ThreadPriority::Max),

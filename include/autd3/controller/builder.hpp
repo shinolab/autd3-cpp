@@ -97,7 +97,7 @@ class ControllerBuilder {
         _fallback_timeout(std::chrono::milliseconds(20)),
         _send_interval(std::chrono::milliseconds(1)),
         _receive_interval(std::chrono::milliseconds(1)),
-        _timer_strategy(TimerStrategy::Spin(SpinSleeper())) {}
+        _timer_strategy(timer::TimerStrategy::Spin(timer::SpinSleeper())) {}
 
   AUTD3_API explicit ControllerBuilder(const std::initializer_list<driver::AUTD3> r) : ControllerBuilder(std::vector(r)) {}
 };
