@@ -11,10 +11,9 @@ namespace autd3::driver {
 template <class D>
 class DatagramWithTimeout final {
  public:
-  template <typename Rep, typename Period>
-  DatagramWithTimeout(D datagram, const std::optional<std::chrono::duration<Rep, Period>> timeout)
+  DatagramWithTimeout(D datagram, const std::optional<std::chrono::nanoseconds> timeout)
       : _datagram(std::move(datagram)),
-        _timeout_ns(timeout.has_value() ? static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count()) : -1) {}
+        _timeout_ns(timeout.has_value() ? static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(timeout.value()).count()) : -1) {}
   ~DatagramWithTimeout() = default;
   DatagramWithTimeout(const DatagramWithTimeout& v) noexcept = default;
   DatagramWithTimeout& operator=(const DatagramWithTimeout& obj) = default;

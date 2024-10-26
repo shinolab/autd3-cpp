@@ -277,7 +277,7 @@ def check_if_all_native_methods_called():
     defined_methods.remove("AUTDLinkSOEMTracingInit")
     defined_methods.remove("AUTDModulationAudioFileTracingInit")
     defined_methods.remove("AUTDLinkSimulatorTracingInit")
-    defined_methods.remove("AUTDAUTDLinkTwinCATTracingInit")
+    defined_methods.remove("AUTDLinkTwinCATTracingInit")
     defined_methods.remove("AUTDModulationSquareNearestFreq")
     defined_methods.remove("AUTDModulationSineExactFreq")
     defined_methods.remove("AUTDModulationSquareExactFreq")

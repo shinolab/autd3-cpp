@@ -27,7 +27,9 @@ class Simulator final {
 
     AUTD3_DEF_PROP(std::string, ip)
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return validate(native_methods::AUTDLinkSimulator(_ip.c_str())); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const {
+      return native_methods::LinkBuilderPtr{validate(native_methods::AUTDLinkSimulator(_ip.c_str()))._0};
+    }
   };
 
   AUTD3_API [[nodiscard]] static Builder builder(const std::string& ip) { return Builder(ip); }

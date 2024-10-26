@@ -8,9 +8,9 @@ namespace autd3::native_methods {
 
 extern "C" {
 
-void AUTDAUTDLinkTwinCATTracingInit();
+void AUTDLinkTwinCATTracingInit();
 
-ResultStatus AUTDAUTDLinkTwinCATTracingInitWithFile(const char *path);
+ResultStatus AUTDLinkTwinCATTracingInitWithFile(const char *path);
 
 [[nodiscard]] LinkBuilderPtr AUTDLinkTwinCAT();
 

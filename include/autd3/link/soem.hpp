@@ -116,14 +116,16 @@ class SOEM final {
     err_handler_t _err_handler;
 
     [[nodiscard]] native_methods::LinkBuilderPtr ptr() const {
-      return validate(
-          AUTDLinkSOEM(_ifname.c_str(), static_cast<uint32_t>(_buf_size),
-                       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_send_cycle).count()),
-                       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync0_cycle).count()),
-                       reinterpret_cast<void*>(_native_err_handler), reinterpret_cast<void*>(_err_handler), _sync_mode, _process_priority,
-                       _thread_priority, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_state_check_interval).count()),
-                       _timer_strategy, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync_tolerance).count()),
-                       static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync_timeout).count())));
+      return native_methods::LinkBuilderPtr{
+          validate(AUTDLinkSOEM(_ifname.c_str(), static_cast<uint32_t>(_buf_size),
+                                static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_send_cycle).count()),
+                                static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync0_cycle).count()),
+                                reinterpret_cast<void*>(_native_err_handler), reinterpret_cast<void*>(_err_handler), _sync_mode, _process_priority,
+                                _thread_priority,
+                                static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_state_check_interval).count()),
+                                _timer_strategy, static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync_tolerance).count()),
+                                static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_sync_timeout).count())))
+              ._0};
     }
 
     template <soem_err_handler_f F>
@@ -172,7 +174,9 @@ class RemoteSOEM final {
 
     AUTD3_DEF_PROP(std::string, addr)
 
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return validate(native_methods::AUTDLinkRemoteSOEM(_addr.c_str())); }
+    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const {
+      return native_methods::LinkBuilderPtr{validate(native_methods::AUTDLinkRemoteSOEM(_addr.c_str()))._0};
+    }
   };
 
   AUTD3_API [[nodiscard]] static Builder builder(const std::string& addr) { return Builder(addr); }

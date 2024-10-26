@@ -86,13 +86,13 @@ struct ModulationPtr {
 struct ResultModulation {
   ModulationPtr result;
   uint32_t err_len;
-  const void *err;
+  const void* err;
 };
 
 struct ResultSamplingConfig {
   SamplingConfig result;
   uint32_t err_len;
-  const void *err;
+  const void* err;
 };
 
 struct TimerStrategyWrap {
@@ -104,23 +104,27 @@ struct TimerStrategyWrap {
 struct ResultStatus {
   AUTDStatus result;
   uint32_t err_len;
-  const void *err;
+  const void* err;
+};
+
+struct SyncLinkBuilderPtr {
+  const void *_0;
+};
+
+struct ResultSyncLinkBuilder {
+  SyncLinkBuilderPtr result;
+  uint32_t err_len;
+  const void* err;
 };
 
 struct LinkBuilderPtr {
   const void *_0;
 };
 
-struct ResultSyncLinkBuilder {
-  LinkBuilderPtr result;
-  uint32_t err_len;
-  const void *err;
-};
-
 struct ResultLinkBuilder {
   LinkBuilderPtr result;
   uint32_t err_len;
-  const void *err;
+  const void* err;
 };
 
 struct ControllerPtr {
@@ -172,13 +176,15 @@ struct GainSTMPtr {
 struct ResultFociSTM {
   FociSTMPtr result;
   uint32_t err_len;
-  const void *err;
+  const void* err;
 };
 
 struct ResultGainSTM {
   GainSTMPtr result;
   uint32_t err_len;
-  const void *err;
+  const void* err;
 };
 
-}  // namespace autd3::native_methods
+
+
+} // namespace autd3::native_methods
