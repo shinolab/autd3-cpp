@@ -27,8 +27,8 @@ class Status {
   friend class SOEM;
 
   static Status Lost() { return Status(native_methods::Status::Lost, ""); }
-  static Status Error(const std::string& msg) { return Status(native_methods::Status::Error, msg); }
-  static Status StateChanged(const std::string& msg) { return Status(native_methods::Status::StateChanged, msg); }
+  static Status Error() { return Status(native_methods::Status::Error, ""); }
+  static Status StateChanged() { return Status(native_methods::Status::StateChanged, ""); }
 
   bool operator==(const Status& that) const { return _inner == that._inner && _msg == that._msg; }
 

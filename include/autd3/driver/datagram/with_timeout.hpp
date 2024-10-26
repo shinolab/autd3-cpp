@@ -40,12 +40,10 @@ class IntoDatagramWithTimeout {
   IntoDatagramWithTimeout(IntoDatagramWithTimeout&& obj) = default;
   IntoDatagramWithTimeout& operator=(IntoDatagramWithTimeout&& obj) = default;
 
-  template <typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::duration<Rep, Period>> timeout) & {
+  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) & {
     return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);
   }
-  template <typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::duration<Rep, Period>> timeout) && {
+  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) && {
     return DatagramWithTimeout<D>(std::move(*static_cast<D*>(this)), timeout);
   }
 };
