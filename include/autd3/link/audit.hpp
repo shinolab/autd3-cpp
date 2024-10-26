@@ -92,7 +92,7 @@ class Audit final {
     std::vector<uint8_t> buf(n);
     AUTDLinkAuditFpgaModulationBuffer(_ptr, segment, static_cast<uint16_t>(idx), buf.data(), n);
     return buf;
-  }
+  }  // LCOV_EXCL_LINE
 
   [[nodiscard]] uint32_t modulation_freq_division(const size_t idx, const native_methods::Segment segment) const {
     return AUTDLinkAuditFpgaModulationFreqDivision(_ptr, segment, static_cast<uint16_t>(idx));
@@ -108,7 +108,7 @@ class Audit final {
     AUTDLinkAuditFpgaDrivesAt(_ptr, segment, static_cast<uint16_t>(idx), static_cast<uint16_t>(stm_idx),
                               reinterpret_cast<native_methods::Drive*>(drives.data()));
     return drives;
-  }
+  }  // LCOV_EXCL_LINE
 
   [[nodiscard]] uint32_t stm_cycle(const size_t idx, const native_methods::Segment segment) const {
     return AUTDLinkAuditFpgaStmCycle(_ptr, segment, static_cast<uint16_t>(idx));
@@ -142,7 +142,7 @@ class Audit final {
     std::vector<uint8_t> buf(256);
     AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), buf.data());
     return buf;
-  }
+  }  // LCOV_EXCL_LINE
 };
 
 }  // namespace autd3::link

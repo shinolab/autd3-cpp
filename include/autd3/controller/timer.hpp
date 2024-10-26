@@ -41,7 +41,9 @@ struct TimerStrategy {
   AUTD3_API static inline const native_methods::TimerStrategyWrap Async(AsyncSleeper sleeper) {
     return native_methods::AUTDTimerStrategyAsync(sleeper.timer_resolution.value_or(0));
   }
+#ifdef WIN32
   AUTD3_API static inline const native_methods::TimerStrategyWrap Waitable(WaitableSleeper) { return native_methods::AUTDTimerStrategyWaitable(); }
+#endif
 };
 
 }  // namespace autd3::controller::timer

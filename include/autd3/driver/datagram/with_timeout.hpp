@@ -39,9 +39,9 @@ class IntoDatagramWithTimeout {
   IntoDatagramWithTimeout(IntoDatagramWithTimeout&& obj) = default;
   IntoDatagramWithTimeout& operator=(IntoDatagramWithTimeout&& obj) = default;
 
-  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) & {
-    return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);
-  }
+  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) & {  // LCOV_EXCL_LINE
+    return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);                                                       // LCOV_EXCL_LINE
+  }  // LCOV_EXCL_LINE
   AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) && {
     return DatagramWithTimeout<D>(std::move(*static_cast<D*>(this)), timeout);
   }

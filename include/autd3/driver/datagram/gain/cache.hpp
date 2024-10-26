@@ -61,7 +61,7 @@ class IntoGainCache {
   IntoGainCache& operator=(IntoGainCache&& obj) = default;       // LCOV_EXCL_LINE
   virtual ~IntoGainCache() = default;                            // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] gain::Cache<G> with_cache() & { return gain::Cache(*static_cast<G*>(this)); }
+  AUTD3_API [[nodiscard]] gain::Cache<G> with_cache() & { return gain::Cache(*static_cast<G*>(this)); }  // LCOV_EXCL_LINE
   AUTD3_API [[nodiscard]] gain::Cache<G> with_cache() && { return gain::Cache(std::move(*static_cast<G*>(this))); }
 };
 
