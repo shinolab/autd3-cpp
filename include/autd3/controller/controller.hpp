@@ -68,7 +68,7 @@ class Controller {
 
   AUTD3_API void close() {
     if (_ptr._0 == nullptr) return;
-    const auto res = AUTDWaitResultI32(_handle, AUTDControllerClose(_ptr));
+    const auto res = AUTDWaitResultStatus(_handle, AUTDControllerClose(_ptr));
     _ptr._0 = nullptr;
     AUTDDeleteRuntime(_runtime);
     _runtime._0 = nullptr;
@@ -87,7 +87,7 @@ class Controller {
     }
     AUTDControllerFPGAStateDelete(p);
     return ret;
-  }
+  }  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] std::vector<driver::FirmwareVersion> firmware_version() {
     const size_t num_devices = geometry().num_devices();
@@ -101,11 +101,11 @@ class Controller {
     }
     AUTDControllerFirmwareVersionListPointerDelete(handle);
     return ret;
-  }
+  }  // LCOV_EXCL_LINE
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    validate(AUTDWaitResultI32(_handle, AUTDControllerSend(_ptr, d.ptr(_geometry))));
+    validate(AUTDWaitResultStatus(_handle, AUTDControllerSend(_ptr, d.ptr(_geometry))));
   }
 
   template <group_f F>
@@ -135,7 +135,7 @@ class Controller {
     }
 
     AUTD3_API void send() const {
-      validate(AUTDWaitLocalResultI32(
+      validate(AUTDWaitLocalResultStatus(
           _controller._handle,
           AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), _controller._geometry.ptr(),
                               _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()))));

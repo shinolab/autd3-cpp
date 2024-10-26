@@ -46,7 +46,11 @@ TEST(DriverDatagram, Silencer) {
     ASSERT_TRUE(autd.link().silencer_fixed_completion_steps_mode(dev.idx()));
   }
 
-  ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionTimeIsDefault(autd3::driver::Silencer().ptr(autd.geometry())));
+  const auto default_ = autd3::driver::Silencer();
+  ASSERT_TRUE(autd3::native_methods::AUTDDatagramSilencerFixedCompletionTimeIsDefault(
+      static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::get<0>(default_.inner()).intensity).count()),
+      static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(std::get<0>(default_.inner()).phase).count()),
+      default_.strict_mode(), default_.target()));
 }
 
 TEST(DriverDatagram, SilencerIsValid) {

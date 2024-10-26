@@ -6,27 +6,13 @@
 
 namespace autd3::native_methods {
 
-struct LinkSimulatorBuilderPtr {
-  const void *_0;
-};
-
-struct ResultLinkSimulatorBuilder {
-  LinkSimulatorBuilderPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 extern "C" {
 
 void AUTDLinkSimulatorTracingInit();
 
-[[nodiscard]] ResultLinkSimulatorBuilder AUTDLinkSimulator(const char *addr);
+ResultStatus AUTDLinkSimulatorTracingInitWithFile(const char *path);
 
-[[nodiscard]]
-LinkSimulatorBuilderPtr AUTDLinkSimulatorWithTimeout(LinkSimulatorBuilderPtr simulator,
-                                                     uint64_t timeout_ns);
-
-[[nodiscard]] LinkBuilderPtr AUTDLinkSimulatorIntoBuilder(LinkSimulatorBuilderPtr simulator);
+[[nodiscard]] ResultSyncLinkBuilder AUTDLinkSimulator(const char *addr);
 
 } // extern "C"
 

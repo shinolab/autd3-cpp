@@ -14,20 +14,18 @@
 namespace autd3::modulation {
 
 class Fourier;
-class Mixer;
 
 class Sine final : public driver::Modulation<Sine> {
   AUTD3_API explicit Sine(const std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> freq)
       : Modulation(driver::SamplingConfig(10)),
         _intensity(std::numeric_limits<uint8_t>::max()),
-        _offset(std::numeric_limits<uint8_t>::max()),
+        _offset(0x80),
         _phase(0.0 * driver::rad),
         _clamp(false),
         _freq(freq) {}
 
  public:
   friend Fourier;
-  friend Mixer;
 
   AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq) : Sine(SamplingModeExact{freq}) {}
   AUTD3_API explicit Sine(const driver::Freq<float> freq) : Sine(SamplingModeExactFloat{freq}) {}

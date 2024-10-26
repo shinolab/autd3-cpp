@@ -86,6 +86,22 @@
                                                                                                        \
  public:
 
+#define AUTD3_DEF_PARAM_CHRONO(T, PARAM_NAME)                                                              \
+  template <typename Rep, typename Period>                                                                 \
+  void with_##PARAM_NAME(const std::chrono::duration<Rep, Period> value)& {                                \
+    _##PARAM_NAME = std::chrono::duration_cast<std::chrono::nanoseconds>(value); /* LCOV_EXCL_LINE */      \
+  }                                                                                                        \
+  template <typename Rep, typename Period>                                                                 \
+  [[nodiscard]] T&& with_##PARAM_NAME(const std::chrono::duration<Rep, Period> value)&& {                  \
+    _##PARAM_NAME = std::chrono::duration_cast<std::chrono::nanoseconds>(value); /* LCOV_EXCL_LINE */      \
+    return std::move(*static_cast<T*>(this));                                    /* LCOV_EXCL_LINE */      \
+  }                                                                                                        \
+  [[nodiscard]] std::chrono::nanoseconds PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */ \
+ protected:                                                                                                \
+  std::chrono::nanoseconds _##PARAM_NAME;                                                                  \
+                                                                                                           \
+ public:
+
 namespace autd3::native_methods {
 
 template <typename T>
@@ -98,10 +114,10 @@ constexpr auto validate(T res) {
   return res.result;
 }
 
-template <typename T = int32_t>
-constexpr T validate(ResultI32 res) {
+template <typename T = AUTDStatus>
+constexpr T validate(ResultStatus res) {
   const auto [result, err_len, err] = res;
-  if (result == AUTD3_ERR) {
+  if (result == AUTDStatus::Err) {
     const std::string err_str(err_len, ' ');
     AUTDGetErr(err, const_cast<char*>(err_str.c_str()));
     throw AUTDException(err_str);
@@ -110,12 +126,12 @@ constexpr T validate(ResultI32 res) {
 }
 
 #ifdef AUTD3_ASYNC_API
-inline coro::task<ResultI32> wait_future(const HandlePtr handle, FfiFutureResultI32 future) {
-  co_return AUTDWaitResultI32(handle, std::move(future));
+inline coro::task<ResultStatus> wait_future(const HandlePtr handle, FfiFutureResultStatus future) {
+  co_return AUTDWaitResultStatus(handle, std::move(future));
 }
 
-inline coro::task<ResultI32> wait_future(const HandlePtr handle, LocalFfiFutureResultI32 future) {
-  co_return AUTDWaitLocalResultI32(handle, std::move(future));
+inline coro::task<ResultStatus> wait_future(const HandlePtr handle, LocalFfiFutureResultStatus future) {
+  co_return AUTDWaitLocalResultStatus(handle, std::move(future));
 }
 
 inline coro::task<ResultFPGAStateList> wait_future(const HandlePtr handle, FfiFutureResultFPGAStateList future) {

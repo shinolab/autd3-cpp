@@ -4,10 +4,10 @@
 
 namespace autd3::native_methods {
 
-struct FfiFutureResultI32 {
+struct FfiFutureResultStatus {
   uint8_t _data[24];
 };
-struct LocalFfiFutureResultI32 {
+struct LocalFfiFutureResultStatus {
   uint8_t _data[24];
 };
 struct FfiFutureResultFPGAStateList {
@@ -15,9 +15,6 @@ struct FfiFutureResultFPGAStateList {
 };
 struct FfiFutureResultFirmwareVersionList {
   uint8_t _data[24];
-};
-struct SamplingConfig {
-  uint16_t _div;
 };
 struct FfiFutureResultController {
   uint8_t _data[24];

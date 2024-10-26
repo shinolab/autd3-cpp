@@ -4,7 +4,11 @@ use std::path::Path;
 use anyhow::Result;
 use glob::glob;
 
-pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> Result<()> {
+pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
+    crate_path: P1,
+    dest_dir: P2,
+    item_types: Vec<cbindgen::ItemType>,
+) -> Result<()> {
     let out_file = dest_dir.as_ref().join(format!(
         "{}.h",
         crate_path.as_ref().file_name().unwrap().to_str().unwrap()
@@ -23,58 +27,48 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
     config.usize_is_size_t = true;
     config.export = cbindgen::ExportConfig {
         include: vec![
-            "ContextPtr".to_string(),
-            "GPIOOut".to_string(),
-            "GPIOIn".to_string(),
-            "SyncMode".to_string(),
-            "LoopBehavior".to_string(),
-            "TransitionModeWrap".to_string(),
-            "TimerStrategy".to_string(),
-            "GainSTMMode".to_string(),
-            "ControllerPtr".to_string(),
-            "EmissionConstraintWrap".to_string(),
-            "FirmwareVersionListPtr".to_string(),
-            "GroupKVMapPtr".to_string(),
-            "CachePtr".to_string(),
-            "DevicePtr".to_string(),
-            "TransducerPtr".to_string(),
-            "GeometryPtr".to_string(),
-            "ModulationPtr".to_string(),
-            "GainPtr".to_string(),
-            "LinkPtr".to_string(),
-            "DatagramPtr".to_string(),
-            "DatagramSpecialPtr".to_string(),
-            "STMPropsPtr".to_string(),
-            "BackendPtr".to_string(),
-            "GroupGainMapPtr".to_string(),
-            "GainCalcDrivesMapPtr".to_string(),
-            "LinkBuilderPtr".to_string(),
-            "ResultI32".to_string(),
-            "ResultF32".to_string(),
-            "ResultModulation".to_string(),
-            "ResultBackend".to_string(),
-            "ResultController".to_string(),
-            "ResultGainCalcDrivesMap".to_string(),
-            "ResultDatagram".to_string(),
             "Drive".to_string(),
-            "Status".to_string(),
             "Segment".to_string(),
-            "GainSTMPtr".to_string(),
-            "FociSTMPtr".to_string(),
-            "ResultGainSTM".to_string(),
-            "ResultFociSTM".to_string(),
-            "DebugTypeWrap".to_string(),
+            "LoopBehavior".to_string(),
             "SamplingConfig".to_string(),
+            "SyncMode".to_string(),
+            "ProcessPriority".to_string(),
+            "TimerStrategy".to_string(),
+            "DatagramPtr".to_string(),
+            "GainPtr".to_string(),
+            "DynWindow".to_string(),
+            "DynSincInterpolator".to_string(),
+            "ResultModulation".to_string(),
             "ResultSamplingConfig".to_string(),
-            "SilencerTarget".to_string(),
+            "TimerStrategyTag".to_string(),
+            "SpinStrategyTag".to_string(),
+            "TimerStrategyWrap".to_string(),
+            "ResultStatus".to_string(),
+            "ResultSyncLinkBuilder".to_string(),
+            "ResultLinkBuilder".to_string(),
+            "ControllerPtr".to_string(),
             "RuntimePtr".to_string(),
             "HandlePtr".to_string(),
-            "DynSincInterpolator".to_string(),
+            "TransitionModeWrap".to_string(),
+            "TransducerPtr".to_string(),
+            "DevicePtr".to_string(),
+            "GeometryPtr".to_string(),
+            "LinkPtr".to_string(),
+            "DebugTypeWrap".to_string(),
+            "FociSTMPtr".to_string(),
+            "GainSTMPtr".to_string(),
+            "GPIOIn".to_string(),
+            "GPIOOut".to_string(),
+            "SilencerTarget".to_string(),
+            "GainSTMMode".to_string(),
+            "ResultFociSTM".to_string(),
+            "ResultGainSTM".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]
             .into_iter()
             .collect(),
+        item_types,
         ..Default::default()
     };
     config.function = cbindgen::FunctionConfig {
@@ -96,7 +90,7 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
 
     let content = std::fs::read_to_string(&out_file)?;
 
-    let re = regex::Regex::new(r"constexpr const float (.*) = (.*);").unwrap();
+    let re = regex::Regex::new(r"constexpr const float (.*) = ([\d\.]+);").unwrap();
     let content = re
         .replace_all(&content, "constexpr const float $1 = ${2}f;")
         .to_string();
@@ -111,13 +105,36 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(crate_path: P1, dest_dir: P2) -> 
 
 fn main() -> Result<()> {
     let home = env::var("CARGO_MANIFEST_DIR")?;
+    for entry in glob(&format!("{}/autd3/*/Cargo.toml", home))? {
+        let entry = entry?;
+        let crate_path = Path::new(&entry).parent().unwrap();
+        if crate_path.file_name() == Some("autd3-driver".as_ref())
+            || crate_path.file_name() == Some("autd3-link-soem".as_ref())
+        {
+            gen_c(
+                &crate_path,
+                "../../include/autd3/native_methods",
+                vec![cbindgen::ItemType::Enums, cbindgen::ItemType::Structs],
+            )?;
+        }
+    }
     for entry in glob(&format!("{}/capi/*/Cargo.toml", home))? {
         let entry = entry?;
         let crate_path = Path::new(&entry).parent().unwrap();
         if crate_path.file_name() == Some("autd3capi-emulator".as_ref()) {
             continue;
         }
-        gen_c(&crate_path, "../../include/autd3/native_methods")?;
+        gen_c(
+            &crate_path,
+            "../../include/autd3/native_methods",
+            vec![
+                cbindgen::ItemType::Constants,
+                cbindgen::ItemType::Enums,
+                cbindgen::ItemType::Unions,
+                cbindgen::ItemType::Structs,
+                cbindgen::ItemType::Functions,
+            ],
+        )?;
     }
     Ok(())
 }

@@ -71,5 +71,5 @@ TEST(Modulation, FourierInvalidMix) {
   auto autd = create_controller();
 
   const auto m = autd3::modulation::Fourier({autd3::modulation::Sine(50 * autd3::driver::Hz), autd3::modulation::Sine(100.0f * autd3::driver::Hz)});
-  ASSERT_THROW(autd.send(m), autd3::AUTDException);
+  ASSERT_THROW(autd.send(m), std::bad_variant_access);
 }

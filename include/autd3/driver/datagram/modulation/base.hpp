@@ -2,7 +2,7 @@
 
 #include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
-#include "autd3/driver/datagram/with_segment_transition.hpp"
+#include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
@@ -12,9 +12,9 @@
 namespace autd3::driver {
 
 template <class M>
-class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
+class ModulationBase : public DatagramS<native_methods::ModulationPtr>,
                        public IntoDatagramTuple<M>,
-                       public IntoDatagramWithSegmentTransition<native_methods::ModulationPtr, M>,
+                       public IntoDatagramWithSegment<native_methods::ModulationPtr, M>,
                        public driver::IntoDatagramWithTimeout<M>,
                        public driver::IntoDatagramWithParallelThreshold<M> {
  public:
@@ -28,14 +28,10 @@ class ModulationBase : public DatagramST<native_methods::ModulationPtr>,
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const { return AUTDModulationIntoDatagram(modulation_ptr()); }
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr raw_ptr(const geometry::Geometry&) const override { return modulation_ptr(); }
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::ModulationPtr p,
-                                                                   const native_methods::Segment segment) const override {
-    return AUTDModulationIntoDatagramWithSegment(p, segment);
-  }
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(
       const native_methods::ModulationPtr p, const native_methods::Segment segment,
       const native_methods::TransitionModeWrap transition_mode) const override {
-    return AUTDModulationIntoDatagramWithSegmentTransition(p, segment, transition_mode);
+    return AUTDModulationIntoDatagramWithSegment(p, segment, transition_mode);
   }
   AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr() const = 0;
 

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <chrono>
+#include <optional>
 
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
@@ -10,9 +11,9 @@ namespace autd3::driver {
 template <class D>
 class DatagramWithTimeout final {
  public:
-  template <typename Rep, typename Period>
-  DatagramWithTimeout(D datagram, const std::chrono::duration<Rep, Period> timeout)
-      : _datagram(std::move(datagram)), _timeout_ns(std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count()) {}
+  DatagramWithTimeout(D datagram, const std::optional<std::chrono::nanoseconds> timeout)
+      : _datagram(std::move(datagram)),
+        _timeout_ns(timeout.has_value() ? static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(timeout.value()).count()) : -1) {}
   ~DatagramWithTimeout() = default;
   DatagramWithTimeout(const DatagramWithTimeout& v) noexcept = default;
   DatagramWithTimeout& operator=(const DatagramWithTimeout& obj) = default;
@@ -25,7 +26,7 @@ class DatagramWithTimeout final {
 
  private:
   D _datagram;
-  uint64_t _timeout_ns;
+  int64_t _timeout_ns;
 };
 
 template <class D>
@@ -38,12 +39,10 @@ class IntoDatagramWithTimeout {
   IntoDatagramWithTimeout(IntoDatagramWithTimeout&& obj) = default;
   IntoDatagramWithTimeout& operator=(IntoDatagramWithTimeout&& obj) = default;
 
-  template <typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::chrono::duration<Rep, Period> timeout) & {
-    return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);
-  }
-  template <typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::chrono::duration<Rep, Period> timeout) && {
+  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) & {  // LCOV_EXCL_LINE
+    return DatagramWithTimeout<D>(*static_cast<D*>(this), timeout);                                                       // LCOV_EXCL_LINE
+  }  // LCOV_EXCL_LINE
+  AUTD3_API [[nodiscard]] DatagramWithTimeout<D> with_timeout(const std::optional<std::chrono::nanoseconds> timeout) && {
     return DatagramWithTimeout<D>(std::move(*static_cast<D*>(this)), timeout);
   }
 };

@@ -4,18 +4,22 @@
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/native_methods.hpp"
+#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
 
 struct SwapSegment {
   class Gain final : public IntoDatagramTuple<Gain>, public IntoDatagramWithTimeout<Gain>, public IntoDatagramWithParallelThreshold<Gain> {
    public:
-    AUTD3_API explicit Gain(const native_methods::Segment segment) : _segment(segment) {}
+    AUTD3_API explicit Gain(const native_methods::Segment segment, const native_methods::TransitionModeWrap transition_mode)
+        : _segment(segment), _transition_mode(transition_mode) {}
 
-    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const { return AUTDDatagramSwapSegmentGain(_segment); }
+    AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const {
+      return AUTDDatagramSwapSegmentGain(_segment, _transition_mode);
+    }
 
-   private:
-    native_methods::Segment _segment;
+    AUTD3_DEF_PROP(native_methods::Segment, segment)
+    AUTD3_DEF_PROP(native_methods::TransitionModeWrap, transition_mode)
   };
 
   class GainSTM final : public IntoDatagramTuple<GainSTM>,
@@ -29,9 +33,8 @@ struct SwapSegment {
       return AUTDDatagramSwapSegmentGainSTM(_segment, _transition_mode);
     }
 
-   private:
-    native_methods::Segment _segment;
-    native_methods::TransitionModeWrap _transition_mode;
+    AUTD3_DEF_PROP(native_methods::Segment, segment)
+    AUTD3_DEF_PROP(native_methods::TransitionModeWrap, transition_mode)
   };
 
   class FociSTM final : public IntoDatagramTuple<FociSTM>,
@@ -45,9 +48,8 @@ struct SwapSegment {
       return AUTDDatagramSwapSegmentFociSTM(_segment, _transition_mode);
     }
 
-   private:
-    native_methods::Segment _segment;
-    native_methods::TransitionModeWrap _transition_mode;
+    AUTD3_DEF_PROP(native_methods::Segment, segment)
+    AUTD3_DEF_PROP(native_methods::TransitionModeWrap, transition_mode)
   };
 
   class Modulation final : public IntoDatagramTuple<Modulation>,
@@ -61,9 +63,8 @@ struct SwapSegment {
       return AUTDDatagramSwapSegmentModulation(_segment, _transition_mode);
     }
 
-   private:
-    native_methods::Segment _segment;
-    native_methods::TransitionModeWrap _transition_mode;
+    AUTD3_DEF_PROP(native_methods::Segment, segment)
+    AUTD3_DEF_PROP(native_methods::TransitionModeWrap, transition_mode)
   };
 };
 

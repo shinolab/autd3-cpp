@@ -36,11 +36,15 @@ struct ControllerBuilderPtr {
   const void *_0;
 };
 
+struct GainCachePtr {
+  const void *_0;
+};
+
 struct GroupGainMapPtr {
   const void *_0;
 };
 
-struct LinkAuditBuilderPtr {
+struct ModulationCachePtr {
   const void *_0;
 };
 
@@ -52,9 +56,11 @@ extern "C" {
 
 void AUTDDeleteRuntime(RuntimePtr runtime);
 
-[[nodiscard]] ResultI32 AUTDWaitResultI32(HandlePtr handle, FfiFutureResultI32 future);
+[[nodiscard]] ResultStatus AUTDWaitResultStatus(HandlePtr handle, FfiFutureResultStatus future);
 
-[[nodiscard]] ResultI32 AUTDWaitLocalResultI32(HandlePtr handle, LocalFfiFutureResultI32 future);
+[[nodiscard]]
+ResultStatus AUTDWaitLocalResultStatus(HandlePtr handle,
+                                       LocalFfiFutureResultStatus future);
 
 [[nodiscard]]
 ResultController AUTDWaitResultController(HandlePtr handle,
@@ -70,7 +76,9 @@ ResultFirmwareVersionList AUTDWaitResultFirmwareVersionList(HandlePtr handle,
 
 void AUTDTracingInit();
 
-[[nodiscard]] FfiFutureResultI32 AUTDControllerClose(ControllerPtr cnt);
+ResultStatus AUTDTracingInitWithFile(const char *path);
+
+[[nodiscard]] FfiFutureResultStatus AUTDControllerClose(ControllerPtr cnt);
 
 [[nodiscard]] FfiFutureResultFPGAStateList AUTDControllerFPGAState(ControllerPtr cnt);
 
@@ -87,28 +95,24 @@ void AUTDControllerFirmwareVersionListPointerDelete(FirmwareVersionListPtr p_inf
 
 void AUTDFirmwareLatest(char *latest);
 
-[[nodiscard]] FfiFutureResultI32 AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
+[[nodiscard]] FfiFutureResultStatus AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
 
 [[nodiscard]]
 ControllerBuilderPtr AUTDControllerBuilder(const Vector3 *pos,
                                            const Quaternion *rot,
-                                           uint16_t len);
+                                           uint16_t len,
+                                           uint16_t fallback_parallel_threshold,
+                                           uint64_t fallback_timeout,
+                                           uint64_t send_interval_ns,
+                                           uint64_t receive_interval_ns,
+                                           TimerStrategyWrap timer_strategy);
 
 [[nodiscard]]
-ControllerBuilderPtr AUTDControllerBuilderWithParallelThreshold(ControllerBuilderPtr builder,
-                                                                uint16_t parallel_threshold);
-
-[[nodiscard]]
-ControllerBuilderPtr AUTDControllerBuilderWithSendInterval(ControllerBuilderPtr builder,
-                                                           uint64_t interval_ns);
-
-[[nodiscard]]
-ControllerBuilderPtr AUTDControllerBuilderWithReceiveInterval(ControllerBuilderPtr builder,
-                                                              uint64_t interval_ns);
-
-[[nodiscard]]
-ControllerBuilderPtr AUTDControllerBuilderWithTimerResolution(ControllerBuilderPtr builder,
-                                                              uint32_t resolution);
+bool AUTDControllerBuilderIsDefault(uint16_t fallback_parallel_threshold,
+                                    uint64_t fallback_timeout,
+                                    uint64_t send_interval_ns,
+                                    uint64_t receive_interval_ns,
+                                    TimerStrategyWrap timer_strategy);
 
 [[nodiscard]]
 FfiFutureResultController AUTDControllerOpen(ControllerBuilderPtr builder,
@@ -116,13 +120,25 @@ FfiFutureResultController AUTDControllerOpen(ControllerBuilderPtr builder,
                                                int64_t timeout_ns);
 
 [[nodiscard]]
-LocalFfiFutureResultI32 AUTDControllerGroup(ControllerPtr cnt,
-                                              const void* f,
-                                              const void* context,
-                                              GeometryPtr geometry,
-                                              const int32_t *keys,
-                                              const DatagramPtr *d,
-                                              uint16_t n);
+LocalFfiFutureResultStatus AUTDControllerGroup(ControllerPtr cnt,
+                                                 const void* f,
+                                                 const void* context,
+                                                 GeometryPtr geometry,
+                                                 const int32_t *keys,
+                                                 const DatagramPtr *d,
+                                                 uint16_t n);
+
+[[nodiscard]] TimerStrategyWrap AUTDTimerStrategyStd(uint32_t timer_resolution);
+
+[[nodiscard]] uint32_t AUTDTimerStrategySpinDefaultAccuracy();
+
+[[nodiscard]]
+TimerStrategyWrap AUTDTimerStrategySpin(uint32_t native_accuracy_ns,
+                                        SpinStrategyTag spin_strategy);
+
+[[nodiscard]] TimerStrategyWrap AUTDTimerStrategyAsync(uint32_t timer_resolution);
+
+[[nodiscard]] TimerStrategyWrap AUTDTimerStrategyWaitable();
 
 [[nodiscard]] DatagramPtr AUTDDatagramTuple(DatagramPtr d1, DatagramPtr d2);
 
@@ -167,30 +183,39 @@ DatagramPtr AUTDDatagramSwapSegmentFociSTM(Segment segment,
 DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
                                            TransitionModeWrap transition_mode);
 
-[[nodiscard]] DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment);
+[[nodiscard]]
+DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment,
+                                        TransitionModeWrap transition_mode);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromUpdateRate(uint16_t value_intensity,
-                                               uint16_t value_phase,
+DatagramPtr AUTDDatagramSilencerFromUpdateRate(uint16_t intensity,
+                                               uint16_t phase,
                                                SilencerTarget target);
 
 [[nodiscard]]
-bool AUTDDatagramSilencerFixedUpdateRateIsValid(DatagramPtr silencer,
+bool AUTDDatagramSilencerFixedUpdateRateIsValid(uint16_t intensity,
+                                                uint16_t phase,
                                                 SamplingConfig config_intensity,
                                                 SamplingConfig config_phase);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromCompletionTime(uint64_t value_intensity,
-                                                   uint64_t value_phase,
+DatagramPtr AUTDDatagramSilencerFromCompletionTime(uint64_t intensity,
+                                                   uint64_t phase,
                                                    bool strict_mode,
                                                    SilencerTarget target);
 
 [[nodiscard]]
-bool AUTDDatagramSilencerFixedCompletionTimeIsValid(DatagramPtr silencer,
+bool AUTDDatagramSilencerFixedCompletionTimeIsValid(uint64_t intensity,
+                                                    uint64_t phase,
+                                                    bool strict_mode,
                                                     SamplingConfig config_intensity,
                                                     SamplingConfig config_phase);
 
-[[nodiscard]] bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(DatagramPtr silencer);
+[[nodiscard]]
+bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(uint64_t intensity,
+                                                      uint64_t phase,
+                                                      bool strict_mode,
+                                                      SilencerTarget target);
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromFreq(float f, uint16_t n);
 
@@ -208,46 +233,36 @@ bool AUTDDatagramSilencerFixedCompletionTimeIsValid(DatagramPtr silencer,
 ResultFociSTM AUTDSTMFoci(SamplingConfig config,
                           const void* points,
                           uint16_t size,
-                          uint8_t n);
-
-[[nodiscard]]
-FociSTMPtr AUTDSTMFociWithLoopBehavior(FociSTMPtr stm,
-                                       uint8_t n,
-                                       LoopBehavior loop_behavior);
+                          uint8_t n,
+                          LoopBehavior loop_behavior);
 
 [[nodiscard]]
 DatagramPtr AUTDSTMFociIntoDatagramWithSegment(FociSTMPtr stm,
                                                uint8_t n,
-                                               Segment segment);
-
-[[nodiscard]]
-DatagramPtr AUTDSTMFociIntoDatagramWithSegmentTransition(FociSTMPtr stm,
-                                                         uint8_t n,
-                                                         Segment segment,
-                                                         TransitionModeWrap transition_mode);
+                                               Segment segment,
+                                               TransitionModeWrap transition_mode);
 
 [[nodiscard]] DatagramPtr AUTDSTMFociIntoDatagram(FociSTMPtr stm, uint8_t n);
 
-[[nodiscard]] ResultGainSTM AUTDSTMGain(SamplingConfig config, const GainPtr *gains, uint16_t size);
-
-[[nodiscard]] GainSTMPtr AUTDSTMGainWithMode(GainSTMPtr stm, GainSTMMode mode);
-
-[[nodiscard]] GainSTMPtr AUTDSTMGainWithLoopBehavior(GainSTMPtr stm, LoopBehavior loop_behavior);
-
-[[nodiscard]] DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm, Segment segment);
+[[nodiscard]]
+ResultGainSTM AUTDSTMGain(SamplingConfig config,
+                          const GainPtr *gains,
+                          uint16_t size,
+                          GainSTMMode mode,
+                          LoopBehavior loop_behavior);
 
 [[nodiscard]]
-DatagramPtr AUTDSTMGainIntoDatagramWithSegmentTransition(GainSTMPtr stm,
-                                                         Segment segment,
-                                                         TransitionModeWrap transition_mode);
+DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
+                                               Segment segment,
+                                               TransitionModeWrap transition_mode);
 
 [[nodiscard]] DatagramPtr AUTDSTMGainIntoDatagram(GainSTMPtr stm);
 
 [[nodiscard]] DatagramPtr AUTDDatagramSynchronize();
 
-[[nodiscard]] DatagramPtr AUTDDatagramWithParallelThreshold(DatagramPtr d, uint16_t threshold);
+[[nodiscard]] DatagramPtr AUTDDatagramWithParallelThreshold(DatagramPtr d, int32_t threshold);
 
-[[nodiscard]] DatagramPtr AUTDDatagramWithTimeout(DatagramPtr d, uint64_t timeout_ns);
+[[nodiscard]] DatagramPtr AUTDDatagramWithTimeout(DatagramPtr d, int64_t timeout_ns);
 
 [[nodiscard]] uint64_t AUTDDcSysTimeNow();
 
@@ -315,10 +330,12 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegmentTransition(GainSTMPtr stm,
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeImmediate();
 
+[[nodiscard]] TransitionModeWrap AUTDTransitionModeNone();
+
 [[nodiscard]]
 DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
                                             Segment segment,
-                                            bool update_segment);
+                                            TransitionModeWrap transition_mode);
 
 [[nodiscard]] DatagramPtr AUTDGainIntoDatagram(GainPtr gain);
 
@@ -329,19 +346,19 @@ GainPtr AUTDGainBessel(Vector3 p,
                        uint8_t intensity,
                        uint8_t phase_offset);
 
-[[nodiscard]] bool AUTDGainBesselIsDefault(GainPtr bessel);
+[[nodiscard]] bool AUTDGainBesselIsDefault(uint8_t intensity, uint8_t phase_offset);
 
-[[nodiscard]] GainPtr AUTDGainCache(GainPtr g);
+[[nodiscard]] GainCachePtr AUTDGainCache(GainPtr g);
 
-[[nodiscard]] GainPtr AUTDGainCacheClone(GainPtr g);
+[[nodiscard]] GainPtr AUTDGainCacheClone(GainCachePtr g);
 
-void AUTDGainCacheFree(GainPtr g);
+void AUTDGainCacheFree(GainCachePtr g);
 
 [[nodiscard]] GainPtr AUTDGainCustom(const void* f, const void* context, GeometryPtr geometry);
 
 [[nodiscard]] GainPtr AUTDGainFocus(Vector3 p, uint8_t intensity, uint8_t phase_offset);
 
-[[nodiscard]] bool AUTDGainFocusIsDefault(GainPtr focus);
+[[nodiscard]] bool AUTDGainFocusIsDefault(uint8_t intensity, uint8_t phase_offset);
 
 [[nodiscard]]
 GroupGainMapPtr AUTDGainGroupCreateMap(const uint16_t *device_indices_ptr,
@@ -363,13 +380,7 @@ GainPtr AUTDGainGroup(GroupGainMapPtr map,
 
 [[nodiscard]] GainPtr AUTDGainPlane(Vector3 n, uint8_t intensity, uint8_t phase_offset);
 
-[[nodiscard]] bool AUTDGainPlanelIsDefault(GainPtr plane);
-
-[[nodiscard]]
-GainPtr AUTDGainWithTransform(GainPtr g,
-                              const void* f,
-                              const void* context,
-                              GeometryPtr geometry);
+[[nodiscard]] bool AUTDGainPlanelIsDefault(uint8_t intensity, uint8_t phase_offset);
 
 [[nodiscard]] GainPtr AUTDGainUniform(uint8_t intensity, uint8_t phase);
 
@@ -426,21 +437,9 @@ Vector3 AUTDTransducerPosition(TransducerPtr tr);
 
 [[nodiscard]] LinkPtr AUTDLinkGet(ControllerPtr cnt);
 
-[[nodiscard]] LinkAuditBuilderPtr AUTDLinkAudit();
-
-[[nodiscard]]
-LinkAuditBuilderPtr AUTDLinkAuditWithTimeout(LinkAuditBuilderPtr audit,
-                                             uint64_t timeout_ns);
-
-[[nodiscard]] LinkBuilderPtr AUTDLinkAuditIntoBuilder(LinkAuditBuilderPtr audit);
+[[nodiscard]] LinkBuilderPtr AUTDLinkAudit();
 
 [[nodiscard]] bool AUTDLinkAuditIsOpen(LinkPtr audit);
-
-[[nodiscard]] uint64_t AUTDLinkAuditTimeoutNs(LinkPtr audit);
-
-[[nodiscard]] uint64_t AUTDLinkAuditLastTimeoutNs(LinkPtr audit);
-
-[[nodiscard]] uint64_t AUTDLinkAuditLastParallelThreshold(LinkPtr audit);
 
 void AUTDLinkAuditDown(LinkPtr audit);
 
@@ -531,20 +530,20 @@ void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint8_
 
 [[nodiscard]] SamplingConfig AUTDModulationSamplingConfig(ModulationPtr m);
 
-[[nodiscard]] DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m, Segment segment);
-
 [[nodiscard]]
-DatagramPtr AUTDModulationIntoDatagramWithSegmentTransition(ModulationPtr m,
-                                                            Segment segment,
-                                                            TransitionModeWrap transition_mode);
+DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m,
+                                                  Segment segment,
+                                                  TransitionModeWrap transition_mode);
 
 [[nodiscard]] DatagramPtr AUTDModulationIntoDatagram(ModulationPtr m);
 
-[[nodiscard]] ModulationPtr AUTDModulationCache(ModulationPtr m);
+[[nodiscard]] ModulationCachePtr AUTDModulationCache(ModulationPtr m);
 
-[[nodiscard]] ModulationPtr AUTDModulationCacheClone(ModulationPtr m, LoopBehavior loop_behavior);
+[[nodiscard]]
+ModulationPtr AUTDModulationCacheClone(ModulationCachePtr m,
+                                       LoopBehavior loop_behavior);
 
-void AUTDModulationCacheFree(ModulationPtr m);
+void AUTDModulationCacheFree(ModulationCachePtr m);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationCustom(SamplingConfig config,
@@ -567,7 +566,12 @@ ModulationPtr AUTDModulationWithFir(ModulationPtr m,
                                     uint32_t n_tap);
 
 [[nodiscard]]
-ResultModulation AUTDModulationFourierExact(const ModulationPtr *components,
+ResultModulation AUTDModulationFourierExact(const uint32_t *sine_freq,
+                                            const SamplingConfig *sine_config,
+                                            const uint8_t *sine_intensity,
+                                            const uint8_t *sine_offset,
+                                            const float *sine_phase,
+                                            const bool *sine_clamp,
                                             uint32_t size,
                                             bool clamp,
                                             float scale_factor,
@@ -575,7 +579,12 @@ ResultModulation AUTDModulationFourierExact(const ModulationPtr *components,
                                             LoopBehavior loop_behavior);
 
 [[nodiscard]]
-ResultModulation AUTDModulationFourierExactFloat(const ModulationPtr *components,
+ResultModulation AUTDModulationFourierExactFloat(const float *sine_freq,
+                                                 const SamplingConfig *sine_config,
+                                                 const uint8_t *sine_intensity,
+                                                 const uint8_t *sine_offset,
+                                                 const float *sine_phase,
+                                                 const bool *sine_clamp,
                                                  uint32_t size,
                                                  bool clamp,
                                                  float scale_factor,
@@ -583,7 +592,12 @@ ResultModulation AUTDModulationFourierExactFloat(const ModulationPtr *components
                                                  LoopBehavior loop_behavior);
 
 [[nodiscard]]
-ResultModulation AUTDModulationFourierNearest(const ModulationPtr *components,
+ResultModulation AUTDModulationFourierNearest(const float *sine_freq,
+                                              const SamplingConfig *sine_config,
+                                              const uint8_t *sine_intensity,
+                                              const uint8_t *sine_offset,
+                                              const float *sine_phase,
+                                              const bool *sine_clamp,
                                               uint32_t size,
                                               bool clamp,
                                               float scale_factor,
@@ -621,13 +635,19 @@ ResultModulation AUTDModulationSineNearest(float freq,
                                            bool clamp,
                                            LoopBehavior loop_behavior);
 
-[[nodiscard]] uint32_t AUTDModulationSineExactFreq(ModulationPtr sine);
+[[nodiscard]] uint32_t AUTDModulationSineExactFreq(uint32_t freq);
 
-[[nodiscard]] float AUTDModulationSineExactFloatFreq(ModulationPtr sine);
+[[nodiscard]] float AUTDModulationSineExactFloatFreq(float freq);
 
-[[nodiscard]] float AUTDModulationSineNearestFreq(ModulationPtr sine);
+[[nodiscard]] float AUTDModulationSineNearestFreq(float freq);
 
-[[nodiscard]] bool AUTDModulationSineIsDefault(ModulationPtr sine);
+[[nodiscard]]
+bool AUTDModulationSineIsDefault(SamplingConfig config,
+                                 uint8_t intensity,
+                                 uint8_t offset,
+                                 float phase,
+                                 bool clamp,
+                                 LoopBehavior loop_behavior);
 
 [[nodiscard]]
 ResultModulation AUTDModulationSquareExact(uint32_t freq,
@@ -653,17 +673,22 @@ ResultModulation AUTDModulationSquareNearest(float freq,
                                              float duty,
                                              LoopBehavior loop_behavior);
 
-[[nodiscard]] uint32_t AUTDModulationSquareExactFreq(ModulationPtr square);
+[[nodiscard]] uint32_t AUTDModulationSquareExactFreq(uint32_t freq);
 
-[[nodiscard]] float AUTDModulationSquareExactFloatFreq(ModulationPtr square);
+[[nodiscard]] float AUTDModulationSquareExactFloatFreq(float freq);
 
-[[nodiscard]] float AUTDModulationSquareNearestFreq(ModulationPtr square);
+[[nodiscard]] float AUTDModulationSquareNearestFreq(float freq);
 
-[[nodiscard]] bool AUTDModulationSquareIsDefault(ModulationPtr square);
+[[nodiscard]]
+bool AUTDModulationSquareIsDefault(SamplingConfig config,
+                                   uint8_t low,
+                                   uint8_t high,
+                                   float duty,
+                                   LoopBehavior loop_behavior);
 
 [[nodiscard]] ModulationPtr AUTDModulationStatic(uint8_t intensity, LoopBehavior loop_behavior);
 
-[[nodiscard]] bool AUTDModulationStaticIsDefault(ModulationPtr s);
+[[nodiscard]] bool AUTDModulationStaticIsDefault(uint8_t intensity);
 
 void AUTDGetErr(const void* src, char *dst);
 

@@ -12,7 +12,7 @@
 
 using autd3::native_methods::Segment;
 
-TEST(DriverDatagramSTM, FociSTM) {
+TEST(DriverDatagramSM, FociSTM) {
   auto autd = create_controller();
 
   autd.send(autd3::driver::Silencer::disable());
@@ -66,7 +66,7 @@ TEST(DriverDatagramSTM, FociSTM) {
   }
 }
 
-TEST(DriverDatagramSTM, FociSTMSegment) {
+TEST(DriverDatagramSM, FociSTMSegment) {
   auto autd = create_controller();
 
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
@@ -141,11 +141,11 @@ void test_foci_stm_n() {
   }
 }
 
-TEST(DriverDatagramSTM, FociSTM_N1) { test_foci_stm_n<1>(); }
-TEST(DriverDatagramSTM, FociSTM_N2) { test_foci_stm_n<2>(); }
-TEST(DriverDatagramSTM, FociSTM_N3) { test_foci_stm_n<3>(); }
-TEST(DriverDatagramSTM, FociSTM_N4) { test_foci_stm_n<4>(); }
-TEST(DriverDatagramSTM, FociSTM_N5) { test_foci_stm_n<5>(); }
-TEST(DriverDatagramSTM, FociSTM_N6) { test_foci_stm_n<6>(); }
-TEST(DriverDatagramSTM, FociSTM_N7) { test_foci_stm_n<7>(); }
-TEST(DriverDatagramSTM, FociSTM_N8) { test_foci_stm_n<8>(); }
+TEST(DriverDatagramSM, FociSTM_N1) { test_foci_stm_n<1>(); }
+TEST(DriverDatagramSM, FociSTM_N2) { test_foci_stm_n<2>(); }
+TEST(DriverDatagramSM, FociSTM_N3) { test_foci_stm_n<3>(); }
+TEST(DriverDatagramSM, FociSTM_N4) { test_foci_stm_n<4>(); }
+TEST(DriverDatagramSM, FociSTM_N5) { test_foci_stm_n<5>(); }
+TEST(DriverDatagramSM, FociSTM_N6) { test_foci_stm_n<6>(); }
+TEST(DriverDatagramSM, FociSTM_N7) { test_foci_stm_n<7>(); }
+TEST(DriverDatagramSM, FociSTM_N8) { test_foci_stm_n<8>(); }

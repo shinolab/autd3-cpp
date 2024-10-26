@@ -14,7 +14,7 @@
 
 using autd3::native_methods::Segment;
 
-TEST(DriverDatagramSTM, GainSTM) {
+TEST(DriverDatagramSM, GainSTM) {
   auto autd = autd3::controller::ControllerBuilder(
                   {autd3::driver::AUTD3(autd3::driver::Vector3::Zero()), autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
                   .open(autd3::link::Audit::builder());
@@ -81,7 +81,7 @@ TEST(DriverDatagramSTM, GainSTM) {
   }
 }
 
-TEST(DriverDatagramSTM, GainSTMSegment) {
+TEST(DriverDatagramSM, GainSTMSegment) {
   auto autd = create_controller();
 
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));

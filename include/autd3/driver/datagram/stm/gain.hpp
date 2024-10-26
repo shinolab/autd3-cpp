@@ -6,7 +6,7 @@
 
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/datagram/with_segment_transition.hpp"
+#include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/driver/firmware/fpga/stm_sampling_config.hpp"
@@ -18,7 +18,7 @@ template <class R>
 concept gain_range = std::ranges::viewable_range<R> && gain<std::ranges::range_value_t<R>>;
 
 class GainSTM final : public IntoDatagramTuple<GainSTM>,
-                      public DatagramST<native_methods::GainSTMPtr>,
+                      public DatagramS<native_methods::GainSTMPtr>,
                       public IntoDatagramWithTimeout<GainSTM>,
                       public IntoDatagramWithParallelThreshold<GainSTM> {
  public:
@@ -76,21 +76,13 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
     std::vector<native_methods::GainPtr> gains;
     gains.reserve(_gains.size());
     std::ranges::transform(_gains, std::back_inserter(gains), [&](const auto& gain) { return gain->gain_ptr(geometry); });
-    native_methods::GainSTMPtr ptr = validate(AUTDSTMGain(_sampling, gains.data(), static_cast<uint16_t>(gains.size())));
-    ptr = AUTDSTMGainWithMode(ptr, _mode);
-    ptr = AUTDSTMGainWithLoopBehavior(ptr, _loop_behavior);
-    return ptr;
-  }
-
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment(const native_methods::GainSTMPtr p,
-                                                                   const native_methods::Segment segment) const override {
-    return AUTDSTMGainIntoDatagramWithSegment(p, segment);
+    return validate(AUTDSTMGain(_sampling, gains.data(), static_cast<uint16_t>(gains.size()), _mode, _loop_behavior));
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr into_segment_transition(
       const native_methods::GainSTMPtr p, const native_methods::Segment segment,
       const native_methods::TransitionModeWrap transition_mode) const override {
-    return AUTDSTMGainIntoDatagramWithSegmentTransition(p, segment, transition_mode);
+    return AUTDSTMGainIntoDatagramWithSegment(p, segment, transition_mode);
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
@@ -98,9 +90,9 @@ class GainSTM final : public IntoDatagramTuple<GainSTM>,
   }
 
   AUTD3_API
-  [[nodiscard]] DatagramWithSegmentTransition<native_methods::GainSTMPtr> with_segment(
+  [[nodiscard]] DatagramWithSegment<native_methods::GainSTMPtr> with_segment(
       const native_methods::Segment segment, const std::optional<native_methods::TransitionModeWrap>& transition_mode) {
-    return DatagramWithSegmentTransition<native_methods::GainSTMPtr>(std::make_unique<GainSTM>(std::move(*this)), segment, transition_mode);
+    return DatagramWithSegment<native_methods::GainSTMPtr>(std::make_unique<GainSTM>(std::move(*this)), segment, transition_mode);
   }
 
   AUTD3_DEF_PARAM(GainSTM, native_methods::LoopBehavior, loop_behavior)

@@ -29,12 +29,6 @@ struct BackendPtr {
   const void *_0;
 };
 
-struct ResultBackend {
-  BackendPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 extern "C" {
 
 [[nodiscard]] float AUTDGainHoloSPLToPascal(float value);
@@ -63,7 +57,7 @@ GainPtr AUTDGainHoloGreedyT4010A1(const Vector3 *points,
                                   uint8_t div,
                                   EmissionConstraintWrap constraint);
 
-[[nodiscard]] bool AUTDGainGreedyIsDefault(GainPtr greedy);
+[[nodiscard]] bool AUTDGainGreedyIsDefault(EmissionConstraintWrap constraint, uint8_t phase_div);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSSphere(BackendPtr backend,
@@ -81,7 +75,7 @@ GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
                               uint32_t repeat_nonzero,
                               EmissionConstraintWrap constraint);
 
-[[nodiscard]] bool AUTDGainGSIsDefault(GainPtr gs);
+[[nodiscard]] bool AUTDGainGSIsDefault(EmissionConstraintWrap constraint, uint32_t repeat);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSPATSphere(BackendPtr backend,
@@ -99,7 +93,7 @@ GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
                                  uint32_t repeat_nonzero,
                                  EmissionConstraintWrap constraint);
 
-[[nodiscard]] bool AUTDGainGSPATIsDefault(GainPtr gs);
+[[nodiscard]] bool AUTDGainGSPATIsDefault(EmissionConstraintWrap constraint, uint32_t repeat);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloLMSphere(BackendPtr backend,
@@ -127,7 +121,14 @@ GainPtr AUTDGainHoloLMT4010A1(BackendPtr backend,
                               uint32_t initial_len,
                               EmissionConstraintWrap constraint);
 
-[[nodiscard]] bool AUTDGainLMIsDefault(GainPtr gs);
+[[nodiscard]]
+bool AUTDGainLMIsDefault(EmissionConstraintWrap constraint,
+                         float eps_1,
+                         float eps_2,
+                         float tau,
+                         uint32_t k_max,
+                         const float *initial_ptr,
+                         uint32_t initial_len);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloNaiveSphere(BackendPtr backend,
@@ -143,7 +144,7 @@ GainPtr AUTDGainHoloNaiveT4010A1(BackendPtr backend,
                                  uint32_t size,
                                  EmissionConstraintWrap constraint);
 
-[[nodiscard]] bool AUTDGainNaiveIsDefault(GainPtr gs);
+[[nodiscard]] bool AUTDGainNaiveIsDefault(EmissionConstraintWrap constraint);
 
 [[nodiscard]] BackendPtr AUTDNalgebraBackendSphere();
 

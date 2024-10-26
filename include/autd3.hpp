@@ -31,12 +31,10 @@
 #include "autd3/driver/geometry/transducer.hpp"
 #include "autd3/gain/bessel.hpp"
 #include "autd3/gain/focus.hpp"
-#include "autd3/gain/gain.hpp"
 #include "autd3/gain/group.hpp"
 #include "autd3/gain/null.hpp"
 #include "autd3/gain/plane.hpp"
 #include "autd3/gain/uniform.hpp"
-#include "autd3/modulation/modulation.hpp"
 #include "autd3/modulation/sine.hpp"
 #include "autd3/modulation/square.hpp"
 #include "autd3/modulation/static.hpp"
@@ -45,7 +43,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "28.1.0";
+static inline std::string version = "29.0.0-rc.0";
 
 using autd3::driver::deg;
 using autd3::driver::Hz;
@@ -111,14 +109,5 @@ using controller::Controller;
 using controller::ControllerBuilder;
 
 inline void tracing_init() { native_methods::AUTDTracingInit(); }
-
-namespace derive {
-using gain::Gain;
-using gain::GainCalcResult;
-
-using modulation::Modulation;
-using modulation::ModulationCalcResult;
-
-}  // namespace derive
 
 }  // namespace autd3

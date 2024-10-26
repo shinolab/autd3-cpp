@@ -37,5 +37,6 @@ TEST(GainHolo, LMDefault) {
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
   const auto g = autd3::gain::holo::LM(std::move(backend), foci);
-  ASSERT_TRUE(autd3::native_methods::AUTDGainLMIsDefault(g.gain_ptr(autd.geometry())));
+  ASSERT_TRUE(autd3::native_methods::AUTDGainLMIsDefault(g.constraint(), g.eps1(), g.eps2(), g.tau(), g.k_max(), g.initial().data(),
+                                                         static_cast<uint32_t>(g.initial().size())));
 }
