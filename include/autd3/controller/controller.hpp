@@ -67,7 +67,7 @@ class Controller final : public driver::geometry::Geometry {
     }  // LCOV_EXCL_LINE
   }
 
-  AUTD3_API [[nodiscard]] const Geometry& geometry() const { return static_cast<const Geometry&>(*this); }
+  AUTD3_API [[nodiscard]] const Geometry& geometry() const { return static_cast<const Geometry&>(*this); }  // LCOV_EXCL_LINE
   AUTD3_API [[nodiscard]] Geometry& geometry() { return static_cast<Geometry&>(*this); }
 
   AUTD3_API [[nodiscard]] L& link() { return _link; }
