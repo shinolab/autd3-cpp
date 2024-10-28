@@ -4,7 +4,9 @@
 
 #include "autd3/def.hpp"
 #include "autd3/driver/datagram/gain/gain.hpp"
+#include "autd3/driver/defined/angle.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"

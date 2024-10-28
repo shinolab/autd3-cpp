@@ -14,7 +14,7 @@ TEST(Modulation, FourierExact) {
 
   autd.send(m);
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{
         128, 157, 184, 206, 221, 228, 227, 219, 206, 189, 171, 154, 140, 130, 125, 124, 128, 134, 141, 148, 153, 156, 155, 152, 146, 139, 132,
@@ -35,7 +35,7 @@ TEST(Modulation, FourierExactFloat) {
 
   autd.send(m);
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{
         128, 157, 184, 206, 221, 228, 227, 219, 206, 189, 171, 154, 140, 130, 125, 124, 128, 134, 141, 148, 153, 156, 155, 152, 146, 139, 132,
@@ -55,7 +55,7 @@ TEST(Modulation, FourierNearest) {
       f | std::ranges::views::transform([](const float x) { return autd3::modulation::Sine::nearest(x * autd3::driver::Hz); }));
   autd.send(m);
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{
         128, 142, 157, 171, 185, 197, 208, 218, 226, 232, 236, 239, 240, 239, 236, 231, 226, 218, 210, 201, 191, 181, 171, 161, 151, 141, 133,

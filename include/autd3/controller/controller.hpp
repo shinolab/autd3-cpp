@@ -26,7 +26,7 @@ concept group_f =
     requires(F f, const driver::geometry::Device& dev) { typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type; };
 
 template <typename L>
-class Controller {
+class Controller final : public driver::geometry::Geometry {
   friend class ControllerBuilder;
 
  public:
@@ -34,18 +34,25 @@ class Controller {
   Controller(const Controller& v) = delete;
   Controller& operator=(const Controller& obj) = delete;
   Controller(Controller&& obj) noexcept
-      : _geometry(std::move(obj._geometry)), _runtime(obj._runtime), _handle(obj._handle), _ptr(obj._ptr), _link(std::move(obj._link)) {
+      : Geometry(obj._geometry_ptr, std::move(obj._devices)),
+        _runtime(obj._runtime),
+        _handle(obj._handle),
+        _ptr(obj._ptr),
+        _link(std::move(obj._link)) {
+    obj._geometry_ptr._0 = nullptr;
     obj._runtime._0 = nullptr;
     obj._handle._0 = nullptr;
     obj._ptr._0 = nullptr;
   }
   Controller& operator=(Controller&& obj) noexcept {
     if (this != &obj) {
-      _geometry = std::move(obj._geometry);
+      this->_geometry_ptr = obj._geometry_ptr;
+      this->_devices = std::move(obj._devices);
       _runtime = obj._runtime;
       _handle = obj._handle;
       _ptr = obj._ptr;
       _link = std::move(obj._link);
+      obj._geometry_ptr._0 = nullptr;
       obj._runtime._0 = nullptr;
       obj._handle._0 = nullptr;
       obj._ptr._0 = nullptr;
@@ -53,15 +60,15 @@ class Controller {
     return *this;
   }
 
-  ~Controller() noexcept {
+  ~Controller() noexcept override {
     try {
       close();
     } catch (...) {  // LCOV_EXCL_LINE
     }  // LCOV_EXCL_LINE
   }
 
-  AUTD3_API [[nodiscard]] const driver::geometry::Geometry& geometry() const { return _geometry; }
-  AUTD3_API [[nodiscard]] driver::geometry::Geometry& geometry() { return _geometry; }
+  AUTD3_API [[nodiscard]] const Geometry& geometry() const { return static_cast<const Geometry&>(*this); }  // LCOV_EXCL_LINE
+  AUTD3_API [[nodiscard]] Geometry& geometry() { return static_cast<Geometry&>(*this); }
 
   AUTD3_API [[nodiscard]] L& link() { return _link; }
   AUTD3_API [[nodiscard]] const L& link() const { return _link; }  // LCOV_EXCL_LINE
@@ -105,7 +112,7 @@ class Controller {
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    validate(AUTDWaitResultStatus(_handle, AUTDControllerSend(_ptr, d.ptr(_geometry))));
+    validate(AUTDWaitResultStatus(_handle, AUTDControllerSend(_ptr, d.ptr(geometry()))));
   }
 
   template <group_f F>
@@ -127,7 +134,7 @@ class Controller {
     template <driver::datagram D>
     AUTD3_API GroupGuard set(const key_type key, const D& data) {
       if (_keymap.contains(key)) throw AUTDException("Key already exists");
-      const auto ptr = data.ptr(_controller._geometry);
+      const auto ptr = data.ptr(_controller.geometry());
       _datagrams.push_back(ptr);
       _keys.push_back(_k);
       _keymap[key] = _k++;
@@ -136,15 +143,14 @@ class Controller {
 
     AUTD3_API void send() const {
       validate(AUTDWaitLocalResultStatus(
-          _controller._handle,
-          AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), _controller._geometry.ptr(),
-                              _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()))));
+          _controller._handle, AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this),
+                                                   _controller._geometry_ptr, _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()))));
     }
 
 #ifdef AUTD3_ASYNC_API
     AUTD3_API [[nodiscard]] coro::task<void> send_async() {
       auto future = AUTDControllerGroup(_controller._ptr, reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this),
-                                        _controller._geometry.ptr(), _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()));
+                                        _controller._geometry_ptr, _keys.data(), _datagrams.data(), static_cast<uint16_t>(_keys.size()));
       auto ptr = co_await wait_future(_controller._handle, std::move(future));
       validate(ptr);
     }
@@ -195,7 +201,7 @@ class Controller {
 
   template <driver::datagram D>
   AUTD3_API [[nodiscard]] coro::task<void> send_async(const D& d) {
-    auto future = AUTDControllerSend(_ptr, d.ptr(_geometry));
+    auto future = AUTDControllerSend(_ptr, d.ptr(geometry()));
     auto result = co_await wait_future(_handle, std::move(future));
     validate(result);
   }
@@ -218,11 +224,10 @@ class Controller {
 #endif
 
  private:
-  AUTD3_API Controller(driver::geometry::Geometry geometry, const native_methods::RuntimePtr runtime, const native_methods::HandlePtr handle,
+  AUTD3_API Controller(const native_methods::GeometryPtr geometry, const native_methods::RuntimePtr runtime, const native_methods::HandlePtr handle,
                        const native_methods::ControllerPtr ptr, L link)
-      : _geometry(std::move(geometry)), _runtime(runtime), _handle(handle), _ptr(ptr), _link(std::move(link)) {}
+      : Geometry(geometry), _runtime(runtime), _handle(handle), _ptr(ptr), _link(std::move(link)) {}
 
-  driver::geometry::Geometry _geometry;
   native_methods::RuntimePtr _runtime;
   native_methods::HandlePtr _handle;
   native_methods::ControllerPtr _ptr;

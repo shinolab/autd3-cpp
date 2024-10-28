@@ -76,8 +76,8 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
             .intensity{std::chrono::microseconds(250)},
             .phase{std::chrono::microseconds(1000)},
         }) {}
-  explicit Silencer(std::variant<FixedCompletionTime, FixedUpdateRate> s)
-      : _strict_mode(true), _target(native_methods::SilencerTarget::Intensity), _inner(std::move(s)) {}
+  explicit Silencer(const std::variant<FixedCompletionTime, FixedUpdateRate>& s)
+      : _strict_mode(true), _target(native_methods::SilencerTarget::Intensity), _inner(s) {}
 
   AUTD3_DEF_PARAM(Silencer, bool, strict_mode)
   AUTD3_DEF_PARAM(Silencer, native_methods::SilencerTarget, target)

@@ -25,7 +25,7 @@ struct Rectangular {
 class SincInterpolation {
  public:
   SincInterpolation() : SincInterpolation(BlackMan(32)) {}
-  explicit SincInterpolation(std::variant<BlackMan, Rectangular> window) : _window(std::move(window)) {}
+  explicit SincInterpolation(const std::variant<BlackMan, Rectangular> window) : _window(window) {}
 
   [[nodiscard]] native_methods::DynSincInterpolator dyn_resampler() const {
     return native_methods::DynSincInterpolator{.window{std::visit([](const auto& w) { return w.window(); }, _window)},

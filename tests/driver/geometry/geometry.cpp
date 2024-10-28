@@ -15,28 +15,28 @@ TEST(DriverGeomtry, AUTD3) {
 
 TEST(DriverGeomtry, GeometryNumDevices) {
   auto autd = create_controller();
-  ASSERT_EQ(autd.geometry().num_devices(), 2);
+  ASSERT_EQ(autd.num_devices(), 2);
 }
 
 TEST(DriverGeomtry, GeometryNumTransducers) {
   auto autd = create_controller();
-  ASSERT_EQ(autd.geometry().num_transducers(), 2 * 249);
+  ASSERT_EQ(autd.num_transducers(), 2 * 249);
 }
 
 TEST(DriverGeomtry, GeometryCenter) {
   auto autd = create_controller();
-  ASSERT_NEAR_VECTOR3(autd.geometry().center(), autd3::driver::Vector3(86.625267028808594f, 66.71319580078125f, 0), 1e-6);
+  ASSERT_NEAR_VECTOR3(autd.center(), autd3::driver::Vector3(86.625267028808594f, 66.71319580078125f, 0), 1e-6);
 }
 
 TEST(DriverGeomtry, GeometrySoundSpeed) {
   auto autd = create_controller();
-  for (auto& dev : autd.geometry()) ASSERT_EQ(dev.sound_speed(), 340e3);
-  autd.geometry().set_sound_speed(350e3);
-  for (auto& dev : autd.geometry()) ASSERT_EQ(dev.sound_speed(), 350e3);
+  for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 340e3);
+  autd.set_sound_speed(350e3);
+  for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 350e3);
 }
 
 TEST(DriverGeomtry, GeometrySoundSpeedFromTemp) {
   auto autd = create_controller();
-  autd.geometry().set_sound_speed_from_temp(15);
-  for (auto& dev : autd.geometry()) ASSERT_EQ(dev.sound_speed(), 340.29525e3f);
+  autd.set_sound_speed_from_temp(15);
+  for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 340.29525e3f);
 }

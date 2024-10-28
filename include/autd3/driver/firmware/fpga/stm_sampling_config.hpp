@@ -12,7 +12,7 @@ struct STMSamplingConfig final {
 
   operator native_methods::SamplingConfig() const { return _inner; }
 
-  Freq<float> freq() const { return AUTDSTMFreq(_inner, _n) * driver::Hz; }
+  [[nodiscard]] Freq<float> freq() const { return AUTDSTMFreq(_inner, _n) * driver::Hz; }
   [[nodiscard]] std::chrono::nanoseconds period() const { return std::chrono::nanoseconds(AUTDSTMPeriod(_inner, _n)); }
   driver::SamplingConfig sampling_config() const { return driver::SamplingConfig{_inner}; }
 

@@ -63,6 +63,7 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "GainSTMMode".to_string(),
             "ResultFociSTM".to_string(),
             "ResultGainSTM".to_string(),
+            "ControllerBuilderPtr".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]

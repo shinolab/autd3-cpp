@@ -9,7 +9,7 @@ TEST(Modulation, Static) {
 
   const auto m = autd3::modulation::Static::with_intensity(32);
   autd.send(m);
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{32, 32};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));

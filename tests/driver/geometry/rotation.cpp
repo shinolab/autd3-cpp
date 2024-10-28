@@ -28,33 +28,33 @@ TEST(DriverGeomtry, WithRotationXYZ) {
 
   {
     const auto autd = open_rotation(EulerAngles::XYZ(90.0 * deg, 0.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitY(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitY(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::XYZ(0.0 * deg, 90.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::XYZ(0.0 * deg, 0.0 * deg, 90.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::XYZ(0.0 * deg, 90.0 * deg, 90.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::XYZ(90.0 * deg, 90.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd[0].axial_direction(), 1e-6);
   }
 }
 
@@ -65,32 +65,32 @@ TEST(DriverGeomtry, WithRotationZYZ) {
 
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(90.0 * deg, 0.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 90.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 0.0 * deg, 90.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(0.0 * deg, 90.0 * deg, 90.0 * deg));
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitZ(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitX(), autd[0].axial_direction(), 1e-6);
   }
   {
     const auto autd = open_rotation(EulerAngles::ZYZ(90.0 * deg, 90.0 * deg, 0.0 * deg));
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd.geometry()[0].x_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd.geometry()[0].y_direction(), 1e-6);
-    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd.geometry()[0].axial_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitZ(), autd[0].x_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(-Vector3::UnitX(), autd[0].y_direction(), 1e-6);
+    ASSERT_NEAR_VECTOR3(Vector3::UnitY(), autd[0].axial_direction(), 1e-6);
   }
 }

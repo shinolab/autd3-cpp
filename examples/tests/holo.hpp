@@ -17,7 +17,7 @@ inline void holo_test(autd3::Controller<L>& autd) {
 
   autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM
 
-  const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0.0, 0.0, 150.0);
+  const autd3::Vector3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
 
   std::cout << "Select Optimization Method (default is GSPAT)" << std::endl;
 

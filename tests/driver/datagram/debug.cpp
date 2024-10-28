@@ -7,7 +7,7 @@
 TEST(DriverDatagram, DebugOutputIdx) {
   auto autd = create_controller();
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x00, 0x00, 0x00, 0x00};
     std::array<uint64_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
@@ -27,7 +27,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     }
     return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
   }));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x00, 0x01, 0x02, 0x03};
     std::array<uint64_t, 4> value{0x0000, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
@@ -47,7 +47,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     }
     return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
   }));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x10, 0x20, 0x21, 0x50};
     std::array<uint64_t, 4> value{0x0000, 0x0000, 0x0001, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
@@ -67,7 +67,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     }
     return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
   }));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x51, 0x52, 0xE0, 0xF0};
     std::array<uint64_t, 4> value{0x0002, 0x0000, 0x0003, 0x0001};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));
@@ -88,7 +88,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     }
     return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
   }));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x60, 0x00, 0x00, 0x00};
     std::array<uint64_t, 4> value{(sys_time.sys_time() / 3125) << 5, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link().debug_types(dev.idx()));

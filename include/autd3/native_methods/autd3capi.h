@@ -32,10 +32,6 @@ struct ResultFirmwareVersionList {
   const void* err;
 };
 
-struct ControllerBuilderPtr {
-  const void *_0;
-};
-
 struct GainCachePtr {
   const void *_0;
 };
@@ -387,6 +383,10 @@ GainPtr AUTDGainGroup(GroupGainMapPtr map,
 [[nodiscard]] GeometryPtr AUTDGeometry(ControllerPtr cnt);
 
 [[nodiscard]] uint32_t AUTDGeometryNumDevices(GeometryPtr geo);
+
+[[nodiscard]] uint32_t AUTDGeometryNumTransducers(GeometryPtr geo);
+
+[[nodiscard]] Vector3 AUTDGeometrCenter(GeometryPtr geo);
 
 [[nodiscard]] DevicePtr AUTDDevice(GeometryPtr geo, uint16_t dev_idx);
 

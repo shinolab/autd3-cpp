@@ -7,7 +7,7 @@ inline void group_by_device_test(autd3::Controller<T>& autd) {
   auto silencer = autd3::Silencer();
   autd.send(silencer);
 
-  const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0.0, 0.0, 150.0);
+  const autd3::Vector3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
 
   autd.group([](const autd3::Device& dev) -> std::optional<const char*> {
         if (dev.idx() == 0) {
@@ -28,8 +28,8 @@ inline void group_by_transducer_test(autd3::Controller<T>& autd) {
   auto silencer = autd3::Silencer();
   autd.send(silencer);
 
-  const auto cx = autd.geometry().center().x();
-  autd3::gain::Focus g1(autd.geometry().center() + autd3::Vector3(0, 0, 150));
+  const auto cx = autd.center().x();
+  autd3::gain::Focus g1(autd.center() + autd3::Vector3(0, 0, 150));
   autd3::gain::Null g2;
 
   const auto g = autd3::gain::Group([&cx](const autd3::Device&) {

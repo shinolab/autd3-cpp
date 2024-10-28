@@ -20,7 +20,7 @@ class TwinCAT final {
     friend class TwinCAT;
     friend class controller::ControllerBuilder;
 
-    AUTD3_API Builder() {}
+    Builder() = default;
 
     [[nodiscard]] static TwinCAT resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return {}; }
 

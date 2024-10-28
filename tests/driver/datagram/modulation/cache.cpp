@@ -15,7 +15,7 @@ TEST(DriverDatagramModulation, Cache) {
   autd1.send(m1);
   autd2.send(m2);
 
-  for (auto& dev : autd1.geometry()) {
+  for (auto& dev : autd1) {
     auto mod = autd2.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     auto mod_expect = autd1.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));

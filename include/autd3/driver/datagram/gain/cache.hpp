@@ -2,9 +2,6 @@
 
 #include <algorithm>
 #include <memory>
-#include <numeric>
-#include <ranges>
-#include <unordered_map>
 #include <vector>
 
 #include "autd3/driver/datagram/gain/base.hpp"
@@ -12,7 +9,6 @@
 #include "autd3/driver/datagram/with_parallel_threshold.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/datagram/with_timeout.hpp"
-#include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -36,12 +32,12 @@ class Cache final : public driver::GainBase,
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     if (!_ptr) {
-      _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDGainCache(_g.gain_ptr(geometry))._0), [](void* ptr) {
+      _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDGainCache(_g.gain_ptr(geometry))._0), [](const void* ptr) {
         if (!ptr) return;
-        native_methods::AUTDGainCacheFree(native_methods::GainCachePtr{ptr});
+        AUTDGainCacheFree(native_methods::GainCachePtr{ptr});
       });
     }
-    return native_methods::AUTDGainCacheClone(native_methods::GainCachePtr{_ptr.get()});
+    return AUTDGainCacheClone(native_methods::GainCachePtr{_ptr.get()});
   }
 
  private:

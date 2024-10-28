@@ -118,7 +118,7 @@ TEST(DriverDatagramModulation, Fir) {
         0.0f,
     }));
 
-    for (auto& dev : autd.geometry()) {
+    for (auto& dev : autd) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{
           127, 131, 136, 140, 145, 149, 153, 157, 161, 164, 168, 171, 173, 176, 178, 180, 182, 183, 184, 184, 184, 184, 184, 183, 182, 180, 178,
@@ -235,7 +235,7 @@ TEST(DriverDatagramModulation, Fir) {
                 0.0f,
             }));
 
-    for (auto& dev : autd.geometry()) {
+    for (auto& dev : autd) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{
           127, 131, 136, 140, 145, 149, 153, 157, 161, 164, 168, 171, 173, 176, 178, 180, 182, 183, 184, 184, 184, 184, 184, 183, 182, 180, 178,

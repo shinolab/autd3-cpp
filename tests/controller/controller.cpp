@@ -56,13 +56,13 @@ TEST(Controller, ControllerCloseAsync) {
 TEST(Controller, ControllerSendSingle) {
   auto autd = create_controller();
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
 
   autd.send(autd3::modulation::Static());
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
@@ -80,13 +80,13 @@ TEST(Controller, ControllerSendSingle) {
 TEST(Controller, ControllerSendSingleAsync) {
   auto autd = create_controller();
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
 
   sync_wait(autd.send_async(autd3::modulation::Static()));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
@@ -104,7 +104,7 @@ TEST(Controller, ControllerSendSingleAsync) {
 TEST(Controller, ControllerSendTuple) {
   auto autd = create_controller();
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0 && d.phase.value() == 0; }));
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -112,7 +112,7 @@ TEST(Controller, ControllerSendTuple) {
   }
 
   autd.send((autd3::modulation::Static::with_intensity(0x80), autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81), autd3::driver::Phase(0x82))));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(0, autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x81 && d.phase.value() == 0x82; }));
     auto m = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
@@ -202,9 +202,9 @@ TEST(Controller, ControllerGroupAsync) {
 
 TEST(Controller, ControllerGroupCheckOnlyForEnabled) {
   auto autd = create_controller();
-  autd.geometry()[0].set_enable(false);
+  autd[0].set_enable(false);
 
-  std::vector check(autd.geometry().num_devices(), false);
+  std::vector check(autd.num_devices(), false);
   autd.group([&check](auto& dev) -> std::optional<int> {
         check[dev.idx()] = true;
         return 0;

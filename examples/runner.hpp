@@ -29,7 +29,7 @@ inline void run(autd3::Controller<L>& autd) {
       std::pair(F{holo_test<L>}, "Multiple foci test"), std::pair(F{flag_test<L>}, "Flag test"),
       std::pair(F{custom<L>}, "Custom Gain test"),      std::pair(F{group_by_transducer_test<L>}, "Group (by Transducer) test")};
 
-  if (autd.geometry().num_devices() >= 2) tests.emplace_back(F{group_by_device_test<L>}, "Group (by Device) test");
+  if (autd.num_devices() >= 2) tests.emplace_back(F{group_by_device_test<L>}, "Group (by Device) test");
 
   const auto firm_infos = autd.firmware_version();
   std::cout << "======== AUTD3 firmware information ========" << std::endl;

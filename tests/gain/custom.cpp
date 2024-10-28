@@ -25,7 +25,7 @@ TEST(Gain, Coustom) {
 
   {
     auto drives = autd.link().drives(1, autd3::native_methods::Segment::S0, 0);
-    const auto idx = autd.geometry()[1].num_transducers() - 1;
+    const auto idx = autd[1].num_transducers() - 1;
     ASSERT_EQ(0x81, drives[idx].intensity.value());
     ASSERT_EQ(0x91, drives[idx].phase.value());
     ASSERT_TRUE(

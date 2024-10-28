@@ -21,7 +21,7 @@ TEST(DriverDatagramSM, GainSTM) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   {
     auto stm = autd3::driver::GainSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) |
                                                                     std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
@@ -29,16 +29,16 @@ TEST(DriverDatagramSM, GainSTM) {
     ASSERT_EQ(std::chrono::seconds(1), stm.period());
     ASSERT_EQ(20000u, stm.sampling_config().division());
     autd.send(stm);
-    for (const auto& dev : autd.geometry()) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-    for (const auto& dev : autd.geometry()) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   {
     auto stm = autd3::driver::GainSTM::nearest(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) |
                                                                              std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
     autd.send(stm);
-    for (const auto& dev : autd.geometry()) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-    for (const auto& dev : autd.geometry()) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd) ASSERT_TRUE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   {
@@ -46,9 +46,9 @@ TEST(DriverDatagramSM, GainSTM) {
                                                                          autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80))})
                    .with_mode(autd3::native_methods::GainSTMMode::PhaseIntensityFull);
     autd.send(stm);
-    for (const auto& dev : autd.geometry()) ASSERT_EQ(1, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd) ASSERT_EQ(1, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 
-    for (const auto& dev : autd.geometry()) {
+    for (const auto& dev : autd) {
       ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
       auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
       ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80 && d.phase.value() == 0; }));
@@ -59,7 +59,7 @@ TEST(DriverDatagramSM, GainSTM) {
 
     stm.with_mode(autd3::native_methods::GainSTMMode::PhaseFull);
     autd.send(stm);
-    for (const auto& dev : autd.geometry()) {
+    for (const auto& dev : autd) {
       ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
       auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
       ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
@@ -70,7 +70,7 @@ TEST(DriverDatagramSM, GainSTM) {
 
     stm.with_mode(autd3::native_methods::GainSTMMode::PhaseHalf);
     autd.send(stm);
-    for (const auto& dev : autd.geometry()) {
+    for (const auto& dev : autd) {
       ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
       auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
       ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0xFF && d.phase.value() == 0; }));
@@ -87,18 +87,18 @@ TEST(DriverDatagramSM, GainSTMSegment) {
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
 
   auto infos = autd.fpga_state();
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
   }
 
-  autd3::driver::Vector3 center = autd.geometry().center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::GainSTM(
       1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
 
   autd.send(stm);
   infos = autd.fpga_state();
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
@@ -106,7 +106,7 @@ TEST(DriverDatagramSM, GainSTMSegment) {
 
   autd.send(stm.with_segment(Segment::S1, autd3::driver::TransitionMode::Immediate));
   infos = autd.fpga_state();
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S1, autd.link().current_stm_segment(dev.idx()));
@@ -116,7 +116,7 @@ TEST(DriverDatagramSM, GainSTMSegment) {
                                                                  std::views::transform([&](auto) { return autd3::gain::Focus(center); }))
                 .with_segment(Segment::S0, std::nullopt));
   infos = autd.fpga_state();
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S1, autd.link().current_stm_segment(dev.idx()));
@@ -124,7 +124,7 @@ TEST(DriverDatagramSM, GainSTMSegment) {
 
   autd.send(autd3::driver::SwapSegment::GainSTM(Segment::S0, autd3::driver::TransitionMode::Immediate));
   infos = autd.fpga_state();
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
