@@ -38,7 +38,7 @@ class Status {
 inline std::ostream& operator<<(std::ostream& os, const Status& s) {
   os << s._msg;
   return os;
-};
+}
 
 class EtherCATAdapter {
   std::string _desc;
@@ -165,7 +165,7 @@ class RemoteSOEM final {
     friend class RemoteSOEM;
     friend class controller::ControllerBuilder;
 
-    AUTD3_API explicit Builder(const std::string& addr) {}
+    AUTD3_API explicit Builder(std::string addr) : _addr(std::move(addr)) {}
 
     [[nodiscard]] static RemoteSOEM resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return RemoteSOEM{}; }
 

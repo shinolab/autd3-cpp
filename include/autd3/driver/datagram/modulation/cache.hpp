@@ -3,7 +3,6 @@
 #include <memory>
 
 #include "autd3/driver/datagram/modulation/base.hpp"
-#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::modulation {
@@ -20,12 +19,12 @@ class Cache final : public driver::ModulationBase<Cache<M>> {
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
     if (!_ptr) {
-      _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDModulationCache(_m.modulation_ptr())._0), [](void* ptr) {
+      _ptr = std::shared_ptr<void>(const_cast<void*>(native_methods::AUTDModulationCache(_m.modulation_ptr())._0), [](const void* ptr) {
         if (!ptr) return;
-        native_methods::AUTDModulationCacheFree(native_methods::ModulationCachePtr{ptr});
+        AUTDModulationCacheFree(native_methods::ModulationCachePtr{ptr});
       });
     }
-    return native_methods::AUTDModulationCacheClone(native_methods::ModulationCachePtr{_ptr.get()}, this->_loop_behavior);
+    return AUTDModulationCacheClone(native_methods::ModulationCachePtr{_ptr.get()}, this->_loop_behavior);
   }
 
   M _m;

@@ -12,7 +12,7 @@ TEST(GainHolo, Greedy) {
 
   std::vector<float> p{-30, 30};
   auto g = autd3::gain::holo::Greedy(p | std::ranges::views::transform([&](auto x) {
-                                       autd3::driver::Vector3 focus = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                       autd3::driver::Vector3 focus = autd.center() + autd3::driver::Vector3(x, 0, 150);
                                        return std::make_pair(focus, 5e3 * autd3::gain::holo::Pa);
                                      }))
                .with_phase_div(16);
@@ -20,7 +20,7 @@ TEST(GainHolo, Greedy) {
 
   autd.send(g);
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80; }));
     ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.phase.value() != 0; }));

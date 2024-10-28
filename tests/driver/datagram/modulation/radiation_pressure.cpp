@@ -11,7 +11,7 @@ TEST(DriverDatagramModulation, RadiationPressure) {
   {
     autd.send(autd3::modulation::Sine(150 * autd3::driver::Hz).with_radiation_pressure());
 
-    for (auto& dev : autd.geometry()) {
+    for (auto& dev : autd) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{
           181, 200, 217, 231, 243, 250, 254, 255, 252, 245, 236, 222, 206, 188, 166, 142, 116, 89, 60, 32, 0,  32, 60, 89,  116, 142, 166,
@@ -27,7 +27,7 @@ TEST(DriverDatagramModulation, RadiationPressure) {
     autd3::modulation::Sine m(150 * autd3::driver::Hz);
     autd.send(m.with_radiation_pressure());
 
-    for (auto& dev : autd.geometry()) {
+    for (auto& dev : autd) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{
           181, 200, 217, 231, 243, 250, 254, 255, 252, 245, 236, 222, 206, 188, 166, 142, 116, 89, 60, 32, 0,  32, 60, 89,  116, 142, 166,

@@ -13,7 +13,7 @@ TEST(GainHolo, LM) {
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<float> p{-30, 30};
   const auto g = autd3::gain::holo::LM(std::move(backend), p | std::ranges::views::transform([&](auto x) {
-                                                             autd3::driver::Vector3 p = autd.geometry().center() + autd3::driver::Vector3(x, 0, 150);
+                                                             autd3::driver::Vector3 p = autd.center() + autd3::driver::Vector3(x, 0, 150);
                                                              return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                                            }))
                      .with_eps1(1e-3f)
@@ -25,7 +25,7 @@ TEST(GainHolo, LM) {
 
   autd.send(g);
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity.value() == 0x80; }));
     ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.phase.value() != 0; }));

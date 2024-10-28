@@ -13,7 +13,7 @@ TEST(DriverDatagramModulation, Custom) {
 
   autd.send(autd3::modulation::Custom(buffer, autd3::driver::SamplingConfig(5120)));
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{255, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
@@ -28,7 +28,7 @@ TEST(Modulation, CustomResampler) {
     autd.send(
         autd3::modulation::Custom({127, 255, 127, 0}, 2.0f * autd3::driver::kHz, 4u * autd3::driver::kHz, autd3::modulation::SincInterpolation()));
 
-    for (auto& dev : autd.geometry()) {
+    for (auto& dev : autd) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{127, 217, 255, 217, 127, 37, 0, 37};
       ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
@@ -40,7 +40,7 @@ TEST(Modulation, CustomResampler) {
     autd.send(autd3::modulation::Custom({127, 255, 127, 0}, 2.0f * autd3::driver::kHz, 4u * autd3::driver::kHz,
                                         autd3::modulation::SincInterpolation(autd3::modulation::Rectangular{32})));
 
-    for (auto& dev : autd.geometry()) {
+    for (auto& dev : autd) {
       auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
       std::vector<uint8_t> mod_expect{127, 217, 255, 223, 127, 42, 0, 37};
       ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));

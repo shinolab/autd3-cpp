@@ -9,7 +9,7 @@
 TEST(Gain, Group) {
   auto autd = create_controller();
 
-  const auto cx = autd.geometry().center().x();
+  const auto cx = autd.center().x();
 
   autd.send(autd3::gain::Group([cx](const auto&) {
               return [cx](const auto& tr) -> std::optional<const char*> {
@@ -19,7 +19,7 @@ TEST(Gain, Group) {
             })
                 .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
                 .set("null", autd3::gain::Null()));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
       if (tr.position().x() < cx) {
@@ -38,7 +38,7 @@ TEST(Gain, Group) {
                 return std::nullopt;
               };
             }).set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81), autd3::driver::Phase(0x91))));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
       if (tr.position().x() < cx) {
@@ -55,7 +55,7 @@ TEST(Gain, Group) {
 TEST(Gain, GroupWithParallel) {
   auto autd = create_controller();
 
-  const auto cx = autd.geometry().center().x();
+  const auto cx = autd.center().x();
 
   autd.send(autd3::gain::Group([cx](const auto&) {
               return [cx](const auto& tr) -> std::optional<const char*> {
@@ -66,7 +66,7 @@ TEST(Gain, GroupWithParallel) {
                 .with_parallel(true)
                 .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
                 .set("null", autd3::gain::Null()));
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
     for (auto& tr : dev) {
       if (tr.position().x() < cx) {
@@ -98,7 +98,7 @@ TEST(Gain, GroupUnkownKey) {
 
 TEST(Gain, GroupCheckOnlyForEnabled) {
   auto autd = create_controller();
-  autd.geometry()[0].set_enable(false);
+  autd[0].set_enable(false);
 
   std::vector check(2, false);
   autd.send(autd3::gain::Group([&check](const auto& dev) {

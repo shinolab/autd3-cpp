@@ -12,7 +12,7 @@ inline void focus_stm(autd3::Controller<L>& autd) {
 
   autd3::modulation::Static m;
 
-  const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0, 0, 150);
+  const autd3::Vector3 center = autd.center() + autd3::Vector3(0, 0, 150);
   constexpr size_t points_num = 200;
   constexpr auto radius = 30.0f;
   autd3::FociSTM stm(1.0f * autd3::Hz, iota(0) | take(points_num) | transform([&](auto i) {
@@ -31,7 +31,7 @@ inline void gain_stm(autd3::Controller<L>& autd) {
 
   autd3::modulation::Static m;
 
-  const autd3::Vector3 center = autd.geometry().center() + autd3::Vector3(0, 0, 150);
+  const autd3::Vector3 center = autd.center() + autd3::Vector3(0, 0, 150);
   constexpr size_t points_num = 50;
   constexpr auto radius = 30.0f;
   autd3::GainSTM stm(1.0f * autd3::Hz, iota(0) | take(points_num) | transform([&](auto i) {

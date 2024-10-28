@@ -43,9 +43,7 @@ class ControllerBuilder {
                                                static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_receive_interval).count()),
                                                _timer_strategy);
     auto ptr = validate(AUTDWaitResultController(handle, AUTDControllerOpen(builder, link_builder.ptr(), timeout_ns)));
-    driver::geometry::Geometry geometry(AUTDGeometry(ptr));
-    return Controller<typename B::Link>{std::move(geometry), runtime, handle, ptr,
-                                        link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
+    return Controller<typename B::Link>{AUTDGeometry(ptr), runtime, handle, ptr, link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
   }
 
   template <driver::link_builder B>
@@ -78,8 +76,7 @@ class ControllerBuilder {
     auto future = AUTDControllerOpen(builder, link_builder.ptr(), timeout_ns);
     const auto result = co_await wait_future(handle, future);
     auto ptr = validate(result);
-    driver::geometry::Geometry geometry(AUTDGeometry(ptr));
-    co_return Controller<typename B::Link>{std::move(geometry), runtime, handle, ptr,
+    co_return Controller<typename B::Link>{AUTDGeometry(ptr), runtime, handle, ptr,
                                            link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
   }
 

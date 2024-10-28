@@ -25,33 +25,24 @@ class Geometry {
   };
 
  public:
-  AUTD3_API explicit Geometry(const native_methods::GeometryPtr ptr) : _ptr(ptr) {
-    const auto size = AUTDGeometryNumDevices(_ptr);
+  AUTD3_API explicit Geometry(const native_methods::GeometryPtr ptr) : _geometry_ptr(ptr) {
+    const auto size = AUTDGeometryNumDevices(_geometry_ptr);
     _devices.clear();
     _devices.reserve(size);
-    for (uint16_t i = 0; i < size; i++) _devices.emplace_back(i, _ptr);
+    for (uint16_t i = 0; i < size; i++) _devices.emplace_back(i, _geometry_ptr);
   }
 
-  ~Geometry() = default;                               // LCOV_EXCL_LINE
+  virtual ~Geometry() = default;                       // LCOV_EXCL_LINE
   Geometry(const Geometry& v) noexcept = default;      // LCOV_EXCL_LINE
   Geometry& operator=(const Geometry& obj) = default;  // LCOV_EXCL_LINE
   Geometry(Geometry&& obj) = default;                  // LCOV_EXCL_LINE
   Geometry& operator=(Geometry&& obj) = default;       // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] size_t num_devices() const { return _devices.size(); }
+  AUTD3_API [[nodiscard]] size_t num_devices() const { return AUTDGeometryNumDevices(_geometry_ptr); }
 
-  AUTD3_API [[nodiscard]] size_t num_transducers() const {
-    return std::accumulate(_devices.begin(), _devices.end(), size_t{0}, [](const size_t acc, const Device& d) { return acc + d.num_transducers(); });
-  }
+  AUTD3_API [[nodiscard]] size_t num_transducers() const { return AUTDGeometryNumTransducers(_geometry_ptr); }
 
-  AUTD3_API [[nodiscard]] Vector3 center() const {
-    return std::accumulate(_devices.begin(), _devices.end(), Vector3(0, 0, 0),
-                           [](const Vector3& acc, const Device& d) -> Vector3 {
-                             Vector3 res = acc + d.center();
-                             return res;
-                           }) /
-           static_cast<float>(num_devices());
-  }
+  AUTD3_API [[nodiscard]] Vector3 center() const { return AUTDGeometrCenter(_geometry_ptr); }
 
   AUTD3_API [[nodiscard]] auto devices() const noexcept {
     return GeometryView(_devices) | std::views::filter([](const auto& dev) { return dev.enable(); });
@@ -72,10 +63,13 @@ class Geometry {
   [[nodiscard]] std::vector<Device>::const_iterator cend() const noexcept { return _devices.cend(); }
   [[nodiscard]] const Device& operator[](const size_t i) const { return _devices[i]; }
   [[nodiscard]] Device& operator[](const size_t i) { return _devices[i]; }
-  [[nodiscard]] native_methods::GeometryPtr ptr() const noexcept { return _ptr; }
+  [[nodiscard]] native_methods::GeometryPtr ptr() const noexcept { return _geometry_ptr; }
 
- private:
-  native_methods::GeometryPtr _ptr;
+ protected:
+  explicit Geometry(const native_methods::GeometryPtr geometry_ptr, std::vector<Device> devices)
+      : _geometry_ptr(geometry_ptr), _devices(std::move(devices)) {}
+
+  native_methods::GeometryPtr _geometry_ptr;
   std::vector<Device> _devices{};
 };
 

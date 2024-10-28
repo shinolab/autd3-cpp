@@ -6,7 +6,7 @@
 
 TEST(DriverDatagram, ForceFan) {
   auto autd = create_controller();
-  for (auto& dev : autd.geometry()) ASSERT_FALSE(autd.link().is_force_fan(dev.idx()));
+  for (auto& dev : autd) ASSERT_FALSE(autd.link().is_force_fan(dev.idx()));
 
   autd.send(autd3::driver::ForceFan([](const auto& dev) { return dev.idx() == 0; }));
   ASSERT_TRUE(autd.link().is_force_fan(0));

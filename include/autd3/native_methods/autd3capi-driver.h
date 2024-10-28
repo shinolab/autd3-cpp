@@ -19,9 +19,9 @@ constexpr const float DEVICE_HEIGHT_MM = 151.4f;
 constexpr const float DEVICE_WIDTH_MM = 192.0f;
 
 enum class AUTDStatus : uint8_t {
-  True = 0,
-  False = 1,
-  Err = 2,
+  AUTDTrue = 0,
+  AUTDFalse = 1,
+  AUTDErr = 2,
 };
 
 enum class DebugTypeTag : uint8_t {
@@ -86,13 +86,13 @@ struct ModulationPtr {
 struct ResultModulation {
   ModulationPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
 struct ResultSamplingConfig {
   SamplingConfig result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
 struct TimerStrategyWrap {
@@ -104,7 +104,7 @@ struct TimerStrategyWrap {
 struct ResultStatus {
   AUTDStatus result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
 struct SyncLinkBuilderPtr {
@@ -114,7 +114,7 @@ struct SyncLinkBuilderPtr {
 struct ResultSyncLinkBuilder {
   SyncLinkBuilderPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
 struct LinkBuilderPtr {
@@ -124,7 +124,7 @@ struct LinkBuilderPtr {
 struct ResultLinkBuilder {
   LinkBuilderPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
 struct ControllerPtr {
@@ -176,15 +176,17 @@ struct GainSTMPtr {
 struct ResultFociSTM {
   FociSTMPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
 struct ResultGainSTM {
   GainSTMPtr result;
   uint32_t err_len;
-  const void* err;
+  const void *err;
 };
 
+struct ControllerBuilderPtr {
+  const void *_0;
+};
 
-
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

@@ -9,7 +9,7 @@ TEST(Modulation, Square) {
 
   autd.send(autd3::modulation::Square(200 * autd3::driver::Hz).with_low(32).with_high(85).with_duty(0.1f));
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{85, 85, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32, 32};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
@@ -18,7 +18,7 @@ TEST(Modulation, Square) {
 
   autd.send(autd3::modulation::Square(150 * autd3::driver::Hz).with_sampling_config(autd3::driver::SamplingConfig(20)));
 
-  for (auto& dev : autd.geometry()) ASSERT_EQ(20, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+  for (auto& dev : autd) ASSERT_EQ(20, autd.link().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
 }
 
 TEST(Modulation, SquareWithMode) {
@@ -26,7 +26,7 @@ TEST(Modulation, SquareWithMode) {
 
   autd.send(autd3::modulation::Square::nearest(150.f * autd3::driver::Hz));
 
-  for (auto& dev : autd.geometry()) {
+  for (auto& dev : autd) {
     auto mod = autd.link().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 255, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));

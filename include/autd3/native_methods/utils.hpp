@@ -117,7 +117,7 @@ constexpr auto validate(T res) {
 template <typename T = AUTDStatus>
 constexpr T validate(ResultStatus res) {
   const auto [result, err_len, err] = res;
-  if (result == AUTDStatus::Err) {
+  if (result == AUTDStatus::AUTDErr) {
     const std::string err_str(err_len, ' ');
     AUTDGetErr(err, const_cast<char*>(err_str.c_str()));
     throw AUTDException(err_str);
