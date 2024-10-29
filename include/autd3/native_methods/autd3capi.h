@@ -369,8 +369,7 @@ GroupGainMapPtr AUTDGainGroupMapSet(GroupGainMapPtr map,
 GainPtr AUTDGainGroup(GroupGainMapPtr map,
                       const int32_t *keys_ptr,
                       const GainPtr *values_ptr,
-                      uint32_t kv_len,
-                      bool parallel);
+                      uint32_t kv_len);
 
 [[nodiscard]] GainPtr AUTDGainNull();
 

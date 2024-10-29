@@ -24,9 +24,7 @@ class Group final : public driver::Gain<Group<F>> {
   using key_type =
       typename std::invoke_result_t<std::invoke_result_t<F, const driver::geometry::Device&>, const driver::geometry::Transducer&>::value_type;
 
-  AUTD3_API explicit Group(F f) : _parallel(false), _f(std::move(f)) {}
-
-  AUTD3_DEF_PARAM(Group, bool, parallel)
+  AUTD3_API explicit Group(F f) : _f(std::move(f)) {}
 
   template <driver::gain G>
   AUTD3_API void set(const key_type key, G&& gain) & {
@@ -70,7 +68,7 @@ class Group final : public driver::Gain<Group<F>> {
       gain_ptrs.emplace_back(kv.second->gain_ptr(geometry));
     }
 
-    return AUTDGainGroup(map, gain_keys.data(), gain_ptrs.data(), static_cast<uint32_t>(gain_keys.size()), _parallel);
+    return AUTDGainGroup(map, gain_keys.data(), gain_ptrs.data(), static_cast<uint32_t>(gain_keys.size()));
   }
 
  private:
