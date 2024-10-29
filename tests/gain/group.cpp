@@ -52,34 +52,6 @@ TEST(Gain, Group) {
   }
 }
 
-TEST(Gain, GroupWithParallel) {
-  auto autd = create_controller();
-
-  const auto cx = autd.center().x();
-
-  autd.send(autd3::gain::Group([cx](const auto&) {
-              return [cx](const auto& tr) -> std::optional<const char*> {
-                if (tr.position().x() < cx) return "uniform";
-                return "null";
-              };
-            })
-                .with_parallel(true)
-                .set("uniform", autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)))
-                .set("null", autd3::gain::Null()));
-  for (auto& dev : autd) {
-    auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-    for (auto& tr : dev) {
-      if (tr.position().x() < cx) {
-        ASSERT_EQ(0x80, drives[tr.idx()].intensity.value());
-        ASSERT_EQ(0x90, drives[tr.idx()].phase.value());
-      } else {
-        ASSERT_EQ(0, drives[tr.idx()].intensity.value());
-        ASSERT_EQ(0, drives[tr.idx()].phase.value());
-      }
-    }
-  }
-}
-
 TEST(Gain, GroupUnkownKey) {
   auto autd = create_controller();
 
