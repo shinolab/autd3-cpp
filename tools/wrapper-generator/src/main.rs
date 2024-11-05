@@ -109,9 +109,7 @@ fn main() -> Result<()> {
     for entry in glob(&format!("{}/autd3/*/Cargo.toml", home))? {
         let entry = entry?;
         let crate_path = Path::new(&entry).parent().unwrap();
-        if crate_path.file_name() == Some("autd3-driver".as_ref())
-            || crate_path.file_name() == Some("autd3-link-soem".as_ref())
-        {
+        if crate_path.file_name() == Some("autd3-driver".as_ref()) {
             gen_c(
                 &crate_path,
                 "../../include/autd3/native_methods",

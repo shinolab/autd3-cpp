@@ -448,6 +448,10 @@ void AUTDLinkAuditBreakDown(LinkPtr audit);
 
 void AUTDLinkAuditRepair(LinkPtr audit);
 
+[[nodiscard]] int64_t AUTDLinkAuditLastTimeout(LinkPtr audit);
+
+[[nodiscard]] int64_t AUTDLinkAuditLastParallelThreshold(LinkPtr audit);
+
 [[nodiscard]] uint32_t AUTDLinkAuditCpuNumTransducers(LinkPtr audit, uint16_t idx);
 
 void AUTDLinkAuditFpgaAssertThermalSensor(LinkPtr audit, uint16_t idx);

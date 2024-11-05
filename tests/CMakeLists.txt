@@ -55,7 +55,6 @@ add_executable(test_autd3 main.cpp)
 target_include_directories(test_autd3 PRIVATE .)
 target_link_libraries(test_autd3 PRIVATE gtest_main)
 target_link_libraries(test_autd3 PRIVATE autd3::autd3 autd3::gain::holo autd3::modulation::audio_file)
-target_link_libraries(test_autd3 PRIVATE autd3::link::soem)
 target_link_libraries(test_autd3 PRIVATE autd3::link::twincat)
 target_link_libraries(test_autd3 PRIVATE autd3::link::simulator)
 
