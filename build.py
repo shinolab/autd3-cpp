@@ -10,7 +10,15 @@ import sys
 import tarfile
 import urllib.request
 
-from tools.autd3_build_utils.autd3_build_utils import BaseConfig, err, fetch_submodule, info, remove, run_command, working_dir
+from tools.autd3_build_utils.autd3_build_utils import (
+    BaseConfig,
+    err,
+    fetch_submodule,
+    info,
+    remove,
+    run_command,
+    working_dir,
+)
 
 
 class Config(BaseConfig):
@@ -189,8 +197,8 @@ def check_if_all_native_methods_called() -> None:
 
 def check_all_headers_is_tested() -> None:  # noqa: C901, PLR0912, PLR0915
     with working_dir("include/autd3"):
-        headers = pathlib.Path.cwd().rglob("*.hpp")
-        headers = [str(header).replace("\\", "/") for header in headers if not header.startswith("native_methods")]
+        headers = [str(header.relative_to(pathlib.Path.cwd())) for header in pathlib.Path.cwd().rglob("*.hpp")]
+        headers = [header.replace("\\", "/") for header in headers if not header.startswith("native_methods")]
         headers.remove("exception.hpp")
         headers.remove("def.hpp")
         headers.remove("controller/builder.hpp")
@@ -210,13 +218,13 @@ def check_all_headers_is_tested() -> None:  # noqa: C901, PLR0912, PLR0915
         headers.remove("modulation/sampling_mode.hpp")
         headers = {header.replace(".hpp", ".cpp") for header in headers}
 
-    def load_sources(base_path: pathlib.Path) -> set[str]:
+    def load_sources(base_path: pathlib.Path) -> set[pathlib.Path]:
         tested = set()
         with (base_path / "CMakeLists.txt").open() as f:
             for line in f.readlines():
                 subdir = re.search(r"add_subdirectory\((.*)\)", line)
                 if subdir:
-                    tested = tested | load_sources(base_path / subdir.group(1))
+                    tested |= load_sources(base_path / subdir.group(1))
 
         with (base_path / "CMakeLists.txt").open() as f:
             sources = False
@@ -230,12 +238,12 @@ def check_all_headers_is_tested() -> None:  # noqa: C901, PLR0912, PLR0915
                     continue
                 src = re.search(r"\s*(.*.cpp)", line)
                 if src:
-                    tested.add(f"{base_path}/{src.group(1)}")
+                    tested.add(base_path / src.group(1))
         return tested
 
     with working_dir("tests"):
         base_path = pathlib.Path.cwd()
-        tested = [tested.replace("\\", "/") for tested in load_sources(base_path)]
+        tested = [str(tested.relative_to(base_path)).replace("\\", "/") for tested in load_sources(base_path)]
 
         untested_headers = headers.difference(tested)
         if len(untested_headers) > 0:
