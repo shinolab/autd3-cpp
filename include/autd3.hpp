@@ -108,6 +108,8 @@ using driver::Vector3;
 using controller::Controller;
 using controller::ControllerBuilder;
 
+#ifndef AUTD3_EXT_TRACING
 inline void tracing_init() { native_methods::AUTDTracingInit(); }
+#endif
 
 }  // namespace autd3
