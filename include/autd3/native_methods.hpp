@@ -9,14 +9,12 @@
 #endif
 
 #include "autd3/native_methods/autd3-driver.h"
-#include "autd3/native_methods/autd3-link-soem.h"
 #include "autd3/native_methods/def.hpp"
 // def.hpp must be included first
 #include "autd3/native_methods/autd3capi-driver.h"
 // then autd3capi-driver.h
 #include "autd3/native_methods/autd3capi-gain-holo.h"
 #include "autd3/native_methods/autd3capi-link-simulator.h"
-#include "autd3/native_methods/autd3capi-link-soem.h"
 #include "autd3/native_methods/autd3capi-link-twincat.h"
 #include "autd3/native_methods/autd3capi-modulation-audio-file.h"
 #include "autd3/native_methods/autd3capi.h"

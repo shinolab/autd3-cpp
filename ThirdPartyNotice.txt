@@ -30,7 +30,7 @@ android_system_properties 0.1.5 (Apache-2.0 OR MIT)
 https://github.com/nical/android_system_properties
 ---------------------------------------------------------
 
-anyhow 1.0.91 (Apache-2.0 OR MIT)
+anyhow 1.0.92 (Apache-2.0 OR MIT)
 https://github.com/dtolnay/anyhow
 ---------------------------------------------------------
 
@@ -52,10 +52,6 @@ https://github.com/bluss/arrayvec
 
 ash 0.38.0+1.3.281 (Apache-2.0 OR MIT)
 https://github.com/ash-rs/ash
----------------------------------------------------------
-
-async-channel 2.3.1 (Apache-2.0 OR MIT)
-https://github.com/smol-rs/async-channel
 ---------------------------------------------------------
 
 async-ffi 0.5.0 (MIT)
@@ -82,189 +78,71 @@ atomic-waker 1.1.2 (Apache-2.0 OR MIT)
 https://github.com/smol-rs/atomic-waker
 ---------------------------------------------------------
 
-autd3 29.0.0-rc.2 (MIT)
+autd3 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-derive 29.0.0-rc.2 (MIT)
+autd3-derive 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-driver 29.0.0-rc.2 (MIT)
+autd3-driver 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-emulator 29.0.0-rc.2 (MIT)
+autd3-emulator 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-emulator
 ---------------------------------------------------------
 
-autd3-firmware-emulator 29.0.0-rc.2 (MIT)
+autd3-firmware-emulator 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-gain-holo 29.0.0-rc.2 (MIT)
+autd3-gain-holo 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-link-simulator 29.0.0-rc.2 (MIT)
+autd3-link-simulator 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-link-soem 29.0.0-rc.2
-https://github.com/shinolab/autd3-rs
-
----
-
-MIT License
-
-Copyright (c) 2022-2024 Shun Suzuki
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-================================== SOEM =======================================
-Simple Open EtherCAT Master Library
-
-Copyright (C) 2005-2017 Speciaal Machinefabriek Ketels v.o.f.
-Copyright (C) 2005-2017 Arthur Ketels
-Copyright (C) 2008-2009 TU/e Technische Universiteit Eindhoven
-Copyright (C) 2009-2017 rt-labs AB, Sweden
-
-SOEM is free software; you can redistribute it and/or modify it under the terms
-of the GNU General Public License version 2 as published by the Free Software
-Foundation.
-
-SOEM is distributed in the hope that it will be useful, but WITHOUT ANY
-WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
-PARTICULAR PURPOSE.  See the GNU General Public License for more details.
-
-As a special exception, if other files instantiate templates or use macros or
-inline functions from this file, or you compile this file and link it with other
-works to produce a work based on this file, this file does not by itself cause
-the resulting work to be covered by the GNU General Public License. However the
-source code for this file must still be made available in accordance with
-section (3) of the GNU General Public License.
-
-This exception does not invalidate any other reasons why a work based on this
-file might be covered by the GNU General Public License.
-
-The EtherCAT Technology, the trade name and logo "EtherCAT" are the intellectual
-property of, and protected by Beckhoff Automation GmbH. You can use SOEM for the
-sole purpose of creating, using and/or selling or otherwise distributing an
-EtherCAT network master provided that an EtherCAT Master License is obtained
-from Beckhoff Automation GmbH.
-
-In case you did not receive a copy of the EtherCAT Master License along with
-SOEM write to Beckhoff Automation GmbH, Eiserstrasse 5, D-33415 Verl, Germany
-(www.beckhoff.com).
-================================== SOEM =======================================
-
----------------------------------------------------------
-
-autd3-link-twincat 29.0.0-rc.2
-https://github.com/shinolab/autd3-rs
-
----
-
-MIT License
-
-Copyright (c) 2022-2024 Shun Suzuki
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-
-================================== ADS ========================================
-The MIT License (MIT)
-Copyright (c) 2015 Beckhoff Automation GmbH & Co. KG
-
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
-
-The above copyright notice and this permission notice shall be included in
-all copies or substantial portions of the Software.
-
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
-================================== ADS ========================================
-
----------------------------------------------------------
-
-autd3-modulation-audio-file 29.0.0-rc.2 (MIT)
+autd3-link-twincat 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3-protobuf 29.0.0-rc.2 (MIT)
+autd3-modulation-audio-file 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-rs
 ---------------------------------------------------------
 
-autd3capi 29.0.0-rc.2 (MIT)
+autd3-protobuf 29.0.0-rc.5 (MIT)
+https://github.com/shinolab/autd3-rs
+---------------------------------------------------------
+
+autd3capi 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
-autd3capi-driver 29.0.0-rc.2 (MIT)
+autd3capi-driver 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
-autd3capi-emulator 29.0.0-rc.2 (MIT)
+autd3capi-emulator 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
-autd3capi-gain-holo 29.0.0-rc.2 (MIT)
+autd3capi-gain-holo 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
-autd3capi-link-simulator 29.0.0-rc.2 (MIT)
+autd3capi-link-simulator 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
-autd3capi-link-soem 29.0.0-rc.2 (MIT)
+autd3capi-link-twincat 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
-autd3capi-link-twincat 29.0.0-rc.2 (MIT)
-https://github.com/shinolab/autd3-capi
----------------------------------------------------------
-
-autd3capi-modulation-audio-file 29.0.0-rc.2 (MIT)
+autd3capi-modulation-audio-file 29.0.0-rc.5 (MIT)
 https://github.com/shinolab/autd3-capi
 ---------------------------------------------------------
 
@@ -284,12 +162,8 @@ base64 0.22.1 (Apache-2.0 OR MIT)
 https://github.com/marshallpierce/rust-base64
 ---------------------------------------------------------
 
-bit-set 0.6.0 (Apache-2.0 OR MIT)
+bit-set 0.8.0 (Apache-2.0 OR MIT)
 https://github.com/contain-rs/bit-set
----------------------------------------------------------
-
-bit-vec 0.7.0 (Apache-2.0 OR MIT)
-https://github.com/contain-rs/bit-vec
 ---------------------------------------------------------
 
 bit-vec 0.8.0 (Apache-2.0 OR MIT)
@@ -352,24 +226,8 @@ codespan-reporting 0.11.1 (Apache-2.0)
 https://github.com/brendanzab/codespan
 ---------------------------------------------------------
 
-com 0.6.0 (MIT)
-https://github.com/microsoft/com-rs
----------------------------------------------------------
-
-com_macros 0.6.0 (MIT)
-https://github.com/microsoft/com-rs
----------------------------------------------------------
-
-com_macros_support 0.6.0 (MIT)
-https://github.com/microsoft/com-rs
----------------------------------------------------------
-
 compact_str 0.8.0 (MIT)
 https://github.com/ParkMyCar/compact_str
----------------------------------------------------------
-
-concurrent-queue 2.5.0 (Apache-2.0 OR MIT)
-https://github.com/smol-rs/concurrent-queue
 ---------------------------------------------------------
 
 console 0.15.8 (MIT)
@@ -414,10 +272,6 @@ https://github.com/BurntSushi/rust-csv
 
 csv-core 0.1.11 (MIT OR Unlicense)
 https://github.com/BurntSushi/rust-csv
----------------------------------------------------------
-
-d3d12 22.0.0 (Apache-2.0 OR MIT)
-https://github.com/gfx-rs/wgpu/tree/trunk/d3d12
 ---------------------------------------------------------
 
 deranged 0.3.11 (Apache-2.0 OR MIT)
@@ -468,14 +322,6 @@ ethnum 1.5.0 (Apache-2.0 OR MIT)
 https://github.com/nlordell/ethnum-rs
 ---------------------------------------------------------
 
-event-listener 5.3.1 (Apache-2.0 OR MIT)
-https://github.com/smol-rs/event-listener
----------------------------------------------------------
-
-event-listener-strategy 0.5.2 (Apache-2.0 OR MIT)
-https://github.com/smol-rs/event-listener-strategy
----------------------------------------------------------
-
 fallible-streaming-iterator 0.1.9 (Apache-2.0 OR MIT)
 https://github.com/sfackler/fallible-streaming-iterator
 ---------------------------------------------------------
@@ -490,6 +336,10 @@ https://github.com/zesterer/flume
 
 fnv 1.0.7 (Apache-2.0 OR MIT)
 https://github.com/servo/rust-fnv
+---------------------------------------------------------
+
+foldhash 0.1.3 (Zlib)
+https://github.com/orlp/foldhash
 ---------------------------------------------------------
 
 foreign-types 0.5.0 (Apache-2.0 OR MIT)
@@ -536,7 +386,7 @@ glob 0.3.1 (Apache-2.0 OR MIT)
 https://github.com/rust-lang/glob
 ---------------------------------------------------------
 
-glow 0.13.1 (Apache-2.0 OR MIT OR Zlib)
+glow 0.14.2 (Apache-2.0 OR MIT OR Zlib)
 https://github.com/grovesNL/glow
 ---------------------------------------------------------
 
@@ -552,7 +402,7 @@ gpu-alloc-types 0.3.0 (Apache-2.0 OR MIT)
 https://github.com/zakarumych/gpu-alloc
 ---------------------------------------------------------
 
-gpu-allocator 0.26.0 (Apache-2.0 OR MIT)
+gpu-allocator 0.27.0 (Apache-2.0 OR MIT)
 https://github.com/Traverse-Research/gpu-allocator
 ---------------------------------------------------------
 
@@ -576,12 +426,8 @@ hashbrown 0.14.5 (Apache-2.0 OR MIT)
 https://github.com/rust-lang/hashbrown
 ---------------------------------------------------------
 
-hashbrown 0.15.0 (Apache-2.0 OR MIT)
+hashbrown 0.15.1 (Apache-2.0 OR MIT)
 https://github.com/rust-lang/hashbrown
----------------------------------------------------------
-
-hassle-rs 0.11.0 (MIT)
-https://github.com/Traverse-Research/hassle-rs
 ---------------------------------------------------------
 
 heck 0.5.0 (Apache-2.0 OR MIT)
@@ -628,11 +474,11 @@ hyper 1.5.0 (MIT)
 https://github.com/hyperium/hyper
 ---------------------------------------------------------
 
-hyper-timeout 0.5.1 (Apache-2.0 OR MIT)
+hyper-timeout 0.5.2 (Apache-2.0 OR MIT)
 https://github.com/hjr3/hyper-timeout
 ---------------------------------------------------------
 
-hyper-util 0.1.9 (MIT)
+hyper-util 0.1.10 (MIT)
 https://github.com/hyperium/hyper-util
 ---------------------------------------------------------
 
@@ -684,7 +530,7 @@ libloading 0.8.5 (ISC)
 https://github.com/nagisa/rust_libloading/
 ---------------------------------------------------------
 
-libm 0.2.10 (Apache-2.0) OR MIT AND (MIT)
+libm 0.2.11 (Apache-2.0) OR MIT AND (MIT)
 https://github.com/rust-lang/libm
 ---------------------------------------------------------
 
@@ -760,11 +606,11 @@ multiversion-macros 0.7.4 (Apache-2.0 OR MIT)
 https://github.com/calebzulawski/multiversion
 ---------------------------------------------------------
 
-naga 22.1.0 (Apache-2.0 OR MIT)
+naga 23.0.0 (Apache-2.0 OR MIT)
 https://github.com/gfx-rs/wgpu/tree/trunk/naga
 ---------------------------------------------------------
 
-nalgebra 0.33.1 (Apache-2.0)
+nalgebra 0.33.2 (Apache-2.0)
 https://github.com/dimforge/nalgebra
 ---------------------------------------------------------
 
@@ -844,20 +690,12 @@ overload 0.1.1 (MIT)
 https://github.com/danaugrs/overload
 ---------------------------------------------------------
 
-parking 2.2.1 (Apache-2.0 OR MIT)
-https://github.com/smol-rs/parking
----------------------------------------------------------
-
 parking_lot 0.12.3 (Apache-2.0 OR MIT)
 https://github.com/Amanieu/parking_lot
 ---------------------------------------------------------
 
 parking_lot_core 0.9.10 (Apache-2.0 OR MIT)
 https://github.com/Amanieu/parking_lot
----------------------------------------------------------
-
-parquet-format-safe 0.2.4 (Apache-2.0 OR MIT)
-https://github.com/jorgecarleitao/parquet-format-safe
 ---------------------------------------------------------
 
 paste 1.0.15 (Apache-2.0 OR MIT)
@@ -888,11 +726,11 @@ planus 0.3.1 (Apache-2.0 OR MIT)
 https://github.com/planus-org/planus
 ---------------------------------------------------------
 
-polars 0.43.1 (MIT)
+polars 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-arrow 0.43.1 (MIT AND Apache-2.0)
+polars-arrow 0.44.2 (MIT AND Apache-2.0)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
@@ -900,59 +738,63 @@ polars-arrow-format 0.1.0 (Apache-2.0)
 https://github.com/pola-rs/arrow-format
 ---------------------------------------------------------
 
-polars-compute 0.43.1 (MIT)
+polars-compute 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-core 0.43.1 (MIT)
+polars-core 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-error 0.43.1 (MIT)
+polars-error 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-expr 0.43.1 (MIT)
+polars-expr 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-io 0.43.1 (MIT)
+polars-io 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-lazy 0.43.1 (MIT)
+polars-lazy 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-mem-engine 0.43.1 (MIT)
+polars-mem-engine 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-ops 0.43.1 (MIT)
+polars-ops 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-parquet 0.43.1 (MIT AND Apache-2.0)
+polars-parquet 0.44.2 (MIT AND Apache-2.0)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-pipe 0.43.1 (MIT)
+polars-parquet-format 0.1.0 (MIT AND Apache-2.0)
+https://github.com/pola-rs/parquet-format
+---------------------------------------------------------
+
+polars-pipe 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-plan 0.43.1 (MIT)
+polars-plan 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-row 0.43.1 (MIT)
+polars-row 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-schema 0.43.1 (MIT)
+polars-schema 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
-polars-utils 0.43.1 (MIT)
+polars-utils 0.44.2 (MIT)
 https://github.com/pola-rs/polars
 ---------------------------------------------------------
 
@@ -1100,11 +942,11 @@ seq-macro 0.3.5 (Apache-2.0 OR MIT)
 https://github.com/dtolnay/seq-macro
 ---------------------------------------------------------
 
-serde 1.0.213 (Apache-2.0 OR MIT)
+serde 1.0.214 (Apache-2.0 OR MIT)
 https://github.com/serde-rs/serde
 ---------------------------------------------------------
 
-serde_derive 1.0.213 (Apache-2.0 OR MIT)
+serde_derive 1.0.214 (Apache-2.0 OR MIT)
 https://github.com/serde-rs/serde
 ---------------------------------------------------------
 
@@ -1176,7 +1018,7 @@ syn 1.0.109 (Apache-2.0 OR MIT)
 https://github.com/dtolnay/syn
 ---------------------------------------------------------
 
-syn 2.0.85 (Apache-2.0 OR MIT)
+syn 2.0.87 (Apache-2.0 OR MIT)
 https://github.com/dtolnay/syn
 ---------------------------------------------------------
 
@@ -1192,10 +1034,6 @@ sysinfo 0.31.4 (MIT)
 https://github.com/GuillaumeGomez/sysinfo
 ---------------------------------------------------------
 
-ta 0.5.0 (MIT)
-https://github.com/greyblake/ta-rs
----------------------------------------------------------
-
 target-features 0.1.6 (Apache-2.0 OR MIT)
 https://github.com/calebzulawski/target-features
 ---------------------------------------------------------
@@ -1204,16 +1042,12 @@ termcolor 1.4.1 (MIT OR Unlicense)
 https://github.com/BurntSushi/termcolor
 ---------------------------------------------------------
 
-thiserror 1.0.65 (Apache-2.0 OR MIT)
+thiserror 1.0.68 (Apache-2.0 OR MIT)
 https://github.com/dtolnay/thiserror
 ---------------------------------------------------------
 
-thiserror-impl 1.0.65 (Apache-2.0 OR MIT)
+thiserror-impl 1.0.68 (Apache-2.0 OR MIT)
 https://github.com/dtolnay/thiserror
----------------------------------------------------------
-
-thread-priority 1.1.0 (MIT)
-https://github.com/iddm/thread-priority
 ---------------------------------------------------------
 
 thread_local 1.1.8 (Apache-2.0 OR MIT)
@@ -1363,28 +1197,24 @@ web-sys 0.3.72 (Apache-2.0 OR MIT)
 https://github.com/rustwasm/wasm-bindgen/tree/master/crates/web-sys
 ---------------------------------------------------------
 
-wgpu 22.1.0 (Apache-2.0 OR MIT)
+wgpu 23.0.0 (Apache-2.0 OR MIT)
 https://github.com/gfx-rs/wgpu
 ---------------------------------------------------------
 
-wgpu-core 22.1.0 (Apache-2.0 OR MIT)
+wgpu-core 23.0.0 (Apache-2.0 OR MIT)
 https://github.com/gfx-rs/wgpu
 ---------------------------------------------------------
 
-wgpu-hal 22.0.0 (Apache-2.0 OR MIT)
+wgpu-hal 23.0.0 (Apache-2.0 OR MIT)
 https://github.com/gfx-rs/wgpu
 ---------------------------------------------------------
 
-wgpu-types 22.0.0 (Apache-2.0 OR MIT)
+wgpu-types 23.0.0 (Apache-2.0 OR MIT)
 https://github.com/gfx-rs/wgpu
 ---------------------------------------------------------
 
 wide 0.7.28 (Apache-2.0 OR MIT OR Zlib)
 https://github.com/Lokathor/wide
----------------------------------------------------------
-
-widestring 1.1.0 (Apache-2.0 OR MIT)
-https://github.com/starkat99/widestring-rs
 ---------------------------------------------------------
 
 winapi 0.3.9 (Apache-2.0 OR MIT)
@@ -1403,19 +1233,11 @@ winapi-x86_64-pc-windows-gnu 0.4.0 (Apache-2.0 OR MIT)
 https://github.com/retep998/winapi-rs
 ---------------------------------------------------------
 
-windows 0.52.0 (Apache-2.0 OR MIT)
-https://github.com/microsoft/windows-rs
----------------------------------------------------------
-
 windows 0.57.0 (Apache-2.0 OR MIT)
 https://github.com/microsoft/windows-rs
 ---------------------------------------------------------
 
 windows 0.58.0 (Apache-2.0 OR MIT)
-https://github.com/microsoft/windows-rs
----------------------------------------------------------
-
-windows-core 0.52.0 (Apache-2.0 OR MIT)
 https://github.com/microsoft/windows-rs
 ---------------------------------------------------------
 
@@ -1507,7 +1329,7 @@ zerocopy 0.7.35 (Apache-2.0 OR BSD-2-Clause OR MIT)
 https://github.com/google/zerocopy
 ---------------------------------------------------------
 
-zerocopy 0.8.7 (Apache-2.0 OR BSD-2-Clause OR MIT)
+zerocopy 0.8.9 (Apache-2.0 OR BSD-2-Clause OR MIT)
 https://github.com/google/zerocopy
 ---------------------------------------------------------
 
@@ -1515,7 +1337,7 @@ zerocopy-derive 0.7.35 (Apache-2.0 OR BSD-2-Clause OR MIT)
 https://github.com/google/zerocopy
 ---------------------------------------------------------
 
-zerocopy-derive 0.8.7 (Apache-2.0 OR BSD-2-Clause OR MIT)
+zerocopy-derive 0.8.9 (Apache-2.0 OR BSD-2-Clause OR MIT)
 https://github.com/google/zerocopy
 ---------------------------------------------------------
 
@@ -1529,6 +1351,10 @@ https://github.com/gyscos/zstd-rs
 
 zstd-sys 2.0.13+zstd.1.5.6 (Apache-2.0 OR MIT)
 https://github.com/gyscos/zstd-rs
+---------------------------------------------------------
+
+ADS 0.0.25-1 (MIT)
+https://github.com/Beckhoff/ADS
 
 ---------------------------------------------------------
 

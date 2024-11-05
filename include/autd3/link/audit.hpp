@@ -3,6 +3,7 @@
 #include <array>
 #include <autd3/driver/firmware/fpga/drive.hpp>
 #include <chrono>
+#include <optional>
 
 #include "autd3/native_methods.hpp"
 
@@ -43,6 +44,16 @@ class Audit final {
 
   void break_down() const { AUTDLinkAuditBreakDown(_ptr); }
   void repair() const { AUTDLinkAuditRepair(_ptr); }
+
+  [[nodiscard]] std::optional<uint64_t> last_parallel_threshold() const {
+    const auto threshold = AUTDLinkAuditLastParallelThreshold(_ptr);
+    return threshold < 0 ? std::nullopt : std::make_optional(static_cast<uint64_t>(threshold));
+  }
+
+  [[nodiscard]] std::optional<std::chrono::nanoseconds> last_timeout() const {
+    const auto timeout = AUTDLinkAuditLastTimeout(_ptr);
+    return timeout < 0 ? std::nullopt : std::make_optional(std::chrono::nanoseconds(timeout));
+  }
 
   [[nodiscard]] uint16_t silencer_update_rate_intensity(const size_t idx) const {
     return AUTDLinkAuditFpgaSilencerUpdateRateIntensity(_ptr, static_cast<uint16_t>(idx));
