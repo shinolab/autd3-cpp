@@ -1,111 +1,35 @@
 #!/usr/bin/env python3
 
 import argparse
-import contextlib
 import os
 import pathlib
 import platform
 import re
 import shutil
-import subprocess
 import sys
 import tarfile
 import urllib.request
-from glob import glob
-from typing import List, Optional
+
+from tools.autd3_build_utils.autd3_build_utils import BaseConfig, err, fetch_submodule, info, remove, run_command, working_dir
 
 
-def fetch_submodule():
-    if shutil.which("git") is not None:
-        with working_dir(os.path.dirname(os.path.abspath(__file__))):
-            subprocess.run(["git", "submodule", "update", "--init"]).check_returncode()
-    else:
-        err("git is not installed. Skip fetching submodules.")
-
-
-def generate_wrapper():
-    if shutil.which("cargo") is not None:
-        with working_dir(os.path.dirname(os.path.abspath(__file__))):
-            with working_dir("tools/wrapper-generator"):
-                subprocess.run(
-                    [
-                        "cargo",
-                        "run",
-                    ]
-                ).check_returncode()
-    else:
-        err("cargo is not installed. Skip generating wrapper.")
-
-
-def err(msg: str):
-    print("\033[91mERR \033[0m: " + msg)
-
-
-def warn(msg: str):
-    print("\033[93mWARN\033[0m: " + msg)
-
-
-def info(msg: str):
-    print("\033[92mINFO\033[0m: " + msg)
-
-
-def rm_f(path):
-    try:
-        os.remove(path)
-    except FileNotFoundError:
-        pass
-
-
-def onexc(func, path, exeption):
-    import stat
-
-    if not os.access(path, os.W_OK):
-        os.chmod(path, stat.S_IWUSR)
-        func(path)
-    else:
-        raise
-
-
-def rmtree_f(path):
-    try:
-        shutil.rmtree(path, onerror=onexc)
-    except FileNotFoundError:
-        pass
-
-
-@contextlib.contextmanager
-def working_dir(path):
-    cwd = os.getcwd()
-    os.chdir(path)
-    try:
-        yield
-    finally:
-        os.chdir(cwd)
-
-
-class Config:
+class Config(BaseConfig):
     _platform: str
     release: bool
     no_examples: bool
-    cmake_extra: Optional[List[str]]
+    cmake_extra: list[str] | None
     arch: str
 
-    def __init__(self, args):
-        self._platform = platform.system()
+    def __init__(self, args) -> None:  # noqa: ANN001
+        super().__init__()
 
-        if not self.is_windows() and not self.is_macos() and not self.is_linux():
-            err(f'platform "{platform.system()}" is not supported.')
-            sys.exit(-1)
+        self.release = getattr(args, "release", False)
+        self.no_examples = getattr(args, "no_examples", False)
+        self.cmake_extra = args.cmake_extra.split(" ") if hasattr(args, "cmake_extra") and args.cmake_extra is not None else None
 
-        self.release = hasattr(args, "release") and args.release
-        self.no_examples = hasattr(args, "no_examples") and args.no_examples
-        self.cmake_extra = (
-            args.cmake_extra.split(" ")
-            if hasattr(args, "cmake_extra") and args.cmake_extra is not None
-            else None
-        )
-        if hasattr(args, "arch") and args.arch is not None:
-            self.arch = args.arch
+        arch: str = getattr(args, "arch", None)
+        if arch:
+            self.arch = arch
         elif platform.machine().lower() in ["amd64", "x86_64"]:
             self.arch = "x64"
         elif platform.machine().lower() in ["arm64", "aarch64"]:
@@ -113,60 +37,28 @@ class Config:
         else:
             err(f"Unsupported platform: {platform.machine()}")
 
-    def is_windows(self):
-        return self._platform == "Windows"
-
-    def is_macos(self):
-        return self._platform == "Darwin"
-
-    def is_linux(self):
-        return self._platform == "Linux"
-
-    def exe_ext(self):
-        return ".exe" if self.is_windows() else ""
-
-    def is_pcap_available(self):
-        if not self.is_windows():
-            return True
-        wpcap_exists = os.path.isfile(
-            "C:\\Windows\\System32\\wpcap.dll"
-        ) and os.path.isfile("C:\\Windows\\System32\\Npcap\\wpcap.dll")
-        packet_exists = os.path.isfile(
-            "C:\\Windows\\System32\\Packet.dll"
-        ) and os.path.isfile("C:\\Windows\\System32\\Npcap\\Packet.dll")
-
-        return wpcap_exists and packet_exists
-
 
 def should_update_lib(config: Config, version: str) -> bool:
     if config.is_windows():
-        if not os.path.isfile("lib/autd3capi.lib"):
+        if not pathlib.Path("lib/autd3capi.lib").exists():
             return True
-    else:
-        if not os.path.isfile("lib/libautd3capi.a"):
-            return True
-
-    if not os.path.isfile("VERSION"):
+    elif not pathlib.Path("lib/libautd3capi.a").exists():
         return True
 
-    with open("VERSION", "r") as f:
+    if not pathlib.Path("VERSION").exists():
+        return True
+
+    with pathlib.Path("VERSION").open() as f:
         old_version = f.read().strip()
 
     return old_version != version
 
 
-def copy_lib(config: Config):
-    with open("include/autd3.hpp", "r") as f:
+def copy_lib(config: Config) -> None:
+    with pathlib.Path("include/autd3.hpp").open() as f:
         content = f.read()
-        version = (
-            re.search(r"static inline std::string version = \"(.*)\";", content)
-            .group(1)
-            .split(".")
-        )
-        if version[2].endswith("-rc"):
-            version = ".".join(version)
-        else:
-            version = ".".join(version[:3])
+        version = re.search(r"static inline std::string version = \"(.*)\";", content).group(1).split(".")
+        version = ".".join(version) if version[2].endswith("-rc") else ".".join(version[:3])
 
     if not should_update_lib(config, version):
         return
@@ -181,26 +73,26 @@ def copy_lib(config: Config):
             sys.exit(-1)
         urllib.request.urlretrieve(url, "tmp.zip")
         shutil.unpack_archive("tmp.zip", ".")
-        rm_f("tmp.zip")
+        remove("tmp.zip")
     elif config.is_macos():
         url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-macos-aarch64-static.tar.gz"
         urllib.request.urlretrieve(url, "tmp.tar.gz")
         with tarfile.open("tmp.tar.gz", "r:gz") as tar:
-            tar.extractall()
-        rm_f("tmp.tar.gz")
+            tar.extractall(filter="fully_trusted")
+        remove("tmp.tar.gz")
     elif config.is_linux():
         url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-linux-x64-static.tar.gz"
         urllib.request.urlretrieve(url, "tmp.tar.gz")
         with tarfile.open("tmp.tar.gz", "r:gz") as tar:
-            tar.extractall()
-        rm_f("tmp.tar.gz")
-    rmtree_f("bin")
+            tar.extractall(filter="fully_trusted")
+        remove("tmp.tar.gz")
+    remove("bin")
 
-    with open("VERSION", mode="w") as f:
+    with pathlib.Path("VERSION").open("w") as f:
         f.write(version)
 
 
-def cpp_build(args):
+def cpp_build(args) -> None:  # noqa: ANN001
     config = Config(args)
 
     copy_lib(config)
@@ -208,12 +100,11 @@ def cpp_build(args):
     if not config.no_examples:
         info("Building examples...")
         with working_dir("examples"):
-            os.makedirs("build", exist_ok=True)
+            pathlib.Path("build").mkdir(exist_ok=True)
             with working_dir("build"):
                 command = ["cmake", "..", "-DAUTD_LOCAL_TEST=ON"]
                 if config.cmake_extra is not None:
-                    for cmd in config.cmake_extra:
-                        command.append(cmd)
+                    command.extend(config.cmake_extra)
                 if config.is_windows() and config.arch == "arm64":
                     command.append("-A")
                     command.append("ARM64")
@@ -223,27 +114,26 @@ def cpp_build(args):
                     else:
                         err(f"Unsupported Visual Studio version: {args.vs}")
                         sys.exit(-1)
-                subprocess.run(command).check_returncode()
+                run_command(command)
                 command = ["cmake", "--build", "."]
                 if config.release:
                     command.append("--config")
                     command.append("Release")
-                subprocess.run(command).check_returncode()
+                run_command(command)
 
 
-def cpp_test(args):
+def cpp_test(args) -> None:  # noqa: ANN001
     args.no_examples = True
     cpp_build(args)
 
     config = Config(args)
     with working_dir("tests"):
-        os.makedirs("build", exist_ok=True)
+        pathlib.Path("build").mkdir(exist_ok=True)
         with working_dir("build"):
             command = ["cmake", ".."]
             if config.cmake_extra is not None:
-                for cmd in config.cmake_extra:
-                    command.append(cmd)
-            subprocess.run(command).check_returncode()
+                command.extend(config.cmake_extra)
+            run_command(command)
             command = ["cmake", "--build", ".", "--parallel", "8"]
             if config.release:
                 command.append("--config")
@@ -251,30 +141,25 @@ def cpp_test(args):
             if config.is_windows():
                 command.append("--")
                 command.append("/maxcpucount:8")
-            subprocess.run(command).check_returncode()
+            run_command(command)
 
             target_dir = "."
             if config.is_windows():
                 target_dir = "Release" if config.release else "Debug"
-            subprocess.run(
-                [f"{target_dir}/test_autd3{config.exe_ext()}"]
-            ).check_returncode()
+            run_command([f"{target_dir}/test_autd3{config.exe_ext()}"])
 
 
-def check_if_all_native_methods_called():
+def check_if_all_native_methods_called() -> None:
     defined_methods = set()
     pattern = re.compile(".* (AUTD.*)\\(.*")
-    for file in glob("include/autd3/native_methods/autd3capi*.h"):
-        with open(file, "r") as f:
+    for file in pathlib.Path("include/autd3/native_methods").rglob("autd3capi*.h"):
+        with file.open() as f:
             for line in f.readlines():
                 result = pattern.match(line)
                 if result:
                     defined_methods.add(result.group(1))
     defined_methods = set(filter(lambda x: not x.endswith("T4010A1"), defined_methods))
-    defined_methods = set(
-        filter(lambda x: not x.endswith("TracingInitWithFile"), defined_methods)
-    )
-    defined_methods.remove("AUTDLinkSOEMTracingInit")
+    defined_methods = set(filter(lambda x: not x.endswith("TracingInitWithFile"), defined_methods))
     defined_methods.remove("AUTDModulationAudioFileTracingInit")
     defined_methods.remove("AUTDLinkSimulatorTracingInit")
     defined_methods.remove("AUTDLinkTwinCATTracingInit")
@@ -287,10 +172,8 @@ def check_if_all_native_methods_called():
 
     used_methods = set()
     pattern = re.compile(r".*(AUTD.*?)[\(|,|\)].*")
-    for file in glob("include/**/*.hpp", recursive=True) + glob(
-        "tests/**/*.cpp", recursive=True
-    ):
-        with open(file, "r") as f:
+    for file in list(pathlib.Path("include").rglob("*.hpp")) + list(pathlib.Path("tests").rglob("*.cpp")):
+        with file.open() as f:
             for line in f.readlines():
                 result = pattern.match(line)
                 if result:
@@ -304,14 +187,10 @@ def check_if_all_native_methods_called():
         sys.exit(-1)
 
 
-def check_all_headers_is_tested():
+def check_all_headers_is_tested() -> None:  # noqa: C901, PLR0912, PLR0915
     with working_dir("include/autd3"):
-        headers = glob("**/*.hpp", recursive=True)
-        headers = [
-            header.replace("\\", "/")
-            for header in headers
-            if not header.startswith("native_methods")
-        ]
+        headers = pathlib.Path.cwd().rglob("*.hpp")
+        headers = [str(header).replace("\\", "/") for header in headers if not header.startswith("native_methods")]
         headers.remove("exception.hpp")
         headers.remove("def.hpp")
         headers.remove("controller/builder.hpp")
@@ -329,17 +208,17 @@ def check_all_headers_is_tested():
         headers.remove("modulation/audio_file.hpp")
         headers.remove("modulation/resampler.hpp")
         headers.remove("modulation/sampling_mode.hpp")
-        headers = set([header.replace(".hpp", ".cpp") for header in headers])
+        headers = {header.replace(".hpp", ".cpp") for header in headers}
 
     def load_sources(base_path: pathlib.Path) -> set[str]:
         tested = set()
-        with open(base_path / "CMakeLists.txt", "r") as f:
+        with (base_path / "CMakeLists.txt").open() as f:
             for line in f.readlines():
                 subdir = re.search(r"add_subdirectory\((.*)\)", line)
                 if subdir:
                     tested = tested | load_sources(base_path / subdir.group(1))
 
-        with open(base_path / "CMakeLists.txt", "r") as f:
+        with (base_path / "CMakeLists.txt").open() as f:
             sources = False
             for line in f.readlines():
                 if line.strip().startswith("target_sources(test_autd3 PRIVATE"):
@@ -355,7 +234,7 @@ def check_all_headers_is_tested():
         return tested
 
     with working_dir("tests"):
-        base_path = pathlib.Path(".")
+        base_path = pathlib.Path.cwd()
         tested = [tested.replace("\\", "/") for tested in load_sources(base_path)]
 
         untested_headers = headers.difference(tested)
@@ -368,16 +247,14 @@ def check_all_headers_is_tested():
         unincluded_headers = set()
         for cpp in tested:
             hpp = cpp.replace(".cpp", ".hpp")
-            with open(base_path / cpp, "r") as f:
+            with (base_path / cpp).open() as f:
                 found_include = False
                 for line in f.readlines():
                     if re.search(rf"#include <autd3/{hpp}>", line):
                         found_include = True
                         break
                 if not found_include:
-                    unincluded_headers.add(
-                        f"{cpp} does not include target header file {hpp}"
-                    )
+                    unincluded_headers.add(f"{cpp} does not include target header file {hpp}")
         if len(unincluded_headers) > 0:
             err("Following source files do not include target header file.")
             for header in sorted(unincluded_headers):
@@ -386,7 +263,7 @@ def check_all_headers_is_tested():
 
         empty_test = set()
         for cpp in tested:
-            with open(base_path / cpp, "r") as f:
+            with (base_path / cpp).open() as f:
                 found_test = False
                 for line in f.readlines():
                     if re.search(r"TEST\(", line):
@@ -401,7 +278,7 @@ def check_all_headers_is_tested():
             sys.exit(-1)
 
 
-def cpp_cov(args):
+def cpp_cov(args) -> None:  # noqa: ANN001
     check_if_all_native_methods_called()
     check_all_headers_is_tested()
 
@@ -414,21 +291,20 @@ def cpp_cov(args):
     cpp_build(args)
 
     with working_dir("tests"):
-        os.makedirs("build", exist_ok=True)
+        pathlib.Path("build").mkdir(exist_ok=True)
         with working_dir("build"):
             command = ["cmake", "..", "-DCOVERAGE=ON", "-DAUTD3_USE_PCH=OFF"]
             if config.cmake_extra is not None:
-                for cmd in config.cmake_extra:
-                    command.append(cmd)
-            subprocess.run(command).check_returncode()
+                command.extend(config.cmake_extra)
+            run_command(command)
             command = ["cmake", "--build", ".", "--parallel", "8"]
             if config.release:
                 command.append("--config")
                 command.append("Release")
-            subprocess.run(command).check_returncode()
+            run_command(command)
 
             with working_dir("CMakeFiles/test_autd3.dir"):
-                subprocess.run(
+                run_command(
                     [
                         "lcov",
                         "-c",
@@ -437,18 +313,16 @@ def cpp_cov(args):
                         ".",
                         "-o",
                         "coverage.baseline",
-                    ]
-                ).check_returncode()
+                    ],
+                )
 
             target_dir = "."
             if config.is_windows():
                 target_dir = "Release" if config.release else "Debug"
-            subprocess.run(
-                [f"{target_dir}/test_autd3{config.exe_ext()}"]
-            ).check_returncode()
+            run_command([f"{target_dir}/test_autd3{config.exe_ext()}"])
 
             with working_dir("CMakeFiles/test_autd3.dir"):
-                subprocess.run(
+                run_command(
                     [
                         "lcov",
                         "-c",
@@ -456,9 +330,9 @@ def cpp_cov(args):
                         ".",
                         "-o",
                         "coverage.out",
-                    ]
-                ).check_returncode()
-                subprocess.run(
+                    ],
+                )
+                run_command(
                     [
                         "lcov",
                         "-a",
@@ -467,10 +341,10 @@ def cpp_cov(args):
                         "coverage.out",
                         "-o",
                         "coverage.raw.info",
-                    ]
-                ).check_returncode()
+                    ],
+                )
 
-                subprocess.run(
+                run_command(
                     [
                         "lcov",
                         "-r",
@@ -482,10 +356,10 @@ def cpp_cov(args):
                         "unused",
                         "-o",
                         "coverage.info",
-                    ]
-                ).check_returncode()
+                    ],
+                )
                 if args.html:
-                    subprocess.run(
+                    run_command(
                         [
                             "genhtml",
                             "-o",
@@ -493,99 +367,90 @@ def cpp_cov(args):
                             "--num-spaces",
                             "4",
                             "coverage.info",
-                        ]
-                    ).check_returncode()
+                        ],
+                    )
 
 
-def cpp_run(args):
+def cpp_run(args) -> None:  # noqa: ANN001
     args.no_examples = False
     cpp_build(args)
 
     config = Config(args)
-    if config.is_windows():
-        target_dir = "Release" if args.release else "Debug"
-    else:
-        target_dir = "."
+    target_dir = ("Release" if args.release else "Debug") if config.is_windows() else "."
 
-    subprocess.run(
-        [f"examples/build/{target_dir}/{args.target}{config.exe_ext()}"]
-    ).check_returncode()
+    run_command([f"examples/build/{target_dir}/{args.target}{config.exe_ext()}"])
 
 
-def cpp_clear(_):
-    with working_dir("."):
-        rmtree_f("lib")
-        rmtree_f("bin")
-        rmtree_f("examples/build")
-        rmtree_f("tests/build")
+def cpp_clear(_) -> None:  # noqa: ANN001
+    remove("lib")
+    remove("bin")
+    remove("examples/build")
+    remove("tests/build")
 
 
-def util_update_ver(args):
+def util_update_ver(args) -> None:  # noqa: ANN001
     version = args.version
 
-    with working_dir("."):
-        with open("CMakeLists.txt", "r") as f:
-            content = f.read()
-            version_cmake = version.split(".")
-            if version_cmake[2].endswith("-rc"):
-                version_cmake[2] = version_cmake[2].replace("-rc", "")
-                version_cmake = ".".join(version_cmake[:3])
-            else:
-                version_cmake = ".".join(version_cmake)
-            content = re.sub(
-                r"^project\(autd3 VERSION (.*)\)",
-                f"project(autd3 VERSION {version_cmake})",
-                content,
-                flags=re.MULTILINE,
-            )
-        with open("CMakeLists.txt", "w") as f:
-            f.write(content)
+    f = pathlib.Path("CMakeLists.txt")
+    content = f.read_text()
+    version_cmake = version.split(".")
+    if version_cmake[2].endswith("-rc"):
+        version_cmake[2] = version_cmake[2].replace("-rc", "")
+        version_cmake = ".".join(version_cmake[:3])
+    else:
+        version_cmake = ".".join(version_cmake)
+    content = re.sub(
+        r"^project\(autd3 VERSION (.*)\)",
+        f"project(autd3 VERSION {version_cmake})",
+        content,
+        flags=re.MULTILINE,
+    )
+    f.write_text(content)
 
-        with open("include/autd3.hpp", "r") as f:
-            content = f.read()
-            content = re.sub(
-                r'^static inline std::string version = "(.*)";',
-                f'static inline std::string version = "{version}";',
-                content,
-                flags=re.MULTILINE,
-            )
-        with open("include/autd3.hpp", "w") as f:
-            f.write(content)
+    f = pathlib.Path("include/autd3.hpp")
+    content = f.read_text()
+    content = re.sub(
+        r'^static inline std::string version = "(.*)";',
+        f'static inline std::string version = "{version}";',
+        content,
+        flags=re.MULTILINE,
+    )
+    f.write_text(content)
 
-        with open("examples/CMakeLists.txt", "r") as f:
-            content = f.read()
-            content = re.sub(
-                r"v.*/autd3-v.*-(win|macos|linux)",
-                rf"v{version}/autd3-v{version}-\1",
-                content,
-                flags=re.MULTILINE,
-            )
-        with open("examples/CMakeLists.txt", "w") as f:
-            f.write(content)
+    f = pathlib.Path("examples/CMakeLists.txt")
+    content = f.read_text()
+    content = re.sub(
+        r"v.*/autd3-v.*-(win|macos|linux)",
+        rf"v{version}/autd3-v{version}-\1",
+        content,
+        flags=re.MULTILINE,
+    )
+    f.write_text(content)
 
 
-def util_gen_wrapper(_):
-    fetch_submodule()
-    generate_wrapper()
+def util_gen_wrapper(_) -> None:  # noqa: ANN001
+    if shutil.which("cargo") is not None:
+        with working_dir("tools/wrapper-generator"):
+            run_command(["cargo", "run"])
+    else:
+        err("cargo is not installed. Skip generating wrapper.")
 
 
-def command_help(args):
+def command_help(args) -> None:  # noqa: ANN001
     print(parser.parse_args([args.command, "--help"]))
 
 
 if __name__ == "__main__":
-    with working_dir(os.path.dirname(os.path.abspath(__file__))):
+    with working_dir(pathlib.Path(__file__).parent):
+        fetch_submodule()
+
         parser = argparse.ArgumentParser(description="autd3 library build script")
         subparsers = parser.add_subparsers()
 
         # build
         parser_cpp_build = subparsers.add_parser("build", help="see `build -h`")
-        parser_cpp_build.add_argument(
-            "--release", action="store_true", help="release build"
-        )
-        parser_cpp_build.add_argument(
-            "--no-examples", action="store_true", help="skip building examples"
-        )
+        parser_cpp_build.add_argument("--release", action="store_true", help="release build")
+        parser_cpp_build.add_argument("--no-examples", action="store_true", help="skip building examples")
         parser_cpp_build.add_argument("--cmake-extra", help="cmake extra args")
         parser_cpp_build.add_argument("--arch", help="architecture (x64, arm64)")
         parser_cpp_build.add_argument("--vs", help="Visual Studio version")
@@ -593,29 +458,21 @@ if __name__ == "__main__":
 
         # test
         parser_cpp_test = subparsers.add_parser("test", help="see `test -h`")
-        parser_cpp_test.add_argument(
-            "--release", action="store_true", help="release build"
-        )
+        parser_cpp_test.add_argument("--release", action="store_true", help="release build")
         parser_cpp_test.add_argument("--cmake-extra", help="cmake extra args")
         parser_cpp_test.set_defaults(handler=cpp_test)
 
         # cov
         parser_cpp_cov = subparsers.add_parser("cov", help="see `cov -h`")
-        parser_cpp_cov.add_argument(
-            "--release", action="store_true", help="release build"
-        )
-        parser_cpp_cov.add_argument(
-            "--html", action="store_true", help="generate html report", default=False
-        )
+        parser_cpp_cov.add_argument("--release", action="store_true", help="release build")
+        parser_cpp_cov.add_argument("--html", action="store_true", help="generate html report", default=False)
         parser_cpp_cov.add_argument("--cmake-extra", help="cmake extra args")
         parser_cpp_cov.set_defaults(handler=cpp_cov)
 
         # run
         parser_cpp_run = subparsers.add_parser("run", help="see `run -h`")
         parser_cpp_run.add_argument("target", help="binary target")
-        parser_cpp_run.add_argument(
-            "--release", action="store_true", help="release build"
-        )
+        parser_cpp_run.add_argument("--release", action="store_true", help="release build")
         parser_cpp_run.set_defaults(handler=cpp_run)
 
         # clear
@@ -627,16 +484,12 @@ if __name__ == "__main__":
         subparsers_util = parser_util.add_subparsers()
 
         # util update version
-        parser_util_upver = subparsers_util.add_parser(
-            "upver", help="see `util upver -h`"
-        )
+        parser_util_upver = subparsers_util.add_parser("upver", help="see `util upver -h`")
         parser_util_upver.add_argument("version", help="version")
         parser_util_upver.set_defaults(handler=util_update_ver)
 
         # util update version
-        parser_util_gen_wrap = subparsers_util.add_parser(
-            "gen_wrap", help="see `util gen_wrap -h`"
-        )
+        parser_util_gen_wrap = subparsers_util.add_parser("gen_wrap", help="see `util gen_wrap -h`")
         parser_util_gen_wrap.set_defaults(handler=util_gen_wrapper)
 
         # help
