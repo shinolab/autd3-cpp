@@ -70,4 +70,9 @@ constexpr const SamplingConfig SamplingConfig_FREQ_40K = SamplingConfig{ /* .div
 constexpr const SamplingConfig SamplingConfig_FREQ_4K = SamplingConfig{ /* .division = */ 10 };
 constexpr const SamplingConfig SamplingConfig_FREQ_MIN = SamplingConfig{ /* .division = */ UINT16_MAX };
 
+struct DcSysTime {
+  uint64_t dc_sys_time;
+};
+constexpr const DcSysTime DcSysTime_ZERO = DcSysTime{ /* .dc_sys_time = */ 0 };
+
 } // namespace autd3::native_methods

@@ -208,8 +208,8 @@ bool AUTDDatagramSilencerFixedCompletionTimeIsValid(Duration intensity,
                                                     SamplingConfig config_phase);
 
 [[nodiscard]]
-bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(uint64_t intensity,
-                                                      uint64_t phase,
+bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(Duration intensity,
+                                                      Duration phase,
                                                       bool strict_mode,
                                                       SilencerTarget target);
 
@@ -260,7 +260,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] DatagramPtr AUTDDatagramWithTimeout(DatagramPtr d, OptionDuration timeout);
 
-[[nodiscard]] uint64_t AUTDDcSysTimeNow();
+[[nodiscard]] DcSysTime AUTDDcSysTimeNow();
 
 [[nodiscard]] DebugTypeWrap AUTDDebugTypeNone();
 
@@ -286,7 +286,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] DebugTypeWrap AUTDDebugTypeDirect(bool value);
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeSysTimeEq(Duration sys_time);
+[[nodiscard]] DebugTypeWrap AUTDDebugTypeSysTimeEq(DcSysTime sys_time);
 
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
 
@@ -318,7 +318,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeSyncIdx();
 
-[[nodiscard]] TransitionModeWrap AUTDTransitionModeSysTime(Duration sys_time);
+[[nodiscard]] TransitionModeWrap AUTDTransitionModeSysTime(DcSysTime sys_time);
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeGPIO(GPIOIn gpio);
 

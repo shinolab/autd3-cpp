@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 
 import argparse
-import os
 import pathlib
 import platform
 import re
@@ -17,33 +16,21 @@ from tools.autd3_build_utils.autd3_build_utils import (
     info,
     remove,
     run_command,
+    substitute_in_file,
     working_dir,
 )
 
 
 class Config(BaseConfig):
     _platform: str
-    release: bool
     no_examples: bool
     cmake_extra: list[str] | None
-    arch: str
 
     def __init__(self, args) -> None:  # noqa: ANN001
-        super().__init__()
+        super().__init__(args)
 
-        self.release = getattr(args, "release", False)
         self.no_examples = getattr(args, "no_examples", False)
         self.cmake_extra = args.cmake_extra.split(" ") if hasattr(args, "cmake_extra") and args.cmake_extra is not None else None
-
-        arch: str = getattr(args, "arch", None)
-        if arch:
-            self.arch = arch
-        elif platform.machine().lower() in ["amd64", "x86_64"]:
-            self.arch = "x64"
-        elif platform.machine().lower() in ["arm64", "aarch64"]:
-            self.arch = "arm64"
-        else:
-            err(f"Unsupported platform: {platform.machine()}")
 
 
 def should_update_lib(config: Config, version: str) -> bool:
@@ -52,13 +39,10 @@ def should_update_lib(config: Config, version: str) -> bool:
             return True
     elif not pathlib.Path("lib/libautd3capi.a").exists():
         return True
-
     if not pathlib.Path("VERSION").exists():
         return True
-
     with pathlib.Path("VERSION").open() as f:
         old_version = f.read().strip()
-
     return old_version != version
 
 
@@ -70,7 +54,6 @@ def copy_lib(config: Config) -> None:
 
     if not should_update_lib(config, version):
         return
-
     if config.is_windows():
         if config.arch == "x64":
             url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}/autd3-v{version}-win-x64-static.zip"
@@ -95,16 +78,13 @@ def copy_lib(config: Config) -> None:
             tar.extractall(filter="fully_trusted")
         remove("tmp.tar.gz")
     remove("bin")
-
     with pathlib.Path("VERSION").open("w") as f:
         f.write(version)
 
 
 def cpp_build(args) -> None:  # noqa: ANN001
     config = Config(args)
-
     copy_lib(config)
-
     if not config.no_examples:
         info("Building examples...")
         with working_dir("examples"):
@@ -113,9 +93,8 @@ def cpp_build(args) -> None:  # noqa: ANN001
                 command = ["cmake", "..", "-DAUTD_LOCAL_TEST=ON"]
                 if config.cmake_extra is not None:
                     command.extend(config.cmake_extra)
-                if config.is_windows() and config.arch == "arm64":
-                    command.append("-A")
-                    command.append("ARM64")
+                if config.is_windows() and config.arch == "aarch64":
+                    command.extend(["-A", "ARM64"])
                 if config.is_windows() and hasattr(args, "vs") and args.vs is not None:
                     if args.vs == "2022":
                         command.append("-GVisual Studio 17 2022")
@@ -125,15 +104,13 @@ def cpp_build(args) -> None:  # noqa: ANN001
                 run_command(command)
                 command = ["cmake", "--build", "."]
                 if config.release:
-                    command.append("--config")
-                    command.append("Release")
+                    command.extend(["--config", "Release"])
                 run_command(command)
 
 
 def cpp_test(args) -> None:  # noqa: ANN001
     args.no_examples = True
     cpp_build(args)
-
     config = Config(args)
     with working_dir("tests"):
         pathlib.Path("build").mkdir(exist_ok=True)
@@ -144,13 +121,10 @@ def cpp_test(args) -> None:  # noqa: ANN001
             run_command(command)
             command = ["cmake", "--build", ".", "--parallel", "8"]
             if config.release:
-                command.append("--config")
-                command.append("Release")
+                command.extend(["--config", "Release"])
             if config.is_windows():
-                command.append("--")
-                command.append("/maxcpucount:8")
+                command.extend(["--", "/maxcpucount:8"])
             run_command(command)
-
             target_dir = "."
             if config.is_windows():
                 target_dir = "Release" if config.release else "Debug"
@@ -307,85 +281,29 @@ def cpp_cov(args) -> None:  # noqa: ANN001
             run_command(command)
             command = ["cmake", "--build", ".", "--parallel", "8"]
             if config.release:
-                command.append("--config")
-                command.append("Release")
+                command.extend(["--config", "Release"])
             run_command(command)
-
             with working_dir("CMakeFiles/test_autd3.dir"):
-                run_command(
-                    [
-                        "lcov",
-                        "-c",
-                        "-i",
-                        "-d",
-                        ".",
-                        "-o",
-                        "coverage.baseline",
-                    ],
-                )
-
+                run_command(["lcov", "-c", "-i", "-d", ".", "-o", "coverage.baseline"])
             target_dir = "."
             if config.is_windows():
                 target_dir = "Release" if config.release else "Debug"
             run_command([f"{target_dir}/test_autd3{config.exe_ext()}"])
-
             with working_dir("CMakeFiles/test_autd3.dir"):
+                run_command(["lcov", "-c", "-d", ".", "-o", "coverage.out"])
+                run_command(["lcov", "-a", "coverage.baseline", "-a", "coverage.out", "-o", "coverage.raw.info"])
                 run_command(
-                    [
-                        "lcov",
-                        "-c",
-                        "-d",
-                        ".",
-                        "-o",
-                        "coverage.out",
-                    ],
-                )
-                run_command(
-                    [
-                        "lcov",
-                        "-a",
-                        "coverage.baseline",
-                        "-a",
-                        "coverage.out",
-                        "-o",
-                        "coverage.raw.info",
-                    ],
-                )
-
-                run_command(
-                    [
-                        "lcov",
-                        "-r",
-                        "coverage.raw.info",
-                        "*/_deps/*",
-                        "*/usr/*",
-                        "*/tests/*",
-                        "--ignore-errors",
-                        "unused",
-                        "-o",
-                        "coverage.info",
-                    ],
+                    ["lcov", "-r", "coverage.raw.info", "*/_deps/*", "*/usr/*", "*/tests/*", "--ignore-errors", "unused", "-o", "coverage.info"]
                 )
                 if args.html:
-                    run_command(
-                        [
-                            "genhtml",
-                            "-o",
-                            "html",
-                            "--num-spaces",
-                            "4",
-                            "coverage.info",
-                        ],
-                    )
+                    run_command(["genhtml", "-o", "html", "--num-spaces", "4", "coverage.info"])
 
 
 def cpp_run(args) -> None:  # noqa: ANN001
     args.no_examples = False
     cpp_build(args)
-
     config = Config(args)
     target_dir = ("Release" if args.release else "Debug") if config.is_windows() else "."
-
     run_command([f"examples/build/{target_dir}/{args.target}{config.exe_ext()}"])
 
 
@@ -398,42 +316,34 @@ def cpp_clear(_) -> None:  # noqa: ANN001
 
 def util_update_ver(args) -> None:  # noqa: ANN001
     version = args.version
-
-    f = pathlib.Path("CMakeLists.txt")
-    content = f.read_text()
     version_cmake = version.split(".")
     if version_cmake[2].endswith("-rc"):
         version_cmake[2] = version_cmake[2].replace("-rc", "")
         version_cmake = ".".join(version_cmake[:3])
     else:
         version_cmake = ".".join(version_cmake)
-    content = re.sub(
-        r"^project\(autd3 VERSION (.*)\)",
-        f"project(autd3 VERSION {version_cmake})",
-        content,
-        flags=re.MULTILINE,
-    )
-    f.write_text(content)
 
-    f = pathlib.Path("include/autd3.hpp")
-    content = f.read_text()
-    content = re.sub(
-        r'^static inline std::string version = "(.*)";',
-        f'static inline std::string version = "{version}";',
-        content,
+    substitute_in_file(
+        "CMakeLists.txt",
+        [
+            (r"^project\(autd3 VERSION (.*)\)", f"project(autd3 VERSION {version_cmake})"),
+        ],
         flags=re.MULTILINE,
     )
-    f.write_text(content)
-
-    f = pathlib.Path("examples/CMakeLists.txt")
-    content = f.read_text()
-    content = re.sub(
-        r"v.*/autd3-v.*-(win|macos|linux)",
-        rf"v{version}/autd3-v{version}-\1",
-        content,
+    substitute_in_file(
+        "include/autd3.hpp",
+        [
+            (r'^static inline std::string version = "(.*)";', f'static inline std::string version = "{version}";'),
+        ],
         flags=re.MULTILINE,
     )
-    f.write_text(content)
+    substitute_in_file(
+        "examples/CMakeLists.txt",
+        [
+            (r"v.*/autd3-v.*-(win|macos|linux)", rf"v{version}/autd3-v{version}-\1"),
+        ],
+        flags=re.MULTILINE,
+    )
 
 
 def util_gen_wrapper(_) -> None:  # noqa: ANN001
