@@ -98,22 +98,22 @@ ControllerBuilderPtr AUTDControllerBuilder(const Vector3 *pos,
                                            const Quaternion *rot,
                                            uint16_t len,
                                            uint16_t fallback_parallel_threshold,
-                                           uint64_t fallback_timeout,
-                                           uint64_t send_interval_ns,
-                                           uint64_t receive_interval_ns,
+                                           Duration fallback_timeout,
+                                           Duration send_interval,
+                                           Duration receive_interval,
                                            TimerStrategyWrap timer_strategy);
 
 [[nodiscard]]
 bool AUTDControllerBuilderIsDefault(uint16_t fallback_parallel_threshold,
-                                    uint64_t fallback_timeout,
-                                    uint64_t send_interval_ns,
-                                    uint64_t receive_interval_ns,
+                                    Duration fallback_timeout,
+                                    Duration send_interval_ns,
+                                    Duration receive_interval,
                                     TimerStrategyWrap timer_strategy);
 
 [[nodiscard]]
 FfiFutureResultController AUTDControllerOpen(ControllerBuilderPtr builder,
                                                LinkBuilderPtr link_builder,
-                                               int64_t timeout_ns);
+                                               OptionDuration timeout);
 
 [[nodiscard]]
 LocalFfiFutureResultStatus AUTDControllerGroup(ControllerPtr cnt,
@@ -195,14 +195,14 @@ bool AUTDDatagramSilencerFixedUpdateRateIsValid(uint16_t intensity,
                                                 SamplingConfig config_phase);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromCompletionTime(uint64_t intensity,
-                                                   uint64_t phase,
+DatagramPtr AUTDDatagramSilencerFromCompletionTime(Duration intensity,
+                                                   Duration phase,
                                                    bool strict_mode,
                                                    SilencerTarget target);
 
 [[nodiscard]]
-bool AUTDDatagramSilencerFixedCompletionTimeIsValid(uint64_t intensity,
-                                                    uint64_t phase,
+bool AUTDDatagramSilencerFixedCompletionTimeIsValid(Duration intensity,
+                                                    Duration phase,
                                                     bool strict_mode,
                                                     SamplingConfig config_intensity,
                                                     SamplingConfig config_phase);
@@ -215,11 +215,11 @@ bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(uint64_t intensity,
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromFreq(float f, uint16_t n);
 
-[[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromPeriod(uint64_t p, uint16_t n);
+[[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromPeriod(Duration p, uint16_t n);
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromFreqNearest(float f, uint16_t n);
 
-[[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromPeriodNearest(uint64_t p, uint16_t n);
+[[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromPeriodNearest(Duration p, uint16_t n);
 
 [[nodiscard]] float AUTDSTMFreq(SamplingConfig c, uint16_t n);
 
@@ -258,7 +258,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] DatagramPtr AUTDDatagramWithParallelThreshold(DatagramPtr d, int32_t threshold);
 
-[[nodiscard]] DatagramPtr AUTDDatagramWithTimeout(DatagramPtr d, int64_t timeout_ns);
+[[nodiscard]] DatagramPtr AUTDDatagramWithTimeout(DatagramPtr d, OptionDuration timeout);
 
 [[nodiscard]] uint64_t AUTDDcSysTimeNow();
 
@@ -286,7 +286,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] DebugTypeWrap AUTDDebugTypeDirect(bool value);
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeSysTimeEq(uint64_t sys_time);
+[[nodiscard]] DebugTypeWrap AUTDDebugTypeSysTimeEq(Duration sys_time);
 
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
 
@@ -306,9 +306,9 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] SamplingConfig AUTDSamplingConfigFromFreqNearest(float f);
 
-[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromPeriod(uint64_t p);
+[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromPeriod(Duration p);
 
-[[nodiscard]] SamplingConfig AUTDSamplingConfigFromPeriodNearest(uint64_t p);
+[[nodiscard]] SamplingConfig AUTDSamplingConfigFromPeriodNearest(Duration p);
 
 [[nodiscard]] uint16_t AUTDSamplingConfigDivision(SamplingConfig c);
 
@@ -318,7 +318,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeSyncIdx();
 
-[[nodiscard]] TransitionModeWrap AUTDTransitionModeSysTime(uint64_t sys_time);
+[[nodiscard]] TransitionModeWrap AUTDTransitionModeSysTime(Duration sys_time);
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeGPIO(GPIOIn gpio);
 

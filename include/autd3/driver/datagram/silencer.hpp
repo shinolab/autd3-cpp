@@ -31,14 +31,13 @@ struct FixedCompletionTime {
  private:
   template <with_samplng_config C>
   AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool strict_mode) const noexcept {
-    return native_methods::AUTDDatagramSilencerFixedCompletionTimeIsValid(
-        static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(intensity).count()),
-        static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(phase).count()), strict_mode,
-        c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)), c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+    return native_methods::AUTDDatagramSilencerFixedCompletionTimeIsValid(intensity, phase, strict_mode,
+                                                                          c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
+                                                                          c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr(const bool strict_mode, const native_methods::SilencerTarget target) const noexcept {
-    return AUTDDatagramSilencerFromCompletionTime(intensity.count(), phase.count(), strict_mode, target);
+    return AUTDDatagramSilencerFromCompletionTime(intensity, phase, strict_mode, target);
   }
 };
 

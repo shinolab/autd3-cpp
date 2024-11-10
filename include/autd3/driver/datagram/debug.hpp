@@ -25,7 +25,7 @@ struct DebugType {
   AUTD3_API static native_methods::DebugTypeWrap StmIdx(const uint16_t idx) { return native_methods::AUTDDebugTypeStmIdx(idx); }
   AUTD3_API static inline const native_methods::DebugTypeWrap IsStmMode = native_methods::AUTDDebugTypeIsStmMode();
   AUTD3_API static native_methods::DebugTypeWrap SysTimeEq(const DcSysTime sys_time) {
-    return native_methods::AUTDDebugTypeSysTimeEq(sys_time.sys_time());
+    return native_methods::AUTDDebugTypeSysTimeEq(native_methods::Duration(sys_time.sys_time()));
   }
   AUTD3_API static native_methods::DebugTypeWrap PwmOut(const geometry::Transducer* tr) { return AUTDDebugTypePwmOut(tr->ptr()); }
   AUTD3_API static native_methods::DebugTypeWrap Direct(const bool v) { return native_methods::AUTDDebugTypeDirect(v); }

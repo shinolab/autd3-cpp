@@ -24,8 +24,8 @@ class ControllerBuilder {
   AUTD3_DEF_PARAM(ControllerBuilder, native_methods::TimerStrategyWrap, timer_strategy)
 
   template <driver::link_builder B, typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] Controller<typename B::Link> open_with_timeout(const B& link_builder, const std::chrono::duration<Rep, Period> timeout) {
-    const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
+  AUTD3_API [[nodiscard]] Controller<typename B::Link> open_with_timeout(const B& link_builder,
+                                                                         const std::optional<std::chrono::duration<Rep, Period>> timeout) {
     auto runtime = native_methods::AUTDCreateRuntime();
     auto handle = AUTDGetRuntimeHandle(runtime);
 
@@ -38,24 +38,20 @@ class ControllerBuilder {
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _fallback_parallel_threshold,
-                                               static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_fallback_timeout).count()),
-                                               static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_send_interval).count()),
-                                               static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_receive_interval).count()),
-                                               _timer_strategy);
-    auto ptr = validate(AUTDWaitResultController(handle, AUTDControllerOpen(builder, link_builder.ptr(), timeout_ns)));
+                                               _fallback_timeout, _send_interval, _receive_interval, _timer_strategy);
+    auto ptr = validate(AUTDWaitResultController(handle, AUTDControllerOpen(builder, link_builder.ptr(), timeout)));
     return Controller<typename B::Link>{AUTDGeometry(ptr), runtime, handle, ptr, link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
   }
 
   template <driver::link_builder B>
   AUTD3_API [[nodiscard]] Controller<typename B::Link> open(const B& link_builder) {
-    return open_with_timeout(link_builder, std::chrono::nanoseconds(-1));
+    return open_with_timeout<B, uint64_t, std::nano>(link_builder, std::nullopt);
   }
 
 #ifdef AUTD3_ASYNC_API
   template <driver::link_builder B, typename Rep, typename Period>
-  AUTD3_API [[nodiscard]] coro::task<Controller<typename B::Link>> open_with_timeout_async(const B& link_builder,
-                                                                                           const std::chrono::duration<Rep, Period> timeout) {
-    const int64_t timeout_ns = std::chrono::duration_cast<std::chrono::nanoseconds>(timeout).count();
+  AUTD3_API [[nodiscard]] coro::task<Controller<typename B::Link>> open_with_timeout_async(
+      const B& link_builder, const std::optional<std::chrono::duration<Rep, Period>> timeout) {
     auto runtime = native_methods::AUTDCreateRuntime();
     auto handle = native_methods::AUTDGetRuntimeHandle(runtime);
 
@@ -68,12 +64,9 @@ class ControllerBuilder {
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _fallback_parallel_threshold,
-                                               static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_fallback_timeout).count()),
-                                               static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_send_interval).count()),
-                                               static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(_receive_interval).count()),
-                                               _timer_strategy);
+                                               _fallback_timeout, _send_interval, _receive_interval, _timer_strategy);
 
-    auto future = AUTDControllerOpen(builder, link_builder.ptr(), timeout_ns);
+    auto future = AUTDControllerOpen(builder, link_builder.ptr(), timeout);
     const auto result = co_await wait_future(handle, future);
     auto ptr = validate(result);
     co_return Controller<typename B::Link>{AUTDGeometry(ptr), runtime, handle, ptr,
@@ -82,7 +75,7 @@ class ControllerBuilder {
 
   template <driver::link_builder B>
   AUTD3_API [[nodiscard]] coro::task<Controller<typename B::Link>> open_async(const B& link_builder) {
-    auto cnt = co_await open_with_timeout_async(link_builder, std::chrono::nanoseconds(-1));
+    auto cnt = co_await open_with_timeout_async<B, uint64_t, std::nano>(link_builder, std::nullopt);
     co_return cnt;
   }
 #endif
