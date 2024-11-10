@@ -11,9 +11,7 @@ namespace autd3::driver {
 template <class D>
 class DatagramWithTimeout final {
  public:
-  DatagramWithTimeout(D datagram, const std::optional<std::chrono::nanoseconds> timeout)
-      : _datagram(std::move(datagram)),
-        _timeout_ns(timeout.has_value() ? static_cast<int64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(timeout.value()).count()) : -1) {}
+  DatagramWithTimeout(D datagram, const std::optional<std::chrono::nanoseconds> timeout) : _datagram(std::move(datagram)), _timeout(timeout) {}
   ~DatagramWithTimeout() = default;
   DatagramWithTimeout(const DatagramWithTimeout& v) noexcept = default;
   DatagramWithTimeout& operator=(const DatagramWithTimeout& obj) = default;
@@ -21,12 +19,12 @@ class DatagramWithTimeout final {
   DatagramWithTimeout& operator=(DatagramWithTimeout&& obj) = default;
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
     const auto ptr = _datagram.ptr(g);
-    return native_methods::AUTDDatagramWithTimeout(ptr, _timeout_ns);
+    return native_methods::AUTDDatagramWithTimeout(ptr, _timeout);
   }
 
  private:
   D _datagram;
-  int64_t _timeout_ns;
+  std::optional<std::chrono::nanoseconds> _timeout;
 };
 
 template <class D>
