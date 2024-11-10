@@ -22,8 +22,7 @@ struct STMSamplingConfig final {
 
   template <typename Rep, typename P>
   static STMSamplingConfig nearest(const std::chrono::duration<Rep, P> period, const uint16_t n) {
-    return STMSamplingConfig{
-        validate(native_methods::AUTDSTMConfigFromPeriodNearest(std::chrono::duration_cast<std::chrono::nanoseconds>(period).count(), n)), n};
+    return STMSamplingConfig{validate(native_methods::AUTDSTMConfigFromPeriodNearest(period, n)), n};
   }
 
   explicit STMSamplingConfig(const driver::SamplingConfig config, const uint16_t n) : _inner(config), _n(n) {}
@@ -31,7 +30,7 @@ struct STMSamplingConfig final {
       : _inner(validate(native_methods::AUTDSTMConfigFromFreq(freq.hz(), n))), _n(n) {}
   template <typename Rep, typename P>
   explicit STMSamplingConfig(const std::chrono::duration<Rep, P> period, const uint16_t n)
-      : _inner(validate(native_methods::AUTDSTMConfigFromPeriod(std::chrono::duration_cast<std::chrono::nanoseconds>(period).count(), n))), _n(n) {}
+      : _inner(validate(native_methods::AUTDSTMConfigFromPeriod(period, n))), _n(n) {}
 
   explicit STMSamplingConfig(const STMSamplingConfig config, const uint16_t n) : _inner(config._inner), _n(n) {}
 
