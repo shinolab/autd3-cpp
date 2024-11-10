@@ -43,7 +43,7 @@ struct Quaternion {
 struct Duration {
   template <typename Rep, typename Period>
   Duration(const std::chrono::duration<Rep, Period>& d) : _ns(std::chrono::duration_cast<std::chrono::nanoseconds>(d).count()) {}
-  Duration(uint64_t ns) : _ns(ns) {}
+  explicit Duration(uint64_t ns) : _ns(ns) {}
 
  private:
   uint64_t _ns;
