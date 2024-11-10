@@ -10,22 +10,24 @@ class DcSysTime final {
  public:
   AUTD3_API static DcSysTime now() { return DcSysTime{native_methods::AUTDDcSysTimeNow()}; }
 
-  AUTD3_API [[nodiscard]] constexpr uint64_t sys_time() const { return _dc_sys_time; }
+  AUTD3_API [[nodiscard]] constexpr uint64_t sys_time() const { return _inner.dc_sys_time; }
 
   template <typename Rep, typename Period>
   AUTD3_API DcSysTime operator+(const std::chrono::duration<Rep, Period> &rhs) {
-    return DcSysTime{_dc_sys_time + std::chrono::duration_cast<std::chrono::nanoseconds>(rhs).count()};
+    return DcSysTime{native_methods::DcSysTime{_inner.dc_sys_time + std::chrono::duration_cast<std::chrono::nanoseconds>(rhs).count()}};
   }
 
   template <typename Rep, typename Period>
   AUTD3_API DcSysTime operator-(const std::chrono::duration<Rep, Period> &rhs) {
-    return DcSysTime{_dc_sys_time - std::chrono::duration_cast<std::chrono::nanoseconds>(rhs).count()};
+    return DcSysTime{native_methods::DcSysTime{_inner.dc_sys_time - std::chrono::duration_cast<std::chrono::nanoseconds>(rhs).count()}};
   }
 
- private:
-  AUTD3_API explicit constexpr DcSysTime(const uint64_t sys_time) : _dc_sys_time(sys_time) {}
+  operator native_methods::DcSysTime() const { return _inner; }
 
-  uint64_t _dc_sys_time;
+ private:
+  AUTD3_API explicit constexpr DcSysTime(const native_methods::DcSysTime inner) : _inner(inner) {}
+
+  native_methods::DcSysTime _inner;
 };
 
 }  // namespace autd3::driver

@@ -139,9 +139,15 @@ struct HandlePtr {
   const void *_0;
 };
 
+union TransitionModeValue {
+  uint64_t null;
+  DcSysTime sys_time;
+  GPIOIn gpio_in;
+};
+
 struct TransitionModeWrap {
   TransitionModeTag tag;
-  uint64_t value;
+  TransitionModeValue value;
 };
 
 struct TransducerPtr {
@@ -160,9 +166,16 @@ struct LinkPtr {
   const void *_0;
 };
 
+union DebugTypeValue {
+  uint64_t null;
+  DcSysTime sys_time;
+  uint16_t idx;
+  bool direct;
+};
+
 struct DebugTypeWrap {
   DebugTypeTag ty;
-  uint64_t value;
+  DebugTypeValue value;
 };
 
 struct FociSTMPtr {
