@@ -202,6 +202,16 @@ struct ControllerBuilderPtr {
   const void *_0;
 };
 
+struct Duration {
+  uint64_t nanos;
+};
+
+struct OptionDuration {
+  bool has_value;
+  Duration value;
+};
+constexpr const OptionDuration OptionDuration_NONE = OptionDuration{ /* .has_value = */ false, /* .value = */ Duration{ /* .nanos = */ 0 } };
+
 
 
 } // namespace autd3::native_methods

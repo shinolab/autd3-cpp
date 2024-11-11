@@ -223,7 +223,7 @@ bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(Duration intensity,
 
 [[nodiscard]] float AUTDSTMFreq(SamplingConfig c, uint16_t n);
 
-[[nodiscard]] uint64_t AUTDSTMPeriod(SamplingConfig c, uint16_t n);
+[[nodiscard]] Duration AUTDSTMPeriod(SamplingConfig c, uint16_t n);
 
 [[nodiscard]]
 ResultFociSTM AUTDSTMFoci(SamplingConfig config,
@@ -314,7 +314,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
 
 [[nodiscard]] float AUTDSamplingConfigFreq(SamplingConfig c);
 
-[[nodiscard]] uint64_t AUTDSamplingConfigPeriod(SamplingConfig c);
+[[nodiscard]] Duration AUTDSamplingConfigPeriod(SamplingConfig c);
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeSyncIdx();
 
@@ -448,7 +448,7 @@ void AUTDLinkAuditBreakDown(LinkPtr audit);
 
 void AUTDLinkAuditRepair(LinkPtr audit);
 
-[[nodiscard]] int64_t AUTDLinkAuditLastTimeout(LinkPtr audit);
+[[nodiscard]] OptionDuration AUTDLinkAuditLastTimeout(LinkPtr audit);
 
 [[nodiscard]] int64_t AUTDLinkAuditLastParallelThreshold(LinkPtr audit);
 
@@ -473,10 +473,10 @@ void AUTDLinkAuditFpgaDeassertThermalSensor(LinkPtr audit, uint16_t idx);
 [[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerUpdateRatePhase(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]]
-uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
+Duration AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
                                                            uint16_t idx);
 
-[[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsPhase(LinkPtr audit, uint16_t idx);
+[[nodiscard]] Duration AUTDLinkAuditFpgaSilencerCompletionStepsPhase(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]] bool AUTDLinkAuditFpgaSilencerFixedCompletionStepsMode(LinkPtr audit, uint16_t idx);
 

@@ -13,7 +13,7 @@ struct STMSamplingConfig final {
   operator native_methods::SamplingConfig() const { return _inner; }
 
   [[nodiscard]] Freq<float> freq() const { return AUTDSTMFreq(_inner, _n) * driver::Hz; }
-  [[nodiscard]] std::chrono::nanoseconds period() const { return std::chrono::nanoseconds(AUTDSTMPeriod(_inner, _n)); }
+  [[nodiscard]] std::chrono::nanoseconds period() const { return native_methods::from_duration(AUTDSTMPeriod(_inner, _n)); }
   driver::SamplingConfig sampling_config() const { return driver::SamplingConfig{_inner}; }
 
   static STMSamplingConfig nearest(const Freq<float> freq, const uint16_t n) {

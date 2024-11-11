@@ -1,5 +1,6 @@
 #pragma once
 
+#include <autd3/native_methods/utils.hpp>
 #include <chrono>
 #include <optional>
 
@@ -19,7 +20,7 @@ class DatagramWithTimeout final {
   DatagramWithTimeout& operator=(DatagramWithTimeout&& obj) = default;
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& g) const {
     const auto ptr = _datagram.ptr(g);
-    return native_methods::AUTDDatagramWithTimeout(ptr, _timeout);
+    return native_methods::AUTDDatagramWithTimeout(ptr, native_methods::to_option_duration(_timeout));
   }
 
  private:

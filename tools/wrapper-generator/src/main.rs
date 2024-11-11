@@ -65,6 +65,8 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "ResultGainSTM".to_string(),
             "ControllerBuilderPtr".to_string(),
             "DcSysTime".to_string(),
+            "Duration".to_string(),
+            "OptionDuration".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]
