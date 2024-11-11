@@ -14,7 +14,7 @@ struct SamplingConfig final {
   }
   template <typename Rep, typename P>
   static SamplingConfig nearest(const std::chrono::duration<Rep, P> period) noexcept {
-    return SamplingConfig(native_methods::AUTDSamplingConfigFromPeriodNearest(period));
+    return SamplingConfig(native_methods::AUTDSamplingConfigFromPeriodNearest(native_methods::to_duration(period)));
   }
 
   operator native_methods::SamplingConfig() const { return _inner; }
@@ -26,7 +26,8 @@ struct SamplingConfig final {
   SamplingConfig(const Freq<uint32_t> f) : _inner(validate(native_methods::AUTDSamplingConfigFromFreq(f.hz()))) {}
   SamplingConfig(const Freq<float> f) : _inner(validate(native_methods::AUTDSamplingConfigFromFreqF(f.hz()))) {}
   template <typename Rep, typename P>
-  SamplingConfig(const std::chrono::duration<Rep, P> period) : _inner(validate(native_methods::AUTDSamplingConfigFromPeriod(period))) {}
+  SamplingConfig(const std::chrono::duration<Rep, P> period)
+      : _inner(validate(native_methods::AUTDSamplingConfigFromPeriod(native_methods::to_duration(period)))) {}
   explicit SamplingConfig(const uint16_t div) : _inner(validate(native_methods::AUTDSamplingConfigFromDivision(div))) {}
   explicit SamplingConfig(const native_methods::SamplingConfig inner) : _inner(inner) {}
 

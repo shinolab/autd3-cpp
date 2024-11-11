@@ -69,7 +69,7 @@ class ControllerBuilder {
                                                native_methods::to_duration(_fallback_timeout), native_methods::to_duration(_send_interval),
                                                native_methods::to_duration(_receive_interval), _timer_strategy);
 
-    auto future = AUTDControllerOpen(builder, link_builder.ptr(), timeout);
+    auto future = AUTDControllerOpen(builder, link_builder.ptr(), native_methods::to_option_duration(timeout));
     const auto result = co_await wait_future(handle, future);
     auto ptr = validate(result);
     co_return Controller<typename B::Link>{AUTDGeometry(ptr), runtime, handle, ptr,
