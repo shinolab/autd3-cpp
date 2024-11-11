@@ -12,8 +12,9 @@
 TEST(Controller, ControllerIsDefault) {
   auto autd = autd3::controller::ControllerBuilder(std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero())});
 
-  ASSERT_TRUE(autd3::native_methods::AUTDControllerBuilderIsDefault(autd.fallback_parallel_threshold(), autd.fallback_timeout(), autd.send_interval(),
-                                                                    autd.receive_interval(), autd.timer_strategy()));
+  ASSERT_TRUE(autd3::native_methods::AUTDControllerBuilderIsDefault(
+      autd.fallback_parallel_threshold(), autd3::native_methods::to_duration(autd.fallback_timeout()),
+      autd3::native_methods::to_duration(autd.send_interval()), autd3::native_methods::to_duration(autd.receive_interval()), autd.timer_strategy()));
 }
 
 TEST(Controller, ControllerClose) {

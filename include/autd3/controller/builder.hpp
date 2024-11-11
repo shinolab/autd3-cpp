@@ -38,8 +38,10 @@ class ControllerBuilder {
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _fallback_parallel_threshold,
-                                               _fallback_timeout, _send_interval, _receive_interval, _timer_strategy);
-    auto ptr = validate(AUTDWaitResultController(handle, AUTDControllerOpen(builder, link_builder.ptr(), timeout)));
+                                               native_methods::to_duration(_fallback_timeout), native_methods::to_duration(_send_interval),
+                                               native_methods::to_duration(_receive_interval), _timer_strategy);
+    auto ptr =
+        validate(AUTDWaitResultController(handle, AUTDControllerOpen(builder, link_builder.ptr(), native_methods::to_option_duration(timeout))));
     return Controller<typename B::Link>{AUTDGeometry(ptr), runtime, handle, ptr, link_builder.resolve_link(handle, native_methods::AUTDLinkGet(ptr))};
   }
 
@@ -64,7 +66,8 @@ class ControllerBuilder {
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _fallback_parallel_threshold,
-                                               _fallback_timeout, _send_interval, _receive_interval, _timer_strategy);
+                                               native_methods::to_duration(_fallback_timeout), native_methods::to_duration(_send_interval),
+                                               native_methods::to_duration(_receive_interval), _timer_strategy);
 
     auto future = AUTDControllerOpen(builder, link_builder.ptr(), timeout);
     const auto result = co_await wait_future(handle, future);

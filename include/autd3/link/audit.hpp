@@ -6,6 +6,7 @@
 #include <optional>
 
 #include "autd3/native_methods.hpp"
+#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::controller {
 class ControllerBuilder;
@@ -51,8 +52,7 @@ class Audit final {
   }
 
   [[nodiscard]] std::optional<std::chrono::nanoseconds> last_timeout() const {
-    const auto timeout = AUTDLinkAuditLastTimeout(_ptr);
-    return timeout < 0 ? std::nullopt : std::make_optional(std::chrono::nanoseconds(timeout));
+    return native_methods::from_option_duration(AUTDLinkAuditLastTimeout(_ptr));
   }
 
   [[nodiscard]] uint16_t silencer_update_rate_intensity(const size_t idx) const {
@@ -62,12 +62,12 @@ class Audit final {
     return AUTDLinkAuditFpgaSilencerUpdateRatePhase(_ptr, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] uint16_t silencer_completion_steps_intensity(const size_t idx) const {
-    return AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(_ptr, static_cast<uint16_t>(idx));
+  [[nodiscard]] std::chrono::nanoseconds silencer_completion_steps_intensity(const size_t idx) const {
+    return native_methods::from_duration(AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(_ptr, static_cast<uint16_t>(idx)));
   }
 
-  [[nodiscard]] uint16_t silencer_completion_steps_phase(const size_t idx) const {
-    return AUTDLinkAuditFpgaSilencerCompletionStepsPhase(_ptr, static_cast<uint16_t>(idx));
+  [[nodiscard]] std::chrono::nanoseconds silencer_completion_steps_phase(const size_t idx) const {
+    return native_methods::from_duration(AUTDLinkAuditFpgaSilencerCompletionStepsPhase(_ptr, static_cast<uint16_t>(idx)));
   }
 
   [[nodiscard]] bool silencer_fixed_completion_steps_mode(const size_t idx) const {

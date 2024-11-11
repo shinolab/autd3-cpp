@@ -1,5 +1,8 @@
 #pragma once
 
+#include <chrono>
+#include <optional>
+
 #include "autd3/exception.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -125,6 +128,22 @@ constexpr T validate(ResultStatus res) {
   return static_cast<T>(result);
 }
 
+template <typename Rep, typename Period>
+inline Duration to_duration(const std::chrono::duration<Rep, Period>& d) {
+  return Duration{static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(d).count())};
+}
+
+inline std::chrono::nanoseconds from_duration(const Duration& d) { return std::chrono::nanoseconds(d.nanos); }
+
+template <typename Rep, typename Period>
+inline OptionDuration to_option_duration(const std::optional<std::chrono::duration<Rep, Period>>& d) {
+  return OptionDuration{d.has_value(), to_duration(d.value_or(std::chrono::nanoseconds(0)))};
+}
+
+inline std::optional<std::chrono::nanoseconds> from_option_duration(const OptionDuration& d) {
+  return d.has_value ? std::make_optional(from_duration(d.value)) : std::nullopt;
+}
+
 #ifdef AUTD3_ASYNC_API
 inline coro::task<ResultStatus> wait_future(const HandlePtr handle, FfiFutureResultStatus future) {
   co_return AUTDWaitResultStatus(handle, std::move(future));
@@ -145,6 +164,7 @@ inline coro::task<ResultFirmwareVersionList> wait_future(const HandlePtr handle,
 inline coro::task<ResultController> wait_future(const HandlePtr handle, FfiFutureResultController future) {
   co_return AUTDWaitResultController(handle, std::move(future));
 }
+
 #endif
 
 }  // namespace autd3::native_methods

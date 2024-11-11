@@ -21,7 +21,7 @@ struct SamplingConfig final {
 
   [[nodiscard]] uint32_t division() const { return AUTDSamplingConfigDivision(_inner); }
   [[nodiscard]] Freq<float> freq() const { return AUTDSamplingConfigFreq(_inner) * driver::Hz; }
-  [[nodiscard]] std::chrono::nanoseconds period() const { return std::chrono::nanoseconds(AUTDSamplingConfigPeriod(_inner)); }
+  [[nodiscard]] std::chrono::nanoseconds period() const { return native_methods::from_duration(AUTDSamplingConfigPeriod(_inner)); }
 
   SamplingConfig(const Freq<uint32_t> f) : _inner(validate(native_methods::AUTDSamplingConfigFromFreq(f.hz()))) {}
   SamplingConfig(const Freq<float> f) : _inner(validate(native_methods::AUTDSamplingConfigFromFreqF(f.hz()))) {}
