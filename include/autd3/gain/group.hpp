@@ -68,7 +68,7 @@ class Group final : public driver::Gain<Group<F>> {
       gain_ptrs.emplace_back(kv.second->gain_ptr(geometry));
     }
 
-    return AUTDGainGroup(map, gain_keys.data(), gain_ptrs.data(), static_cast<uint32_t>(gain_keys.size()));
+    return validate(AUTDGainGroup(map, gain_keys.data(), gain_ptrs.data(), static_cast<uint32_t>(gain_keys.size())));
   }
 
  private:

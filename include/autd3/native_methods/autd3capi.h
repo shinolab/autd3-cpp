@@ -97,15 +97,15 @@ void AUTDFirmwareLatest(char *latest);
 ControllerBuilderPtr AUTDControllerBuilder(const Vector3 *pos,
                                            const Quaternion *rot,
                                            uint16_t len,
-                                           uint16_t fallback_parallel_threshold,
-                                           Duration fallback_timeout,
+                                           uint16_t default_parallel_threshold,
+                                           Duration default_timeout,
                                            Duration send_interval,
                                            Duration receive_interval,
                                            TimerStrategyWrap timer_strategy);
 
 [[nodiscard]]
-bool AUTDControllerBuilderIsDefault(uint16_t fallback_parallel_threshold,
-                                    Duration fallback_timeout,
+bool AUTDControllerBuilderIsDefault(uint16_t default_parallel_threshold,
+                                    Duration default_timeout,
                                     Duration send_interval_ns,
                                     Duration receive_interval,
                                     TimerStrategyWrap timer_strategy);
@@ -366,10 +366,10 @@ GroupGainMapPtr AUTDGainGroupMapSet(GroupGainMapPtr map,
                                     const int32_t *map_data);
 
 [[nodiscard]]
-GainPtr AUTDGainGroup(GroupGainMapPtr map,
-                      const int32_t *keys_ptr,
-                      const GainPtr *values_ptr,
-                      uint32_t kv_len);
+ResultGain AUTDGainGroup(GroupGainMapPtr map,
+                         const int32_t *keys_ptr,
+                         const GainPtr *values_ptr,
+                         uint32_t kv_len);
 
 [[nodiscard]] GainPtr AUTDGainNull();
 

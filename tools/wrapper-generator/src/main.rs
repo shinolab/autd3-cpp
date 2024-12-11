@@ -38,6 +38,7 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "GainPtr".to_string(),
             "DynWindow".to_string(),
             "DynSincInterpolator".to_string(),
+            "ResultGain".to_string(),
             "ResultModulation".to_string(),
             "ResultSamplingConfig".to_string(),
             "TimerStrategyTag".to_string(),

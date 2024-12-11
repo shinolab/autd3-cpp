@@ -17,8 +17,8 @@ concept device_range = std::ranges::viewable_range<R> && std::same_as<std::range
 class ControllerBuilder {
  public:
   AUTD3_DEF_PROP(std::vector<driver::AUTD3>, devices)
-  AUTD3_DEF_PARAM(ControllerBuilder, uint16_t, fallback_parallel_threshold)
-  AUTD3_DEF_PARAM_CHRONO(ControllerBuilder, fallback_timeout)
+  AUTD3_DEF_PARAM(ControllerBuilder, uint16_t, default_parallel_threshold)
+  AUTD3_DEF_PARAM_CHRONO(ControllerBuilder, default_timeout)
   AUTD3_DEF_PARAM_CHRONO(ControllerBuilder, send_interval)
   AUTD3_DEF_PARAM_CHRONO(ControllerBuilder, receive_interval)
   AUTD3_DEF_PARAM(ControllerBuilder, native_methods::TimerStrategyWrap, timer_strategy)
@@ -37,8 +37,8 @@ class ControllerBuilder {
       pos.emplace_back(native_methods::Vector3{p.x(), p.y(), p.z()});
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
-    const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _fallback_parallel_threshold,
-                                               native_methods::to_duration(_fallback_timeout), native_methods::to_duration(_send_interval),
+    const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _default_parallel_threshold,
+                                               native_methods::to_duration(_default_timeout), native_methods::to_duration(_send_interval),
                                                native_methods::to_duration(_receive_interval), _timer_strategy);
     auto ptr =
         validate(AUTDWaitResultController(handle, AUTDControllerOpen(builder, link_builder.ptr(), native_methods::to_option_duration(timeout))));
@@ -65,8 +65,8 @@ class ControllerBuilder {
       pos.emplace_back(native_methods::Vector3{p.x(), p.y(), p.z()});
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
-    const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _fallback_parallel_threshold,
-                                               native_methods::to_duration(_fallback_timeout), native_methods::to_duration(_send_interval),
+    const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _default_parallel_threshold,
+                                               native_methods::to_duration(_default_timeout), native_methods::to_duration(_send_interval),
                                                native_methods::to_duration(_receive_interval), _timer_strategy);
 
     auto future = AUTDControllerOpen(builder, link_builder.ptr(), native_methods::to_option_duration(timeout));
@@ -86,8 +86,8 @@ class ControllerBuilder {
   template <device_range R>
   AUTD3_API explicit ControllerBuilder(R iter)
       : _devices(iter.begin(), iter.end()),
-        _fallback_parallel_threshold(4),
-        _fallback_timeout(std::chrono::milliseconds(20)),
+        _default_parallel_threshold(4),
+        _default_timeout(std::chrono::milliseconds(20)),
         _send_interval(std::chrono::milliseconds(1)),
         _receive_interval(std::chrono::milliseconds(1)),
         _timer_strategy(timer::TimerStrategy::Spin(timer::SpinSleeper())) {}
