@@ -12,8 +12,8 @@
 static inline autd3::controller::Controller<autd3::link::Audit> create_controller() {
   return autd3::controller::ControllerBuilder(
              std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero()), autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
-      .with_fallback_parallel_threshold(4)
-      .with_fallback_timeout(std::chrono::milliseconds(20))
+      .with_default_parallel_threshold(4)
+      .with_default_timeout(std::chrono::milliseconds(20))
       .with_send_interval(std::chrono::milliseconds(1))
       .with_receive_interval(std::chrono::milliseconds(1))
       .open(autd3::link::Audit::builder());

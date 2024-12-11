@@ -79,6 +79,12 @@ struct DynSincInterpolator {
   uint32_t window_size;
 };
 
+struct ResultGain {
+  GainPtr result;
+  uint32_t err_len;
+  const void* err;
+};
+
 struct ModulationPtr {
   const void *_0;
 };
