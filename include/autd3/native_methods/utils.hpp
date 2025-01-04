@@ -129,14 +129,14 @@ constexpr T validate(ResultStatus res) {
 }
 
 template <typename Rep, typename Period>
-inline Duration to_duration(const std::chrono::duration<Rep, Period>& d) {
+Duration to_duration(const std::chrono::duration<Rep, Period>& d) {
   return Duration{static_cast<uint64_t>(std::chrono::duration_cast<std::chrono::nanoseconds>(d).count())};
 }
 
 inline std::chrono::nanoseconds from_duration(const Duration& d) { return std::chrono::nanoseconds(d.nanos); }
 
 template <typename Rep, typename Period>
-inline OptionDuration to_option_duration(const std::optional<std::chrono::duration<Rep, Period>>& d) {
+OptionDuration to_option_duration(const std::optional<std::chrono::duration<Rep, Period>>& d) {
   return OptionDuration{d.has_value(), to_duration(d.value_or(std::chrono::nanoseconds(0)))};
 }
 
@@ -146,23 +146,23 @@ inline std::optional<std::chrono::nanoseconds> from_option_duration(const Option
 
 #ifdef AUTD3_ASYNC_API
 inline coro::task<ResultStatus> wait_future(const HandlePtr handle, FfiFutureResultStatus future) {
-  co_return AUTDWaitResultStatus(handle, std::move(future));
+  co_return AUTDWaitResultStatus(handle, future);
 }
 
 inline coro::task<ResultStatus> wait_future(const HandlePtr handle, LocalFfiFutureResultStatus future) {
-  co_return AUTDWaitLocalResultStatus(handle, std::move(future));
+  co_return AUTDWaitLocalResultStatus(handle, future);
 }
 
 inline coro::task<ResultFPGAStateList> wait_future(const HandlePtr handle, FfiFutureResultFPGAStateList future) {
-  co_return AUTDWaitResultFPGAStateList(handle, std::move(future));
+  co_return AUTDWaitResultFPGAStateList(handle, future);
 }
 
 inline coro::task<ResultFirmwareVersionList> wait_future(const HandlePtr handle, FfiFutureResultFirmwareVersionList future) {
-  co_return AUTDWaitResultFirmwareVersionList(handle, std::move(future));
+  co_return AUTDWaitResultFirmwareVersionList(handle, future);
 }
 
 inline coro::task<ResultController> wait_future(const HandlePtr handle, FfiFutureResultController future) {
-  co_return AUTDWaitResultController(handle, std::move(future));
+  co_return AUTDWaitResultController(handle, future);
 }
 
 #endif

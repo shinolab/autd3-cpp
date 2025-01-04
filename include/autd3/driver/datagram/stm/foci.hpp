@@ -35,7 +35,7 @@ class FociSTM final : public IntoDatagramTuple<FociSTM>,
     ~ControlPointsArray() override = default;
     explicit ControlPointsArray(std::vector<ControlPoints<N>> points) : _points(std::move(points)) {}
     [[nodiscard]] native_methods::FociSTMPtr ptr(const native_methods::SamplingConfig config,
-                                                 native_methods::LoopBehavior loop_behavior) const override {
+                                                 const native_methods::LoopBehavior loop_behavior) const override {
       return validate(AUTDSTMFoci(config, reinterpret_cast<const void*>(_points.data()), static_cast<uint16_t>(_points.size()), N, loop_behavior));
     }
     [[nodiscard]] uint8_t n() const override { return N; }

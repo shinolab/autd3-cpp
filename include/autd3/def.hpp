@@ -26,44 +26,49 @@ struct Point3 {
     Vector3 coords;
 
     Point3() : coords(Vector3::Zero()) {}
-    Point3(const Vector3& coords) : coords(coords) {}
+    explicit Point3(Vector3 coords) : coords(std::move(coords)) {}
     Point3(const float x, const float y, const float z) : coords(x, y, z) {}
 
-    inline static Point3 origin() { return {Vector3::Zero()}; }
+    static Point3 origin() { return Point3{Vector3::Zero()}; }
 
-    inline float x() const { return coords.x(); }
-    inline float y() const { return coords.y(); }
-    inline float z() const { return coords.z(); }
+    float x() const { return coords.x(); }
+    float y() const { return coords.y(); }
+    float z() const { return coords.z(); }
 
-    inline Point3 operator+() const { return *this; }
-    inline Point3 operator-() const { return {-coords}; }
-    inline Point3 operator+(const Vector3& rhs) const { return {coords + rhs}; }
-    inline Point3 operator-(const Vector3& rhs) const { return {coords - rhs}; }
-    inline Vector3 operator-(const Point3& rhs) const { return coords - rhs.coords; }
-    inline Point3 operator*(const float& rhs) const { return {coords * rhs}; }
-    friend inline Point3 operator*(const float& lhs, const Point3& rhs) { return rhs * lhs; }
-    inline Point3 operator/(const float& rhs) const { return {coords / rhs}; }
-    inline Point3 operator+=(const Vector3& rhs) {
+    Point3 operator+() const { return *this; }
+    Point3 operator-() const { return Point3{-coords}; }
+    Point3 operator+(const Vector3& rhs) const { return Point3{coords + rhs}; }
+    Point3 operator-(const Vector3& rhs) const { return Point3{coords - rhs}; }
+    Vector3 operator-(const Point3& rhs) const { return coords - rhs.coords; }
+    Point3 operator*(const float& rhs) const { return Point3{coords * rhs}; }
+    friend Point3 operator*(const float& lhs, const Point3& rhs) { return rhs * lhs; }
+    Point3 operator/(const float& rhs) const { return Point3{coords / rhs}; }
+
+    Point3 operator+=(const Vector3& rhs) {
         coords += rhs;
         return *this;
     }
-    inline Point3 operator-=(const Vector3& rhs) {
+
+    Point3 operator-=(const Vector3& rhs) {
         coords -= rhs;
         return *this;
     }
-    inline Point3 operator*=(const float& rhs) {
+
+    Point3 operator*=(const float& rhs) {
         coords *= rhs;
         return *this;
     }
-    inline Point3 operator/=(const float& rhs) {
+
+    Point3 operator/=(const float& rhs) {
         coords /= rhs;
         return *this;
     }
-    inline bool operator==(const Point3& rhs) const { return coords == rhs.coords; }
-    inline bool operator!=(const Point3& rhs) const { return coords != rhs.coords; }
 
-    inline float operator[](const size_t i) const { return coords[i]; }
-    inline float& operator[](const size_t i) { return coords[i]; }
+    bool operator==(const Point3& rhs) const { return coords == rhs.coords; }
+    bool operator!=(const Point3& rhs) const { return coords != rhs.coords; }
+
+    float operator[](const Eigen::Index i) const { return coords[i]; }
+    float& operator[](const Eigen::Index i) { return coords[i]; }
 
 };
 

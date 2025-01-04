@@ -3,7 +3,6 @@
 #include "autd3/controller/controller.hpp"
 #include "autd3/controller/timer.hpp"
 #include "autd3/driver/autd3_device.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/link.hpp"
 #include "autd3/native_methods.hpp"

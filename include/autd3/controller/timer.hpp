@@ -1,6 +1,5 @@
 #pragma once
 
-#include "autd3/driver/ethercat/dc_sys_time.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 

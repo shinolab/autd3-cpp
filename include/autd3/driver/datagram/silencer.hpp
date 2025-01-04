@@ -49,8 +49,8 @@ struct FixedUpdateRate {
 
  private:
   template <with_samplng_config C>
-  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool) const {
-    throw std::runtime_error("unimpletened"); // LCOV_EXCL_LINE
+  AUTD3_API [[nodiscard]] bool is_valid(const C&, const bool) const {
+    throw std::runtime_error("unimplemented"); // LCOV_EXCL_LINE
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr(const bool, const native_methods::SilencerTarget target) const noexcept {
