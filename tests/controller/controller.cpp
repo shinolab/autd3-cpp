@@ -10,7 +10,7 @@
 #include "utils.hpp"
 
 TEST(Controller, ControllerIsDefault) {
-  auto autd = autd3::controller::ControllerBuilder(std::vector{autd3::driver::AUTD3(autd3::driver::Vector3::Zero())});
+  auto autd = autd3::controller::ControllerBuilder(std::vector{autd3::driver::AUTD3(autd3::driver::Point3::origin())});
 
   ASSERT_TRUE(autd3::native_methods::AUTDControllerBuilderIsDefault(
       autd.default_parallel_threshold(), autd3::native_methods::to_duration(autd.default_timeout()),

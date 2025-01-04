@@ -19,6 +19,6 @@ TEST(Gain, Focus) {
 TEST(Gain, FocusDefault) {
   auto autd = create_controller();
 
-  const auto g = autd3::gain::Focus(autd3::driver::Vector3::Zero());
+  const auto g = autd3::gain::Focus(autd3::driver::Point3::origin());
   ASSERT_TRUE(autd3::native_methods::AUTDGainFocusIsDefault(g.intensity().value(), g.phase_offset().value()));
 }

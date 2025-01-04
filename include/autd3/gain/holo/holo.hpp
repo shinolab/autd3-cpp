@@ -10,7 +10,7 @@
 namespace autd3::gain::holo {
 
 template <class R>
-concept holo_foci_range = std::ranges::viewable_range<R> && std::same_as<std::ranges::range_value_t<R>, std::pair<driver::Vector3, Amplitude>>;
+concept holo_foci_range = std::ranges::viewable_range<R> && std::same_as<std::ranges::range_value_t<R>, std::pair<driver::Point3, Amplitude>>;
 
 template <class H>
 class Holo : public driver::Gain<H> {
@@ -26,7 +26,7 @@ class Holo : public driver::Gain<H> {
   AUTD3_DEF_PARAM(H, native_methods::EmissionConstraintWrap, constraint)
 
  protected:
-  std::vector<driver::Vector3> _foci;
+  std::vector<driver::Point3> _foci;
   std::vector<Amplitude> _amps;
 };
 

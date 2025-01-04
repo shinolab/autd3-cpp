@@ -19,7 +19,7 @@ class Greedy final : public Holo<Greedy> {
   AUTD3_DEF_PARAM(Greedy, uint8_t, phase_div)
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return AUTDGainHoloGreedySphere(reinterpret_cast<const native_methods::Vector3*>(this->_foci.data()),
+    return AUTDGainHoloGreedySphere(reinterpret_cast<const native_methods::Point3*>(this->_foci.data()),
                                     reinterpret_cast<const float*>(this->_amps.data()), static_cast<uint32_t>(this->_amps.size()), _phase_div,
                                     _constraint);
   }

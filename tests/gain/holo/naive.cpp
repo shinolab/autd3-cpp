@@ -8,12 +8,12 @@
 #include <autd3/link/audit.hpp>
 
 TEST(GainHolo, Naive) {
-  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin())}).open(autd3::link::Audit::builder());
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   std::vector<float> p{-30, 30};
   const auto g = autd3::gain::holo::Naive(std::move(backend), p | std::ranges::views::transform([&](auto x) {
-                                                                autd3::driver::Vector3 p = autd.center() + autd3::driver::Vector3(x, 0, 150);
+                                                                autd3::driver::Point3 p = autd.center() + autd3::driver::Vector3(x, 0, 150);
                                                                 return std::make_pair(p, 5e3 * autd3::gain::holo::Pa);
                                                               }))
                      .with_constraint(autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80)));
@@ -28,9 +28,9 @@ TEST(GainHolo, Naive) {
 }
 
 TEST(GainHolo, NaiveDefault) {
-  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin())}).open(autd3::link::Audit::builder());
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
+  std::vector<std::pair<autd3::driver::Point3, autd3::gain::holo::Amplitude>> foci;
   const auto g = autd3::gain::holo::Naive(std::move(backend), foci);
   ASSERT_TRUE(AUTDGainNaiveIsDefault(g.constraint()));
 }

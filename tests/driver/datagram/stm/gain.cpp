@@ -16,12 +16,12 @@ using autd3::native_methods::Segment;
 
 TEST(DriverDatagramSM, GainSTM) {
   auto autd = autd3::controller::ControllerBuilder(
-                  {autd3::driver::AUTD3(autd3::driver::Vector3::Zero()), autd3::driver::AUTD3(autd3::driver::Vector3::Zero())})
+                  {autd3::driver::AUTD3(autd3::driver::Point3::origin()), autd3::driver::AUTD3(autd3::driver::Point3::origin())})
                   .open(autd3::link::Audit::builder());
 
   autd.send(autd3::driver::Silencer::disable());
 
-  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   {
     auto stm = autd3::driver::GainSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) |
                                                                     std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
@@ -92,7 +92,7 @@ TEST(DriverDatagramSM, GainSTMSegment) {
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
   }
 
-  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::GainSTM(
       1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) { return autd3::gain::Focus(center); }));
 

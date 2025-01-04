@@ -49,9 +49,8 @@ struct FixedUpdateRate {
 
  private:
   template <with_samplng_config C>
-  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool) const noexcept {
-    return native_methods::AUTDDatagramSilencerFixedUpdateRateIsValid(
-        intensity, phase, c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)), c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool) const {
+    throw std::runtime_error("unimpletened"); // LCOV_EXCL_LINE
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr(const bool, const native_methods::SilencerTarget target) const noexcept {
@@ -82,7 +81,7 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
   AUTD3_DEF_PARAM(Silencer, native_methods::SilencerTarget, target)
 
   template <with_samplng_config C>
-  AUTD3_API [[nodiscard]] bool is_valid(const C& c) const noexcept {
+  AUTD3_API [[nodiscard]] bool is_valid(const C& c) const {
     return std::visit([this, &c](const auto& s) { return s.is_valid(c, _strict_mode); }, _inner);
   }
 

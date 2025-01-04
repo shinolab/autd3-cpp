@@ -42,7 +42,7 @@ class Geometry {
 
   AUTD3_API [[nodiscard]] size_t num_transducers() const { return AUTDGeometryNumTransducers(_geometry_ptr); }
 
-  AUTD3_API [[nodiscard]] Vector3 center() const { return AUTDGeometrCenter(_geometry_ptr); }
+  AUTD3_API [[nodiscard]] Point3 center() const { return AUTDGeometrCenter(_geometry_ptr); }
 
   AUTD3_API [[nodiscard]] auto devices() const noexcept {
     return GeometryView(_devices) | std::views::filter([](const auto& dev) { return dev.enable(); });

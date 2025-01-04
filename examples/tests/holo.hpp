@@ -17,7 +17,7 @@ inline void holo_test(autd3::Controller<L>& autd) {
 
   autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM
 
-  const autd3::Vector3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
+  const autd3::Point3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
 
   std::cout << "Select Optimization Method (default is GSPAT)" << std::endl;
 
@@ -37,7 +37,7 @@ inline void holo_test(autd3::Controller<L>& autd) {
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto amp = 5e3 * autd3::gain::holo::Pa;
-  std::vector<std::pair<autd3::Vector3, autd3::gain::holo::Amplitude>> foci = {
+  std::vector<std::pair<autd3::Point3, autd3::gain::holo::Amplitude>> foci = {
       {center + autd3::Vector3(30.0, 0.0, 0.0), amp},
       {center - autd3::Vector3(30.0, 0.0, 0.0), amp},
   };

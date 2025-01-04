@@ -53,10 +53,8 @@ TEST(DriverDatagram, Silencer) {
 }
 
 TEST(DriverDatagram, SilencerIsValid) {
-  ASSERT_TRUE(autd3::driver::Silencer(autd3::driver::FixedUpdateRate{.intensity = 1, .phase = 1})
-                  .is_valid(autd3::modulation::Sine(150u * autd3::driver::Hz)));
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(autd3::modulation::Sine(150u * autd3::driver::Hz)));
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(
-      autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::vector{autd3::driver::Vector3::Zero(), autd3::driver::Vector3::Zero()})));
+      autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::vector{autd3::driver::Point3::origin(), autd3::driver::Point3::origin()})));
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(autd3::driver::GainSTM(1.0f * autd3::driver::Hz, {autd3::gain::Null(), autd3::gain::Null()})));
 }

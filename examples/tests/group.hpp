@@ -7,7 +7,7 @@ inline void group_by_device_test(autd3::Controller<T>& autd) {
   auto silencer = autd3::Silencer();
   autd.send(silencer);
 
-  const autd3::Vector3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
+  const autd3::Point3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
 
   autd.group([](const autd3::Device& dev) -> std::optional<const char*> {
         if (dev.idx() == 0) {

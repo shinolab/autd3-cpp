@@ -17,7 +17,7 @@ TEST(DriverDatagramSM, FociSTM) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   {
     auto stm = autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
                                                                   return autd3::driver::ControlPoints<1>{center};
@@ -77,7 +77,7 @@ TEST(DriverDatagramSM, FociSTMSegment) {
     ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
   }
 
-  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   auto stm = autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
                                                                 return autd3::driver::ControlPoints<1>{std::array{center}};
                                                               }));
@@ -124,10 +124,10 @@ void test_foci_stm_n() {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  autd3::driver::Vector3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
 
   constexpr auto size = 2;
-  std::array<autd3::driver::Vector3, N> points;
+  std::array<autd3::driver::Point3, N> points;
   points.fill(center);
   auto stm = autd3::driver::FociSTM(autd3::driver::SamplingConfig(1),
                                     std::views::iota(0) | std::views::take(size) |

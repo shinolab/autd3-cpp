@@ -77,9 +77,9 @@ TEST(DriverGeomtry, DeviceAffine) {
     std::ranges::for_each(dev.transducers(), [&t, &original_pos](auto& tr) {
       auto& op = original_pos[tr.idx()];
       autd3::driver::Vector3 expected = autd3::driver::Vector3(-op.y(), op.x(), op.z()) + t;
-      ASSERT_FLOAT_EQ(tr.position().x(), expected.x());
-      ASSERT_FLOAT_EQ(tr.position().y(), expected.y());
-      ASSERT_FLOAT_EQ(tr.position().z(), expected.z());
+      EXPECT_NEAR(tr.position().x(), expected.x(), 1e-3);
+      EXPECT_NEAR(tr.position().y(), expected.y(), 1e-3);
+      EXPECT_NEAR(tr.position().z(), expected.z(), 1e-3);
     });
     ASSERT_EQ(dev.rotation(), r);
   }

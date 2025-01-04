@@ -94,7 +94,7 @@ void AUTDFirmwareLatest(char *latest);
 [[nodiscard]] FfiFutureResultStatus AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
 
 [[nodiscard]]
-ControllerBuilderPtr AUTDControllerBuilder(const Vector3 *pos,
+ControllerBuilderPtr AUTDControllerBuilder(const Point3 *pos,
                                            const Quaternion *rot,
                                            uint16_t len,
                                            uint16_t default_parallel_threshold,
@@ -187,12 +187,6 @@ DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment,
 DatagramPtr AUTDDatagramSilencerFromUpdateRate(uint16_t intensity,
                                                uint16_t phase,
                                                SilencerTarget target);
-
-[[nodiscard]]
-bool AUTDDatagramSilencerFixedUpdateRateIsValid(uint16_t intensity,
-                                                uint16_t phase,
-                                                SamplingConfig config_intensity,
-                                                SamplingConfig config_phase);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramSilencerFromCompletionTime(Duration intensity,
@@ -336,7 +330,7 @@ DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
 [[nodiscard]] DatagramPtr AUTDGainIntoDatagram(GainPtr gain);
 
 [[nodiscard]]
-GainPtr AUTDGainBessel(Vector3 p,
+GainPtr AUTDGainBessel(Point3 p,
                        Vector3 n,
                        float theta_z,
                        uint8_t intensity,
@@ -352,7 +346,7 @@ void AUTDGainCacheFree(GainCachePtr g);
 
 [[nodiscard]] GainPtr AUTDGainCustom(const void* f, const void* context, GeometryPtr geometry);
 
-[[nodiscard]] GainPtr AUTDGainFocus(Vector3 p, uint8_t intensity, uint8_t phase_offset);
+[[nodiscard]] GainPtr AUTDGainFocus(Point3 p, uint8_t intensity, uint8_t phase_offset);
 
 [[nodiscard]] bool AUTDGainFocusIsDefault(uint8_t intensity, uint8_t phase_offset);
 
@@ -385,7 +379,7 @@ ResultGain AUTDGainGroup(GroupGainMapPtr map,
 
 [[nodiscard]] uint32_t AUTDGeometryNumTransducers(GeometryPtr geo);
 
-[[nodiscard]] Vector3 AUTDGeometrCenter(GeometryPtr geo);
+[[nodiscard]] Point3 AUTDGeometrCenter(GeometryPtr geo);
 
 [[nodiscard]] DevicePtr AUTDDevice(GeometryPtr geo, uint16_t dev_idx);
 
@@ -402,7 +396,7 @@ void AUTDDeviceSetSoundSpeedFromTemp(GeometryPtr geo,
                                      float r,
                                      float m);
 
-Vector3 AUTDDeviceCenter(DevicePtr dev);
+Point3 AUTDDeviceCenter(DevicePtr dev);
 
 void AUTDDeviceTranslate(GeometryPtr geo, uint16_t dev_idx, Vector3 t);
 
@@ -432,7 +426,7 @@ Quaternion AUTDRotationFromEulerZYZ(float z1, float y, float z2);
 
 [[nodiscard]] TransducerPtr AUTDTransducer(DevicePtr dev, uint8_t idx);
 
-Vector3 AUTDTransducerPosition(TransducerPtr tr);
+Point3 AUTDTransducerPosition(TransducerPtr tr);
 
 [[nodiscard]] LinkPtr AUTDLinkGet(ControllerPtr cnt);
 
