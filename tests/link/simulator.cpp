@@ -7,7 +7,7 @@ TEST(Link, Simulator) {
   auto link = autd3::link::Simulator::builder("127.0.0.1:8080");
 
 #ifdef RUN_LINK_SIMULATOR
-  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(std::move(link));
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin())}).open(std::move(link));
 
   autd.close();
 #else

@@ -9,7 +9,7 @@ TEST(GainHolo, ConstraintUniform) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
+  std::vector<std::pair<autd3::driver::Point3, autd3::gain::holo::Amplitude> > foci{
       {autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
   const auto g = autd3::gain::holo::Naive(std::move(backend), foci)
@@ -28,7 +28,7 @@ TEST(GainHolo, ConstraintNormalize) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
+  std::vector<std::pair<autd3::driver::Point3, autd3::gain::holo::Amplitude> > foci{
       {autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
   const auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::Normalize);
@@ -46,7 +46,7 @@ TEST(GainHolo, ConstraintClamp) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
+  std::vector<std::pair<autd3::driver::Point3, autd3::gain::holo::Amplitude> > foci{
       {autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
   const auto g =
@@ -66,7 +66,7 @@ TEST(GainHolo, ConstraintMultiply) {
   auto autd = create_controller();
 
   auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude> > foci{
+  std::vector<std::pair<autd3::driver::Point3, autd3::gain::holo::Amplitude> > foci{
       {autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
   const auto g = autd3::gain::holo::Naive(std::move(backend), foci).with_constraint(autd3::gain::holo::EmissionConstraint::Multiply(0));

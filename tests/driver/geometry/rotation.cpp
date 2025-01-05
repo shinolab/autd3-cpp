@@ -16,7 +16,7 @@ TEST(DriverGeomtry, Angle) {
 
 namespace {
 autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::driver::Quaternion& q) {
-  return autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero()).with_rotation(q)})
+  return autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin()).with_rotation(q)})
       .open(autd3::link::Audit::builder());
 }
 }  // namespace

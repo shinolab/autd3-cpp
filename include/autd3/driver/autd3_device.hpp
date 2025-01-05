@@ -17,9 +17,9 @@ class AUTD3 {
   static constexpr float DEVICE_WIDTH = native_methods::DEVICE_WIDTH_MM;
   static constexpr float DEVICE_HEIGHT = native_methods::DEVICE_HEIGHT_MM;
 
-  AUTD3_API explicit AUTD3(Vector3 pos) : _position(std::move(pos)), _rotation(Quaternion::Identity()) {}
+  AUTD3_API explicit AUTD3(Point3 pos) : _position(std::move(pos)), _rotation(Quaternion::Identity()) {}
 
-  AUTD3_DEF_PROP(Vector3, position)
+  AUTD3_DEF_PROP(Point3, position)
   AUTD3_DEF_PARAM(AUTD3, Quaternion, rotation)
 };
 }  // namespace autd3::driver

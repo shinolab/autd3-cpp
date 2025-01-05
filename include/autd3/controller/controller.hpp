@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include <future>
 #include <optional>
 #include <vector>
@@ -116,15 +115,15 @@ class Controller final : public driver::geometry::Geometry {
   }
 
   template <group_f F>
-  class GroupGuard {
+  class Group {
    public:
     using key_type = typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type;
     using native_f = int32_t (*)(const void*, native_methods::GeometryPtr, uint16_t);
 
-    AUTD3_API explicit GroupGuard(F map, Controller& controller) : _controller(controller), _map(std::move(map)) {
+    AUTD3_API explicit Group(F map, Controller& controller) : _controller(controller), _map(std::move(map)) {
       _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx) -> int32_t {
         const driver::geometry::Device dev(dev_idx, geometry_ptr);
-        const auto* self = static_cast<const GroupGuard*>(context);
+        const auto* self = static_cast<const Group*>(context);
         const auto key = self->_map(dev);
         const auto& keymap = self->_keymap;
         return key.has_value() ? keymap.at(key.value()) : -1;
@@ -132,7 +131,7 @@ class Controller final : public driver::geometry::Geometry {
     }
 
     template <driver::datagram D>
-    AUTD3_API GroupGuard set(const key_type key, const D& data) {
+    AUTD3_API Group set(const key_type key, const D& data) {
       if (_keymap.contains(key)) throw AUTDException("Key already exists");
       const auto ptr = data.ptr(_controller.geometry());
       _datagrams.push_back(ptr);
@@ -167,8 +166,8 @@ class Controller final : public driver::geometry::Geometry {
   };
 
   template <group_f F>
-  AUTD3_API GroupGuard<F> group(const F& map) {
-    return GroupGuard<F>(map, *this);
+  AUTD3_API Group<F> group(const F& map) {
+    return Group<F>(map, *this);
   }
 
 #ifdef AUTD3_ASYNC_API

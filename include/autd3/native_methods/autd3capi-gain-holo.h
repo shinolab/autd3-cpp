@@ -44,14 +44,14 @@ extern "C" {
 [[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintClamp(uint8_t min_v, uint8_t max_v);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloGreedySphere(const Vector3 *points,
+GainPtr AUTDGainHoloGreedySphere(const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
                                  uint8_t div,
                                  EmissionConstraintWrap constraint);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloGreedyT4010A1(const Vector3 *points,
+GainPtr AUTDGainHoloGreedyT4010A1(const Point3 *points,
                                   const float *amps,
                                   uint32_t size,
                                   uint8_t div,
@@ -61,7 +61,7 @@ GainPtr AUTDGainHoloGreedyT4010A1(const Vector3 *points,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSSphere(BackendPtr backend,
-                             const Vector3 *points,
+                             const Point3 *points,
                              const float *amps,
                              uint32_t size,
                              uint32_t repeat_nonzero,
@@ -69,7 +69,7 @@ GainPtr AUTDGainHoloGSSphere(BackendPtr backend,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
-                              const Vector3 *points,
+                              const Point3 *points,
                               const float *amps,
                               uint32_t size,
                               uint32_t repeat_nonzero,
@@ -79,7 +79,7 @@ GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSPATSphere(BackendPtr backend,
-                                const Vector3 *points,
+                                const Point3 *points,
                                 const float *amps,
                                 uint32_t size,
                                 uint32_t repeat_nonzero,
@@ -87,7 +87,7 @@ GainPtr AUTDGainHoloGSPATSphere(BackendPtr backend,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
-                                 const Vector3 *points,
+                                 const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
                                  uint32_t repeat_nonzero,
@@ -97,7 +97,7 @@ GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloLMSphere(BackendPtr backend,
-                             const Vector3 *points,
+                             const Point3 *points,
                              const float *amps,
                              uint32_t size,
                              float eps_1,
@@ -110,7 +110,7 @@ GainPtr AUTDGainHoloLMSphere(BackendPtr backend,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloLMT4010A1(BackendPtr backend,
-                              const Vector3 *points,
+                              const Point3 *points,
                               const float *amps,
                               uint32_t size,
                               float eps_1,
@@ -132,14 +132,14 @@ bool AUTDGainLMIsDefault(EmissionConstraintWrap constraint,
 
 [[nodiscard]]
 GainPtr AUTDGainHoloNaiveSphere(BackendPtr backend,
-                                const Vector3 *points,
+                                const Point3 *points,
                                 const float *amps,
                                 uint32_t size,
                                 EmissionConstraintWrap constraint);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloNaiveT4010A1(BackendPtr backend,
-                                 const Vector3 *points,
+                                 const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
                                  EmissionConstraintWrap constraint);

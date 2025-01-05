@@ -39,7 +39,7 @@ class Device {
 
   AUTD3_API [[nodiscard]] size_t num_transducers() const { return _transducers.size(); }
 
-  AUTD3_API [[nodiscard]] Vector3 center() const { return AUTDDeviceCenter(_ptr); }
+  AUTD3_API [[nodiscard]] Point3 center() const { return AUTDDeviceCenter(_ptr); }
 
   AUTD3_API [[nodiscard]] float sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
 

@@ -8,11 +8,11 @@
 #include <autd3/link/audit.hpp>
 
 TEST(GainHolo, Greedy) {
-  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin())}).open(autd3::link::Audit::builder());
 
   std::vector<float> p{-30, 30};
   auto g = autd3::gain::holo::Greedy(p | std::ranges::views::transform([&](auto x) {
-                                       autd3::driver::Vector3 focus = autd.center() + autd3::driver::Vector3(x, 0, 150);
+                                       autd3::driver::Point3 focus = autd.center() + autd3::driver::Vector3(x, 0, 150);
                                        return std::make_pair(focus, 5e3 * autd3::gain::holo::Pa);
                                      }))
                .with_phase_div(16);
@@ -28,8 +28,8 @@ TEST(GainHolo, Greedy) {
 }
 
 TEST(GainHolo, GreedyDefault) {
-  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
-  std::vector<std::pair<autd3::driver::Vector3, autd3::gain::holo::Amplitude>> foci;
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin())}).open(autd3::link::Audit::builder());
+  std::vector<std::pair<autd3::driver::Point3, autd3::gain::holo::Amplitude>> foci;
   const auto g = autd3::gain::holo::Greedy(foci);
   ASSERT_TRUE(autd3::native_methods::AUTDGainGreedyIsDefault(g.constraint(), g.phase_div()));
 }

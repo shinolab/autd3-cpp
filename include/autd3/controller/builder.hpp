@@ -3,7 +3,6 @@
 #include "autd3/controller/controller.hpp"
 #include "autd3/controller/timer.hpp"
 #include "autd3/driver/autd3_device.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/driver/link.hpp"
 #include "autd3/native_methods.hpp"
@@ -29,12 +28,12 @@ class ControllerBuilder {
     auto runtime = native_methods::AUTDCreateRuntime();
     auto handle = AUTDGetRuntimeHandle(runtime);
 
-    std::vector<native_methods::Vector3> pos;
+    std::vector<native_methods::Point3> pos;
     std::vector<native_methods::Quaternion> rot;
     for (const auto& device : _devices) {
       const auto p = device.position();
       const auto r = device.rotation();
-      pos.emplace_back(native_methods::Vector3{p.x(), p.y(), p.z()});
+      pos.emplace_back(native_methods::Point3{p.x(), p.y(), p.z()});
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _default_parallel_threshold,
@@ -57,12 +56,12 @@ class ControllerBuilder {
     auto runtime = native_methods::AUTDCreateRuntime();
     auto handle = native_methods::AUTDGetRuntimeHandle(runtime);
 
-    std::vector<native_methods::Vector3> pos;
+    std::vector<native_methods::Point3> pos;
     std::vector<native_methods::Quaternion> rot;
     for (const auto& device : _devices) {
       const auto p = device.position();
       const auto r = device.rotation();
-      pos.emplace_back(native_methods::Vector3{p.x(), p.y(), p.z()});
+      pos.emplace_back(native_methods::Point3{p.x(), p.y(), p.z()});
       rot.emplace_back(native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
     }
     const auto builder = AUTDControllerBuilder(pos.data(), rot.data(), static_cast<uint16_t>(pos.size()), _default_parallel_threshold,

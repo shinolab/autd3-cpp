@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <memory>
-#include <vector>
 
 #include "autd3/driver/datagram/gain/base.hpp"
 #include "autd3/driver/datagram/tuple.hpp"

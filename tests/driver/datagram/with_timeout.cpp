@@ -7,7 +7,7 @@
 #include "utils.hpp"
 
 TEST(DriverDatagram, WithTimeout) {
-  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Vector3::Zero())}).open(autd3::link::Audit::builder());
+  auto autd = autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin())}).open(autd3::link::Audit::builder());
 
   autd.send(autd3::gain::Null().with_timeout(std::nullopt));
   ASSERT_EQ(autd.link().last_timeout(), std::nullopt);

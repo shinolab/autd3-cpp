@@ -15,7 +15,7 @@ namespace autd3::gain {
 
 class Bessel final : public driver::Gain<Bessel> {
  public:
-  AUTD3_API explicit Bessel(driver::Vector3 p, driver::Vector3 d, const driver::Angle theta)
+  AUTD3_API explicit Bessel(driver::Point3 p, driver::Vector3 d, const driver::Angle theta)
       : _pos(std::move(p)),
         _dir(std::move(d)),
         _theta(theta),
@@ -28,14 +28,14 @@ class Bessel final : public driver::Gain<Bessel> {
   Bessel& operator=(Bessel&& obj) = default;       // LCOV_EXCL_LINE
   ~Bessel() override = default;                    // LCOV_EXCL_LINE
 
-  AUTD3_DEF_PROP(driver::Vector3, pos)
+  AUTD3_DEF_PROP(driver::Point3, pos)
   AUTD3_DEF_PROP(driver::Vector3, dir)
   AUTD3_DEF_PROP(driver::Angle, theta)
   AUTD3_DEF_PARAM_INTENSITY(Bessel, intensity)
   AUTD3_DEF_PARAM_PHASE(Bessel, phase_offset)
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return native_methods::AUTDGainBessel(native_methods::Vector3{_pos.x(), _pos.y(), _pos.z()},
+    return native_methods::AUTDGainBessel(native_methods::Point3{_pos.x(), _pos.y(), _pos.z()},
                                           native_methods::Vector3{_dir.x(), _dir.y(), _dir.z()}, _theta.radian(), _intensity.value(),
                                           _phase_offset.value());
   }

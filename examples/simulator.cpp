@@ -8,7 +8,7 @@
 
 int main() try {
   auto autd =
-      autd3::ControllerBuilder(std::vector{autd3::AUTD3(autd3::Vector3::Zero()), autd3::AUTD3(autd3::Vector3(autd3::AUTD3::DEVICE_WIDTH, 0.0, 0.0))})
+      autd3::ControllerBuilder(std::vector{autd3::AUTD3(autd3::Point3::origin()), autd3::AUTD3(autd3::Point3(autd3::AUTD3::DEVICE_WIDTH, 0.0, 0.0))})
           .open(autd3::link::Simulator::builder("127.0.0.1:8080"));
   run(autd);
   return 0;

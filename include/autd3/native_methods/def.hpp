@@ -28,6 +28,14 @@ struct Vector3 {
   operator driver::Vector3() const { return {x, y, z}; }
 };
 
+struct Point3 {
+  float x;
+  float y;
+  float z;
+
+  operator driver::Point3() const { return {x, y, z}; }
+};
+
 struct Quaternion {
   float x;
   float y;

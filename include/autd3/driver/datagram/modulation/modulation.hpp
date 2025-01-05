@@ -18,7 +18,7 @@ class Modulation : public ModulationBase<M>, public IntoModulationCache<M>, publ
   } /* LCOV_EXCL_LINE */
   template <sampling_config T>
   [[nodiscard]] M&& with_sampling_config(const T value) && {   /* LCOV_EXCL_LINE */
-    this->_sampling_config = std::move(SamplingConfig(value)); /* LCOV_EXCL_LINE */
+    this->_sampling_config = SamplingConfig(value); /* LCOV_EXCL_LINE */
     return std::move(*static_cast<M*>(this));                  /* LCOV_EXCL_LINE */
   } /* LCOV_EXCL_LINE */
 
