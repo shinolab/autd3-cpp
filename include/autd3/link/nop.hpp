@@ -18,7 +18,7 @@ class Nop {
 
     AUTD3_API Builder() = default;  // LCOV_EXCL_LINE
 
-    AUTD3_API [[nodiscard]] static Nop resolve_link(native_methods::HandlePtr, const native_methods::LinkPtr) { return {}; }
+    AUTD3_API [[nodiscard]] static Nop resolve_link(const native_methods::LinkPtr) { return {}; }
 
    public:
     using Link = Nop;

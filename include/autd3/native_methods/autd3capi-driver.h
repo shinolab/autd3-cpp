@@ -53,7 +53,6 @@ enum class SpinStrategyTag : uint8_t {
 enum class TimerStrategyTag : uint8_t {
   Std = 0,
   Spin = 1,
-  Async = 2,
   Waitable = 3,
 };
 
@@ -113,16 +112,6 @@ struct ResultStatus {
   const void* err;
 };
 
-struct SyncLinkBuilderPtr {
-  const void *_0;
-};
-
-struct ResultSyncLinkBuilder {
-  SyncLinkBuilderPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 struct LinkBuilderPtr {
   const void *_0;
 };
@@ -134,14 +123,6 @@ struct ResultLinkBuilder {
 };
 
 struct ControllerPtr {
-  const void *_0;
-};
-
-struct RuntimePtr {
-  const void *_0;
-};
-
-struct HandlePtr {
   const void *_0;
 };
 

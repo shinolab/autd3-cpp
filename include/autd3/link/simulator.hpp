@@ -20,7 +20,7 @@ class Simulator final {
 
     AUTD3_API explicit Builder(std::string ip) : _ip(std::move(ip)) {}
 
-    [[nodiscard]] static Simulator resolve_link(const native_methods::HandlePtr, const native_methods::LinkPtr) { return Simulator{}; }
+    [[nodiscard]] static Simulator resolve_link(const native_methods::LinkPtr) { return Simulator{}; }
 
    public:
     using Link = Simulator;

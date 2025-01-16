@@ -5,10 +5,6 @@
 #include <autd3/driver/autd3_device.hpp>
 #include <autd3/link/audit.hpp>
 
-#ifdef AUTD3_ASYNC_API
-#include <coro/coro.hpp>
-#endif
-
 static inline autd3::controller::Controller<autd3::link::Audit> create_controller() {
   return autd3::controller::ControllerBuilder(
              std::vector{autd3::driver::AUTD3(autd3::driver::Point3::origin()), autd3::driver::AUTD3(autd3::driver::Point3::origin())})

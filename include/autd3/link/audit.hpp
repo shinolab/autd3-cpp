@@ -26,7 +26,7 @@ class Audit final {
 
     Builder() = default;
 
-    [[nodiscard]] static Audit resolve_link(native_methods::HandlePtr, const native_methods::LinkPtr link) { return Audit{link}; }
+    [[nodiscard]] static Audit resolve_link(const native_methods::LinkPtr link) { return Audit{link}; }
 
    public:
     using Link = Audit;
@@ -62,12 +62,12 @@ class Audit final {
     return AUTDLinkAuditFpgaSilencerUpdateRatePhase(_ptr, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] std::chrono::nanoseconds silencer_completion_steps_intensity(const size_t idx) const {
-    return native_methods::from_duration(AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(_ptr, static_cast<uint16_t>(idx)));
+  [[nodiscard]] uint16_t silencer_completion_steps_intensity(const size_t idx) const {
+    return AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(_ptr, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] std::chrono::nanoseconds silencer_completion_steps_phase(const size_t idx) const {
-    return native_methods::from_duration(AUTDLinkAuditFpgaSilencerCompletionStepsPhase(_ptr, static_cast<uint16_t>(idx)));
+  [[nodiscard]] uint16_t silencer_completion_steps_phase(const size_t idx) const {
+    return AUTDLinkAuditFpgaSilencerCompletionStepsPhase(_ptr, static_cast<uint16_t>(idx));
   }
 
   [[nodiscard]] bool silencer_fixed_completion_steps_mode(const size_t idx) const {

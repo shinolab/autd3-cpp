@@ -36,18 +36,6 @@ FetchContent_Declare(
   autd3
   SOURCE_DIR ${PROJECT_SOURCE_DIR}/..
 )
-set(AUTD3_ASYNC_API ON)
-if(AUTD3_ASYNC_API AND APPLE)
-  if(CMAKE_CXX_COMPILER_ID MATCHES "AppleClang|Clang")
-    if (CMAKE_CXX_COMPILER_VERSION LESS 16.0.0)
-        set(AUTD3_ASYNC_API OFF)
-        message(STATUS "Disable async APIs on macOS because Clang version ${CMAKE_CXX_COMPILER_VERSION} is not supported. Use 16.0.0 or higher version.")
-    endif()
-  else()
-    set(AUTD3_ASYNC_API OFF)
-    message(STATUS "Disable async APIs on macOS.")
-  endif()
-endif()
 FetchContent_MakeAvailable(autd3)
 
 add_executable(test_autd3 main.cpp)
