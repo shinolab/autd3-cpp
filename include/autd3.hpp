@@ -74,6 +74,7 @@ using driver::ControlPoint;
 using driver::ControlPoints;
 using driver::DebugSettings;
 using driver::DebugType;
+using driver::FixedCompletionSteps;
 using driver::FixedCompletionTime;
 using driver::FixedUpdateRate;
 using driver::FociSTM;
@@ -102,9 +103,9 @@ using modulation::Static;
 using driver::FirmwareVersion;
 using driver::FPGAState;
 
+using driver::Point3;
 using driver::Quaternion;
 using driver::Vector3;
-using driver::Point3;
 
 using controller::Controller;
 using controller::ControllerBuilder;

@@ -56,4 +56,7 @@ TEST(DriverDatagram, SilencerIsValid) {
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(
       autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::vector{autd3::driver::Point3::origin(), autd3::driver::Point3::origin()})));
   ASSERT_TRUE(autd3::driver::Silencer().is_valid(autd3::driver::GainSTM(1.0f * autd3::driver::Hz, {autd3::gain::Null(), autd3::gain::Null()})));
+  ASSERT_TRUE(autd3::driver::Silencer(
+                  autd3::driver::FixedCompletionTime{.intensity = std::chrono::microseconds(250), .phase = std::chrono::microseconds(1000)})
+                  .is_valid(autd3::modulation::Sine(150u * autd3::driver::Hz)));
 }
