@@ -22,7 +22,7 @@ class TwinCAT final {
 
     Builder() = default;
 
-    [[nodiscard]] static TwinCAT resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return {}; }
+    [[nodiscard]] static TwinCAT resolve_link(native_methods::LinkPtr) { return {}; }
 
    public:
     using Link = TwinCAT;
@@ -43,7 +43,7 @@ class RemoteTwinCAT final {
 
     AUTD3_API [[nodiscard]] explicit Builder(std::string server_ams_net_id) : _server_ams_net_id(std::move(server_ams_net_id)) {}
 
-    [[nodiscard]] static RemoteTwinCAT resolve_link(native_methods::HandlePtr, native_methods::LinkPtr) { return {}; }
+    [[nodiscard]] static RemoteTwinCAT resolve_link(native_methods::LinkPtr) { return {}; }
 
    public:
     using Link = RemoteTwinCAT;

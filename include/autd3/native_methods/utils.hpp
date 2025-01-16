@@ -6,10 +6,6 @@
 #include "autd3/exception.hpp"
 #include "autd3/native_methods.hpp"
 
-#ifdef AUTD3_ASYNC_API
-#include <coro/coro.hpp>
-#endif
-
 #define AUTD3_DEF_PROP(PARAM_T, PARAM_NAME)                                               \
   [[nodiscard]] PARAM_T PARAM_NAME() const { return _##PARAM_NAME; } /* LCOV_EXCL_LINE */ \
                                                                                           \
@@ -143,28 +139,5 @@ OptionDuration to_option_duration(const std::optional<std::chrono::duration<Rep,
 inline std::optional<std::chrono::nanoseconds> from_option_duration(const OptionDuration& d) {
   return d.has_value ? std::make_optional(from_duration(d.value)) : std::nullopt;
 }
-
-#ifdef AUTD3_ASYNC_API
-inline coro::task<ResultStatus> wait_future(const HandlePtr handle, FfiFutureResultStatus future) {
-  co_return AUTDWaitResultStatus(handle, future);
-}
-
-inline coro::task<ResultStatus> wait_future(const HandlePtr handle, LocalFfiFutureResultStatus future) {
-  co_return AUTDWaitLocalResultStatus(handle, future);
-}
-
-inline coro::task<ResultFPGAStateList> wait_future(const HandlePtr handle, FfiFutureResultFPGAStateList future) {
-  co_return AUTDWaitResultFPGAStateList(handle, future);
-}
-
-inline coro::task<ResultFirmwareVersionList> wait_future(const HandlePtr handle, FfiFutureResultFirmwareVersionList future) {
-  co_return AUTDWaitResultFirmwareVersionList(handle, future);
-}
-
-inline coro::task<ResultController> wait_future(const HandlePtr handle, FfiFutureResultController future) {
-  co_return AUTDWaitResultController(handle, future);
-}
-
-#endif
 
 }  // namespace autd3::native_methods

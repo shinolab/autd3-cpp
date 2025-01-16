@@ -6,12 +6,6 @@
 
 namespace autd3::native_methods {
 
-struct ResultController {
-  ControllerPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
 struct FPGAStateListPtr {
   const void *_0;
 };
@@ -32,6 +26,12 @@ struct ResultFirmwareVersionList {
   const void* err;
 };
 
+struct ResultController {
+  ControllerPtr result;
+  uint32_t err_len;
+  const void* err;
+};
+
 struct GainCachePtr {
   const void *_0;
 };
@@ -46,44 +46,19 @@ struct ModulationCachePtr {
 
 extern "C" {
 
-[[nodiscard]] RuntimePtr AUTDCreateRuntime();
-
-[[nodiscard]] HandlePtr AUTDGetRuntimeHandle(RuntimePtr runtime);
-
-void AUTDDeleteRuntime(RuntimePtr runtime);
-
-[[nodiscard]] ResultStatus AUTDWaitResultStatus(HandlePtr handle, FfiFutureResultStatus future);
-
-[[nodiscard]]
-ResultStatus AUTDWaitLocalResultStatus(HandlePtr handle,
-                                       LocalFfiFutureResultStatus future);
-
-[[nodiscard]]
-ResultController AUTDWaitResultController(HandlePtr handle,
-                                          FfiFutureResultController future);
-
-[[nodiscard]]
-ResultFPGAStateList AUTDWaitResultFPGAStateList(HandlePtr handle,
-                                                FfiFutureResultFPGAStateList future);
-
-[[nodiscard]]
-ResultFirmwareVersionList AUTDWaitResultFirmwareVersionList(HandlePtr handle,
-                                                            FfiFutureResultFirmwareVersionList future);
-
 void AUTDTracingInit();
 
 ResultStatus AUTDTracingInitWithFile(const char *path);
 
-[[nodiscard]] FfiFutureResultStatus AUTDControllerClose(ControllerPtr cnt);
+[[nodiscard]] ResultStatus AUTDControllerClose(ControllerPtr cnt);
 
-[[nodiscard]] FfiFutureResultFPGAStateList AUTDControllerFPGAState(ControllerPtr cnt);
+[[nodiscard]] ResultFPGAStateList AUTDControllerFPGAState(ControllerPtr cnt);
 
 int16_t AUTDControllerFPGAStateGet(FPGAStateListPtr p, uint32_t idx);
 
 void AUTDControllerFPGAStateDelete(FPGAStateListPtr p);
 
-[[nodiscard]]
-FfiFutureResultFirmwareVersionList AUTDControllerFirmwareVersionListPointer(ControllerPtr cnt);
+[[nodiscard]] ResultFirmwareVersionList AUTDControllerFirmwareVersionListPointer(ControllerPtr cnt);
 
 void AUTDControllerFirmwareVersionGet(FirmwareVersionListPtr p_info_list, uint32_t idx, char *info);
 
@@ -91,7 +66,7 @@ void AUTDControllerFirmwareVersionListPointerDelete(FirmwareVersionListPtr p_inf
 
 void AUTDFirmwareLatest(char *latest);
 
-[[nodiscard]] FfiFutureResultStatus AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
+[[nodiscard]] ResultStatus AUTDControllerSend(ControllerPtr cnt, DatagramPtr d);
 
 [[nodiscard]]
 ControllerBuilderPtr AUTDControllerBuilder(const Point3 *pos,
@@ -111,18 +86,18 @@ bool AUTDControllerBuilderIsDefault(uint16_t default_parallel_threshold,
                                     TimerStrategyWrap timer_strategy);
 
 [[nodiscard]]
-FfiFutureResultController AUTDControllerOpen(ControllerBuilderPtr builder,
-                                               LinkBuilderPtr link_builder,
-                                               OptionDuration timeout);
+ResultController AUTDControllerOpen(ControllerBuilderPtr builder,
+                                    LinkBuilderPtr link_builder,
+                                    OptionDuration timeout);
 
 [[nodiscard]]
-LocalFfiFutureResultStatus AUTDControllerGroup(ControllerPtr cnt,
-                                                 const void* f,
-                                                 const void* context,
-                                                 GeometryPtr geometry,
-                                                 const int32_t *keys,
-                                                 const DatagramPtr *d,
-                                                 uint16_t n);
+ResultStatus AUTDControllerGroup(ControllerPtr cnt,
+                                 const void* f,
+                                 const void* context,
+                                 GeometryPtr geometry,
+                                 const int32_t *keys,
+                                 const DatagramPtr *d,
+                                 uint16_t n);
 
 [[nodiscard]] TimerStrategyWrap AUTDTimerStrategyStd(uint32_t timer_resolution);
 
@@ -131,8 +106,6 @@ LocalFfiFutureResultStatus AUTDControllerGroup(ControllerPtr cnt,
 [[nodiscard]]
 TimerStrategyWrap AUTDTimerStrategySpin(uint32_t native_accuracy_ns,
                                         SpinStrategyTag spin_strategy);
-
-[[nodiscard]] TimerStrategyWrap AUTDTimerStrategyAsync(uint32_t timer_resolution);
 
 [[nodiscard]] TimerStrategyWrap AUTDTimerStrategyWaitable();
 
@@ -189,10 +162,23 @@ DatagramPtr AUTDDatagramSilencerFromUpdateRate(uint16_t intensity,
                                                SilencerTarget target);
 
 [[nodiscard]]
+DatagramPtr AUTDDatagramSilencerFromCompletionSteps(uint16_t intensity,
+                                                    uint16_t phase,
+                                                    bool strict_mode,
+                                                    SilencerTarget target);
+
+[[nodiscard]]
 DatagramPtr AUTDDatagramSilencerFromCompletionTime(Duration intensity,
                                                    Duration phase,
                                                    bool strict_mode,
                                                    SilencerTarget target);
+
+[[nodiscard]]
+bool AUTDDatagramSilencerFixedCompletionStepsIsValid(uint16_t intensity,
+                                                     uint16_t phase,
+                                                     bool strict_mode,
+                                                     SamplingConfig config_intensity,
+                                                     SamplingConfig config_phase);
 
 [[nodiscard]]
 bool AUTDDatagramSilencerFixedCompletionTimeIsValid(Duration intensity,
@@ -202,10 +188,10 @@ bool AUTDDatagramSilencerFixedCompletionTimeIsValid(Duration intensity,
                                                     SamplingConfig config_phase);
 
 [[nodiscard]]
-bool AUTDDatagramSilencerFixedCompletionTimeIsDefault(Duration intensity,
-                                                      Duration phase,
-                                                      bool strict_mode,
-                                                      SilencerTarget target);
+bool AUTDDatagramSilencerFixedCompletionStepsIsDefault(uint16_t intensity,
+                                                       uint16_t phase,
+                                                       bool strict_mode,
+                                                       SilencerTarget target);
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromFreq(float f, uint16_t n);
 
@@ -467,10 +453,10 @@ void AUTDLinkAuditFpgaDeassertThermalSensor(LinkPtr audit, uint16_t idx);
 [[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerUpdateRatePhase(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]]
-Duration AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
+uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
                                                            uint16_t idx);
 
-[[nodiscard]] Duration AUTDLinkAuditFpgaSilencerCompletionStepsPhase(LinkPtr audit, uint16_t idx);
+[[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsPhase(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]] bool AUTDLinkAuditFpgaSilencerFixedCompletionStepsMode(LinkPtr audit, uint16_t idx);
 

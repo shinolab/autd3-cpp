@@ -48,8 +48,6 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "ResultSyncLinkBuilder".to_string(),
             "ResultLinkBuilder".to_string(),
             "ControllerPtr".to_string(),
-            "RuntimePtr".to_string(),
-            "HandlePtr".to_string(),
             "TransitionModeWrap".to_string(),
             "TransducerPtr".to_string(),
             "DevicePtr".to_string(),
@@ -113,7 +111,7 @@ fn main() -> Result<()> {
     for entry in glob(&format!("{}/autd3/*/Cargo.toml", home))? {
         let entry = entry?;
         let crate_path = Path::new(&entry).parent().unwrap();
-        if crate_path.file_name() == Some("autd3-driver".as_ref()) {
+        if crate_path.file_name() == Some("autd3-core".as_ref()) {
             gen_c(
                 &crate_path,
                 "../../include/autd3/native_methods",
@@ -124,9 +122,6 @@ fn main() -> Result<()> {
     for entry in glob(&format!("{}/capi/*/Cargo.toml", home))? {
         let entry = entry?;
         let crate_path = Path::new(&entry).parent().unwrap();
-        if crate_path.file_name() == Some("autd3capi-emulator".as_ref()) {
-            continue;
-        }
         gen_c(
             &crate_path,
             "../../include/autd3/native_methods",

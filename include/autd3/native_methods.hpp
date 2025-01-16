@@ -8,6 +8,7 @@
 #define AUTD3_API
 #endif
 
+#include "autd3/native_methods/autd3-core.h"
 #include "autd3/native_methods/autd3-driver.h"
 #include "autd3/native_methods/def.hpp"
 // def.hpp must be included first

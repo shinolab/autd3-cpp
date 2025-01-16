@@ -22,6 +22,25 @@ concept with_samplng_config = requires(const C& c) {
   { c.sampling_config_phase() } -> std::same_as<std::optional<SamplingConfig>>;
 };
 
+struct FixedCompletionSteps {
+  friend class Silencer;
+
+  uint16_t intensity;
+  uint16_t phase;
+
+ private:
+  template <with_samplng_config C>
+  AUTD3_API [[nodiscard]] bool is_valid(const C& c, const bool strict_mode) const noexcept {
+    return native_methods::AUTDDatagramSilencerFixedCompletionStepsIsValid(intensity, phase, strict_mode,
+                                                                           c.sampling_config_intensity().value_or(SamplingConfig(0xFFFF)),
+                                                                           c.sampling_config_phase().value_or(SamplingConfig(0xFFFF)));
+  }
+
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr raw_ptr(const bool strict_mode, const native_methods::SilencerTarget target) const noexcept {
+    return AUTDDatagramSilencerFromCompletionSteps(intensity, phase, strict_mode, target);
+  }
+};
+
 struct FixedCompletionTime {
   friend class Silencer;
 
@@ -63,18 +82,18 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
                        public IntoDatagramWithParallelThreshold<Silencer> {
  public:
   AUTD3_API [[nodiscard]] static Silencer disable() noexcept {
-    return Silencer(FixedCompletionTime{
-        .intensity{std::chrono::microseconds(25)},
-        .phase{std::chrono::microseconds(25)},
+    return Silencer(FixedCompletionSteps{
+        .intensity{1},
+        .phase{1},
     });
   }
 
   Silencer()
-      : Silencer(FixedCompletionTime{
-            .intensity{std::chrono::microseconds(250)},
-            .phase{std::chrono::microseconds(1000)},
+      : Silencer(FixedCompletionSteps{
+            .intensity{10},
+            .phase{40},
         }) {}
-  explicit Silencer(const std::variant<FixedCompletionTime, FixedUpdateRate>& s)
+  explicit Silencer(const std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate>& s)
       : _strict_mode(true), _target(native_methods::SilencerTarget::Intensity), _inner(s) {}
 
   AUTD3_DEF_PARAM(Silencer, bool, strict_mode)
@@ -90,12 +109,12 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
   }
 
   [[nodiscard]]
-  std::variant<FixedCompletionTime, FixedUpdateRate> inner() const {
+  std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate> inner() const {
     return _inner;
   }
 
  private:
-  std::variant<FixedCompletionTime, FixedUpdateRate> _inner;
+  std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate> _inner;
 };
 
 }  // namespace autd3::driver
