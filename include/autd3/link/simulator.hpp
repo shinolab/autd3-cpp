@@ -1,6 +1,5 @@
 #pragma once
 
-#include <chrono>
 #include <string>
 
 #include "autd3/native_methods.hpp"

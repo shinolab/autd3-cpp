@@ -79,14 +79,9 @@ TEST(DriverDatagram, DebugOutputIdx) {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::SysTimeEq(sys_time);
-      case autd3::native_methods::GPIOOut::O1:
-        return autd3::driver::DebugType::None;
-      case autd3::native_methods::GPIOOut::O2:
-        return autd3::driver::DebugType::None;
-      case autd3::native_methods::GPIOOut::O3:
+      default:
         return autd3::driver::DebugType::None;
     }
-    return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
   }));
   for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x60, 0x00, 0x00, 0x00};

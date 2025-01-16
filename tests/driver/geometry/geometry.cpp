@@ -14,17 +14,17 @@ TEST(DriverGeomtry, AUTD3) {
 }
 
 TEST(DriverGeomtry, GeometryNumDevices) {
-  auto autd = create_controller();
+  const auto autd = create_controller();
   ASSERT_EQ(autd.num_devices(), 2);
 }
 
 TEST(DriverGeomtry, GeometryNumTransducers) {
-  auto autd = create_controller();
+  const auto autd = create_controller();
   ASSERT_EQ(autd.num_transducers(), 2 * 249);
 }
 
 TEST(DriverGeomtry, GeometryCenter) {
-  auto autd = create_controller();
+  const auto autd = create_controller();
   ASSERT_NEAR_VECTOR3(autd.center(), autd3::driver::Vector3(86.625267028808594f, 66.71319580078125f, 0), 1e-6);
 }
 

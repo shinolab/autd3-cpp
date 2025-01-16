@@ -129,7 +129,7 @@ void test_foci_stm_n() {
   constexpr auto size = 2;
   std::array<autd3::driver::Point3, N> points;
   points.fill(center);
-  auto stm = autd3::driver::FociSTM(autd3::driver::SamplingConfig(1),
+  const auto stm = autd3::driver::FociSTM(autd3::driver::SamplingConfig(1),
                                     std::views::iota(0) | std::views::take(size) |
                                         std::views::transform([&](auto i) { return autd3::driver::ControlPoints<N>{points}.with_intensity(i); }));
 

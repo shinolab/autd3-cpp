@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <autd3/driver/datagram/pulse_width_encoder.hpp>
-#include <iostream>
 #include <random>
 
 #include "utils.hpp"

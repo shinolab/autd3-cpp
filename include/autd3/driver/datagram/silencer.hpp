@@ -83,15 +83,15 @@ class Silencer final : public IntoDatagramTuple<Silencer>,
  public:
   AUTD3_API [[nodiscard]] static Silencer disable() noexcept {
     return Silencer(FixedCompletionSteps{
-        .intensity{1},
-        .phase{1},
+        .intensity = 1,
+        .phase = 1,
     });
   }
 
   Silencer()
       : Silencer(FixedCompletionSteps{
-            .intensity{10},
-            .phase{40},
+            .intensity = 10,
+            .phase = 40,
         }) {}
   explicit Silencer(const std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate>& s)
       : _strict_mode(true), _target(native_methods::SilencerTarget::Intensity), _inner(s) {}

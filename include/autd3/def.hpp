@@ -31,9 +31,9 @@ struct Point3 {
 
     static Point3 origin() { return Point3{Vector3::Zero()}; }
 
-    float x() const { return coords.x(); }
-    float y() const { return coords.y(); }
-    float z() const { return coords.z(); }
+    [[nodiscard]] float x() const { return coords.x(); }
+    [[nodiscard]] float y() const { return coords.y(); }
+    [[nodiscard]] float z() const { return coords.z(); }
 
     Point3 operator+() const { return *this; }
     Point3 operator-() const { return Point3{-coords}; }
