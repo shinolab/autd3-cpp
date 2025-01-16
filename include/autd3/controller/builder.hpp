@@ -37,7 +37,8 @@ class ControllerBuilder {
                                                native_methods::to_duration(_default_timeout), native_methods::to_duration(_send_interval),
                                                native_methods::to_duration(_receive_interval), _timer_strategy);
     auto ptr = validate(AUTDControllerOpen(builder, link_builder.ptr(), native_methods::to_option_duration(timeout)));
-    return Controller<typename B::Link>{AUTDGeometry(ptr), ptr, link_builder.resolve_link(native_methods::AUTDLinkGet(ptr))};
+    auto geometry = AUTDGeometry(ptr);
+    return Controller<typename B::Link>{std::move(geometry), ptr, link_builder.resolve_link(native_methods::AUTDLinkGet(ptr))};
   }
 
   template <driver::link_builder B>
