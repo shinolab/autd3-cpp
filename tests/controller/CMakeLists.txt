@@ -1,4 +1,4 @@
 target_sources(test_autd3 PRIVATE
-  timer.cpp
+  sleeper.cpp
   controller.cpp
 )

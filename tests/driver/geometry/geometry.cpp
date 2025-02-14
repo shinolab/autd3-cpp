@@ -8,8 +8,8 @@ TEST(DriverGeomtry, AUTD3) {
   ASSERT_EQ(10.16f, autd3::driver::AUTD3::TRANS_SPACING);
   ASSERT_EQ(192.0f, autd3::driver::AUTD3::DEVICE_WIDTH);
   ASSERT_EQ(151.4f, autd3::driver::AUTD3::DEVICE_HEIGHT);
-  ASSERT_EQ(18, autd3::driver::AUTD3::NUM_TRANS_IN_X);
-  ASSERT_EQ(14, autd3::driver::AUTD3::NUM_TRANS_IN_Y);
+  ASSERT_EQ(18, autd3::driver::AUTD3::NUM_TRANS_X);
+  ASSERT_EQ(14, autd3::driver::AUTD3::NUM_TRANS_Y);
   ASSERT_EQ(249, autd3::driver::AUTD3::NUM_TRANS_IN_UNIT);
 }
 

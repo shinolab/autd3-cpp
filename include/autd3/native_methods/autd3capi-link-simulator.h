@@ -12,7 +12,7 @@ void AUTDLinkSimulatorTracingInit();
 
 ResultStatus AUTDLinkSimulatorTracingInitWithFile(const char *path);
 
-[[nodiscard]] ResultLinkBuilder AUTDLinkSimulator(const char *addr);
+[[nodiscard]] ResultLink AUTDLinkSimulator(const char *addr);
 
 } // extern "C"
 

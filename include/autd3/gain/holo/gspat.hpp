@@ -1,30 +1,48 @@
 #pragma once
 
-#include <memory>
+#include <vector>
 
+#include "amplitude.hpp"
+#include "autd3/driver/datagram/gain.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
-#include "autd3/gain/holo/holo.hpp"
+#include "autd3/gain/holo/constraint.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::gain::holo {
 
-template <backend B>
-class GSPAT final : public Holo<GSPAT<B>> {
- public:
-  template <holo_foci_range R>
-  AUTD3_API explicit GSPAT(std::shared_ptr<B> holo_backend, R&& iter)
-      : Holo<GSPAT>(EmissionConstraint::Clamp(0x00, 0xFF), std::forward<R>(iter)), _repeat(100), _backend(std::move(holo_backend)) {}
+struct GSPATOption {
+  size_t repeat = 100;
+  EmissionConstraint constraint =
+      EmissionConstraint::Clamp(std::numeric_limits<driver::EmitIntensity>::min(), std::numeric_limits<driver::EmitIntensity>::max());
 
-  AUTD3_DEF_PARAM(GSPAT, uint32_t, repeat)
+  operator native_methods::GSPATOption() const {
+    return native_methods::GSPATOption{.constraint = constraint, .repeat = static_cast<uint32_t>(repeat)};
+  }
+};
+
+template <backend B>
+struct GSPAT final : driver::Gain, driver::IntoDatagramTuple<GSPAT<B>> {
+  AUTD3_API explicit GSPAT(std::vector<std::pair<driver::Point3, Amplitude>> foci, const GSPATOption option, std::shared_ptr<B> backend)
+      : foci(std::move(foci)), option(option), backend(std::move(backend)) {}
+
+  std::vector<std::pair<driver::Point3, Amplitude>> foci;
+  GSPATOption option;
+  std::shared_ptr<B> backend;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return this->_backend->gspat(reinterpret_cast<const float*>(this->_foci.data()), reinterpret_cast<const float*>(this->_amps.data()),
-                                 static_cast<uint32_t>(this->_amps.size()), _repeat, this->_constraint);
+    std::vector<native_methods::Point3> points;
+    points.reserve(foci.size());
+    std::ranges::transform(foci, std::back_inserter(points),
+                           [&](const auto& f) { return native_methods::Point3{f.first.x(), f.first.y(), f.first.z()}; });
+    std::vector<float> amps;
+    amps.reserve(foci.size());
+    std::ranges::transform(foci, std::back_inserter(amps), [&](const auto& f) { return f.second.pascal(); });
+    return backend->gspat(reinterpret_cast<const float*>(points.data()), amps.data(), static_cast<uint32_t>(foci.size()), option);
   }
-
- private:
-  std::shared_ptr<B> _backend;
 };
+
+template <backend B>
+GSPAT(std::vector<std::pair<driver::Point3, Amplitude>> foci, GSPATOption option, std::shared_ptr<B> backend) -> GSPAT<B>;
 
 }  // namespace autd3::gain::holo

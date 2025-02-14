@@ -2,33 +2,22 @@
 
 #include <filesystem>
 
-#include "autd3/driver/datagram/modulation/modulation.hpp"
-#include "autd3/modulation/resampler.hpp"
+#include "autd3/driver/datagram/modulation.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
 namespace autd3::modulation::audio_file {
 
-class Wav final : public driver::ModulationBase<Wav>,
-                  public driver::IntoModulationCache<Wav>,
-                  public driver::IntoRadiationPressure<Wav>,
-                  public driver::IntoFir<Wav> {
+class Wav final : public driver::Modulation, public driver::IntoDatagramTuple<Wav> {
  public:
-  AUTD3_API explicit Wav(std::filesystem::path path) : _path(std::move(path)) {}
-
-  template <driver::sampling_config T>
-  AUTD3_API explicit Wav(std::filesystem::path path, const T target, const SincInterpolation resampler)
-      : _path(std::move(path)), _resample(std::make_tuple(target, resampler.dyn_resampler())) {}
+  AUTD3_API explicit Wav(std::filesystem::path path) : path(std::move(path)) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    return validate(_resample.has_value() ? AUTDModulationAudioFileWavWithResample(_path.string().c_str(), _loop_behavior,
-                                                                                   std::get<0>(_resample.value()), std::get<1>(_resample.value()))
-                                          : AUTDModulationAudioFileWav(_path.string().c_str(), _loop_behavior));
+    return validate(native_methods::AUTDModulationAudioFileWav(path.string().c_str()));
   }
 
- private:
-  std::filesystem::path _path;
-  std::optional<std::tuple<driver::SamplingConfig, native_methods::DynSincInterpolator>> _resample;
+  std::filesystem::path path;
 };
 
 }  // namespace autd3::modulation::audio_file

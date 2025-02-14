@@ -1,6 +1,5 @@
 #include <gtest/gtest.h>
 
-#include <autd3/controller/builder.hpp>
 #include <autd3/controller/controller.hpp>
 #include <autd3/driver/autd3_device.hpp>
 #include <autd3/driver/geometry/rotation.hpp>
@@ -15,9 +14,8 @@ TEST(DriverGeomtry, Angle) {
 }
 
 namespace {
-autd3::controller::Controller<autd3::link::Audit> open_rotation(const autd3::driver::Quaternion& q) {
-  return autd3::controller::ControllerBuilder({autd3::driver::AUTD3(autd3::driver::Point3::origin()).with_rotation(q)})
-      .open(autd3::link::Audit::builder());
+autd3::controller::Controller open_rotation(const autd3::driver::Quaternion& q) {
+  return autd3::controller::Controller::open({autd3::driver::AUTD3{.pos = autd3::driver::Point3::origin(), .rot = q}}, autd3::link::Audit());
 }
 }  // namespace
 

@@ -40,20 +40,15 @@ enum class DebugTypeTag : uint8_t {
   SysTimeEq = 12,
 };
 
-enum class DynWindow : uint32_t {
-  Rectangular = 0,
-  Blackman = 1,
+enum class SleeperTag : uint8_t {
+  Std = 0,
+  Spin = 1,
+  Waitable = 3,
 };
 
 enum class SpinStrategyTag : uint8_t {
   YieldThread = 0,
   SpinLoopHint = 1,
-};
-
-enum class TimerStrategyTag : uint8_t {
-  Std = 0,
-  Spin = 1,
-  Waitable = 3,
 };
 
 enum class TransitionModeTag : uint8_t {
@@ -71,11 +66,6 @@ struct DatagramPtr {
 
 struct GainPtr {
   const void *_0;
-};
-
-struct DynSincInterpolator {
-  DynWindow window;
-  uint32_t window_size;
 };
 
 struct ResultGain {
@@ -100,24 +90,8 @@ struct ResultSamplingConfig {
   const void* err;
 };
 
-struct TimerStrategyWrap {
-  TimerStrategyTag tag;
-  uint32_t value;
-  SpinStrategyTag spin_strategy;
-};
-
 struct ResultStatus {
   AUTDStatus result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct LinkBuilderPtr {
-  const void *_0;
-};
-
-struct ResultLinkBuilder {
-  LinkBuilderPtr result;
   uint32_t err_len;
   const void* err;
 };
@@ -173,22 +147,6 @@ struct GainSTMPtr {
   const void *_0;
 };
 
-struct ResultFociSTM {
-  FociSTMPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct ResultGainSTM {
-  GainSTMPtr result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct ControllerBuilderPtr {
-  const void *_0;
-};
-
 struct Duration {
   uint64_t nanos;
 };
@@ -198,6 +156,22 @@ struct OptionDuration {
   Duration value;
 };
 constexpr const OptionDuration OptionDuration_NONE = OptionDuration{ /* .has_value = */ false, /* .value = */ Duration{ /* .nanos = */ 0 } };
+
+struct SenderPtr {
+  const void *_0;
+};
+
+struct ResultLink {
+  LinkPtr result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct SleeperWrap {
+  SleeperTag tag;
+  uint32_t value;
+  SpinStrategyTag spin_strategy;
+};
 
 
 

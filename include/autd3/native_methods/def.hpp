@@ -29,4 +29,8 @@ struct Quaternion {
   operator driver::Quaternion() const { return {w, x, y, z}; }
 };
 
+struct LoopBehavior {
+  uint16_t rep;
+};
+
 }  // namespace autd3::native_methods

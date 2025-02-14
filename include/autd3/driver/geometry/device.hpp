@@ -62,15 +62,15 @@ class Device {
 
   AUTD3_API void set_enable(const bool value) const { AUTDDeviceEnableSet(_geo_ptr, static_cast<uint16_t>(_idx), value); }
 
-  AUTD3_API void translate(Vector3 t) const {
+  AUTD3_API void translate(const Vector3& t) const {
     AUTDDeviceTranslate(_geo_ptr, static_cast<uint16_t>(_idx), native_methods::Vector3{t.x(), t.y(), t.z()});
   }
 
-  AUTD3_API void rotate(Quaternion r) const {
+  AUTD3_API void rotate(const Quaternion& r) const {
     AUTDDeviceRotate(_geo_ptr, static_cast<uint16_t>(_idx), native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
   }
 
-  AUTD3_API void affine(Vector3 t, Quaternion r) const {
+  AUTD3_API void affine(const Vector3& t, const Quaternion& r) const {
     AUTDDeviceAffine(_geo_ptr, static_cast<uint16_t>(_idx), native_methods::Vector3{t.x(), t.y(), t.z()},
                      native_methods::Quaternion{r.x(), r.y(), r.z(), r.w()});
   }

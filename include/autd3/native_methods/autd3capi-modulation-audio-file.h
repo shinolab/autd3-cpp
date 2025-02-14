@@ -12,41 +12,12 @@ void AUTDModulationAudioFileTracingInit();
 
 ResultStatus AUTDModulationAudioFileTracingInitWithFile(const char *path);
 
-[[nodiscard]]
-ResultModulation AUTDModulationAudioFileWav(const char *path,
-                                            LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ResultModulation AUTDModulationAudioFileWavWithResample(const char *path,
-                                                        LoopBehavior loop_behavior,
-                                                        SamplingConfig target,
-                                                        DynSincInterpolator resample);
-
-[[nodiscard]]
-ResultModulation AUTDModulationAudioFileRawPCM(const char *path,
-                                               SamplingConfig config,
-                                               LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ResultModulation AUTDModulationAudioFileRawPCMWithResample(const char *path,
-                                                           LoopBehavior loop_behavior,
-                                                           float src,
-                                                           SamplingConfig target,
-                                                           DynSincInterpolator resample);
+[[nodiscard]] ResultModulation AUTDModulationAudioFileWav(const char *path);
 
 [[nodiscard]]
 ResultModulation AUTDModulationAudioFileCsv(const char *path,
-                                            SamplingConfig config,
-                                            uint8_t deliminator,
-                                            LoopBehavior loop_behavior);
-
-[[nodiscard]]
-ResultModulation AUTDModulationAudioFileCsvWithResample(const char *path,
-                                                        uint8_t deliminator,
-                                                        LoopBehavior loop_behavior,
-                                                        float src,
-                                                        SamplingConfig target,
-                                                        DynSincInterpolator resample);
+                                            SamplingConfig sampling_config,
+                                            uint8_t delimiter);
 
 } // extern "C"
 

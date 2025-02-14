@@ -12,57 +12,34 @@
 
 using autd3::native_methods::Segment;
 
-TEST(DriverDatagramSM, FociSTM) {
+TEST(DriverDatagramSTM, FociSTM) {
   auto autd = create_controller();
 
   autd.send(autd3::driver::Silencer::disable());
 
-  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  const std::vector foci = {center, center};
+
   {
-    auto stm = autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
-                                                                  return autd3::driver::ControlPoints<1>{center};
-                                                                }));
-    ASSERT_EQ(1.0f * autd3::driver::Hz, stm.freq());
-    ASSERT_EQ(std::chrono::seconds(1), stm.period());
+    const auto stm = autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz);
     ASSERT_EQ(20000u, stm.sampling_config().division());
     autd.send(stm);
     for (const auto& dev : autd) {
-      ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_FALSE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
     }
 
-    for (const auto& dev : autd) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    for (const auto& dev : autd) ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 
   {
-    auto stm = autd3::driver::FociSTM::nearest(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
-                                                                           return autd3::driver::ControlPoints<1>{std::array{center}};
-                                                                         }));
-    autd.send(stm);
-    for (const auto& dev : autd) {
-      ASSERT_FALSE(autd.link().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-    }
-
-    for (const auto& dev : autd) ASSERT_EQ(20000u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
-  }
-
-  {
-    auto stm = autd3::driver::FociSTM(autd3::driver::SamplingConfig(1),
-                                      std::views::iota(0) | std::views::take(2) |
-                                          std::views::transform([&](auto i) { return autd3::driver::ControlPoints<1>{center}.with_intensity(i); }));
+    const auto stm = autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz).into_nearest();
 
     autd.send(stm);
-    for (const auto& dev : autd) ASSERT_EQ(1u, autd.link().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
-
     for (const auto& dev : autd) {
-      ASSERT_EQ(2u, autd.link().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
-      auto drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
-      ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.intensity.value() == 0x00; }));
-      ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
-
-      drives = autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, 1);
-      ASSERT_TRUE(std::ranges::any_of(drives, [](auto d) { return d.intensity.value() == 0x01; }));
-      ASSERT_TRUE(std::ranges::any_of(drives, [](auto p) { return p.phase.value() != 0; }));
+      ASSERT_FALSE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
     }
+
+    for (const auto& dev : autd) ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -74,47 +51,44 @@ TEST(DriverDatagramSM, FociSTMSegment) {
   auto infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
-    ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
+    ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
-  auto stm = autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
-                                                                return autd3::driver::ControlPoints<1>{std::array{center}};
-                                                              }));
+  const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  const std::vector foci = {center, center};
+
+  const auto stm = autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz);
 
   autd.send(stm);
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
-    ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
+    ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(stm.with_segment(Segment::S1, autd3::driver::TransitionMode::Immediate));
+  autd.send(autd3::driver::WithSegment(stm, Segment::S1, autd3::driver::TransitionMode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_stm_segment());
-    ASSERT_EQ(Segment::S1, autd.link().current_stm_segment(dev.idx()));
+    ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::FociSTM(1.0f * autd3::driver::Hz, std::views::iota(0) | std::views::take(2) | std::views::transform([&](auto) {
-                                                               return autd3::driver::ControlPoints<1>{std::array{center}};
-                                                             }))
-                .with_segment(Segment::S0, std::nullopt));
+  autd.send(autd3::driver::WithSegment(stm, Segment::S0, std::nullopt));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_stm_segment());
-    ASSERT_EQ(Segment::S1, autd.link().current_stm_segment(dev.idx()));
+    ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::SwapSegment::FociSTM(Segment::S0, autd3::driver::TransitionMode::Immediate));
+  autd.send(autd3::driver::SwapSegment::FociSTM(Segment::S0, autd3::driver::TransitionMode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
-    ASSERT_EQ(Segment::S0, autd.link().current_stm_segment(dev.idx()));
+    ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 }
 
@@ -124,19 +98,20 @@ void test_foci_stm_n() {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
 
-  constexpr auto size = 2;
-  std::array<autd3::driver::Point3, N> points;
-  points.fill(center);
-  const auto stm = autd3::driver::FociSTM(autd3::driver::SamplingConfig(1),
-                                    std::views::iota(0) | std::views::take(size) |
-                                        std::views::transform([&](auto i) { return autd3::driver::ControlPoints<N>{points}.with_intensity(i); }));
+  std::array<autd3::driver::ControlPoint, N> points;
+  points.fill(autd3::driver::ControlPoint{.point = center, .phase_offset = autd3::driver::Phase::zero()});
+
+  const auto foci = std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(0)},
+                                autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(1)}};
+
+  const auto stm = autd3::driver::FociSTM(foci, autd3::driver::SamplingConfig(1));
 
   autd.send(stm);
   for (const auto& dev : autd) {
-    for (int i = 0; i < size; i++) {
-      for (const auto& d : autd.link().drives(dev.idx(), autd3::native_methods::Segment::S0, i)) ASSERT_EQ(d.intensity.value(), i);
+    for (int i = 0; i < 2; i++) {
+      for (const auto& [_, intensity] : autd.link<autd3::link::Audit>().drives(dev.idx(), Segment::S0, i)) ASSERT_EQ(intensity._0, i);
     }
   }
 }

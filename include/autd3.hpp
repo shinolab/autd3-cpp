@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "autd3/controller/builder.hpp"
 #include "autd3/controller/controller.hpp"
 #include "autd3/def.hpp"
 #include "autd3/driver/autd3_device.hpp"
@@ -22,6 +21,7 @@
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
+#include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/firmware/fpga/transition_mode.hpp"
@@ -43,9 +43,10 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "29.0.0-rc.16";
+static inline std::string version = "29.0.0";
 
 using autd3::driver::deg;
+using autd3::driver::Freq;
 using autd3::driver::Hz;
 using autd3::driver::kHz;
 using autd3::driver::rad;
@@ -64,6 +65,7 @@ using driver::LoopBehavior;
 using driver::Phase;
 using driver::SamplingConfig;
 using driver::TransitionMode;
+using native_methods::GainSTMMode;
 using native_methods::GPIOIn;
 using native_methods::GPIOOut;
 using native_methods::Segment;
@@ -72,6 +74,7 @@ using native_methods::SilencerTarget;
 using driver::Clear;
 using driver::ControlPoint;
 using driver::ControlPoints;
+using driver::DatagramTuple;
 using driver::DebugSettings;
 using driver::DebugType;
 using driver::FixedCompletionSteps;
@@ -79,7 +82,9 @@ using driver::FixedCompletionTime;
 using driver::FixedUpdateRate;
 using driver::FociSTM;
 using driver::ForceFan;
+using driver::Gain;
 using driver::GainSTM;
+using driver::GainSTMOption;
 using driver::PhaseCorrection;
 using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;
@@ -90,14 +95,19 @@ using driver::Synchronize;
 using native_methods::GainSTMMode;
 
 using gain::Bessel;
+using gain::BesselOption;
 using gain::Focus;
+using gain::FocusOption;
 using gain::Group;
 using gain::Null;
 using gain::Plane;
+using gain::PlaneOption;
 using gain::Uniform;
 
 using modulation::Sine;
+using modulation::SineOption;
 using modulation::Square;
+using modulation::SquareOption;
 using modulation::Static;
 
 using driver::FirmwareVersion;
@@ -108,7 +118,6 @@ using driver::Quaternion;
 using driver::Vector3;
 
 using controller::Controller;
-using controller::ControllerBuilder;
 
 #ifndef AUTD3_EXT_TRACING
 inline void tracing_init() { native_methods::AUTDTracingInit(); }

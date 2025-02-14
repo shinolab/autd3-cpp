@@ -14,10 +14,10 @@ enum class EmissionConstraintTag : uint8_t {
 };
 
 union EmissionConstraintValue {
-  uint8_t null;
-  uint8_t uniform;
+  EmitIntensity null;
+  EmitIntensity uniform;
   float multiply;
-  uint8_t clamp[2];
+  EmitIntensity clamp[2];
 };
 
 struct EmissionConstraintWrap {
@@ -25,8 +25,37 @@ struct EmissionConstraintWrap {
   EmissionConstraintValue value;
 };
 
+struct GreedyOption {
+  EmissionConstraintWrap constraint;
+  uint8_t phase_div;
+};
+
 struct BackendPtr {
   const void *_0;
+};
+
+struct GSOption {
+  EmissionConstraintWrap constraint;
+  uint32_t repeat;
+};
+
+struct GSPATOption {
+  EmissionConstraintWrap constraint;
+  uint32_t repeat;
+};
+
+struct LMOption {
+  EmissionConstraintWrap constraint;
+  float eps_1;
+  float eps_2;
+  float tau;
+  uint32_t k_max;
+  const float *initial;
+  uint32_t initial_len;
+};
+
+struct NaiveOption {
+  EmissionConstraintWrap constraint;
 };
 
 extern "C" {
@@ -37,114 +66,91 @@ extern "C" {
 
 [[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintNormalize();
 
-[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintUniform(uint8_t intensity);
+[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintUniform(EmitIntensity intensity);
 
 [[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintMultiply(float v);
 
-[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintClamp(uint8_t min_v, uint8_t max_v);
+[[nodiscard]]
+EmissionConstraintWrap AUTDGainHoloConstraintClamp(EmitIntensity min_v,
+                                                   EmitIntensity max_v);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGreedySphere(const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
-                                 uint8_t div,
-                                 EmissionConstraintWrap constraint);
+                                 GreedyOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGreedyT4010A1(const Point3 *points,
                                   const float *amps,
                                   uint32_t size,
-                                  uint8_t div,
-                                  EmissionConstraintWrap constraint);
+                                  GreedyOption option);
 
-[[nodiscard]] bool AUTDGainGreedyIsDefault(EmissionConstraintWrap constraint, uint8_t phase_div);
+[[nodiscard]] bool AUTDGainGreedyIsDefault(GreedyOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSSphere(BackendPtr backend,
                              const Point3 *points,
                              const float *amps,
                              uint32_t size,
-                             uint32_t repeat_nonzero,
-                             EmissionConstraintWrap constraint);
+                             GSOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
                               const Point3 *points,
                               const float *amps,
                               uint32_t size,
-                              uint32_t repeat_nonzero,
-                              EmissionConstraintWrap constraint);
+                              GSOption option);
 
-[[nodiscard]] bool AUTDGainGSIsDefault(EmissionConstraintWrap constraint, uint32_t repeat);
+[[nodiscard]] bool AUTDGainGSIsDefault(GSOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSPATSphere(BackendPtr backend,
                                 const Point3 *points,
                                 const float *amps,
                                 uint32_t size,
-                                uint32_t repeat_nonzero,
-                                EmissionConstraintWrap constraint);
+                                GSPATOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
                                  const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
-                                 uint32_t repeat_nonzero,
-                                 EmissionConstraintWrap constraint);
+                                 GSPATOption option);
 
-[[nodiscard]] bool AUTDGainGSPATIsDefault(EmissionConstraintWrap constraint, uint32_t repeat);
+[[nodiscard]] bool AUTDGainGSPATIsDefault(GSPATOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloLMSphere(BackendPtr backend,
                              const Point3 *points,
                              const float *amps,
                              uint32_t size,
-                             float eps_1,
-                             float eps_2,
-                             float tau,
-                             uint32_t k_max_nonzero,
-                             const float *initial_ptr,
-                             uint32_t initial_len,
-                             EmissionConstraintWrap constraint);
+                             LMOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloLMT4010A1(BackendPtr backend,
                               const Point3 *points,
                               const float *amps,
                               uint32_t size,
-                              float eps_1,
-                              float eps_2,
-                              float tau,
-                              uint32_t k_max_nonzero,
-                              const float *initial_ptr,
-                              uint32_t initial_len,
-                              EmissionConstraintWrap constraint);
+                              LMOption option);
 
-[[nodiscard]]
-bool AUTDGainLMIsDefault(EmissionConstraintWrap constraint,
-                         float eps_1,
-                         float eps_2,
-                         float tau,
-                         uint32_t k_max,
-                         const float *initial_ptr,
-                         uint32_t initial_len);
+[[nodiscard]] bool AUTDGainLMIsDefault(LMOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloNaiveSphere(BackendPtr backend,
                                 const Point3 *points,
                                 const float *amps,
                                 uint32_t size,
-                                EmissionConstraintWrap constraint);
+                                NaiveOption option);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloNaiveT4010A1(BackendPtr backend,
                                  const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
-                                 EmissionConstraintWrap constraint);
+                                 NaiveOption option);
 
-[[nodiscard]] bool AUTDGainNaiveIsDefault(EmissionConstraintWrap constraint);
+[[nodiscard]] bool AUTDGainNaiveIsDefault(NaiveOption option);
 
 [[nodiscard]] BackendPtr AUTDNalgebraBackendSphere();
 
