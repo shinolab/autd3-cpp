@@ -105,14 +105,14 @@ dependencies = ["update-lib", "test-mkdir", "cov-cmake-test", "test-build", "tes
 [tasks.cov-cmake-test]
 cwd = "./build/tests"
 command = "cmake"
-args = ["..", "-DCOVERAGE=ON", "${@}"]
+args = ["../../tests", "-DCOVERAGE=ON", "${@}"]
 
 [tasks.lcov]
-cwd = "./build/tests/CMakeFiles/test_autd3-firmware.dir"
+cwd = "./build/tests/CMakeFiles/test_autd3.dir"
 script_runner = "@shell"
 script = '''
 lcov -d . -c --ignore-errors mismatch -o coverage.raw.info
-lcov -r coverage.raw.info "*/_deps/*" "*/tests/*" "*/usr/*" "*/c++/*" "*/gcc/*" --ignore-errors unused -o coverage.info
+lcov -r coverage.raw.info "*/_deps/*" "*/tests/*" "*/usr/*" --ignore-errors unused -o coverage.info
 '''
 
 [tasks.generate-wrapper]

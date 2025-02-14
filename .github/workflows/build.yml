@@ -19,4 +19,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: ./.github/actions/setup-build
-      - run: cargo make check
+      - run: |
+          cargo make build
+          cargo make test
