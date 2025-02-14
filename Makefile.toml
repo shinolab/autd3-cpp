@@ -11,8 +11,10 @@ linux_alias = "format-nix"
 mac_alias = "format-nix"
 
 [tasks.format-nix]
-command = "clang-format"
-args = ["-i", "./examples/**/*.hpp", "./examples/**/*.cpp", "./include/**/*.hpp", "./tests/**/*.hpp", "./tests/**/*.cpp"]
+script_runner = "@shell"
+script = '''
+clang-format -i ./examples/**.hpp ./examples/**.cpp ./include/**.hpp ./tests/**.hpp ./tests/**.cpp
+'''
 
 [tasks.format-win]
 script_runner = "pwsh"
