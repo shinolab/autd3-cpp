@@ -168,7 +168,7 @@ class Controller final : public driver::geometry::Geometry {
     }
     AUTDControllerFPGAStateDelete(p);
     return ret;
-  }
+  }  // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] std::vector<driver::FirmwareVersion> firmware_version() {
     const size_t num_devices = geometry().num_devices();
@@ -182,7 +182,7 @@ class Controller final : public driver::geometry::Geometry {
     }
     AUTDControllerFirmwareVersionListPointerDelete(handle);
     return ret;
-  }
+  }  // LCOV_EXCL_LINE
 
   AUTD3_API Sender sender(const SenderOption option) const { return Sender(AUTDSender(_ptr, SenderOption()), geometry()); }
 

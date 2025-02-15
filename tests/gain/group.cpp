@@ -36,6 +36,35 @@ TEST(Gain, Group) {
   }
 }
 
+TEST(Gain, GroupNullopt) {
+  auto autd = create_controller();
+
+  const auto cx = autd.center().x();
+
+  autd.send(autd3::gain::Group(
+      [cx](const auto&) {
+        return [cx](const auto& tr) -> std::optional<const char*> {
+          if (tr.position().x() < cx) return "uniform";
+          return std::nullopt;
+        };
+      },
+      std::unordered_map<const char*, std::shared_ptr<autd3::driver::Gain>>{
+          {"uniform", std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90))}}));
+
+  for (auto& dev : autd) {
+    auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
+    for (auto& tr : dev) {
+      if (tr.position().x() < cx) {
+        ASSERT_EQ(0x80, drives[tr.idx()].intensity._0);
+        ASSERT_EQ(0x90, drives[tr.idx()].phase._0);
+      } else {
+        ASSERT_EQ(0, drives[tr.idx()].intensity._0);
+        ASSERT_EQ(0, drives[tr.idx()].phase._0);
+      }
+    }
+  }
+}
+
 TEST(Gain, GroupUnkownKey) {
   auto autd = create_controller();
 

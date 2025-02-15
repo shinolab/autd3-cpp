@@ -11,7 +11,7 @@ struct StdSleeper {
   operator native_methods::SleeperWrap() const {
     return native_methods::SleeperWrap{
         .tag = native_methods::SleeperTag::Std,
-        .value = 0,
+        .value = timer_resolution.value_or(0),
         .spin_strategy = native_methods::SpinStrategyTag::SpinLoopHint,
     };
   }

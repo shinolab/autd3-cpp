@@ -94,7 +94,6 @@ class GainSTM<Freq<float>> final : public GainSTMBase, public IntoDatagramTuple<
   template <gain G>
   AUTD3_API explicit GainSTM(std::vector<G> gains, const Freq<float> config, const GainSTMOption option)
       : GainSTMBase(std::move(gains), option), config(config) {}
-
   AUTD3_API explicit GainSTM(std::vector<std::shared_ptr<Gain>> gains_, const Freq<float> config, const GainSTMOption option_)
       : GainSTMBase(std::move(gains_), option_), config(config) {}
 
@@ -139,9 +138,12 @@ class GainSTM<std::chrono::nanoseconds> final : public GainSTMBase, public IntoD
 
 template <gain G>
 GainSTM(std::vector<G> gains, SamplingConfig config, GainSTMOption option) -> GainSTM<SamplingConfig>;
+GainSTM(std::vector<std::shared_ptr<Gain>> gains, SamplingConfig config, GainSTMOption option) -> GainSTM<SamplingConfig>;
 template <gain G>
 GainSTM(std::vector<G> gains, Freq<float> config, GainSTMOption option) -> GainSTM<Freq<float>>;
+GainSTM(std::vector<std::shared_ptr<Gain>> gains, Freq<float> config, GainSTMOption option) -> GainSTM<Freq<float>>;
 template <typename Rep, typename P, gain G>
 GainSTM(std::vector<G> gains, std::chrono::duration<Rep, P> config, GainSTMOption option) -> GainSTM<std::chrono::nanoseconds>;
-
+template <typename Rep, typename P>
+GainSTM(std::vector<std::shared_ptr<Gain>> gains, std::chrono::duration<Rep, P> config, GainSTMOption option) -> GainSTM<std::chrono::nanoseconds>;
 }  // namespace autd3::driver
