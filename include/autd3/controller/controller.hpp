@@ -45,9 +45,9 @@ class Sender {
 
   Sender() = delete;
   Sender(const Sender& v) = default;
-  Sender& operator=(const Sender& obj) = default;
+  Sender& operator=(const Sender& obj) = delete;
   Sender(Sender&& obj) = default;
-  Sender& operator=(Sender&& obj) = default;
+  Sender& operator=(Sender&& obj) = delete;
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
