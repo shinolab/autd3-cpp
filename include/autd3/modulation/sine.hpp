@@ -1,46 +1,72 @@
 #pragma once
 
-#include <variant>
-
-#include "autd3/driver/datagram/modulation/modulation.hpp"
+#include "autd3/driver/datagram/modulation.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/defined/angle.hpp"
 #include "autd3/driver/defined/freq.hpp"
-#include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/modulation/sampling_mode.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::modulation {
 
-class Fourier;
+struct SineOption {
+  uint8_t intensity = 0xFF;
+  uint8_t offset = 0x80;
+  driver::Angle phase = 0.0 * driver::rad;
+  bool clamp = false;
+  driver::SamplingConfig sampling_config = driver::SamplingConfig::freq_4k();
 
-class Sine final : public driver::Modulation<Sine> {
-  AUTD3_API explicit Sine(const std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> freq)
-      : Modulation(driver::SamplingConfig(10)),
-        _intensity(std::numeric_limits<uint8_t>::max()),
-        _offset(0x80),
-        _phase(0.0 * driver::rad),
-        _clamp(false),
-        _freq(freq) {}
+  operator native_methods::SineOption() const {
+    return native_methods::SineOption{.intensity = intensity, .offset = offset, .phase = phase, .clamp = clamp, .sampling_config = sampling_config};
+  }
+};
 
- public:
-  friend Fourier;
+template <typename>
+struct Sine {};
 
-  AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq) : Sine(SamplingModeExact{freq}) {}
-  AUTD3_API explicit Sine(const driver::Freq<float> freq) : Sine(SamplingModeExactFloat{freq}) {}
-  AUTD3_API [[nodiscard]] static Sine nearest(const driver::Freq<float> freq) { return Sine(SamplingModeNearest{freq}); }
+template <>
+struct Sine<driver::Freq<uint32_t>> final : driver::Modulation, driver::IntoDatagramTuple<Sine<driver::Freq<uint32_t>>> {
+  AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq, const SineOption option) : freq(freq), option(option) {}
 
-  AUTD3_DEF_PARAM_INT(Sine, uint8_t, intensity)
-  AUTD3_DEF_PARAM_INT(Sine, uint8_t, offset)
-  AUTD3_DEF_PARAM(Sine, driver::Angle, phase)
-  AUTD3_DEF_PARAM(Sine, bool, clamp)
+  driver::Freq<uint32_t> freq;
+  SineOption option;
+
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    return std::visit([&](const auto& f) { return f.sine_ptr(_sampling_config, _intensity, _offset, _phase, _clamp, _loop_behavior); }, _freq);
+    return native_methods::AUTDModulationSineExact(freq.hz(), option);
+  }
+};
+
+template <>
+struct Sine<Nearest> final : driver::Modulation, driver::IntoDatagramTuple<Sine<driver::Freq<float>>> {
+  friend struct Sine<driver::Freq<float>>;
+
+  driver::Freq<float> freq;
+  SineOption option;
+
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    return native_methods::AUTDModulationSineNearest(freq.hz(), option);
   }
 
  private:
-  std::variant<SamplingModeExact, SamplingModeExactFloat, SamplingModeNearest> _freq;
+  AUTD3_API explicit Sine(const driver::Freq<float> freq, const SineOption option) : freq(freq), option(option) {}
 };
+
+template <>
+struct Sine<driver::Freq<float>> final : driver::Modulation, driver::IntoDatagramTuple<Sine<driver::Freq<float>>> {
+  AUTD3_API explicit Sine(const driver::Freq<float> freq, const SineOption option) : freq(freq), option(option) {}
+
+  driver::Freq<float> freq;
+  SineOption option;
+
+  [[nodiscard]] Sine<Nearest> into_nearest() const { return Sine<Nearest>(freq, option); }
+
+  AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
+    return native_methods::AUTDModulationSineExactFloat(freq.hz(), option);
+  }
+};
+
+Sine(driver::Freq<uint32_t>&& freq, SineOption option) -> Sine<driver::Freq<uint32_t>>;
+Sine(driver::Freq<float>&& freq, SineOption option) -> Sine<driver::Freq<float>>;
 
 }  // namespace autd3::modulation

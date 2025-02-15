@@ -1,40 +1,24 @@
 #pragma once
 
 #include <array>
-#include <autd3/driver/firmware/fpga/drive.hpp>
 #include <chrono>
-#include <optional>
 
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::controller {
-class ControllerBuilder;
+class Controller;
 }
 
 namespace autd3::link {
 
-class Audit final {
+struct Audit final {
+  friend class controller::Controller;
+
   native_methods::LinkPtr _ptr;
 
-  explicit Audit(const native_methods::LinkPtr ptr) : _ptr(ptr) {}
+  Audit() : _ptr(native_methods::LinkPtr{nullptr}) {}
 
- public:
-  class Builder final {
-    friend class Audit;
-    friend class controller::ControllerBuilder;
-
-    Builder() = default;
-
-    [[nodiscard]] static Audit resolve_link(const native_methods::LinkPtr link) { return Audit{link}; }
-
-   public:
-    using Link = Audit;
-
-    [[nodiscard]] native_methods::LinkBuilderPtr ptr() const { return native_methods::AUTDLinkAudit(); }
-  };
-
-  static Builder builder() { return {}; }
+  [[nodiscard]] native_methods::LinkPtr resolve() { return native_methods::AUTDLinkAudit(); }
 
   void down() const { AUTDLinkAuditDown(_ptr); }
   void up() const { AUTDLinkAuditUp(_ptr); }
@@ -45,15 +29,6 @@ class Audit final {
 
   void break_down() const { AUTDLinkAuditBreakDown(_ptr); }
   void repair() const { AUTDLinkAuditRepair(_ptr); }
-
-  [[nodiscard]] std::optional<uint64_t> last_parallel_threshold() const {
-    const auto threshold = AUTDLinkAuditLastParallelThreshold(_ptr);
-    return threshold < 0 ? std::nullopt : std::make_optional(static_cast<uint64_t>(threshold));
-  }
-
-  [[nodiscard]] std::optional<std::chrono::nanoseconds> last_timeout() const {
-    return native_methods::from_option_duration(AUTDLinkAuditLastTimeout(_ptr));
-  }
 
   [[nodiscard]] uint16_t silencer_update_rate_intensity(const size_t idx) const {
     return AUTDLinkAuditFpgaSilencerUpdateRateIntensity(_ptr, static_cast<uint16_t>(idx));
@@ -111,9 +86,9 @@ class Audit final {
     return AUTDLinkAuditFpgaModulationLoopBehavior(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] std::vector<driver::Drive> drives(const size_t idx, const native_methods::Segment segment, const int stm_idx) const {
+  [[nodiscard]] std::vector<native_methods::Drive> drives(const size_t idx, const native_methods::Segment segment, const int stm_idx) const {
     const auto n = AUTDLinkAuditCpuNumTransducers(_ptr, static_cast<uint16_t>(idx));
-    std::vector<driver::Drive> drives(n);
+    std::vector<native_methods::Drive> drives(n);
     AUTDLinkAuditFpgaDrivesAt(_ptr, segment, static_cast<uint16_t>(idx), static_cast<uint16_t>(stm_idx),
                               reinterpret_cast<native_methods::Drive*>(drives.data()));
     return drives;
@@ -152,6 +127,9 @@ class Audit final {
     AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), buf.data());
     return buf;
   }  // LCOV_EXCL_LINE
+
+ private:
+  explicit Audit(const native_methods::LinkPtr ptr) : _ptr(ptr) {}
 };
 
 }  // namespace autd3::link

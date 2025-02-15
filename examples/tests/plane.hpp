@@ -2,15 +2,8 @@
 
 #include "autd3.hpp"
 
-template <typename L>
-inline void plane_test(autd3::Controller<L>& autd) {
-  auto silencer = autd3::Silencer();
-  autd.send(silencer);
+inline void plane_test(autd3::Controller& autd) {
+  autd.send(autd3::Silencer());
 
-  autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM
-
-  const autd3::Vector3 direction = autd3::Vector3::UnitZ();
-  autd3::gain::Plane g(direction);
-
-  autd.send((m, g));
+  autd.send((autd3::Sine(150 * autd3::Hz, autd3::SineOption{}), autd3::Plane(autd3::Vector3(0, 0, 1), autd3::PlaneOption{})));
 }

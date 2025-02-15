@@ -16,7 +16,7 @@ TEST(DriverDatagram, FPGAState) {
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
 
   {
-    autd.link().assert_thermal_sensor(0);
+    autd.link<autd3::link::Audit>().assert_thermal_sensor(0);
 
     const auto infos = autd.fpga_state();
     ASSERT_TRUE(infos[0].value().is_thermal_assert());
@@ -24,8 +24,8 @@ TEST(DriverDatagram, FPGAState) {
   }
 
   {
-    autd.link().deassert_thermal_sensor(0);
-    autd.link().assert_thermal_sensor(1);
+    autd.link<autd3::link::Audit>().deassert_thermal_sensor(0);
+    autd.link<autd3::link::Audit>().assert_thermal_sensor(1);
 
     const auto infos = autd.fpga_state();
     ASSERT_FALSE(infos[0].value().is_thermal_assert());
@@ -33,8 +33,8 @@ TEST(DriverDatagram, FPGAState) {
   }
 
   {
-    autd.link().break_down();
+    autd.link<autd3::link::Audit>().break_down();
     ASSERT_THROW((void)autd.fpga_state(), autd3::AUTDException);
-    autd.link().repair();
+    autd.link<autd3::link::Audit>().repair();
   }
 }

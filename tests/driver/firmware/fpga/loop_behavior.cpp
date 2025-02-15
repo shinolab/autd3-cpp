@@ -4,18 +4,18 @@
 #include <autd3/exception.hpp>
 
 TEST(DriverFirmwareFPGA, LoopBehaviorInfinite) {
-  const auto [rep] = autd3::driver::LoopBehavior::Infinite;
-  ASSERT_EQ(0xFFFF, rep);
+  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::Infinite;
+  ASSERT_EQ(0xFFFF, loop_behavior.rep);
 }
 
 TEST(DriverFirmwareFPGA, LoopBehaviorFinite) {
-  const auto [rep] = autd3::driver::LoopBehavior::Finite(2);
-  ASSERT_EQ(1, rep);
+  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::Finite(2);
+  ASSERT_EQ(1, loop_behavior.rep);
 
   ASSERT_THROW((void)autd3::driver::LoopBehavior::Finite(0), autd3::AUTDException);
 }
 
 TEST(DriverFirmwareFPGA, LoopBehaviorOnce) {
-  const auto [rep] = autd3::driver::LoopBehavior::Once;
-  ASSERT_EQ(0, rep);
+  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::ONCE;
+  ASSERT_EQ(0, loop_behavior.rep);
 }

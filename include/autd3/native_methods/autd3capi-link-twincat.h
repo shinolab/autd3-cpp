@@ -12,12 +12,12 @@ void AUTDLinkTwinCATTracingInit();
 
 ResultStatus AUTDLinkTwinCATTracingInitWithFile(const char *path);
 
-[[nodiscard]] LinkBuilderPtr AUTDLinkTwinCAT();
+[[nodiscard]] ResultLink AUTDLinkTwinCAT();
 
 [[nodiscard]]
-ResultLinkBuilder AUTDLinkRemoteTwinCAT(const char *server_ams_net_id,
-                                        const char *server_ip,
-                                        const char *client_ams_net_id);
+ResultLink AUTDLinkRemoteTwinCAT(const char *server_ams_net_id,
+                                 const char *server_ip,
+                                 const char *client_ams_net_id);
 
 } // extern "C"
 

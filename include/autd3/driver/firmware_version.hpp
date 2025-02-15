@@ -4,11 +4,15 @@
 
 #include "autd3/native_methods.hpp"
 
+namespace autd3::controller {
+class Controller;
+}
+
 namespace autd3::driver {
 
 class FirmwareVersion {
  public:
-  AUTD3_API explicit FirmwareVersion(std::string info) noexcept : _info(std::move(info)) {}
+  friend class controller::Controller;
 
   AUTD3_API [[nodiscard]] std::string info() const { return _info; }
 
@@ -19,6 +23,8 @@ class FirmwareVersion {
   }
 
  private:
+  AUTD3_API explicit FirmwareVersion(std::string info) noexcept : _info(std::move(info)) {}
+
   std::string _info;
 };
 

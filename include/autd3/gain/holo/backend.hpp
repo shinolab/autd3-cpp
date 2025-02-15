@@ -16,15 +16,14 @@ class Backend {
 
   [[nodiscard]] native_methods::BackendPtr ptr() const { return _ptr; }
 
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gs(const float* foci, const float* amps, uint32_t size, uint32_t repeat,
-                                                             native_methods::EmissionConstraintWrap constraint) const = 0;
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gspat(const float* foci, const float* amps, uint32_t size, uint32_t repeat,
-                                                                native_methods::EmissionConstraintWrap constraint) const = 0;
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gs(const float* foci, const float* amps, uint32_t size,
+                                                             native_methods::GSOption option) const = 0;
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr gspat(const float* foci, const float* amps, uint32_t size,
+                                                                native_methods::GSPATOption option) const = 0;
   AUTD3_API [[nodiscard]] virtual native_methods::GainPtr naive(const float* foci, const float* amps, uint32_t size,
-                                                                native_methods::EmissionConstraintWrap constraint) const = 0;
-  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr lm(const float* foci, const float* amps, uint32_t size, float eps1, float eps2, float tau,
-                                                             uint32_t k_max, const float* initial, uint32_t initial_size,
-                                                             native_methods::EmissionConstraintWrap constraint) const = 0;
+                                                                native_methods::NaiveOption option) const = 0;
+  AUTD3_API [[nodiscard]] virtual native_methods::GainPtr lm(const float* foci, const float* amps, uint32_t size,
+                                                             native_methods::LMOption option) const = 0;
 
  protected:
   native_methods::BackendPtr _ptr;

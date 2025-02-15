@@ -10,12 +10,10 @@
 #include "autd3.hpp"
 #include "autd3/gain/holo.hpp"
 
-template <typename L>
-inline void holo_test(autd3::Controller<L>& autd) {
-  auto silencer = autd3::Silencer();
-  autd.send(silencer);
+inline void holo_test(autd3::Controller& autd) {
+  autd.send(autd3::Silencer());
 
-  autd3::modulation::Sine m(150 * autd3::Hz);  // 150Hz AM
+  autd3::Sine m(150 * autd3::Hz, autd3::SineOption{});
 
   const autd3::Point3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
 
@@ -43,19 +41,19 @@ inline void holo_test(autd3::Controller<L>& autd) {
   };
   switch (idx) {
     case 0:
-      autd.send((m, autd3::gain::holo::GS(backend, foci)));
+      autd.send((m, autd3::gain::holo::GS(foci, autd3::gain::holo::GSOption{}, backend)));
       break;
     case 1:
-      autd.send((m, autd3::gain::holo::GSPAT(backend, foci)));
+      autd.send((m, autd3::gain::holo::GSPAT(foci, autd3::gain::holo::GSPATOption{}, backend)));
       break;
     case 2:
-      autd.send((m, autd3::gain::holo::Naive(backend, foci)));
+      autd.send((m, autd3::gain::holo::Naive(foci, autd3::gain::holo::NaiveOption{}, backend)));
       break;
     case 3:
-      autd.send((m, autd3::gain::holo::LM(backend, foci)));
+      autd.send((m, autd3::gain::holo::LM(foci, autd3::gain::holo::LMOption{}, backend)));
       break;
     case 4:
-      autd.send((m, autd3::gain::holo::Greedy(foci)));
+      autd.send((m, autd3::gain::holo::Greedy(foci, autd3::gain::holo::GreedyOption{})));
       break;
     default:
       break;

@@ -25,6 +25,8 @@ class Angle {
 
   AUTD3_API [[nodiscard]] float radian() const { return _value; }
 
+  operator native_methods::Angle() const { return native_methods::Angle{_value}; }
+
   AUTD3_API friend Angle operator*(const float l, const UnitRad&) { return Angle(l); }
   AUTD3_API friend Angle operator*(const float l, const UnitDegree&) { return Angle(l / 180 * std::numbers::pi_v<float>); }
 

@@ -3,19 +3,23 @@
 #include <algorithm>
 
 #include "autd3/def.hpp"
-#include "autd3/driver/datagram/gain/gain.hpp"
+#include "autd3/driver/datagram/gain.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::gain {
 
-class Focus final : public driver::Gain<Focus> {
- public:
-  AUTD3_API explicit Focus(driver::Point3 p)
-      : _pos(std::move(p)), _intensity(std::numeric_limits<driver::EmitIntensity>::max()), _phase_offset(driver::Phase(0)) {}
+struct FocusOption {
+  driver::EmitIntensity intensity = std::numeric_limits<driver::EmitIntensity>::max();
+  driver::Phase phase_offset = driver::Phase(0);
+  operator native_methods::FocusOption() const { return native_methods::FocusOption{.intensity = intensity, .phase_offset = phase_offset}; }
+};
+
+struct Focus final : driver::Gain, driver::IntoDatagramTuple<Focus> {
+  AUTD3_API explicit Focus(driver::Point3 pos, const FocusOption option) : pos(std::move(pos)), option(option) {}
   Focus() = delete;
   Focus(const Focus& obj) = default;             // LCOV_EXCL_LINE
   Focus& operator=(const Focus& obj) = default;  // LCOV_EXCL_LINE
@@ -23,12 +27,11 @@ class Focus final : public driver::Gain<Focus> {
   Focus& operator=(Focus&& obj) = default;       // LCOV_EXCL_LINE
   ~Focus() override = default;                   // LCOV_EXCL_LINE
 
-  AUTD3_DEF_PROP(driver::Point3, pos)
-  AUTD3_DEF_PARAM_INTENSITY(Focus, intensity)
-  AUTD3_DEF_PARAM_PHASE(Focus, phase_offset)
+  driver::Point3 pos;
+  FocusOption option;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return native_methods::AUTDGainFocus(native_methods::Point3{_pos.x(), _pos.y(), _pos.z()}, _intensity.value(), _phase_offset.value());
+    return AUTDGainFocus(native_methods::Point3{pos.x(), pos.y(), pos.z()}, option);
   }
 };
 

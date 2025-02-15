@@ -2,26 +2,37 @@
 
 #include <vector>
 
+#include "amplitude.hpp"
+#include "autd3/driver/datagram/gain.hpp"
+#include "autd3/driver/datagram/tuple.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/gain/holo/constraint.hpp"
-#include "autd3/gain/holo/holo.hpp"
 #include "autd3/native_methods.hpp"
-#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::gain::holo {
+struct GreedyOption {
+  uint8_t phase_div = 16;
+  EmissionConstraint constraint = EmissionConstraint::Uniform(std::numeric_limits<driver::EmitIntensity>::max());
 
-class Greedy final : public Holo<Greedy> {
- public:
-  template <holo_foci_range R>
-  AUTD3_API explicit Greedy(R&& iter)
-      : Holo(EmissionConstraint::Uniform(std::numeric_limits<driver::EmitIntensity>::max()), std::forward<R>(iter)), _phase_div(16) {}
+  operator native_methods::GreedyOption() const { return native_methods::GreedyOption{.constraint = constraint, .phase_div = phase_div}; }
+};
 
-  AUTD3_DEF_PARAM(Greedy, uint8_t, phase_div)
+struct Greedy final : driver::Gain, driver::IntoDatagramTuple<Greedy> {
+  AUTD3_API explicit Greedy(std::vector<std::pair<driver::Point3, Amplitude>> foci, const GreedyOption option)
+      : foci(std::move(foci)), option(option) {}
+
+  std::vector<std::pair<driver::Point3, Amplitude>> foci;
+  GreedyOption option;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return AUTDGainHoloGreedySphere(reinterpret_cast<const native_methods::Point3*>(this->_foci.data()),
-                                    reinterpret_cast<const float*>(this->_amps.data()), static_cast<uint32_t>(this->_amps.size()), _phase_div,
-                                    _constraint);
+    std::vector<native_methods::Point3> points;
+    points.reserve(foci.size());
+    std::ranges::transform(foci, std::back_inserter(points),
+                           [&](const auto& f) { return native_methods::Point3{f.first.x(), f.first.y(), f.first.z()}; });
+    std::vector<float> amps;
+    amps.reserve(foci.size());
+    std::ranges::transform(foci, std::back_inserter(amps), [&](const auto& f) { return f.second.pascal(); });
+    return AUTDGainHoloGreedySphere(points.data(), amps.data(), static_cast<uint32_t>(foci.size()), option);
   }
 };
 

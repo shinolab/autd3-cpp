@@ -19,17 +19,16 @@
 #include "tests/plane.hpp"
 #include "tests/stm.hpp"
 
-template <typename L>
-inline void run(autd3::Controller<L>& autd) {
-  using F = std::function<void(autd3::Controller<L>&)>;
+inline void run(autd3::Controller& autd) {
+  using F = std::function<void(autd3::Controller&)>;
   std::vector<std::pair<F, std::string>> tests = {
-      std::pair(F{focus_test<L>}, "Single focus test"), std::pair(F{bessel_test<L>}, "Bessel beam test"),
-      std::pair(F{plane_test<L>}, "Plane wave test"),   std::pair(F{mod_audio_file_test<L>}, "Wav modulation test"),
-      std::pair(F{focus_stm<L>}, "FociSTM test"),       std::pair(F{gain_stm<L>}, "GainSTM test"),
-      std::pair(F{holo_test<L>}, "Multiple foci test"), std::pair(F{flag_test<L>}, "Flag test"),
-      std::pair(F{custom<L>}, "Custom Gain test"),      std::pair(F{group_by_transducer_test<L>}, "Group (by Transducer) test")};
+      std::pair(F{focus_test}, "Single focus test"), std::pair(F{bessel_test}, "Bessel beam test"),
+      std::pair(F{plane_test}, "Plane wave test"),   std::pair(F{mod_audio_file_test}, "Wav modulation test"),
+      std::pair(F{focus_stm}, "FociSTM test"),       std::pair(F{gain_stm}, "GainSTM test"),
+      std::pair(F{holo_test}, "Multiple foci test"), std::pair(F{flag_test}, "Flag test"),
+      std::pair(F{custom}, "Custom Gain test"),      std::pair(F{group_by_transducer_test}, "Group (by Transducer) test")};
 
-  if (autd.num_devices() >= 2) tests.emplace_back(F{group_by_device_test<L>}, "Group (by Device) test");
+  if (autd.num_devices() >= 2) tests.emplace_back(F{group_by_device_test}, "Group (by Device) test");
 
   const auto firm_infos = autd.firmware_version();
   std::cout << "======== AUTD3 firmware information ========" << std::endl;

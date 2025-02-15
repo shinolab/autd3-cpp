@@ -5,9 +5,6 @@
 #include "utils.hpp"
 
 TEST(DriverDatagram, Synchronize) {
-  auto autd = autd3::controller::ControllerBuilder(
-                  {autd3::driver::AUTD3(autd3::driver::Point3::origin()), autd3::driver::AUTD3(autd3::driver::Point3::origin())})
-                  .open(autd3::link::Audit::builder());
-
+  auto autd = create_controller();
   autd.send(autd3::driver::Synchronize());
 }

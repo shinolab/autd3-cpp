@@ -5,9 +5,18 @@
 
 namespace autd3::driver {
 
-template <class D>
-concept datagram = requires(D d, const geometry::Geometry& g) {
-  { d.ptr(g) } -> std::same_as<native_methods::DatagramPtr>;
+struct Datagram {
+  Datagram() = default;
+  virtual ~Datagram() = default;                       // LCOV_EXCL_LINE
+  Datagram(const Datagram& v) noexcept = default;      // LCOV_EXCL_LINE
+  Datagram& operator=(const Datagram& obj) = default;  // LCOV_EXCL_LINE
+  Datagram(Datagram&& obj) = default;                  // LCOV_EXCL_LINE
+  Datagram& operator=(Datagram&& obj) = default;       // LCOV_EXCL_LINE
+
+  AUTD3_API [[nodiscard]] virtual native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const = 0;
 };
+
+template <class D>
+concept datagram = std::is_base_of_v<Datagram, std::remove_reference_t<D>>;
 
 }  // namespace autd3::driver

@@ -1,30 +1,26 @@
 #pragma once
 
 #include "autd3/driver/datagram/datagram.hpp"
-#include "autd3/driver/datagram/with_parallel_threshold.hpp"
-#include "autd3/driver/datagram/with_timeout.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver {
 
 template <datagram D1, datagram D2>
-class DatagramTuple final : public IntoDatagramWithTimeout<DatagramTuple<D1, D2>>, public IntoDatagramWithParallelThreshold<DatagramTuple<D1, D2>> {
- public:
-  DatagramTuple(D1 d1, D2 d2) : _d1(std::move(d1)), _d2(std::move(d2)) {}
+struct DatagramTuple final : Datagram {
+  DatagramTuple(D1 d1, D2 d2) : d1(std::move(d1)), d2(std::move(d2)) {}
   ~DatagramTuple() override = default;                           // LCOV_EXCL_LINE
   DatagramTuple(const DatagramTuple& v) noexcept = default;      // LCOV_EXCL_LINE
   DatagramTuple& operator=(const DatagramTuple& obj) = default;  // LCOV_EXCL_LINE
   DatagramTuple(DatagramTuple&& obj) = default;                  // LCOV_EXCL_LINE
   DatagramTuple& operator=(DatagramTuple&& obj) = default;       // LCOV_EXCL_LINE
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const {
-    return native_methods::AUTDDatagramTuple(_d1.ptr(geometry), _d2.ptr(geometry));
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
+    return native_methods::AUTDDatagramTuple(d1.ptr(geometry), d2.ptr(geometry));
   }
 
- private:
-  D1 _d1;
-  D2 _d2;
+  D1 d1;
+  D2 d2;
 };
 
 template <class D>

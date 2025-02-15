@@ -9,6 +9,10 @@
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/native_methods.hpp"
 
+namespace autd3::controller {
+class Sender;
+}
+
 namespace autd3::driver::geometry {
 
 class Geometry {
@@ -25,6 +29,8 @@ class Geometry {
   };
 
  public:
+  friend class autd3::controller::Sender;
+
   AUTD3_API explicit Geometry(const native_methods::GeometryPtr ptr) : _geometry_ptr(ptr) {
     const auto size = AUTDGeometryNumDevices(_geometry_ptr);
     _devices.clear();

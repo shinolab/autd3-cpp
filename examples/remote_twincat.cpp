@@ -4,8 +4,9 @@
 #include "util.hpp"
 
 int main() try {
-  auto autd = autd3::ControllerBuilder(std::vector{autd3::AUTD3(autd3::Point3::origin())})
-                  .open(autd3::link::RemoteTwinCAT::builder("your TwinCATAUTDServer AMS net id (e.g. 172.16.99.2.1.1)"));
+  auto autd = autd3::Controller::open(
+      std::vector{autd3::AUTD3{}},
+      autd3::link::RemoteTwinCAT("your TwinCATAUTDServer AMS net id (e.g. 172.16.99.2.1.1)", autd3::link::RemoteTwinCATOption{}));
   run(autd);
   return 0;
 } catch (std::exception& e) {

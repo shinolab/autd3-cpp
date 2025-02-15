@@ -7,8 +7,7 @@
 
 #include "autd3.hpp"
 
-template <typename L>
-inline void flag_test(autd3::Controller<L>& autd) {
+inline void flag_test(autd3::Controller& autd) {
   std::cout << "press any key to run fan..." << std::endl;
   std::cin.ignore();
 

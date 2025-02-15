@@ -4,10 +4,9 @@
 
 namespace autd3::driver {
 
-template <class T>
-concept link_builder = requires(T t) {
-  typename T::Link;
-  { t.ptr() } -> std::same_as<native_methods::LinkBuilderPtr>;
+template <typename T>
+concept link = requires(T t) {
+  { t.resolve() } -> std::same_as<native_methods::LinkPtr>;
 };
 
 }  // namespace autd3::driver
