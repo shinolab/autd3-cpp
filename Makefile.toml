@@ -112,7 +112,7 @@ cwd = "./build/tests/CMakeFiles/test_autd3.dir"
 script_runner = "@shell"
 script = '''
 lcov -d . -c --ignore-errors mismatch --ignore-errors gcov,gcov --ignore-errors mismatch,mismatch -o coverage.raw.info
-lcov -r coverage.raw.info "*/_deps/*" "*/tests/*" "*/usr/*" --ignore-errors unused -o coverage.info
+lcov -r coverage.raw.info "*/_deps/*" "*/tests/*" "*/usr/*" "tests/*" --ignore-errors unused -o coverage.info
 genhtml -o html --num-spaces 4 coverage.info
 '''
 
