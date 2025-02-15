@@ -37,6 +37,62 @@ struct SenderOption {
   }
 };
 
+class Controller;
+
+class Sender {
+ public:
+  friend Controller;
+
+  Sender() = delete;
+  Sender(const Sender& v) = default;
+  Sender& operator=(const Sender& obj) = default;
+  Sender(Sender&& obj) = default;
+  Sender& operator=(Sender&& obj) = default;
+
+  template <driver::datagram D>
+  AUTD3_API void send(const D& d) {
+    native_methods::validate(native_methods::AUTDSenderSend(_ptr, d.ptr(_geometry)));
+  }
+
+  template <group_f F>
+  AUTD3_API void group_send(
+      F key_map,
+      std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, std::shared_ptr<driver::Datagram>> data_map) {
+    std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, int32_t> keymap;
+    std::vector<native_methods::DatagramPtr> datagrams;
+    std::vector<int32_t> keys;
+
+    int k = 0;
+    for (const auto& [key, v] : data_map) {
+      const auto ptr = v->ptr(_geometry);
+      datagrams.push_back(ptr);
+      keys.push_back(k);
+      keymap[key] = k++;
+    }
+
+    const auto context = std::make_pair(std::move(key_map), std::move(keymap));
+
+    const auto f_native = +[](const void* context_ptr, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx) -> int32_t {
+      const driver::geometry::Device dev(dev_idx, geometry_ptr);
+      const auto* c = static_cast<
+          const std::pair<F, std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, int32_t>>*>(
+          context_ptr);
+      const auto key = c->first(dev);
+      const auto& keymap_ = c->second;
+      return key.has_value() ? keymap_.at(key.value()) : -1;
+    };
+
+    validate(AUTDControllerGroup(_ptr, reinterpret_cast<const void*>(f_native), static_cast<const void*>(&context), _geometry._geometry_ptr,
+                                 keys.data(), datagrams.data(), static_cast<uint16_t>(keys.size())));
+  }
+
+ private:
+  explicit Sender(native_methods::SenderPtr ptr, const driver::geometry::Geometry& geometry) : _ptr(ptr), _geometry(geometry) {}
+
+  native_methods::SenderPtr _ptr;
+  const driver::geometry::Geometry& _geometry;
+};
+
 class Controller final : public driver::geometry::Geometry {
  public:
   Controller() = delete;
@@ -128,41 +184,18 @@ class Controller final : public driver::geometry::Geometry {
     return ret;
   }
 
+  AUTD3_API Sender sender(const SenderOption option) const { return Sender(AUTDSender(_ptr, SenderOption()), geometry()); }
+
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    validate(native_methods::AUTDSenderSend(AUTDSender(_ptr, SenderOption()), d.ptr(geometry())));
+    sender(SenderOption()).send(d);
   }
 
   template <group_f F>
   AUTD3_API void group_send(
       F key_map,
       std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, std::shared_ptr<driver::Datagram>> data_map) {
-    std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, int32_t> keymap;
-    std::vector<native_methods::DatagramPtr> datagrams;
-    std::vector<int32_t> keys;
-
-    int k = 0;
-    for (const auto& [key, v] : data_map) {
-      const auto ptr = v->ptr(geometry());
-      datagrams.push_back(ptr);
-      keys.push_back(k);
-      keymap[key] = k++;
-    }
-
-    const auto context = std::make_pair(std::move(key_map), std::move(keymap));
-
-    const auto f_native = +[](const void* context_ptr, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx) -> int32_t {
-      const driver::geometry::Device dev(dev_idx, geometry_ptr);
-      const auto* c = static_cast<
-          const std::pair<F, std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, int32_t>>*>(
-          context_ptr);
-      const auto key = c->first(dev);
-      const auto& keymap_ = c->second;
-      return key.has_value() ? keymap_.at(key.value()) : -1;
-    };
-
-    validate(AUTDControllerGroup(AUTDSender(_ptr, SenderOption()), reinterpret_cast<const void*>(f_native), static_cast<const void*>(&context),
-                                 this->_geometry_ptr, keys.data(), datagrams.data(), static_cast<uint16_t>(keys.size())));
+    sender(SenderOption()).group_send(std::move(key_map), std::move(data_map));
   }
 
  private:
