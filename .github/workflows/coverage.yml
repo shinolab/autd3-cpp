@@ -22,6 +22,6 @@ jobs:
       - uses: codecov/codecov-action@v5
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: tests/build/CMakeFiles/test_autd3.dir/coverage.info
+          files: build/tests/CMakeFiles/test_autd3.dir/coverage.info
           fail_ci_if_error: true
           disable_search: true
