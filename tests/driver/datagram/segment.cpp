@@ -2,11 +2,13 @@
 
 #include <autd3/driver/datagram/reads_fpga_state.hpp>
 #include <autd3/driver/datagram/segment.hpp>
+#include <autd3/driver/datagram/with_loop_behavior.hpp>
+#include <autd3/driver/datagram/with_segment.hpp>
+#include <autd3/driver/firmware/fpga/loop_behavior.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <autd3/gain/uniform.hpp>
 #include <autd3/modulation/static.hpp>
 
-#include "autd3/driver/datagram/with_segment.hpp"
 #include "utils.hpp"
 
 using autd3::native_methods::Segment;
@@ -101,7 +103,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link<autd3::link::Audit>().modulation(dev.idx(), Segment::S1), [](auto d) { return d == 0x81; }));
   }
 
-  autd.send(autd3::driver::WithSegment(autd3::modulation::Static(0x82), Segment::S0, std::nullopt));
+  autd.send(autd3::driver::WithLoopBehavior(autd3::modulation::Static(0x82), Segment::S0, std::nullopt, autd3::driver::LoopBehavior::Infinite()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_mod_segment());
@@ -113,6 +115,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
   autd.send(autd3::driver::SwapSegment::Modulation(Segment::S0, autd3::driver::TransitionMode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
+    ASSERT_EQ(0xFFFF, autd.link<autd3::link::Audit>().modulation_loop_behavior(dev.idx(), Segment::S0).rep);
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_mod_segment());
     ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_mod_segment(dev.idx()));
   }
