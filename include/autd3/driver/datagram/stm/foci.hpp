@@ -21,19 +21,20 @@ class FociSTMBase : Datagram {
 
   AUTD3_API explicit FociSTMBase(std::vector<ControlPoints<N>> foci) : foci(std::move(foci)) {}
 
-  AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr(const geometry::Geometry&) const {
+  AUTD3_API [[nodiscard]] native_methods::FociSTMPtr raw_ptr() const {
     return native_methods::AUTDSTMFoci(sampling_config(), reinterpret_cast<const void*>(foci.data()), static_cast<uint16_t>(foci.size()), N);
   }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_segment_transition(const geometry::Geometry& geometry,
-                                                                              const native_methods::Segment segment,
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_segment_transition(const geometry::Geometry&, const native_methods::Segment segment,
                                                                               const native_methods::TransitionModeWrap transition_mode) const {
-    return AUTDSTMFociIntoDatagramWithSegment(raw_ptr(geometry), N, segment, transition_mode);
+    return AUTDSTMFociIntoDatagramWithSegment(raw_ptr(), N, segment, transition_mode);
   }
-
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
-    return AUTDSTMFociIntoDatagram(raw_ptr(geometry), N);
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_loop_behavior(const geometry::Geometry&, const native_methods::Segment segment,
+                                                                         const native_methods::TransitionModeWrap transition_mode,
+                                                                         const native_methods::LoopBehavior loop_behavior) const {
+    return AUTDSTMFociIntoDatagramWithLoopBehavior(raw_ptr(), N, segment, transition_mode, loop_behavior);
   }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const override { return AUTDSTMFociIntoDatagram(raw_ptr(), N); }
 
   std::vector<ControlPoints<N>> foci;
 

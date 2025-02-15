@@ -17,6 +17,8 @@
 #include "autd3/driver/datagram/stm/foci.hpp"
 #include "autd3/driver/datagram/stm/gain.hpp"
 #include "autd3/driver/datagram/synchronize.hpp"
+#include "autd3/driver/datagram/with_loop_behavior.hpp"
+#include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/defined/angle.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
@@ -91,6 +93,8 @@ using driver::ReadsFPGAState;
 using driver::Silencer;
 using driver::SwapSegment;
 using driver::Synchronize;
+using driver::WithLoopBehavior;
+using driver::WithSegment;
 
 using native_methods::GainSTMMode;
 

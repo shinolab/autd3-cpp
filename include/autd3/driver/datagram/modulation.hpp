@@ -24,6 +24,12 @@ class Modulation : Datagram {
                                                                               const native_methods::TransitionModeWrap transition_mode) const {
     return AUTDModulationIntoDatagramWithSegment(modulation_ptr(), segment, transition_mode);
   }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_loop_behavior(const geometry::Geometry&, const native_methods::Segment segment,
+                                                                         const native_methods::TransitionModeWrap transition_mode,
+                                                                         const native_methods::LoopBehavior loop_behavior) const {
+    return AUTDModulationIntoDatagramWithLoopBehavior(modulation_ptr(), segment, transition_mode, loop_behavior);
+  }
+
   AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr() const = 0;
 
   AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return SamplingConfig{validate(AUTDModulationSamplingConfig(modulation_ptr()))}; }
