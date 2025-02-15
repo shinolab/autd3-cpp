@@ -4,6 +4,9 @@
 #include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/datagram/silencer.hpp>
 #include <autd3/driver/datagram/stm/foci.hpp>
+#include <autd3/driver/datagram/with_loop_behavior.hpp>
+#include <autd3/driver/datagram/with_segment.hpp>
+#include <autd3/driver/firmware/fpga/loop_behavior.hpp>
 #include <autd3/driver/firmware/fpga/sampling_config.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <ranges>
@@ -95,7 +98,7 @@ TEST(DriverDatagramSTM, FocusSTMSampling) {
   }
 }
 
-TEST(DriverDatagramSM, FociSTMSegment) {
+TEST(DriverDatagramSTM, FociSTMSegment) {
   auto autd = create_controller();
 
   autd.send(autd3::driver::ReadsFPGAState([](const auto&) { return true; }));
@@ -142,6 +145,17 @@ TEST(DriverDatagramSM, FociSTMSegment) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
+}
+
+TEST(DriverDatagramSTM, FociSTMLoopBehavior) {
+  auto autd = create_controller();
+
+  const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
+  const std::vector foci = {center, center};
+
+  autd.send(autd3::driver::WithLoopBehavior(autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz), Segment::S1,
+                                            autd3::driver::TransitionMode::SyncIdx(), autd3::driver::LoopBehavior::ONCE()));
+  for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_behavior(dev.idx(), Segment::S1).rep);
 }
 
 template <size_t N>
@@ -222,11 +236,11 @@ void test_foci_stm_n() {
   }
 }
 
-TEST(DriverDatagramSM, FociSTM_N1) { test_foci_stm_n<1>(); }
-TEST(DriverDatagramSM, FociSTM_N2) { test_foci_stm_n<2>(); }
-TEST(DriverDatagramSM, FociSTM_N3) { test_foci_stm_n<3>(); }
-TEST(DriverDatagramSM, FociSTM_N4) { test_foci_stm_n<4>(); }
-TEST(DriverDatagramSM, FociSTM_N5) { test_foci_stm_n<5>(); }
-TEST(DriverDatagramSM, FociSTM_N6) { test_foci_stm_n<6>(); }
-TEST(DriverDatagramSM, FociSTM_N7) { test_foci_stm_n<7>(); }
-TEST(DriverDatagramSM, FociSTM_N8) { test_foci_stm_n<8>(); }
+TEST(DriverDatagramSTM, FociSTM_N1) { test_foci_stm_n<1>(); }
+TEST(DriverDatagramSTM, FociSTM_N2) { test_foci_stm_n<2>(); }
+TEST(DriverDatagramSTM, FociSTM_N3) { test_foci_stm_n<3>(); }
+TEST(DriverDatagramSTM, FociSTM_N4) { test_foci_stm_n<4>(); }
+TEST(DriverDatagramSTM, FociSTM_N5) { test_foci_stm_n<5>(); }
+TEST(DriverDatagramSTM, FociSTM_N6) { test_foci_stm_n<6>(); }
+TEST(DriverDatagramSTM, FociSTM_N7) { test_foci_stm_n<7>(); }
+TEST(DriverDatagramSTM, FociSTM_N8) { test_foci_stm_n<8>(); }

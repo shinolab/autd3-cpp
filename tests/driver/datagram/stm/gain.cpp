@@ -4,13 +4,15 @@
 #include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/datagram/silencer.hpp>
 #include <autd3/driver/datagram/stm/gain.hpp>
+#include <autd3/driver/datagram/with_loop_behavior.hpp>
+#include <autd3/driver/datagram/with_segment.hpp>
+#include <autd3/driver/firmware/fpga/loop_behavior.hpp>
 #include <autd3/driver/firmware/fpga/sampling_config.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <autd3/gain/null.hpp>
 #include <autd3/gain/uniform.hpp>
 #include <ranges>
 
-#include "autd3/driver/datagram/with_segment.hpp"
 #include "utils.hpp"
 
 using autd3::native_methods::Segment;
@@ -304,4 +306,13 @@ TEST(DriverDatagramSTM, GainSTMSegment) {
     ASSERT_EQ(Segment::S0, infos[dev.idx()].value().current_stm_segment());
     ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
+}
+
+TEST(DriverDatagramSTM, GainSTMLoopBehavior) {
+  auto autd = create_controller();
+
+  autd.send(autd3::driver::WithLoopBehavior(
+      autd3::driver::GainSTM(std::vector{autd3::gain::Null(), autd3::gain::Null()}, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption{}),
+      Segment::S1, autd3::driver::TransitionMode::SyncIdx(), autd3::driver::LoopBehavior::ONCE()));
+  for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_behavior(dev.idx(), Segment::S1).rep);
 }

@@ -4,7 +4,7 @@
 #include <autd3/exception.hpp>
 
 TEST(DriverFirmwareFPGA, LoopBehaviorInfinite) {
-  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::Infinite;
+  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::Infinite();
   ASSERT_EQ(0xFFFF, loop_behavior.rep);
 }
 
@@ -16,6 +16,6 @@ TEST(DriverFirmwareFPGA, LoopBehaviorFinite) {
 }
 
 TEST(DriverFirmwareFPGA, LoopBehaviorOnce) {
-  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::ONCE;
+  const autd3::native_methods::LoopBehavior loop_behavior = autd3::driver::LoopBehavior::ONCE();
   ASSERT_EQ(0, loop_behavior.rep);
 }

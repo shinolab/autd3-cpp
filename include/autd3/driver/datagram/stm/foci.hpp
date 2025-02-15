@@ -3,7 +3,6 @@
 #include "autd3/driver/datagram/stm/control_point.hpp"
 #include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/stm_sampling_config.hpp"
 #include "autd3/native_methods.hpp"
