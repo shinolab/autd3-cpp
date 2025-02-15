@@ -22,6 +22,8 @@ class Freq {
 template <>
 class Freq<int> {
  public:
+  AUTD3_API [[nodiscard]] int hz() const { return _value; }
+
   AUTD3_API operator Freq<uint32_t>() const { return Freq<uint32_t>(static_cast<uint32_t>(_value)); }
 
   AUTD3_API explicit Freq(const int value) : _value(value) {}
@@ -31,6 +33,12 @@ class Freq<int> {
  private:
   int _value;
 };
+
+template <class T>
+inline std::ostream& operator<<(std::ostream& os, const Freq<T>& obj) {
+  os << obj.hz() << " Hz";
+  return os;
+}
 
 class UnitHz {
   template <class T>
