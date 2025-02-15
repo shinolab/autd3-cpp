@@ -34,9 +34,6 @@ jobs:
           - os: windows-latest
             name: win
             arch: x64
-          - os: windows-latest
-            name: win
-            arch: aarch64
           - os: ubuntu-latest
             name: linux
             arch: x64
