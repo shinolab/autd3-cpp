@@ -103,7 +103,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link<autd3::link::Audit>().modulation(dev.idx(), Segment::S1), [](auto d) { return d == 0x81; }));
   }
 
-  autd.send(autd3::driver::WithLoopBehavior(autd3::modulation::Static(0x82), Segment::S0, std::nullopt, autd3::driver::LoopBehavior::Infinite()));
+  autd.send(autd3::driver::WithLoopBehavior(autd3::modulation::Static(0x82), autd3::driver::LoopBehavior::Infinite(), Segment::S0, std::nullopt));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(Segment::S1, infos[dev.idx()].value().current_mod_segment());

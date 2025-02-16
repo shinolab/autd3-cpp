@@ -313,6 +313,6 @@ TEST(DriverDatagramSTM, GainSTMLoopBehavior) {
 
   autd.send(autd3::driver::WithLoopBehavior(
       autd3::driver::GainSTM(std::vector{autd3::gain::Null(), autd3::gain::Null()}, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption{}),
-      Segment::S1, autd3::driver::TransitionMode::SyncIdx(), autd3::driver::LoopBehavior::ONCE()));
+      autd3::driver::LoopBehavior::ONCE(), Segment::S1, autd3::driver::TransitionMode::SyncIdx()));
   for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_behavior(dev.idx(), Segment::S1).rep);
 }

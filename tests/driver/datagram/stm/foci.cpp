@@ -153,8 +153,8 @@ TEST(DriverDatagramSTM, FociSTMLoopBehavior) {
   const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   const std::vector foci = {center, center};
 
-  autd.send(autd3::driver::WithLoopBehavior(autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz), Segment::S1,
-                                            autd3::driver::TransitionMode::SyncIdx(), autd3::driver::LoopBehavior::ONCE()));
+  autd.send(autd3::driver::WithLoopBehavior(autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz), autd3::driver::LoopBehavior::ONCE(), Segment::S1,
+                                            autd3::driver::TransitionMode::SyncIdx()));
   for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_behavior(dev.idx(), Segment::S1).rep);
 }
 
