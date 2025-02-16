@@ -18,8 +18,8 @@ concept datagram_l = requires(T t, const geometry::Geometry& geometry, native_me
 
 template <datagram_l L>
 struct WithLoopBehavior final : Datagram, IntoDatagramTuple<WithLoopBehavior<L>> {
-  AUTD3_API explicit WithLoopBehavior(L inner, const native_methods::Segment segment, const std::optional<TransitionMode>& transition_mode,
-                                      LoopBehavior loop_behavior)
+  AUTD3_API explicit WithLoopBehavior(L inner, LoopBehavior loop_behavior, const native_methods::Segment segment,
+                                      const std::optional<TransitionMode>& transition_mode)
       : inner(std::move(inner)), segment(segment), transition_mode(transition_mode), loop_behavior(loop_behavior) {}
   ~WithLoopBehavior() override = default;                              // LCOV_EXCL_LINE
   WithLoopBehavior(const WithLoopBehavior& v) noexcept = default;      // LCOV_EXCL_LINE

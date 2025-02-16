@@ -3,6 +3,7 @@
 #include <string>
 
 #include "autd3/controller/controller.hpp"
+#include "autd3/controller/sleeper.hpp"
 #include "autd3/def.hpp"
 #include "autd3/driver/autd3_device.hpp"
 #include "autd3/driver/datagram/clear.hpp"
@@ -122,6 +123,9 @@ using driver::Quaternion;
 using driver::Vector3;
 
 using controller::Controller;
+using controller::SenderOption;
+using controller::SpinSleeper;
+using native_methods::ParallelMode;
 
 #ifndef AUTD3_EXT_TRACING
 inline void tracing_init() { native_methods::AUTDTracingInit(); }
