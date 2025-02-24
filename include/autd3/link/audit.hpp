@@ -20,9 +20,6 @@ struct Audit final {
 
   [[nodiscard]] native_methods::LinkPtr resolve() { return native_methods::AUTDLinkAudit(); }
 
-  void down() const { AUTDLinkAuditDown(_ptr); }
-  void up() const { AUTDLinkAuditUp(_ptr); }
-
   [[nodiscard]] bool is_open() const { return AUTDLinkAuditIsOpen(_ptr); }
 
   [[nodiscard]] bool is_force_fan(const size_t idx) const { return AUTDLinkAuditFpgaIsForceFan(_ptr, static_cast<uint16_t>(idx)); }

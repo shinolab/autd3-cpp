@@ -8,7 +8,7 @@ TEST(Modulation, Csv) {
   auto autd = create_controller();
 
   const std::filesystem::path path = std::filesystem::path(AUTD3_RESOURCE_PATH).append("sin150.csv");
-  autd.send(autd3::modulation::audio_file::Csv(path, 4000u * autd3::driver::Hz, autd3::modulation::audio_file::CsvOption()));
+  autd.send(autd3::modulation::audio_file::Csv(path, 4000.0f * autd3::driver::Hz, autd3::modulation::audio_file::CsvOption()));
 
   for (auto& dev : autd) {
     auto mod = autd.link<autd3::link::Audit>().modulation(dev.idx(), autd3::native_methods::Segment::S0);

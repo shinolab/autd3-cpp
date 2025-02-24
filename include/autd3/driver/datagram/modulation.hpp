@@ -32,7 +32,7 @@ class Modulation : Datagram {
 
   AUTD3_API [[nodiscard]] virtual native_methods::ModulationPtr modulation_ptr() const = 0;
 
-  AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return SamplingConfig{validate(AUTDModulationSamplingConfig(modulation_ptr()))}; }
+  AUTD3_API [[nodiscard]] SamplingConfig sampling_config() const { return SamplingConfig{AUTDModulationSamplingConfig(modulation_ptr())}; }
 };
 
 }  // namespace autd3::driver

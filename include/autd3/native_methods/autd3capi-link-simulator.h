@@ -14,6 +14,6 @@ ResultStatus AUTDLinkSimulatorTracingInitWithFile(const char *path);
 
 [[nodiscard]] ResultLink AUTDLinkSimulator(const char *addr);
 
-} // extern "C"
+}  // extern "C"
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

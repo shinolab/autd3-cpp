@@ -16,9 +16,9 @@ ResultStatus AUTDModulationAudioFileTracingInitWithFile(const char *path);
 
 [[nodiscard]]
 ResultModulation AUTDModulationAudioFileCsv(const char *path,
-                                            SamplingConfig sampling_config,
+                                            SamplingConfigWrap sampling_config,
                                             uint8_t delimiter);
 
-} // extern "C"
+}  // extern "C"
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods
