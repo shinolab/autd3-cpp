@@ -12,30 +12,25 @@ struct SamplingConfig final {
   static SamplingConfig freq_4k() noexcept { return SamplingConfig(10); }
   static SamplingConfig freq_40k() noexcept { return SamplingConfig(1); }
 
-  static SamplingConfig nearest(const Freq<float> f) noexcept { return SamplingConfig(native_methods::AUTDSamplingConfigFromFreqNearest(f.hz())); }
-  template <typename Rep, typename P>
-  static SamplingConfig nearest(const std::chrono::duration<Rep, P> period) noexcept {
-    return SamplingConfig(native_methods::AUTDSamplingConfigFromPeriodNearest(native_methods::to_duration(period)));
-  }
+  SamplingConfig into_nearest() noexcept { return SamplingConfig(native_methods::AUTDSamplingConfigIntoNearest(_inner)); }
 
-  operator native_methods::SamplingConfig() const { return _inner; }
+  operator native_methods::SamplingConfigWrap() const { return _inner; }
 
-  [[nodiscard]] uint32_t division() const { return AUTDSamplingConfigDivision(_inner); }
-  [[nodiscard]] Freq<float> freq() const { return AUTDSamplingConfigFreq(_inner) * Hz; }
-  [[nodiscard]] std::chrono::nanoseconds period() const { return from_duration(AUTDSamplingConfigPeriod(_inner)); }
+  [[nodiscard]] uint16_t division() const { return validate(AUTDSamplingConfigDivision(_inner)); }
+  [[nodiscard]] Freq<float> freq() const { return validate(AUTDSamplingConfigFreq(_inner)) * Hz; }
+  [[nodiscard]] std::chrono::nanoseconds period() const { return from_duration(validate(AUTDSamplingConfigPeriod(_inner))); }
 
-  SamplingConfig(const Freq<uint32_t> f) : _inner(validate(native_methods::AUTDSamplingConfigFromFreq(f.hz()))) {}
-  SamplingConfig(const Freq<float> f) : _inner(validate(native_methods::AUTDSamplingConfigFromFreqF(f.hz()))) {}
+  SamplingConfig(const Freq<float> f) : _inner(native_methods::AUTDSamplingConfigFromFreq(f.hz())) {}
   template <typename Rep, typename P>
   SamplingConfig(const std::chrono::duration<Rep, P> period)
-      : _inner(validate(native_methods::AUTDSamplingConfigFromPeriod(native_methods::to_duration(period)))) {}
+      : _inner(native_methods::AUTDSamplingConfigFromPeriod(native_methods::to_duration(period))) {}
   explicit SamplingConfig(const uint16_t div) : _inner(validate(native_methods::AUTDSamplingConfigFromDivision(div))) {}
-  explicit SamplingConfig(const native_methods::SamplingConfig inner) : _inner(inner) {}
+  explicit SamplingConfig(const native_methods::SamplingConfigWrap inner) : _inner(inner) {}
 
-  bool operator==(const SamplingConfig& other) const { return _inner.division == other._inner.division; }
+  bool operator==(const SamplingConfig& other) const { return AUTDSamplingConfigEq(_inner, other._inner); }
 
  private:
-  native_methods::SamplingConfig _inner;
+  native_methods::SamplingConfigWrap _inner;
 };
 
 template <class C>

@@ -40,6 +40,14 @@ enum class DebugTypeTag : uint8_t {
   SysTimeEq = 12,
 };
 
+enum class SamplingConfigTag : uint8_t {
+  Division = 0,
+  Frequency = 1,
+  Period = 2,
+  FrequencyNearest = 3,
+  PeriodNearest = 4,
+};
+
 enum class SleeperTag : uint8_t {
   Std = 0,
   Spin = 1,
@@ -84,8 +92,19 @@ struct ResultModulation {
   const void* err;
 };
 
+union SamplingConfigValue {
+  uint16_t division;
+  float freq;
+  uint64_t period_ns;
+};
+
+struct SamplingConfigWrap {
+  SamplingConfigTag tag;
+  SamplingConfigValue value;
+};
+
 struct ResultSamplingConfig {
-  SamplingConfig result;
+  SamplingConfigWrap result;
   uint32_t err_len;
   const void* err;
 };
@@ -155,7 +174,12 @@ struct OptionDuration {
   bool has_value;
   Duration value;
 };
-constexpr const OptionDuration OptionDuration_NONE = OptionDuration{ /* .has_value = */ false, /* .value = */ Duration{ /* .nanos = */ 0 } };
+constexpr const OptionDuration OptionDuration_NONE = OptionDuration{
+  /* .has_value = */ false,
+  /* .value = */ Duration{
+    /* .nanos = */ 0
+  }
+};
 
 struct SenderPtr {
   const void *_0;
@@ -173,6 +197,24 @@ struct SleeperWrap {
   SpinStrategyTag spin_strategy;
 };
 
+struct ResultU16 {
+  uint16_t result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct ResultF32 {
+  float result;
+  uint32_t err_len;
+  const void* err;
+};
+
+struct ResultDuration {
+  Duration result;
+  uint32_t err_len;
+  const void* err;
+};
 
 
-} // namespace autd3::native_methods
+
+}  // namespace autd3::native_methods

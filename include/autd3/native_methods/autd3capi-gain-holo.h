@@ -160,6 +160,6 @@ void AUTDDeleteNalgebraBackendSphere(BackendPtr backend);
 
 void AUTDDeleteNalgebraBackendT4010A1(BackendPtr backend);
 
-} // extern "C"
+}  // extern "C"
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

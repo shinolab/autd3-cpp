@@ -55,8 +55,6 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "DcSysTime".to_string(),
             "Duration".to_string(),
             "OptionDuration".to_string(),
-            "SquareOption".to_string(),
-            "SineOption".to_string(),
             "SenderPtr".to_string(),
             "PlaneOption".to_string(),
             "FocusOption".to_string(),
@@ -68,6 +66,9 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "Angle".to_string(),
             "FixedCompletionSteps".to_string(),
             "FixedUpdateRate".to_string(),
+            "ResultU16".to_string(),
+            "ResultF32".to_string(),
+            "ResultDuration".to_string(),
         ],
         exclude: vec![
             "ConstPtr".to_string(),

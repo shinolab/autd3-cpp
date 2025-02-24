@@ -19,6 +19,6 @@ ResultLink AUTDLinkRemoteTwinCAT(const char *server_ams_net_id,
                                  const char *server_ip,
                                  const char *client_ams_net_id);
 
-} // extern "C"
+}  // extern "C"
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

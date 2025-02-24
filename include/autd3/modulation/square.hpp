@@ -16,7 +16,7 @@ struct SquareOption {
   driver::SamplingConfig sampling_config = driver::SamplingConfig::freq_4k();
 
   operator native_methods::SquareOption() const {
-    return native_methods::SquareOption{.low = low, .high = high, .duty = duty, .sampling_config = sampling_config};
+    return native_methods::SquareOption{.low = low, .high = high, .duty = duty, .sampling_config_div = sampling_config.division()};
   }
 };
 

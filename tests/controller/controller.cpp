@@ -40,10 +40,6 @@ TEST(Controller, ControllerSendSingle) {
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
 
-  autd.link<autd3::link::Audit>().down();
-  ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
-  autd.link<autd3::link::Audit>().up();
-
   autd.link<autd3::link::Audit>().break_down();
   ASSERT_THROW(autd.send(autd3::modulation::Static()), autd3::AUTDException);
   autd.link<autd3::link::Audit>().repair();

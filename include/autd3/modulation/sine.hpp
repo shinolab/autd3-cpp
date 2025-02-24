@@ -18,7 +18,8 @@ struct SineOption {
   driver::SamplingConfig sampling_config = driver::SamplingConfig::freq_4k();
 
   operator native_methods::SineOption() const {
-    return native_methods::SineOption{.intensity = intensity, .offset = offset, .phase = phase, .clamp = clamp, .sampling_config = sampling_config};
+    return native_methods::SineOption{
+        .intensity = intensity, .offset = offset, .phase = phase, .clamp = clamp, .sampling_config_div = sampling_config.division()};
   }
 };
 

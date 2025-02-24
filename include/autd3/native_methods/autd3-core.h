@@ -43,18 +43,26 @@ struct Phase {
   uint8_t _0;
 };
 /// A phase of zero.
-constexpr const Phase Phase_ZERO = Phase{ /* ._0 = */ 0 };
+constexpr const Phase Phase_ZERO = Phase{
+  /* ._0 = */ 0
+};
 /// A phase of π.
-constexpr const Phase Phase_PI = Phase{ /* ._0 = */ 128 };
+constexpr const Phase Phase_PI = Phase{
+  /* ._0 = */ 128
+};
 
 /// The intensity of the ultrasound.
 struct EmitIntensity {
   uint8_t _0;
 };
 /// Maximum intensity.
-constexpr const EmitIntensity EmitIntensity_MAX = EmitIntensity{ /* ._0 = */ 255 };
+constexpr const EmitIntensity EmitIntensity_MAX = EmitIntensity{
+  /* ._0 = */ 255
+};
 /// Minimum intensity.
-constexpr const EmitIntensity EmitIntensity_MIN = EmitIntensity{ /* ._0 = */ 0 };
+constexpr const EmitIntensity EmitIntensity_MIN = EmitIntensity{
+  /* ._0 = */ 0
+};
 
 /// A container for the phase and intensity of the ultrasound.
 struct Drive {
@@ -64,21 +72,10 @@ struct Drive {
   EmitIntensity intensity;
 };
 /// A [`Drive`] with a phase of [`Phase::ZERO`] and an intensity of [`EmitIntensity::MIN`].
-constexpr const Drive Drive_NULL = Drive{ /* .phase = */ Phase_ZERO, /* .intensity = */ EmitIntensity_MIN };
-
-/// The configuration for sampling.
-struct SamplingConfig {
-  /// The division number of the sampling frequency.
-  ///
-  /// The sampling frequency is [`ultrasound_freq`] / `division`.
-  uint16_t division;
+constexpr const Drive Drive_NULL = Drive{
+  /* .phase = */ Phase_ZERO,
+  /* .intensity = */ EmitIntensity_MIN
 };
-/// A [`SamplingConfig`] of 40kHz.
-constexpr const SamplingConfig SamplingConfig_FREQ_40K = SamplingConfig{ /* .division = */ 1 };
-/// A [`SamplingConfig`] of the minimum frequency.
-constexpr const SamplingConfig SamplingConfig_FREQ_MIN = SamplingConfig{ /* .division = */ 0xFFFF };
-/// A [`SamplingConfig`] of the maximum frequency, that is the ultrasound frequency.
-constexpr const SamplingConfig SamplingConfig_FREQ_MAX = SamplingConfig{ /* .division = */ 1 };
 
 /// The system time of the Distributed Clock
 ///
@@ -89,11 +86,13 @@ struct DcSysTime {
   uint64_t dc_sys_time;
 };
 /// The zero point of the DcSysTime (2000-01-01 0:00:00 UTC)
-constexpr const DcSysTime DcSysTime_ZERO = DcSysTime{ /* .dc_sys_time = */ 0 };
+constexpr const DcSysTime DcSysTime_ZERO = DcSysTime{
+  /* .dc_sys_time = */ 0
+};
 
 /// Angle
 struct Angle {
   float radian;
 };
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

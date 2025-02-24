@@ -68,4 +68,4 @@ struct FixedUpdateRate {
   uint16_t phase;
 };
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

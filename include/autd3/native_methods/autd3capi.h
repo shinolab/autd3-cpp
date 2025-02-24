@@ -58,11 +58,26 @@ struct ModulationCachePtr {
   const void *_0;
 };
 
+struct SineOption {
+  uint8_t intensity;
+  uint8_t offset;
+  Angle phase;
+  bool clamp;
+  uint16_t sampling_config_div;
+};
+
 struct FourierOption {
   bool has_scale_factor;
   float scale_factor;
   bool clamp;
   uint8_t offset;
+};
+
+struct SquareOption {
+  uint8_t low;
+  uint8_t high;
+  float duty;
+  uint16_t sampling_config_div;
 };
 
 extern "C" {
@@ -178,12 +193,12 @@ bool AUTDDatagramSilencerFixedCompletionStepsIsDefault(FixedCompletionSteps conf
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromPeriod(Duration p, uint16_t n);
 
-[[nodiscard]] SamplingConfig AUTDSTMConfigFromFreqNearest(float f, uint16_t n);
+[[nodiscard]] SamplingConfigWrap AUTDSTMConfigFromFreqNearest(float f, uint16_t n);
 
-[[nodiscard]] SamplingConfig AUTDSTMConfigFromPeriodNearest(Duration p, uint16_t n);
+[[nodiscard]] SamplingConfigWrap AUTDSTMConfigFromPeriodNearest(Duration p, uint16_t n);
 
 [[nodiscard]]
-FociSTMPtr AUTDSTMFoci(SamplingConfig config,
+FociSTMPtr AUTDSTMFoci(SamplingConfigWrap config,
                        const void* points,
                        uint16_t size,
                        uint8_t n);
@@ -204,7 +219,7 @@ DatagramPtr AUTDSTMFociIntoDatagramWithLoopBehavior(FociSTMPtr stm,
 [[nodiscard]] DatagramPtr AUTDSTMFociIntoDatagram(FociSTMPtr stm, uint8_t n);
 
 [[nodiscard]]
-GainSTMPtr AUTDSTMGain(SamplingConfig config,
+GainSTMPtr AUTDSTMGain(SamplingConfigWrap config,
                        const GainPtr *gains,
                        uint16_t size,
                        GainSTMOption option);
@@ -262,21 +277,19 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivision(uint16_t div);
 
-[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromFreq(uint32_t f);
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreq(float f);
 
-[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromFreqF(float f);
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromPeriod(Duration p);
 
-[[nodiscard]] SamplingConfig AUTDSamplingConfigFromFreqNearest(float f);
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigIntoNearest(SamplingConfigWrap config);
 
-[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromPeriod(Duration p);
+[[nodiscard]] ResultU16 AUTDSamplingConfigDivision(SamplingConfigWrap c);
 
-[[nodiscard]] SamplingConfig AUTDSamplingConfigFromPeriodNearest(Duration p);
+[[nodiscard]] ResultF32 AUTDSamplingConfigFreq(SamplingConfigWrap c);
 
-[[nodiscard]] uint16_t AUTDSamplingConfigDivision(SamplingConfig c);
+[[nodiscard]] ResultDuration AUTDSamplingConfigPeriod(SamplingConfigWrap c);
 
-[[nodiscard]] float AUTDSamplingConfigFreq(SamplingConfig c);
-
-[[nodiscard]] Duration AUTDSamplingConfigPeriod(SamplingConfig c);
+[[nodiscard]] bool AUTDSamplingConfigEq(SamplingConfigWrap a, SamplingConfigWrap b);
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeSyncIdx();
 
@@ -397,10 +410,6 @@ Point3 AUTDTransducerPosition(TransducerPtr tr);
 
 [[nodiscard]] bool AUTDLinkAuditIsOpen(LinkPtr audit);
 
-void AUTDLinkAuditDown(LinkPtr audit);
-
-void AUTDLinkAuditUp(LinkPtr audit);
-
 void AUTDLinkAuditBreakDown(LinkPtr audit);
 
 void AUTDLinkAuditRepair(LinkPtr audit);
@@ -484,7 +493,7 @@ void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint8_
 
 [[nodiscard]] LinkPtr AUTDLinkNop();
 
-[[nodiscard]] ResultSamplingConfig AUTDModulationSamplingConfig(ModulationPtr m);
+[[nodiscard]] SamplingConfigWrap AUTDModulationSamplingConfig(ModulationPtr m);
 
 [[nodiscard]]
 DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m,
@@ -508,7 +517,7 @@ void AUTDModulationCacheFree(ModulationCachePtr m);
 [[nodiscard]]
 ModulationPtr AUTDModulationCustom(const uint8_t *ptr,
                                    uint16_t len,
-                                   SamplingConfig sampling_config);
+                                   SamplingConfigWrap sampling_config);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationWithFir(ModulationPtr m,
@@ -517,19 +526,19 @@ ModulationPtr AUTDModulationWithFir(ModulationPtr m,
 
 [[nodiscard]]
 ModulationPtr AUTDModulationFourierExact(const uint32_t *sine_freq,
-                                         const SineOption *sine_clamp,
+                                         const SineOption *sine_option,
                                          uint32_t size,
                                          FourierOption option);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationFourierExactFloat(const float *sine_freq,
-                                              const SineOption *sine_clamp,
+                                              const SineOption *sine_option,
                                               uint32_t size,
                                               FourierOption option);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationFourierNearest(const float *sine_freq,
-                                           const SineOption *sine_clamp,
+                                           const SineOption *sine_option,
                                            uint32_t size,
                                            FourierOption option);
 
@@ -557,6 +566,6 @@ ModulationPtr AUTDModulationFourierNearest(const float *sine_freq,
 
 void AUTDGetErr(const void* src, char *dst);
 
-} // extern "C"
+}  // extern "C"
 
-} // namespace autd3::native_methods
+}  // namespace autd3::native_methods

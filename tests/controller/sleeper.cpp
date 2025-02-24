@@ -28,6 +28,6 @@ TEST(Controller, SleeperSpin) {
 }
 
 TEST(Controller, SleeperWaitable) {
-  const autd3::native_methods::SleeperWrap wrap = autd3::controller::WaitableSleeper {};
+  const autd3::native_methods::SleeperWrap wrap = autd3::controller::WaitableSleeper{};
   ASSERT_EQ(autd3::native_methods::SleeperTag::Waitable, wrap.tag);
 }
