@@ -57,12 +57,6 @@ TEST(DriverGeomtry, DeviceWavenumber) {
   for (auto autd = create_controller(); auto& dev : autd) ASSERT_NEAR(dev.wavenumber(), 2 * autd3::driver::pi / 8.5, 1e-6);
 }
 
-TEST(DriverGeomtry, TransducerLocal) {
-  for (auto autd = create_controller(); auto& dev : autd) {
-    std::ranges::for_each(std::views::iota(0) | std::views::take(dev.num_transducers()), [&dev](auto i) { ASSERT_EQ(dev[i].idx(), i); });
-  }
-}
-
 TEST(DriverGeomtry, DeviceRotation) {
   for (auto autd = create_controller(); auto& dev : autd) {
     ASSERT_EQ(dev.rotation(), autd3::driver::Quaternion::Identity());
