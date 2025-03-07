@@ -46,7 +46,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "30.0.1";
+static inline std::string version = "31.0.1";
 
 using autd3::driver::deg;
 using autd3::driver::Freq;
@@ -78,7 +78,6 @@ using driver::Clear;
 using driver::ControlPoint;
 using driver::ControlPoints;
 using driver::DatagramTuple;
-using driver::DebugSettings;
 using driver::DebugType;
 using driver::FixedCompletionSteps;
 using driver::FixedCompletionTime;
@@ -88,6 +87,7 @@ using driver::ForceFan;
 using driver::Gain;
 using driver::GainSTM;
 using driver::GainSTMOption;
+using driver::GPIOOutputs;
 using driver::PhaseCorrection;
 using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;

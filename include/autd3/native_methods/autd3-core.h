@@ -94,5 +94,9 @@ constexpr const DcSysTime DcSysTime_ZERO = DcSysTime{
 struct Angle {
   float radian;
 };
+/// An angle of zero
+constexpr const Angle Angle_ZERO = Angle{
+  /* .radian = */ 0.0
+};
 
 }  // namespace autd3::native_methods

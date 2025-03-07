@@ -70,11 +70,7 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "ResultF32".to_string(),
             "ResultDuration".to_string(),
         ],
-        exclude: vec![
-            "ConstPtr".to_string(),
-            "Phase_ZERO".to_string(),
-            "Phase_PI".to_string(),
-        ],
+        exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]
             .into_iter()
             .collect(),
