@@ -14,7 +14,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link<autd3::link::Audit>().debug_values(dev.idx()));
   }
 
-  autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
+  autd.send(autd3::driver::GPIOOutputs([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::None;
@@ -34,7 +34,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link<autd3::link::Audit>().debug_values(dev.idx()));
   }
 
-  autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
+  autd.send(autd3::driver::GPIOOutputs([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::Sync;
@@ -54,7 +54,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link<autd3::link::Audit>().debug_values(dev.idx()));
   }
 
-  autd.send(autd3::driver::DebugSettings([](const autd3::driver::geometry::Device& dev, const autd3::native_methods::GPIOOut gpio) -> auto {
+  autd.send(autd3::driver::GPIOOutputs([](const autd3::driver::geometry::Device& dev, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::StmIdx(0x02);
@@ -75,7 +75,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
   }
 
   const auto sys_time = autd3::driver::DcSysTime::now();
-  autd.send(autd3::driver::DebugSettings([sys_time](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
+  autd.send(autd3::driver::GPIOOutputs([sys_time](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
         return autd3::driver::DebugType::SysTimeEq(sys_time);

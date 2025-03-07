@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "autd3/def.hpp"
+#include "autd3/driver/autd3_device.hpp"
 #include "autd3/driver/geometry/device.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -14,6 +15,11 @@ class Sender;
 }
 
 namespace autd3::driver::geometry {
+
+template <class F>
+concept reconfigure_f = requires(F f, const Device& d) {
+  { f(d) } -> std::same_as<AUTD3>;
+};
 
 class Geometry {
   class GeometryView : public std::ranges::view_interface<GeometryView> {
@@ -61,6 +67,25 @@ class Geometry {
   AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f,
                                            const float m = 28.9647e-3f) const {
     std::ranges::for_each(devices(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
+  }
+
+  template <reconfigure_f F>
+  AUTD3_API void reconfigure(const F& f) {
+    std::vector<AUTD3> devices;
+    devices.reserve(_devices.size());
+    std::ranges::transform(_devices, std::back_inserter(devices), f);
+
+    std::vector<native_methods::Point3> pos;
+    pos.reserve(devices.size());
+    std::ranges::transform(devices, std::back_inserter(pos), [&](const auto& d) { return native_methods::Point3{d.pos.x(), d.pos.y(), d.pos.z()}; });
+
+    std::vector<native_methods::Quaternion> rot;
+    rot.reserve(devices.size());
+    std::ranges::transform(devices, std::back_inserter(rot),
+                           [&](const auto& d) { return native_methods::Quaternion{d.rot.x(), d.rot.y(), d.rot.z(), d.rot.w()}; });
+
+    native_methods::AUTDGeometryReconfigure(_geometry_ptr, pos.data(), rot.data());
+    for (size_t i = 0; i < _devices.size(); i++) _devices[i] = Device(static_cast<uint16_t>(i), _geometry_ptr);
   }
 
   [[nodiscard]] std::vector<Device>::iterator begin() noexcept { return _devices.begin(); }

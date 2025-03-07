@@ -49,17 +49,17 @@ concept debug_settings_f = requires(F f, const geometry::Device& d, const native
 };
 
 template <debug_settings_f F>
-struct DebugSettings final : Datagram, IntoDatagramTuple<DebugSettings<F>> {
-  AUTD3_API explicit DebugSettings(F f) : f(std::move(f)) {
+struct GPIOOutputs final : Datagram, IntoDatagramTuple<GPIOOutputs<F>> {
+  AUTD3_API explicit GPIOOutputs(F f) : f(std::move(f)) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const native_methods::GPIOOut gpio,
                     native_methods::DebugTypeWrap* res) {
       const geometry::Device dev(dev_idx, geometry_ptr);
-      *res = static_cast<const DebugSettings*>(context)->f(dev, gpio);
+      *res = static_cast<const GPIOOutputs*>(context)->f(dev, gpio);
     };
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
-    return AUTDDatagramDebugSettings(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
+    return AUTDDatagramGPIOOutputs(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
   }
 
   F f;

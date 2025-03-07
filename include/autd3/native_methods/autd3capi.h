@@ -131,9 +131,9 @@ ResultStatus AUTDControllerGroup(SenderPtr sender,
 [[nodiscard]] DatagramPtr AUTDDatagramClear();
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramDebugSettings(const void* f,
-                                      const void* context,
-                                      GeometryPtr geometry);
+DatagramPtr AUTDDatagramGPIOOutputs(const void* f,
+                                    const void* context,
+                                    GeometryPtr geometry);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramForceFan(const void* f,
@@ -357,6 +357,8 @@ GainPtr AUTDGainGroup(GroupGainMapPtr map,
 
 [[nodiscard]] Point3 AUTDGeometrCenter(GeometryPtr geo);
 
+void AUTDGeometryReconfigure(GeometryPtr geo, const Point3 *pos, const Quaternion *rot);
+
 [[nodiscard]] DevicePtr AUTDDevice(GeometryPtr geo, uint16_t dev_idx);
 
 [[nodiscard]] uint32_t AUTDDeviceNumTransducers(DevicePtr dev);
@@ -373,12 +375,6 @@ void AUTDDeviceSetSoundSpeedFromTemp(GeometryPtr geo,
                                      float m);
 
 Point3 AUTDDeviceCenter(DevicePtr dev);
-
-void AUTDDeviceTranslate(GeometryPtr geo, uint16_t dev_idx, Vector3 t);
-
-void AUTDDeviceRotate(GeometryPtr geo, uint16_t dev_idx, Quaternion r);
-
-void AUTDDeviceAffine(GeometryPtr geo, uint16_t dev_idx, Vector3 t, Quaternion r);
 
 void AUTDDeviceEnableSet(GeometryPtr geo, uint16_t dev_idx, bool value);
 

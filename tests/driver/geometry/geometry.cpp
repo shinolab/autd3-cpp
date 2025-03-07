@@ -40,3 +40,22 @@ TEST(DriverGeomtry, GeometrySoundSpeedFromTemp) {
   autd.set_sound_speed_from_temp(15);
   for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 340.29525e3f);
 }
+
+TEST(DriverGeomtry, GeometryReconfigure) {
+  auto autd = create_controller();
+  ASSERT_EQ(autd3::driver::Point3(0, 0, 0), autd[0][0].position());
+  ASSERT_EQ(autd3::driver::Quaternion(1, 0, 0, 0), autd[0].rotation());
+  ASSERT_EQ(autd3::driver::Point3(0, 0, 0), autd[1][0].position());
+  ASSERT_EQ(autd3::driver::Quaternion(1, 0, 0, 0), autd[1].rotation());
+
+  autd.reconfigure([](const auto& d) {
+    return d.idx() == 0 ? autd3::driver::AUTD3{.pos = autd3::driver::Point3(1, 2, 3),
+                                               .rot = autd3::driver::Quaternion(0.1825742f, 0.3651484f, 0.5477226f, 0.7302968f)}
+                        : autd3::driver::AUTD3{.pos = autd3::driver::Point3(4, 5, 6),
+                                               .rot = autd3::driver::Quaternion(0.37904903f, 0.45485884f, 0.53066862f, 0.60647845f)};
+  });
+  ASSERT_EQ(autd3::driver::Point3(1, 2, 3), autd[0][0].position());
+  ASSERT_EQ(autd3::driver::Quaternion(0.1825742f, 0.3651484f, 0.5477226f, 0.7302968f), autd[0].rotation());
+  ASSERT_EQ(autd3::driver::Point3(4, 5, 6), autd[1][0].position());
+  ASSERT_EQ(autd3::driver::Quaternion(0.37904903f, 0.45485884f, 0.53066862f, 0.60647845f), autd[1].rotation());
+}

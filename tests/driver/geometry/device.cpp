@@ -49,54 +49,12 @@ TEST(DriverGeomtry, DeviceEnable) {
   ASSERT_FALSE(autd[1].enable());
 }
 
-TEST(DriverGeomtry, DeviceTranslate) {
-  for (auto autd = create_controller(); const auto& dev : autd) {
-    auto original_pos_view = dev.transducers() | std::views::transform([](const auto& tr) { return tr.position(); });
-    std::vector original_pos(original_pos_view.begin(), original_pos_view.end());
-    autd3::driver::Vector3 t(1, 2, 3);
-    dev.translate(t);
-    std::ranges::for_each(dev.transducers(), [&t, &original_pos](auto& tr) { ASSERT_EQ(tr.position(), original_pos[tr.idx()] + t); });
-  }
-}
-
-TEST(DriverGeomtry, DeviceRotate) {
-  for (auto autd = create_controller(); const auto& dev : autd) {
-    autd3::driver::Quaternion r(0.707106829f, 0, 0, 0.707106829f);
-    dev.rotate(r);
-    ASSERT_EQ(dev.rotation(), r);
-  }
-}
-
-TEST(DriverGeomtry, DeviceAffine) {
-  for (auto autd = create_controller(); const auto& dev : autd) {
-    auto original_pos_view = dev.transducers() | std::views::transform([](const auto& tr) { return tr.position(); });
-    std::vector original_pos(original_pos_view.begin(), original_pos_view.end());
-    autd3::driver::Vector3 t(1, 2, 3);
-    autd3::driver::Quaternion r(0.707106829f, 0, 0, 0.707106829f);
-    dev.affine(t, r);
-    std::ranges::for_each(dev.transducers(), [&t, &original_pos](auto& tr) {
-      auto& op = original_pos[tr.idx()];
-      autd3::driver::Vector3 expected = autd3::driver::Vector3(-op.y(), op.x(), op.z()) + t;
-      EXPECT_NEAR(tr.position().x(), expected.x(), 1e-3);
-      EXPECT_NEAR(tr.position().y(), expected.y(), 1e-3);
-      EXPECT_NEAR(tr.position().z(), expected.z(), 1e-3);
-    });
-    ASSERT_EQ(dev.rotation(), r);
-  }
-}
-
 TEST(DriverGeomtry, DeviceWavelength) {
   for (auto autd = create_controller(); auto& dev : autd) ASSERT_NEAR(dev.wavelength(), 8.5, 1e-6);
 }
 
 TEST(DriverGeomtry, DeviceWavenumber) {
   for (auto autd = create_controller(); auto& dev : autd) ASSERT_NEAR(dev.wavenumber(), 2 * autd3::driver::pi / 8.5, 1e-6);
-}
-
-TEST(DriverGeomtry, TransducerLocal) {
-  for (auto autd = create_controller(); auto& dev : autd) {
-    std::ranges::for_each(std::views::iota(0) | std::views::take(dev.num_transducers()), [&dev](auto i) { ASSERT_EQ(dev[i].idx(), i); });
-  }
 }
 
 TEST(DriverGeomtry, DeviceRotation) {
