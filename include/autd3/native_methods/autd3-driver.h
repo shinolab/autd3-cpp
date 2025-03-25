@@ -18,18 +18,6 @@ enum class GainSTMMode : uint8_t {
   PhaseHalf = 2,
 };
 
-/// Silencer target.
-enum class SilencerTarget : uint8_t {
-  /// Apply the silencer to the intensity (before [`PulseWidthEncoder`]).
-  ///
-  /// [`PulseWidthEncoder`]: crate::datagram::PulseWidthEncoder
-  Intensity = 0,
-  /// Apply the silencer to the pulse width (after [`PulseWidthEncoder`]).
-  ///
-  /// [`PulseWidthEncoder`]: crate::datagram::PulseWidthEncoder
-  PulseWidth = 1,
-};
-
 /// The option for the [`GainSTM`].
 struct GainSTMOption {
   /// The mode of the STM. The default is [`GainSTMMode::PhaseIntensityFull`].

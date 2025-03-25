@@ -48,13 +48,9 @@ struct Audit final {
 
   [[nodiscard]] bool silencer_strict_mode(const size_t idx) const { return AUTDLinkAuditCpuSilencerStrictMode(_ptr, static_cast<uint16_t>(idx)); }
 
-  [[nodiscard]] native_methods::SilencerTarget silencer_target(const size_t idx) const {
-    return AUTDLinkAuditFpgaSilencerTarget(_ptr, static_cast<uint16_t>(idx));
-  }
-
   [[nodiscard]] std::array<uint8_t, 4> debug_types(const size_t idx) const {
     std::array<uint8_t, 4> ty{};
-    AUTDLinkAuditFpgaDebugTypes(_ptr, static_cast<uint16_t>(idx), ty.data());
+    AUTDLinkAuditFpgaGPIOOutputTypes(_ptr, static_cast<uint16_t>(idx), ty.data());
     return ty;
   }
 
@@ -119,8 +115,8 @@ struct Audit final {
     return AUTDLinkAuditFpgaCurrentModSegment(_ptr, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] std::vector<uint8_t> pulse_width_encoder_table(const size_t idx) const {
-    std::vector<uint8_t> buf(256);
+  [[nodiscard]] std::vector<uint16_t> pulse_width_encoder_table(const size_t idx) const {
+    std::vector<uint16_t> buf(256);
     AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), buf.data());
     return buf;
   }  // LCOV_EXCL_LINE
