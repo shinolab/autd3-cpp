@@ -173,21 +173,13 @@ DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
 DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment,
                                         TransitionModeWrap transition_mode);
 
-[[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromUpdateRate(FixedUpdateRate config,
-                                               SilencerTarget target);
+[[nodiscard]] DatagramPtr AUTDDatagramSilencerFromUpdateRate(FixedUpdateRate config);
 
-[[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromCompletionSteps(FixedCompletionSteps config,
-                                                    SilencerTarget target);
+[[nodiscard]] DatagramPtr AUTDDatagramSilencerFromCompletionSteps(FixedCompletionSteps config);
 
-[[nodiscard]]
-DatagramPtr AUTDDatagramSilencerFromCompletionTime(FixedCompletionTime config,
-                                                   SilencerTarget target);
+[[nodiscard]] DatagramPtr AUTDDatagramSilencerFromCompletionTime(FixedCompletionTime config);
 
-[[nodiscard]]
-bool AUTDDatagramSilencerFixedCompletionStepsIsDefault(FixedCompletionSteps config,
-                                                       SilencerTarget target);
+[[nodiscard]] bool AUTDDatagramSilencerFixedCompletionStepsIsDefault(FixedCompletionSteps config);
 
 [[nodiscard]] ResultSamplingConfig AUTDSTMConfigFromFreq(float f, uint16_t n);
 
@@ -241,31 +233,31 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] DcSysTime AUTDDcSysTimeNow();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeNone();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeNone();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeBaseSignal();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeBaseSignal();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeThermo();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeThermo();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeForceFan();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeForceFan();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeSync();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeSync();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeModSegment();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeModSegment();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeModIdx(uint16_t value);
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeModIdx(uint16_t value);
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeStmSegment();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeStmSegment();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeStmIdx(uint16_t value);
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeStmIdx(uint16_t value);
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeIsStmMode();
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeIsStmMode();
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypePwmOut(TransducerPtr value);
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypePwmOut(TransducerPtr value);
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeDirect(bool value);
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeDirect(bool value);
 
-[[nodiscard]] DebugTypeWrap AUTDDebugTypeSysTimeEq(DcSysTime sys_time);
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeSysTimeEq(DcSysTime sys_time);
 
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
 
@@ -438,9 +430,7 @@ uint16_t AUTDLinkAuditFpgaSilencerCompletionStepsIntensity(LinkPtr audit,
 
 [[nodiscard]] bool AUTDLinkAuditFpgaSilencerFixedCompletionStepsMode(LinkPtr audit, uint16_t idx);
 
-[[nodiscard]] SilencerTarget AUTDLinkAuditFpgaSilencerTarget(LinkPtr audit, uint16_t idx);
-
-void AUTDLinkAuditFpgaDebugTypes(LinkPtr audit, uint16_t idx, uint8_t *ty);
+void AUTDLinkAuditFpgaGPIOOutputTypes(LinkPtr audit, uint16_t idx, uint8_t *ty);
 
 void AUTDLinkAuditFpgaDebugValues(LinkPtr audit, uint16_t idx, uint64_t *value);
 
@@ -485,7 +475,7 @@ void AUTDLinkAuditFpgaDrivesAt(LinkPtr audit,
                                uint16_t stm_idx,
                                Drive *drive);
 
-void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint8_t *dst);
+void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint16_t *dst);
 
 [[nodiscard]] LinkPtr AUTDLinkNop();
 

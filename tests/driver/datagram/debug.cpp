@@ -17,15 +17,15 @@ TEST(DriverDatagram, DebugOutputIdx) {
   autd.send(autd3::driver::GPIOOutputs([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
-        return autd3::driver::DebugType::None;
+        return autd3::driver::GPIOOutputType::None;
       case autd3::native_methods::GPIOOut::O1:
-        return autd3::driver::DebugType::BaseSignal;
+        return autd3::driver::GPIOOutputType::BaseSignal;
       case autd3::native_methods::GPIOOut::O2:
-        return autd3::driver::DebugType::Thermo;
+        return autd3::driver::GPIOOutputType::Thermo;
       case autd3::native_methods::GPIOOut::O3:
-        return autd3::driver::DebugType::ForceFan;
+        return autd3::driver::GPIOOutputType::ForceFan;
     }
-    return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
+    return autd3::driver::GPIOOutputType::None;  // LCOV_EXCL_LINE
   }));
   for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x00, 0x01, 0x02, 0x03};
@@ -37,15 +37,15 @@ TEST(DriverDatagram, DebugOutputIdx) {
   autd.send(autd3::driver::GPIOOutputs([](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
-        return autd3::driver::DebugType::Sync;
+        return autd3::driver::GPIOOutputType::Sync;
       case autd3::native_methods::GPIOOut::O1:
-        return autd3::driver::DebugType::ModSegment;
+        return autd3::driver::GPIOOutputType::ModSegment;
       case autd3::native_methods::GPIOOut::O2:
-        return autd3::driver::DebugType::ModIdx(0x01);
+        return autd3::driver::GPIOOutputType::ModIdx(0x01);
       case autd3::native_methods::GPIOOut::O3:
-        return autd3::driver::DebugType::StmSegment;
+        return autd3::driver::GPIOOutputType::StmSegment;
     }
-    return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
+    return autd3::driver::GPIOOutputType::None;  // LCOV_EXCL_LINE
   }));
   for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x10, 0x20, 0x21, 0x50};
@@ -57,15 +57,15 @@ TEST(DriverDatagram, DebugOutputIdx) {
   autd.send(autd3::driver::GPIOOutputs([](const autd3::driver::geometry::Device& dev, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
-        return autd3::driver::DebugType::StmIdx(0x02);
+        return autd3::driver::GPIOOutputType::StmIdx(0x02);
       case autd3::native_methods::GPIOOut::O1:
-        return autd3::driver::DebugType::IsStmMode;
+        return autd3::driver::GPIOOutputType::IsStmMode;
       case autd3::native_methods::GPIOOut::O2:
-        return autd3::driver::DebugType::PwmOut(&dev[3]);
+        return autd3::driver::GPIOOutputType::PwmOut(&dev[3]);
       case autd3::native_methods::GPIOOut::O3:
-        return autd3::driver::DebugType::Direct(true);
+        return autd3::driver::GPIOOutputType::Direct(true);
     }
-    return autd3::driver::DebugType::None;  // LCOV_EXCL_LINE
+    return autd3::driver::GPIOOutputType::None;  // LCOV_EXCL_LINE
   }));
   for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x51, 0x52, 0xE0, 0xF0};
@@ -78,14 +78,14 @@ TEST(DriverDatagram, DebugOutputIdx) {
   autd.send(autd3::driver::GPIOOutputs([sys_time](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> auto {
     switch (gpio) {
       case autd3::native_methods::GPIOOut::O0:
-        return autd3::driver::DebugType::SysTimeEq(sys_time);
+        return autd3::driver::GPIOOutputType::SysTimeEq(sys_time);
       default:
-        return autd3::driver::DebugType::None;
+        return autd3::driver::GPIOOutputType::None;
     }
   }));
   for (auto& dev : autd) {
     std::array<uint8_t, 4> ty{0x60, 0x00, 0x00, 0x00};
-    std::array<uint64_t, 4> value{(sys_time.sys_time() / 3125) << 5, 0x0000, 0x0000, 0x0000};
+    std::array<uint64_t, 4> value{(sys_time.sys_time() / 3125) >> 3, 0x0000, 0x0000, 0x0000};
     ASSERT_EQ(ty, autd.link<autd3::link::Audit>().debug_types(dev.idx()));
     ASSERT_EQ(value, autd.link<autd3::link::Audit>().debug_values(dev.idx()));
   }

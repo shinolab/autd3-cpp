@@ -18,9 +18,7 @@ struct FixedCompletionSteps {
     return native_methods::FixedCompletionSteps{.intensity = intensity, .phase = phase, .strict_mode = strict_mode};
   }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const native_methods::SilencerTarget target) const noexcept {
-    return AUTDDatagramSilencerFromCompletionSteps(*this, target);
-  }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr() const noexcept { return native_methods::AUTDDatagramSilencerFromCompletionSteps(*this); }
 };
 
 struct FixedCompletionTime {
@@ -35,9 +33,7 @@ struct FixedCompletionTime {
         .intensity = native_methods::to_duration(intensity), .phase = native_methods::to_duration(phase), .strict_mode = strict_mode};
   }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const native_methods::SilencerTarget target) const noexcept {
-    return AUTDDatagramSilencerFromCompletionTime(*this, target);
-  }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr() const noexcept { return native_methods::AUTDDatagramSilencerFromCompletionTime(*this); }
 };
 
 struct FixedUpdateRate {
@@ -48,31 +44,24 @@ struct FixedUpdateRate {
 
   operator native_methods::FixedUpdateRate() const { return native_methods::FixedUpdateRate{.intensity = intensity, .phase = phase}; }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const native_methods::SilencerTarget target) const noexcept {
-    return AUTDDatagramSilencerFromUpdateRate(*this, target);
-  }
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr() const noexcept { return native_methods::AUTDDatagramSilencerFromUpdateRate(*this); }
 };
 
 struct Silencer final : Datagram, IntoDatagramTuple<Silencer> {
   AUTD3_API [[nodiscard]] static Silencer disable() noexcept {
-    return Silencer(
-        FixedCompletionSteps{
-            .intensity = 1,
-            .phase = 1,
-        },
-        native_methods::SilencerTarget::Intensity);
+    return Silencer(FixedCompletionSteps{
+        .intensity = 1,
+        .phase = 1,
+    });
   }
 
-  Silencer() : Silencer(FixedCompletionSteps{}, native_methods::SilencerTarget::Intensity) {}
-  explicit Silencer(const std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate>& config,
-                    const native_methods::SilencerTarget target)
-      : config(config), target(target) {}
+  Silencer() : Silencer(FixedCompletionSteps{}) {}
+  explicit Silencer(const std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate>& config) : config(config) {}
 
   std::variant<FixedCompletionSteps, FixedCompletionTime, FixedUpdateRate> config;
-  native_methods::SilencerTarget target;
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const noexcept override {
-    return std::visit([this](const auto& c) { return c.ptr(target); }, config);
+    return std::visit([this](const auto& c) { return c.ptr(); }, config);
   }
 };
 }  // namespace autd3::driver

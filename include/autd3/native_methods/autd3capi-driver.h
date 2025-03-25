@@ -24,7 +24,7 @@ enum class AUTDStatus : uint8_t {
   AUTDErr = 2,
 };
 
-enum class DebugTypeTag : uint8_t {
+enum class GPIOOutputTypeTag : uint8_t {
   None = 0,
   BaseSignal = 1,
   Thermo = 2,
@@ -146,16 +146,16 @@ struct LinkPtr {
   const void *_0;
 };
 
-union DebugTypeValue {
+union GPIOOutputTypeValue {
   uint64_t null;
   DcSysTime sys_time;
   uint16_t idx;
   bool direct;
 };
 
-struct DebugTypeWrap {
-  DebugTypeTag ty;
-  DebugTypeValue value;
+struct GPIOOutputTypeWrap {
+  GPIOOutputTypeTag ty;
+  GPIOOutputTypeValue value;
 };
 
 struct FociSTMPtr {
