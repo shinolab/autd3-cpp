@@ -267,6 +267,10 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] float AUTDPhaseToRad(Phase value);
 
+[[nodiscard]] ResultU16 AUTDPulseWidth(uint16_t value);
+
+[[nodiscard]] ResultU16 AUTDPulseWidthFromDuty(float duty);
+
 [[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivision(uint16_t div);
 
 [[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreq(float f);
@@ -480,6 +484,8 @@ void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint16
 [[nodiscard]] LinkPtr AUTDLinkNop();
 
 [[nodiscard]] SamplingConfigWrap AUTDModulationSamplingConfig(ModulationPtr m);
+
+[[nodiscard]] ResultF32 AUTDModulationExpectedRadiationPressure(ModulationPtr m);
 
 [[nodiscard]]
 DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m,

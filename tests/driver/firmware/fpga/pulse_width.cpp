@@ -10,8 +10,8 @@ TEST(DriverFirmwareFPGA, PulseWidth) {
     ASSERT_EQ(i, pw.pulse_width());
   }
 
-  ASSERT_THROW(autd3::driver::PulseWidth(-1), std::out_of_range);
-  ASSERT_THROW(autd3::driver::PulseWidth(512), std::out_of_range);
+  ASSERT_THROW(autd3::driver::PulseWidth(-1), autd3::AUTDException);
+  ASSERT_THROW(autd3::driver::PulseWidth(512), autd3::AUTDException);
 }
 
 TEST(DriverFirmwareFPGA, PulseWidthFromDuty) {
@@ -20,6 +20,6 @@ TEST(DriverFirmwareFPGA, PulseWidthFromDuty) {
     ASSERT_EQ(i, pw.pulse_width());
   }
 
-  ASSERT_THROW(autd3::driver::PulseWidth::from_duty(-1.0f), std::out_of_range);
-  ASSERT_THROW(autd3::driver::PulseWidth::from_duty(1.0f), std::out_of_range);
+  ASSERT_THROW(autd3::driver::PulseWidth::from_duty(-1.0f), autd3::AUTDException);
+  ASSERT_THROW(autd3::driver::PulseWidth::from_duty(1.0f), autd3::AUTDException);
 }

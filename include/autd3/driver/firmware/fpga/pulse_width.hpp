@@ -3,20 +3,19 @@
 #include <stdexcept>
 
 #include "autd3/native_methods.hpp"
+#include "autd3/native_methods/utils.hpp"
 
 namespace autd3::driver {
 
 struct PulseWidth final {
-  template <std::integral T>
-  AUTD3_API explicit constexpr PulseWidth(const T pulse_width) {
-    if (pulse_width < 0 || 512 <= pulse_width) throw std::out_of_range("PulseWidth must be in range [0, 255]");
-    _pulse_width = static_cast<uint16_t>(pulse_width);
-  }
+ private:
+  struct _empty {};
+  AUTD3_API explicit constexpr PulseWidth(const uint16_t pulse_width, const _empty) { _pulse_width = pulse_width; }
 
-  static PulseWidth from_duty(const float duty) {
-    if (duty < 0.0f || 1.0f < duty) throw std::out_of_range("Duty must be in range [0, 1]");
-    return PulseWidth(static_cast<uint16_t>(duty * 512.0f));
-  }
+ public:
+  AUTD3_API explicit constexpr PulseWidth(const uint16_t pulse_width) { _pulse_width = validate(native_methods::AUTDPulseWidth(pulse_width)); }
+
+  static PulseWidth from_duty(const float duty) { return PulseWidth(validate(native_methods::AUTDPulseWidthFromDuty(duty)), _empty{}); }
 
   AUTD3_API [[nodiscard]] constexpr uint16_t pulse_width() const noexcept { return _pulse_width; }
 
