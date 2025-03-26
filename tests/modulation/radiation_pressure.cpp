@@ -2,6 +2,7 @@
 
 #include <autd3/modulation/radiation_pressure.hpp>
 #include <autd3/modulation/sine.hpp>
+#include <autd3/modulation/static.hpp>
 
 #include "utils.hpp"
 
@@ -20,4 +21,10 @@ TEST(DriverDatagramModulation, RadiationPressure) {
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
     ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
   }
+}
+
+TEST(DriverDatagramModulation, ExpectedRadiationPressure) {
+  ASSERT_EQ(1.0, autd3::modulation::Static(0xFF).expected_radiation_pressure());
+  ASSERT_EQ(0.25196465849876404, autd3::modulation::Static(0x80).expected_radiation_pressure());
+  ASSERT_EQ(0.503821611404419, autd3::modulation::RadiationPressure(autd3::modulation::Static(0x80)).expected_radiation_pressure());
 }
