@@ -96,7 +96,7 @@ script = '''
 rm -rf lib
 rm -rf bin
 rm -rf build
-rm VRESION
+rm VERSION
 '''
 
 [tasks.cov]
