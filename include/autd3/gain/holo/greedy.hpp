@@ -11,10 +11,12 @@
 
 namespace autd3::gain::holo {
 struct GreedyOption {
-  uint8_t phase_div = 16;
+  uint8_t phase_quantization_levels = 16;
   EmissionConstraint constraint = EmissionConstraint::Uniform(std::numeric_limits<driver::EmitIntensity>::max());
 
-  operator native_methods::GreedyOption() const { return native_methods::GreedyOption{.constraint = constraint, .phase_div = phase_div}; }
+  operator native_methods::GreedyOption() const {
+    return native_methods::GreedyOption{.constraint = constraint, .phase_quantization_levels = phase_quantization_levels};
+  }
 };
 
 struct Greedy final : driver::Gain, driver::IntoDatagramTuple<Greedy> {

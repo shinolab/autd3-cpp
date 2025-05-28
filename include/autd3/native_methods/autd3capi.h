@@ -17,7 +17,6 @@ struct SenderOption {
   Duration receive_interval;
   OptionDuration timeout;
   ParallelMode parallel;
-  SleeperWrap sleeper;
 };
 
 struct FPGAStateListPtr {
@@ -91,7 +90,8 @@ ResultController AUTDControllerOpen(const Point3 *pos,
                                     const Quaternion *rot,
                                     uint16_t len,
                                     LinkPtr link,
-                                    SenderOption option);
+                                    SenderOption option,
+                                    SleeperWrap sleeper);
 
 [[nodiscard]] ResultStatus AUTDControllerClose(ControllerPtr cnt);
 
@@ -109,24 +109,15 @@ void AUTDControllerFirmwareVersionListPointerDelete(FirmwareVersionListPtr p_inf
 
 void AUTDFirmwareLatest(char *latest);
 
-[[nodiscard]]
-ResultStatus AUTDControllerGroup(SenderPtr sender,
-                                 const void* f,
-                                 const void* context,
-                                 GeometryPtr geometry,
-                                 const int32_t *keys,
-                                 const DatagramPtr *d,
-                                 uint16_t n);
+void AUTDSetDefaultSenderOption(ControllerPtr cnt, SenderOption option);
 
-[[nodiscard]] SenderPtr AUTDSender(ControllerPtr cnt, SenderOption option);
+[[nodiscard]] SenderPtr AUTDSender(ControllerPtr cnt, SenderOption option, SleeperWrap sleeper);
 
 [[nodiscard]] ResultStatus AUTDSenderSend(SenderPtr sender, DatagramPtr d);
 
 [[nodiscard]] uint32_t AUTDSpinSleepDefaultAccuracy();
 
 [[nodiscard]] bool AUTDSenderOptionIsDefault(SenderOption option);
-
-[[nodiscard]] DatagramPtr AUTDDatagramTuple(DatagramPtr d1, DatagramPtr d2);
 
 [[nodiscard]] DatagramPtr AUTDDatagramClear();
 
@@ -139,6 +130,14 @@ DatagramPtr AUTDDatagramGPIOOutputs(const void* f,
 DatagramPtr AUTDDatagramForceFan(const void* f,
                                  const void* context,
                                  GeometryPtr geometry);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramGroup(const void* f,
+                              const void* context,
+                              GeometryPtr geometry,
+                              const int32_t *keys,
+                              const DatagramPtr *d,
+                              uint16_t n);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramPhaseCorr(const void* f,
@@ -231,6 +230,8 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] DatagramPtr AUTDDatagramSynchronize();
 
+[[nodiscard]] DatagramPtr AUTDDatagramTuple(DatagramPtr d1, DatagramPtr d2);
+
 [[nodiscard]] DcSysTime AUTDDcSysTimeNow();
 
 [[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeNone();
@@ -271,7 +272,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] ResultU16 AUTDPulseWidthFromDuty(float duty);
 
-[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivision(uint16_t div);
+[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivide(uint16_t div);
 
 [[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreq(float f);
 
@@ -279,7 +280,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] SamplingConfigWrap AUTDSamplingConfigIntoNearest(SamplingConfigWrap config);
 
-[[nodiscard]] ResultU16 AUTDSamplingConfigDivision(SamplingConfigWrap c);
+[[nodiscard]] ResultU16 AUTDSamplingConfigDivide(SamplingConfigWrap c);
 
 [[nodiscard]] ResultF32 AUTDSamplingConfigFreq(SamplingConfigWrap c);
 
@@ -438,10 +439,7 @@ void AUTDLinkAuditFpgaGPIOOutputTypes(LinkPtr audit, uint16_t idx, uint8_t *ty);
 
 void AUTDLinkAuditFpgaDebugValues(LinkPtr audit, uint16_t idx, uint64_t *value);
 
-[[nodiscard]]
-uint16_t AUTDLinkAuditFpgaStmFreqDivision(LinkPtr audit,
-                                          Segment segment,
-                                          uint16_t idx);
+[[nodiscard]] uint16_t AUTDLinkAuditFpgaStmFreqDivide(LinkPtr audit, Segment segment, uint16_t idx);
 
 [[nodiscard]] uint16_t AUTDLinkAuditFpgaStmCycle(LinkPtr audit, Segment segment, uint16_t idx);
 
@@ -453,9 +451,9 @@ LoopBehavior AUTDLinkAuditFpgaStmLoopBehavior(LinkPtr audit,
                                               uint16_t idx);
 
 [[nodiscard]]
-uint16_t AUTDLinkAuditFpgaModulationFreqDivision(LinkPtr audit,
-                                                 Segment segment,
-                                                 uint16_t idx);
+uint16_t AUTDLinkAuditFpgaModulationFreqDivide(LinkPtr audit,
+                                               Segment segment,
+                                               uint16_t idx);
 
 [[nodiscard]]
 uint16_t AUTDLinkAuditFpgaModulationCycle(LinkPtr audit,

@@ -26,11 +26,11 @@ TEST(DriverDatagramSTM, GainSTMSamplingConfig) {
     const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
                                    autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
     auto stm = autd3::driver::GainSTM(gains, autd3::driver::SamplingConfig(20000), autd3::driver::GainSTMOption());
-    ASSERT_EQ(20000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
     for (const auto& dev : autd) {
       ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
       ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
       auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -45,11 +45,11 @@ TEST(DriverDatagramSTM, GainSTMSamplingConfig) {
         std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0));
     const std::shared_ptr<autd3::driver::Gain> g2 = std::make_shared<autd3::gain::Null>();
     auto stm = autd3::driver::GainSTM(std::vector{g1, g2}, autd3::driver::SamplingConfig(20000), autd3::driver::GainSTMOption());
-    ASSERT_EQ(20000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
     for (const auto& dev : autd) {
       ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
       ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
       auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -69,11 +69,11 @@ TEST(DriverDatagramSTM, GainSTMExactFreq) {
     const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
                                    autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
     auto stm = autd3::driver::GainSTM(gains, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption());
-    ASSERT_EQ(20000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
     for (const auto& dev : autd) {
       ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
       ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
       auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -88,11 +88,11 @@ TEST(DriverDatagramSTM, GainSTMExactFreq) {
         std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0));
     const std::shared_ptr<autd3::driver::Gain> g2 = std::make_shared<autd3::gain::Null>();
     auto stm = autd3::driver::GainSTM(std::vector{g1, g2}, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption());
-    ASSERT_EQ(20000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
     for (const auto& dev : autd) {
       ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
       ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
       auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -111,11 +111,11 @@ TEST(DriverDatagramSTM, GainSTMNearestFreq) {
   const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
                                  autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
   auto stm = autd3::driver::GainSTM(gains, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption()).into_nearest();
-  ASSERT_EQ(20000u, stm.sampling_config().division());
+  ASSERT_EQ(20000u, stm.sampling_config().divide());
   autd.send(stm);
   for (const auto& dev : autd) {
     ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-    ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
     ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
     auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -134,11 +134,11 @@ TEST(DriverDatagramSTM, GainSTMExactPeriod) {
     const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
                                    autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
     auto stm = autd3::driver::GainSTM(gains, std::chrono::seconds(1), autd3::driver::GainSTMOption());
-    ASSERT_EQ(20000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
     for (const auto& dev : autd) {
       ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
       ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
       auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -153,11 +153,11 @@ TEST(DriverDatagramSTM, GainSTMExactPeriod) {
         std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0));
     const std::shared_ptr<autd3::driver::Gain> g2 = std::make_shared<autd3::gain::Null>();
     auto stm = autd3::driver::GainSTM(std::vector{g1, g2}, std::chrono::seconds(1), autd3::driver::GainSTMOption());
-    ASSERT_EQ(20000u, stm.sampling_config().division());
+    ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
     for (const auto& dev : autd) {
       ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+      ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
       ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
       auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -176,11 +176,11 @@ TEST(DriverDatagramSTM, GainSTMNearestPeriod) {
   const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
                                  autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
   auto stm = autd3::driver::GainSTM(gains, std::chrono::seconds(1), autd3::driver::GainSTMOption()).into_nearest();
-  ASSERT_EQ(20000u, stm.sampling_config().division());
+  ASSERT_EQ(20000u, stm.sampling_config().divide());
   autd.send(stm);
   for (const auto& dev : autd) {
     ASSERT_TRUE(autd.link<autd3::link::Audit>().is_stm_gain_mode(dev.idx(), autd3::native_methods::Segment::S0));
-    ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(20000u, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
     ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
 
     auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);
@@ -202,7 +202,7 @@ TEST(DriverDatagramSTM, GainSTMPhaseIntensityFull) {
                                         .mode = autd3::native_methods::GainSTMMode::PhaseIntensityFull,
                                     });
   autd.send(stm);
-  for (const auto& dev : autd) ASSERT_EQ(1, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+  for (const auto& dev : autd) ASSERT_EQ(1, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
 
   for (const auto& dev : autd) {
     ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
@@ -226,7 +226,7 @@ TEST(DriverDatagramSTM, GainSTMPhaseFull) {
                                         .mode = autd3::native_methods::GainSTMMode::PhaseFull,
                                     });
   autd.send(stm);
-  for (const auto& dev : autd) ASSERT_EQ(1, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+  for (const auto& dev : autd) ASSERT_EQ(1, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
 
   for (const auto& dev : autd) {
     ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));
@@ -250,7 +250,7 @@ TEST(DriverDatagramSTM, GainSTMPhaseHalf) {
                                         .mode = autd3::native_methods::GainSTMMode::PhaseHalf,
                                     });
   autd.send(stm);
-  for (const auto& dev : autd) ASSERT_EQ(1, autd.link<autd3::link::Audit>().stm_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+  for (const auto& dev : autd) ASSERT_EQ(1, autd.link<autd3::link::Audit>().stm_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
 
   for (const auto& dev : autd) {
     ASSERT_EQ(2u, autd.link<autd3::link::Audit>().stm_cycle(dev.idx(), autd3::native_methods::Segment::S0));

@@ -19,6 +19,6 @@ TEST(DriverDatagramModulation, Cache) {
     auto mod = autd2.link<autd3::link::Audit>().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     auto mod_expect = autd1.link<autd3::link::Audit>().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect));
-    ASSERT_EQ(0xFFFF, autd2.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(0xFFFF, autd2.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

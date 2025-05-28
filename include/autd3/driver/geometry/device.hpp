@@ -59,7 +59,6 @@ class Device {
   AUTD3_API [[nodiscard]] Vector3 axial_direction() const { return AUTDDeviceDirectionAxial(_ptr); }
 
   AUTD3_API [[nodiscard]] bool enable() const { return AUTDDeviceEnableGet(_ptr); }
-
   AUTD3_API void set_enable(const bool value) const { AUTDDeviceEnableSet(_geo_ptr, static_cast<uint16_t>(_idx), value); }
 
   AUTD3_API [[nodiscard]] float wavelength() const { return AUTDDeviceWavelength(_ptr); }

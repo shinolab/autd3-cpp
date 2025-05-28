@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <autd3/driver/defined/freq.hpp>
+#include <autd3/driver/common/freq.hpp>
 #include <sstream>
 
 TEST(DriverDefined, Freq) {

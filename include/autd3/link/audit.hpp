@@ -71,8 +71,8 @@ struct Audit final {
     return buf;
   }  // LCOV_EXCL_LINE
 
-  [[nodiscard]] uint32_t modulation_freq_division(const size_t idx, const native_methods::Segment segment) const {
-    return AUTDLinkAuditFpgaModulationFreqDivision(_ptr, segment, static_cast<uint16_t>(idx));
+  [[nodiscard]] uint32_t modulation_freq_divide(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaModulationFreqDivide(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
   [[nodiscard]] native_methods::LoopBehavior modulation_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
@@ -95,8 +95,8 @@ struct Audit final {
     return AUTDLinkAuditFpgaIsStmGainMode(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] uint32_t stm_freq_division(const size_t idx, const native_methods::Segment segment) const {
-    return AUTDLinkAuditFpgaStmFreqDivision(_ptr, segment, static_cast<uint16_t>(idx));
+  [[nodiscard]] uint32_t stm_freq_divide(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaStmFreqDivide(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
   [[nodiscard]] native_methods::LoopBehavior stm_loop_behavior(const size_t idx, const native_methods::Segment segment) const {

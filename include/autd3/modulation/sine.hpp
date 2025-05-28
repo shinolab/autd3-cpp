@@ -1,9 +1,9 @@
 #pragma once
 
+#include "autd3/driver/common/angle.hpp"
+#include "autd3/driver/common/freq.hpp"
 #include "autd3/driver/datagram/modulation.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/defined/angle.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/modulation/sampling_mode.hpp"
 #include "autd3/native_methods.hpp"
@@ -19,7 +19,7 @@ struct SineOption {
 
   operator native_methods::SineOption() const {
     return native_methods::SineOption{
-        .intensity = intensity, .offset = offset, .phase = phase, .clamp = clamp, .sampling_config_div = sampling_config.division()};
+        .intensity = intensity, .offset = offset, .phase = phase, .clamp = clamp, .sampling_config_div = sampling_config.divide()};
   }
 };
 

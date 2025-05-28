@@ -12,7 +12,7 @@ TEST(GainHolo, Greedy) {
   const std::vector foci{std::make_pair(autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa),
                          std::make_pair(autd.center() + autd3::driver::Vector3(-30, 0, 150), 5e3 * autd3::gain::holo::Pa)};
   const auto g = autd3::gain::holo::Greedy(
-      foci, autd3::gain::holo::GreedyOption{.phase_div = 16,
+      foci, autd3::gain::holo::GreedyOption{.phase_quantization_levels = 16,
                                             .constraint = autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80))});
 
   autd.send(g);

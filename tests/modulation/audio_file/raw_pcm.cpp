@@ -17,7 +17,7 @@ TEST(Modulation, RawPCM) {
                                     98,  70,  45,  24,  10,  2,   0,   6,   19,  37,  61,  88,  117, 147, 176, 202, 224, 241, 251, 255,
                                     251, 241, 224, 202, 176, 147, 117, 88,  61,  37,  19,  6,   0,   2,   10,  24,  45,  70,  98,  128};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -31,6 +31,6 @@ TEST(Modulation, RawPCMResampler) {
     auto mod = autd.link<autd3::link::Audit>().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     std::vector<uint8_t> mod_expect{127, 217, 255, 217, 127, 37, 0, 37};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

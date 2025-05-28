@@ -3,9 +3,9 @@
 #include <algorithm>
 
 #include "autd3/def.hpp"
+#include "autd3/driver/common/angle.hpp"
 #include "autd3/driver/datagram/gain.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/defined/angle.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/geometry/geometry.hpp"

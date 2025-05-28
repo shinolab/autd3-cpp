@@ -8,7 +8,7 @@ inline void group_by_device_test(autd3::Controller& autd) {
 
   const autd3::Point3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
 
-  autd.group_send(
+  autd.send(autd3::Group(
       [](const autd3::Device& dev) -> std::optional<const char*> {
         if (dev.idx() == 0) {
           return "null";
@@ -21,7 +21,7 @@ inline void group_by_device_test(autd3::Controller& autd) {
       std::unordered_map<const char*, std::shared_ptr<autd3::driver::Datagram>>{
           {"focus", std::make_shared<autd3::DatagramTuple<autd3::Sine<autd3::Freq<uint32_t>>, autd3::Focus>>(
                         autd3::Sine(150 * autd3::driver::Hz, autd3::SineOption{}), autd3::Focus{center, autd3::FocusOption{}})},
-          {"null", std::make_shared<autd3::DatagramTuple<autd3::Static, autd3::Null>>(autd3::Static{}, autd3::Null{})}});
+          {"null", std::make_shared<autd3::DatagramTuple<autd3::Static, autd3::Null>>(autd3::Static{}, autd3::Null{})}}));
 }
 
 inline void group_by_transducer_test(autd3::Controller& autd) {

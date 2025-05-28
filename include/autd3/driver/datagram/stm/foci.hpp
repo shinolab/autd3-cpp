@@ -1,9 +1,9 @@
 #pragma once
 
+#include "autd3/driver/common/freq.hpp"
 #include "autd3/driver/datagram/stm/control_point.hpp"
 #include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/stm_sampling_config.hpp"
 #include "autd3/native_methods.hpp"
 
@@ -58,7 +58,7 @@ class FociSTM<1, SamplingConfig> final : public FociSTMBase<1>, public IntoDatag
   AUTD3_API explicit FociSTM(const std::vector<Point3>& foci_, const SamplingConfig config_) : FociSTMBase(), config(config_) {
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
-      this->foci.emplace_back(ControlPoints<1>{.points = std::array{ControlPoint{.point = f, .phase_offset = Phase::zero()}},
+      this->foci.emplace_back(ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::zero()}},
                                                .intensity = std::numeric_limits<EmitIntensity>::max()});
   }
 
@@ -102,7 +102,7 @@ class FociSTM<1, Freq<float>> final : public FociSTMBase<1>, public IntoDatagram
   AUTD3_API explicit FociSTM(const std::vector<Point3>& foci_, const Freq<float> config_) : FociSTMBase<1>(), config(config_) {
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
-      this->foci.emplace_back(ControlPoints<1>{.points = std::array{ControlPoint{.point = f, .phase_offset = Phase::zero()}},
+      this->foci.emplace_back(ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::zero()}},
                                                .intensity = std::numeric_limits<EmitIntensity>::max()});
   }
 
@@ -157,7 +157,7 @@ class FociSTM<1, std::chrono::nanoseconds> final : public FociSTMBase<1>, public
   AUTD3_API explicit FociSTM(const std::vector<Point3>& foci, const std::chrono::duration<Rep, P> config) : FociSTMBase<1>(), config(config) {
     this->foci.reserve(foci.size());
     for (const auto& f : foci)
-      this->foci.emplace_back(ControlPoints<1>{.points = std::array{ControlPoint{.point = f, .phase_offset = Phase::zero()}},
+      this->foci.emplace_back(ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::zero()}},
                                                .intensity = std::numeric_limits<EmitIntensity>::max()});
   }
 

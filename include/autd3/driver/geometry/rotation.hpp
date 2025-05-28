@@ -1,6 +1,6 @@
 #pragma once
 
-#include "autd3/driver/defined/angle.hpp"
+#include "autd3/driver/common/angle.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::driver::geometry {

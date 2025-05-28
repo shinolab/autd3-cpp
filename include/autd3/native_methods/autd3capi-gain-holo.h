@@ -27,7 +27,7 @@ struct EmissionConstraintWrap {
 
 struct GreedyOption {
   EmissionConstraintWrap constraint;
-  uint8_t phase_div;
+  uint8_t phase_quantization_levels;
 };
 
 struct BackendPtr {

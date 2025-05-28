@@ -9,7 +9,7 @@ TEST(Modulation, SineExact) {
 
   const auto m = autd3::modulation::Sine(
       150 * autd3::driver::Hz, autd3::modulation::SineOption{.intensity = 0x80, .offset = 0x40, .phase = autd3::driver::pi / 2 * autd3::driver::rad});
-  ASSERT_EQ(10, m.sampling_config().division());
+  ASSERT_EQ(10, m.sampling_config().divide());
   autd.send(m);
 
   for (auto& dev : autd) {
@@ -18,7 +18,7 @@ TEST(Modulation, SineExact) {
                                     127, 124, 118, 109, 97,  83, 69, 53, 39, 26, 15, 6, 1, 0, 1, 6, 15, 26, 39, 53, 69, 83, 97,  109, 118, 124, 127,
                                     127, 123, 115, 105, 93,  78, 64, 49, 34, 22, 12, 4, 0, 0, 3, 9, 18, 30, 44, 58, 74, 88, 101, 112, 121, 126};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -28,7 +28,7 @@ TEST(Modulation, SineExactFloat) {
   const auto m =
       autd3::modulation::Sine(150.0f * autd3::driver::Hz,
                               autd3::modulation::SineOption{.intensity = 0x80, .offset = 0x40, .phase = autd3::driver::pi / 2 * autd3::driver::rad});
-  ASSERT_EQ(10, m.sampling_config().division());
+  ASSERT_EQ(10, m.sampling_config().divide());
   autd.send(m);
 
   for (auto& dev : autd) {
@@ -37,7 +37,7 @@ TEST(Modulation, SineExactFloat) {
                                     127, 124, 118, 109, 97,  83, 69, 53, 39, 26, 15, 6, 1, 0, 1, 6, 15, 26, 39, 53, 69, 83, 97,  109, 118, 124, 127,
                                     127, 123, 115, 105, 93,  78, 64, 49, 34, 22, 12, 4, 0, 0, 3, 9, 18, 30, 44, 58, 74, 88, 101, 112, 121, 126};
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 

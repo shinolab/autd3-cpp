@@ -17,23 +17,17 @@
 
 namespace autd3::controller {
 
-template <class F>
-concept group_f =
-    requires(F f, const driver::geometry::Device& dev) { typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type; };
-
 struct SenderOption {
   std::chrono::nanoseconds send_interval = std::chrono::milliseconds(1);
   std::chrono::nanoseconds receive_interval = std::chrono::milliseconds(1);
-  std::optional<std::chrono::nanoseconds> timeout = std::nullopt;
+  std::optional<std::chrono::nanoseconds> timeout = std::chrono::milliseconds(200);
   native_methods::ParallelMode parallel = native_methods::ParallelMode::Auto;
-  std::variant<StdSleeper, SpinSleeper, WaitableSleeper> sleeper = SpinSleeper();
 
   operator native_methods::SenderOption() const {
     return native_methods::SenderOption{.send_interval = native_methods::to_duration(send_interval),
                                         .receive_interval = native_methods::to_duration(receive_interval),
                                         .timeout = native_methods::to_option_duration(timeout),
-                                        .parallel = parallel,
-                                        .sleeper = std::visit([](const auto& s) { return native_methods::SleeperWrap(s); }, sleeper)};
+                                        .parallel = parallel};
   }
 };
 
@@ -52,38 +46,6 @@ class Sender {
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
     native_methods::validate(native_methods::AUTDSenderSend(_ptr, d.ptr(_geometry)));
-  }
-
-  template <group_f F>
-  AUTD3_API void group_send(
-      F key_map,
-      std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, std::shared_ptr<driver::Datagram>> data_map) {
-    std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, int32_t> keymap;
-    std::vector<native_methods::DatagramPtr> datagrams;
-    std::vector<int32_t> keys;
-
-    int k = 0;
-    for (const auto& [key, v] : data_map) {
-      const auto ptr = v->ptr(_geometry);
-      datagrams.push_back(ptr);
-      keys.push_back(k);
-      keymap[key] = k++;
-    }
-
-    const auto context = std::make_pair(std::move(key_map), std::move(keymap));
-
-    const auto f_native = +[](const void* context_ptr, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx) -> int32_t {
-      const driver::geometry::Device dev(dev_idx, geometry_ptr);
-      const auto* c = static_cast<
-          const std::pair<F, std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, int32_t>>*>(
-          context_ptr);
-      const auto key = c->first(dev);
-      const auto& keymap_ = c->second;
-      return key.has_value() ? keymap_.at(key.value()) : -1;
-    };
-
-    validate(AUTDControllerGroup(_ptr, reinterpret_cast<const void*>(f_native), static_cast<const void*>(&context), _geometry._geometry_ptr,
-                                 keys.data(), datagrams.data(), static_cast<uint16_t>(keys.size())));
   }
 
  private:
@@ -122,11 +84,12 @@ class Controller final : public driver::geometry::Geometry {
 
   template <driver::link L>
   AUTD3_API [[nodiscard]] static Controller open(std::vector<driver::AUTD3> devices, L link) {
-    return Controller::open_with_option(std::move(devices), link, SenderOption());
+    return Controller::open_with_option(std::move(devices), link, SenderOption(), SpinSleeper());
   }
 
   template <driver::link L>
-  AUTD3_API [[nodiscard]] static Controller open_with_option(const std::vector<driver::AUTD3>& devices, L link, const SenderOption option) {
+  AUTD3_API [[nodiscard]] static Controller open_with_option(const std::vector<driver::AUTD3>& devices, L link, const SenderOption option,
+                                                             std::variant<StdSleeper, SpinSleeper, WaitableSleeper> sleeper) {
     std::vector<native_methods::Point3> pos;
     pos.reserve(devices.size());
     std::ranges::transform(devices, std::back_inserter(pos), [&](const auto& d) { return native_methods::Point3{d.pos.x(), d.pos.y(), d.pos.z()}; });
@@ -137,9 +100,10 @@ class Controller final : public driver::geometry::Geometry {
                            [&](const auto& d) { return native_methods::Quaternion{d.rot.x(), d.rot.y(), d.rot.z(), d.rot.w()}; });
 
     const auto ptr =
-        validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(), option));
+        validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(), option,
+                                                    std::visit([](const auto& s) { return native_methods::SleeperWrap(s); }, sleeper)));
     auto geometry = AUTDGeometry(ptr);
-    return Controller(geometry, ptr);
+    return Controller(geometry, ptr, option);
   }
 
   AUTD3_API [[nodiscard]] const Geometry& geometry() const { return static_cast<const Geometry&>(*this); }
@@ -184,24 +148,29 @@ class Controller final : public driver::geometry::Geometry {
     return ret;
   }  // LCOV_EXCL_LINE
 
-  AUTD3_API Sender sender(const SenderOption option) const { return Sender(AUTDSender(_ptr, SenderOption()), geometry()); }
+  AUTD3_API Sender sender(const SenderOption option, std::variant<StdSleeper, SpinSleeper, WaitableSleeper> sleeper) const {
+    return Sender(AUTDSender(_ptr, _default_sender_option, std::visit([](const auto& s) { return native_methods::SleeperWrap(s); }, sleeper)),
+                  geometry());
+  }
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    sender(SenderOption()).send(d);
+    sender(_default_sender_option, SpinSleeper()).send(d);
   }
 
-  template <group_f F>
-  AUTD3_API void group_send(
-      F key_map,
-      std::unordered_map<typename std::invoke_result_t<F, const driver::geometry::Device&>::value_type, std::shared_ptr<driver::Datagram>> data_map) {
-    sender(SenderOption()).group_send(std::move(key_map), std::move(data_map));
+  AUTD3_API [[nodiscard]] SenderOption default_sender_option() const { return _default_sender_option; }
+  AUTD3_API void set_default_sender_option(const SenderOption value) {
+    _default_sender_option = value;
+    AUTDSetDefaultSenderOption(_ptr, value);
   }
 
  private:
-  AUTD3_API Controller(const native_methods::GeometryPtr geometry, const native_methods::ControllerPtr ptr) : Geometry(geometry), _ptr(ptr) {}
+  AUTD3_API
+  Controller(const native_methods::GeometryPtr geometry, const native_methods::ControllerPtr ptr, SenderOption option)
+      : Geometry(geometry), _ptr(ptr), _default_sender_option(std::move(option)) {}
 
   native_methods::ControllerPtr _ptr;
+  SenderOption _default_sender_option;
 };
 
 }  // namespace autd3::controller
