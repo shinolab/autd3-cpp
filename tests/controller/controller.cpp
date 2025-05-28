@@ -10,6 +10,19 @@
 
 TEST(Controller, SenderOptionIsDefault) { ASSERT_TRUE(autd3::native_methods::AUTDSenderOptionIsDefault(autd3::controller::SenderOption())); }
 
+TEST(Controller, ControllerDefaultSenderOption) {
+  auto autd = create_controller();
+  const autd3::controller::SenderOption option{
+      .send_interval = std::chrono::milliseconds(2),
+      .receive_interval = std::chrono::milliseconds(3),
+      .timeout = std::chrono::milliseconds(4),
+      .parallel = autd3::native_methods::ParallelMode::Off,
+  };
+
+  autd.set_default_sender_option(option);
+  ASSERT_EQ(option, autd.default_sender_option());
+}
+
 TEST(Controller, ControllerClose) {
   {
     auto autd = create_controller();

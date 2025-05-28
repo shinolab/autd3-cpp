@@ -29,6 +29,8 @@ struct SenderOption {
                                         .timeout = native_methods::to_option_duration(timeout),
                                         .parallel = parallel};
   }
+
+  auto operator<=>(const SenderOption&) const = default;
 };
 
 class Controller;
