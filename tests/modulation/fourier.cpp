@@ -28,7 +28,7 @@ TEST(Modulation, FourierExact) {
         123, 116, 109, 103, 100, 99,  102, 107, 114, 121, 127, 131, 130, 125, 115, 101, 84,  66,  49,  36,  28,  27,  34,  49,  71,  98,
     };
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -55,7 +55,7 @@ TEST(Modulation, FourierExactFloat) {
         123, 116, 109, 103, 100, 99,  102, 107, 114, 121, 127, 131, 130, 125, 115, 101, 84,  66,  49,  36,  28,  27,  34,  49,  71,  98,
     };
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
 
@@ -79,6 +79,6 @@ TEST(Modulation, FourierNearest) {
         122, 114, 104, 94,  84,  74,  64,  54,  45,  37,  29,  24,  19,  16,  15,  16,  19,  23,  29,  37,  47,  58,  70,  84,  98,  113,
     };
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }

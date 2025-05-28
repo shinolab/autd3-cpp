@@ -41,7 +41,7 @@ enum class GPIOOutputTypeTag : uint8_t {
 };
 
 enum class SamplingConfigTag : uint8_t {
-  Division = 0,
+  Divide = 0,
   Frequency = 1,
   Period = 2,
   FrequencyNearest = 3,
@@ -93,7 +93,7 @@ struct ResultModulation {
 };
 
 union SamplingConfigValue {
-  uint16_t division;
+  uint16_t divide;
   float freq;
   uint64_t period_ns;
 };

@@ -2,10 +2,10 @@
 
 #include <memory>
 
+#include "autd3/driver/common/freq.hpp"
 #include "autd3/driver/datagram/gain.hpp"
 #include "autd3/driver/datagram/stm/stm.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/driver/firmware/fpga/stm_sampling_config.hpp"
 #include "autd3/native_methods.hpp"

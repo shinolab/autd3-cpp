@@ -6,10 +6,13 @@
 #include "autd3/controller/sleeper.hpp"
 #include "autd3/def.hpp"
 #include "autd3/driver/autd3_device.hpp"
+#include "autd3/driver/common/angle.hpp"
+#include "autd3/driver/common/freq.hpp"
 #include "autd3/driver/datagram/clear.hpp"
 #include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/datagram/debug.hpp"
 #include "autd3/driver/datagram/force_fan.hpp"
+#include "autd3/driver/datagram/group.hpp"
 #include "autd3/driver/datagram/phase_corr.hpp"
 #include "autd3/driver/datagram/pulse_width_encoder.hpp"
 #include "autd3/driver/datagram/reads_fpga_state.hpp"
@@ -20,8 +23,6 @@
 #include "autd3/driver/datagram/synchronize.hpp"
 #include "autd3/driver/datagram/with_loop_behavior.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
-#include "autd3/driver/defined/angle.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
 #include "autd3/driver/firmware/fpga/loop_behavior.hpp"
@@ -47,7 +48,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "32.1.1";
+static inline std::string version = "33.0.0";
 
 using autd3::driver::deg;
 using autd3::driver::Freq;
@@ -89,6 +90,7 @@ using driver::GainSTM;
 using driver::GainSTMOption;
 using driver::GPIOOutputs;
 using driver::GPIOOutputType;
+using driver::Group;
 using driver::PhaseCorrection;
 using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;
@@ -104,7 +106,6 @@ using gain::Bessel;
 using gain::BesselOption;
 using gain::Focus;
 using gain::FocusOption;
-using gain::Group;
 using gain::Null;
 using gain::Plane;
 using gain::PlaneOption;

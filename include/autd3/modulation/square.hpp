@@ -1,8 +1,8 @@
 #pragma once
 
+#include "autd3/driver/common/freq.hpp"
 #include "autd3/driver/datagram/modulation.hpp"
 #include "autd3/driver/datagram/tuple.hpp"
-#include "autd3/driver/defined/freq.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
 #include "autd3/modulation/sampling_mode.hpp"
 #include "autd3/native_methods.hpp"
@@ -16,7 +16,7 @@ struct SquareOption {
   driver::SamplingConfig sampling_config = driver::SamplingConfig::freq_4k();
 
   operator native_methods::SquareOption() const {
-    return native_methods::SquareOption{.low = low, .high = high, .duty = duty, .sampling_config_div = sampling_config.division()};
+    return native_methods::SquareOption{.low = low, .high = high, .duty = duty, .sampling_config_div = sampling_config.divide()};
   }
 };
 

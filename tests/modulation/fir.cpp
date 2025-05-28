@@ -126,6 +126,6 @@ TEST(DriverDatagramModulation, Fir) {
         75,  73,  72,  70,  70,  69,  69,  69,  70,  70,  72,  73,  75,  77,  80,  83,  86,  89,  93,  96,  100, 105, 109, 113, 118, 122,
     };
     ASSERT_TRUE(std::ranges::equal(mod, mod_expect, [](const auto& l, const auto& r) { return l == r; }));
-    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_division(dev.idx(), autd3::native_methods::Segment::S0));
+    ASSERT_EQ(10, autd.link<autd3::link::Audit>().modulation_freq_divide(dev.idx(), autd3::native_methods::Segment::S0));
   }
 }
