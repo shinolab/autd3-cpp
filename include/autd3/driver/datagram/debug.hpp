@@ -12,7 +12,6 @@
 namespace autd3::driver {
 
 struct GPIOOutputType {
-  AUTD3_API static const GPIOOutputType None;
   AUTD3_API static const GPIOOutputType BaseSignal;
   AUTD3_API static const GPIOOutputType Thermo;
   AUTD3_API static const GPIOOutputType ForceFan;
@@ -36,7 +35,6 @@ struct GPIOOutputType {
   native_methods::GPIOOutputTypeWrap _inner;
 };
 
-const GPIOOutputType GPIOOutputType::None = GPIOOutputType(native_methods::AUTDGPIOOutputTypeNone());
 const GPIOOutputType GPIOOutputType::BaseSignal = GPIOOutputType(native_methods::AUTDGPIOOutputTypeBaseSignal());
 const GPIOOutputType GPIOOutputType::Thermo = GPIOOutputType(native_methods::AUTDGPIOOutputTypeThermo());
 const GPIOOutputType GPIOOutputType::ForceFan = GPIOOutputType(native_methods::AUTDGPIOOutputTypeForceFan());
@@ -47,7 +45,7 @@ const GPIOOutputType GPIOOutputType::IsStmMode = GPIOOutputType(native_methods::
 
 template <class F>
 concept debug_settings_f = requires(F f, const geometry::Device& d, const native_methods::GPIOOut gpio) {
-  { f(d, gpio) } -> std::same_as<GPIOOutputType>;
+  { f(d, gpio) } -> std::same_as<std::optional<GPIOOutputType>>;
 };
 
 template <debug_settings_f F>
@@ -56,7 +54,8 @@ struct GPIOOutputs final : Datagram, IntoDatagramTuple<GPIOOutputs<F>> {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const native_methods::GPIOOut gpio,
                     native_methods::GPIOOutputTypeWrap* res) {
       const geometry::Device dev(dev_idx, geometry_ptr);
-      *res = static_cast<const GPIOOutputs*>(context)->f(dev, gpio);
+      const auto t = static_cast<const GPIOOutputs*>(context)->f(dev, gpio);
+      *res = t.has_value() ? t.value() : native_methods::AUTDGPIOOutputTypeNone();
     };
   }
 
