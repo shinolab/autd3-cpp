@@ -17,7 +17,7 @@ TEST(DriverDatagram, PulseWidthEncoder) {
   std::ranges::generate(buf, [&] { return dist(engine); });
 
   autd.send(autd3::driver::PulseWidthEncoder(
-      [&](const auto&) { return [&](const autd3::driver::EmitIntensity i) { return autd3::driver::PulseWidth(buf[i.value()]); }; }));
+      [&](const auto&) { return [&](const autd3::driver::Intensity i) { return autd3::driver::PulseWidth(buf[i.value()]); }; }));
 
   ASSERT_EQ(buf, autd.link<autd3::link::Audit>().pulse_width_encoder_table(0));
   ASSERT_EQ(buf, autd.link<autd3::link::Audit>().pulse_width_encoder_table(1));

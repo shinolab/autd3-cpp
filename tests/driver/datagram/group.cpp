@@ -16,7 +16,7 @@ TEST(DriverDatagram, Group) {
           {1, std::make_shared<autd3::gain::Null>()},
           {0, std::make_shared<autd3::driver::DatagramTuple<autd3::modulation::Sine<autd3::driver::Freq<uint32_t>>, autd3::gain::Uniform>>(
                   autd3::modulation::Sine(150 * autd3::driver::Hz, autd3::modulation::SineOption{}),
-                  autd3::gain::Uniform{autd3::driver::EmitIntensity(0x80), autd3::driver::Phase::zero()})}}));
+                  autd3::gain::Uniform{autd3::driver::Intensity(0x80), autd3::driver::Phase::zero()})}}));
 
   {
     const auto m = autd.link<autd3::link::Audit>().modulation(0, autd3::native_methods::Segment::S0);

@@ -6,7 +6,6 @@ target_sources(test_autd3 PRIVATE
   plane.cpp
   custom.cpp
   uniform.cpp
-  cache.cpp
 )
 
 add_subdirectory(holo)

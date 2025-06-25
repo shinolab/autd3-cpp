@@ -4,7 +4,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt. ")
 endif()
 
-project(autd3 VERSION 33.0.0)
+project(autd3 VERSION 34.0.0)
 
 message(STATUS "Build AUTD3: ${PROJECT_VERSION}")
 
@@ -15,8 +15,6 @@ set(CMAKE_CXX_EXTENSIONS OFF)
 set(CMAKE_POLICY_DEFAULT_CMP0077 NEW)
 
 option(USE_SYSTEM_EIGEN "Use system installed eigen3" OFF)
-option(USE_SYSTEM_LIBCORO "Use system installed libcoro" OFF)
-option(AUTD3_USE_PCH "Use precompiled headers" OFF)
 
 if(${CMAKE_VERSION} VERSION_GREATER_EQUAL "3.24.0") 
   cmake_policy(SET CMP0135 NEW)
@@ -48,54 +46,95 @@ endif()
 if(WIN32)
   target_compile_definitions(autd3_common INTERFACE NOMINMAX)
 endif()
-if(AUTD3_USE_PCH)
-  file(GLOB_RECURSE autd3_headers ${PROJECT_SOURCE_DIR}/include/**/*.hpp)
-  target_precompile_headers(autd3_common INTERFACE ${autd3_headers})
-endif()
 add_library(autd3::common ALIAS autd3_common)
 
+macro(autd_target_link_libraries target lib)
+  if(WIN32)
+    target_link_libraries(${target} INTERFACE "${lib}.dll.lib")
+  elseif(APPLE)
+    target_link_libraries(${target} INTERFACE ${lib})
+  else()
+    target_link_libraries(${target} INTERFACE ${lib})
+  endif()
+endmacro()
+
 add_library(autd3 INTERFACE)
-target_link_libraries(autd3 INTERFACE autd3::common autd3capi)
-if(AUTD3_USE_PCH)
-  target_precompile_headers(autd3 REUSE_FROM autd3::common)
-endif()
+target_link_libraries(autd3 INTERFACE autd3::common)
+autd_target_link_libraries(autd3 autd3capi)
 if(WIN32)
   target_link_libraries(autd3 INTERFACE ntdll.lib Winmm.lib bcrypt.lib userenv.lib RuntimeObject.lib Propsys.lib)
+  set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+  add_custom_target(autd3capi)
+  add_custom_command(TARGET autd3capi POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    VERBATIM
+  )
+  set_property(TARGET autd3capi PROPERTY FOLDER "autd3capi") 
+  add_dependencies(autd3 autd3capi)
 elseif(APPLE)
   target_link_libraries(autd3 INTERFACE "-framework CoreFoundation")
 endif()
 add_library(autd3::autd3 ALIAS autd3)
 
 add_library(autd3_gain_holo INTERFACE)
-target_link_libraries(autd3_gain_holo INTERFACE autd3::common autd3capi_gain_holo)
-if(AUTD3_USE_PCH)
-  target_precompile_headers(autd3_gain_holo REUSE_FROM autd3::common)
+target_link_libraries(autd3_gain_holo INTERFACE autd3::common)
+autd_target_link_libraries(autd3_gain_holo autd3capi_gain_holo)
+if(WIN32)
+  add_custom_target(autd3capi_gain_holo)
+  add_custom_command(TARGET autd3capi_gain_holo POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_gain_holo.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    VERBATIM
+  )
+  set_property(TARGET autd3capi_gain_holo PROPERTY FOLDER "autd3capi") 
+  add_dependencies(autd3_gain_holo autd3capi_gain_holo)
 endif()
 add_library(autd3::gain::holo ALIAS autd3_gain_holo)
 
 add_library(autd3_modulation_audio_file INTERFACE)
-target_link_libraries(autd3_modulation_audio_file INTERFACE autd3::common autd3capi_modulation_audio_file)
-if(AUTD3_USE_PCH)
-  target_precompile_headers(autd3_modulation_audio_file REUSE_FROM autd3::common)
+target_link_libraries(autd3_modulation_audio_file INTERFACE autd3::common)
+autd_target_link_libraries(autd3_modulation_audio_file autd3capi_modulation_audio_file)
+if(WIN32)
+  add_custom_target(autd3capi_modulation_audio_file)
+  add_custom_command(TARGET autd3capi_modulation_audio_file POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_modulation_audio_file.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    VERBATIM
+  )
+  set_property(TARGET autd3capi_modulation_audio_file PROPERTY FOLDER "autd3capi") 
+  add_dependencies(autd3_modulation_audio_file autd3capi_modulation_audio_file)
 endif()
 add_library(autd3::modulation::audio_file ALIAS autd3_modulation_audio_file)
 
 add_library(autd3_link_twincat INTERFACE)
-target_link_libraries(autd3_link_twincat INTERFACE autd3::common autd3capi_link_twincat)
-if(AUTD3_USE_PCH)
-  target_precompile_headers(autd3_link_twincat REUSE_FROM autd3::common)
-endif()
+target_link_libraries(autd3_link_twincat INTERFACE autd3::common)
+autd_target_link_libraries(autd3_link_twincat autd3capi_link_twincat)
 if(WIN32)
   target_link_libraries(autd3_link_twincat INTERFACE ws2_32)
+  add_custom_target(autd3capi_link_twincat)
+  add_custom_command(TARGET autd3capi_link_twincat POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_twincat.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    VERBATIM
+  )
+  set_property(TARGET autd3capi_link_twincat PROPERTY FOLDER "autd3capi") 
+  add_dependencies(autd3_link_twincat autd3capi_link_twincat)
 endif()
 add_library(autd3::link::twincat ALIAS autd3_link_twincat)
 
 add_library(autd3_link_simulator INTERFACE)
-target_link_libraries(autd3_link_simulator INTERFACE autd3::common autd3capi_link_simulator)
-if(AUTD3_USE_PCH)
-  target_precompile_headers(autd3_link_simulator REUSE_FROM autd3::common)
-endif()
+target_link_libraries(autd3_link_simulator INTERFACE autd3::common)
+autd_target_link_libraries(autd3_link_simulator autd3capi_link_simulator)
 if(WIN32)
   target_link_libraries(autd3_link_simulator INTERFACE ws2_32)
+  add_custom_target(autd3capi_link_simulator)
+  add_custom_command(TARGET autd3capi_link_simulator POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_simulator.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    VERBATIM
+  )
+  set_property(TARGET autd3capi_link_simulator PROPERTY FOLDER "autd3capi") 
+  add_dependencies(autd3_link_simulator autd3capi_link_simulator)
 endif()
 add_library(autd3::link::simulator ALIAS autd3_link_simulator)

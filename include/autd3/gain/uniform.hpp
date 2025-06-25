@@ -10,7 +10,7 @@
 namespace autd3::gain {
 
 struct Uniform final : driver::Gain, driver::IntoDatagramTuple<Uniform> {
-  explicit Uniform(const driver::EmitIntensity intensity, const driver::Phase phase) : intensity(intensity), phase(phase) {}
+  explicit Uniform(const driver::Intensity intensity, const driver::Phase phase) : intensity(intensity), phase(phase) {}
   Uniform() = delete;
   Uniform(const Uniform& obj) = default;             // LCOV_EXCL_LINE
   Uniform& operator=(const Uniform& obj) = default;  // LCOV_EXCL_LINE
@@ -18,7 +18,7 @@ struct Uniform final : driver::Gain, driver::IntoDatagramTuple<Uniform> {
   Uniform& operator=(Uniform&& obj) = default;       // LCOV_EXCL_LINE
   ~Uniform() override = default;                     // LCOV_EXCL_LINE
 
-  driver::EmitIntensity intensity;
+  driver::Intensity intensity;
   driver::Phase phase;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {

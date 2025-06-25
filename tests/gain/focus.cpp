@@ -7,7 +7,7 @@
 TEST(Gain, Focus) {
   auto autd = create_controller();
   autd.send(autd3::gain::Focus{autd.center() + 150 * autd3::driver::Vector3::UnitZ(),
-                               autd3::gain::FocusOption{.intensity = autd3::driver::EmitIntensity(0x80)}});
+                               autd3::gain::FocusOption{.intensity = autd3::driver::Intensity(0x80)}});
 
   for (auto& dev : autd) {
     auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);

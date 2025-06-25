@@ -1,6 +1,6 @@
 target_sources(test_autd3 PRIVATE
   clear.cpp
-  debug.cpp
+  gpio_out.cpp
   force_fan.cpp
   group.cpp
   reads_fpga_state.cpp

@@ -7,10 +7,10 @@ namespace autd3::gain::holo {
 
 struct EmissionConstraint final {
   AUTD3_API static EmissionConstraint Normalize() noexcept { return EmissionConstraint(native_methods::AUTDGainHoloConstraintNormalize()); }
-  AUTD3_API static EmissionConstraint Uniform(const driver::EmitIntensity value) noexcept {
+  AUTD3_API static EmissionConstraint Uniform(const driver::Intensity value) noexcept {
     return EmissionConstraint(native_methods::AUTDGainHoloConstraintUniform(value));
   }
-  AUTD3_API static EmissionConstraint Clamp(const driver::EmitIntensity min_v, const driver::EmitIntensity max_v) noexcept {
+  AUTD3_API static EmissionConstraint Clamp(const driver::Intensity min_v, const driver::Intensity max_v) noexcept {
     return EmissionConstraint(native_methods::AUTDGainHoloConstraintClamp(min_v, max_v));
   }
   AUTD3_API static EmissionConstraint Multiply(const float v) noexcept {

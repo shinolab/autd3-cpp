@@ -65,9 +65,11 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "Angle".to_string(),
             "FixedCompletionSteps".to_string(),
             "FixedUpdateRate".to_string(),
+            "ResultU8".to_string(),
             "ResultU16".to_string(),
             "ResultF32".to_string(),
             "ResultDuration".to_string(),
+            "TimerStrategyWrap".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]

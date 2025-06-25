@@ -1,6 +1,6 @@
 #include <gtest/gtest.h>
 
-#include <autd3/driver/datagram/debug.hpp>
+#include <autd3/driver/datagram/gpio_out.hpp>
 
 #include "utils.hpp"
 

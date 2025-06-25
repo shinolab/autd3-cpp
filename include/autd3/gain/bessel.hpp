@@ -14,7 +14,7 @@
 namespace autd3::gain {
 
 struct BesselOption {
-  driver::EmitIntensity intensity = std::numeric_limits<driver::EmitIntensity>::max();
+  driver::Intensity intensity = std::numeric_limits<driver::Intensity>::max();
   driver::Phase phase_offset = driver::Phase(0);
 
   operator native_methods::BesselOption() const { return native_methods::BesselOption{.intensity = intensity, .phase_offset = phase_offset}; }

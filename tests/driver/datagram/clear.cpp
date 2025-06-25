@@ -8,7 +8,7 @@
 TEST(DriverDatagram, Clear) {
   auto autd = create_controller();
 
-  autd.send(autd3::gain::Uniform{autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)});
+  autd.send(autd3::gain::Uniform{autd3::driver::Intensity(0x80), autd3::driver::Phase(0x90)});
   for (auto& dev : autd) {
     auto m = autd.link<autd3::link::Audit>().modulation(dev.idx(), autd3::native_methods::Segment::S0);
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));

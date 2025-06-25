@@ -38,6 +38,7 @@ enum class GPIOOutputTypeTag : uint8_t {
   PwmOut = 10,
   Direct = 11,
   SysTimeEq = 12,
+  SyncDiff = 13,
 };
 
 enum class SamplingConfigTag : uint8_t {
@@ -51,12 +52,17 @@ enum class SamplingConfigTag : uint8_t {
 enum class SleeperTag : uint8_t {
   Std = 0,
   Spin = 1,
-  Waitable = 3,
+  SpinWait = 4,
 };
 
 enum class SpinStrategyTag : uint8_t {
   YieldThread = 0,
   SpinLoopHint = 1,
+};
+
+enum class TimerStrategyTag : uint8_t {
+  FixedSchedule = 0,
+  FixedDelay = 1,
 };
 
 enum class TransitionModeTag : uint8_t {
@@ -197,6 +203,12 @@ struct SleeperWrap {
   SpinStrategyTag spin_strategy;
 };
 
+struct ResultU8 {
+  uint8_t result;
+  uint32_t err_len;
+  const void* err;
+};
+
 struct ResultU16 {
   uint16_t result;
   uint32_t err_len;
@@ -213,6 +225,11 @@ struct ResultDuration {
   Duration result;
   uint32_t err_len;
   const void* err;
+};
+
+struct TimerStrategyWrap {
+  TimerStrategyTag tag;
+  SleeperWrap sleep;
 };
 
 

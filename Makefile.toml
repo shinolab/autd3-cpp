@@ -134,6 +134,7 @@ import urllib.request
 from pathlib import Path
 
 
+
 def download_and_extract(url: str, *dest_dirs: str) -> None:
     tmp_file = Path("tmp.zip" if url.endswith(".zip") else "tmp.tar.gz")
     urllib.request.urlretrieve(url, tmp_file)
@@ -147,11 +148,13 @@ def download_and_extract(url: str, *dest_dirs: str) -> None:
 
 def should_update_lib(version: str) -> bool:
     if platform.system() == "Windows":
-        if not Path("lib/autd3capi.lib").is_file():
+        if not Path("bin/autd3capi.dll").is_file():
             return True
     elif platform.system() == "Darwin":
-        if not Path("libautd3capi.a").is_file():
+        if not Path("bin/libautd3capi.dylib").exists():
             return True
+    elif not Path("bin/libautd3capi.so").exists():
+        return True
 
     version_file = Path("VERSION")
     if not version_file.exists():
@@ -175,19 +178,19 @@ base_url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}
 
 if platform.system() == "Windows":
     download_and_extract(
-        f"{base_url}/autd3-v{version}-win-x64-static.zip",
+        f"{base_url}/autd3-v{version}-win-x64.zip",
         "src/native/windows/x64",
         "tests",
     )
 elif platform.system() == "Darwin":
     download_and_extract(
-        f"{base_url}/autd3-v{version}-macos-aarch64-static.tar.gz",
+        f"{base_url}/autd3-v{version}-macos-aarch64.tar.gz",
         "src/native/osx/aarch64",
         "tests",
     )
 else:
     download_and_extract(
-        f"{base_url}/autd3-v{version}-linux-x64-static.tar.gz",
+        f"{base_url}/autd3-v{version}-linux-x64.tar.gz",
         "src/native/linux/x64",
         "tests",
     )
