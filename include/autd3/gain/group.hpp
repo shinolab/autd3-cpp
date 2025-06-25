@@ -19,16 +19,16 @@ concept gain_group_f = requires(F f, const driver::geometry::Device& dev, const 
 };
 
 template <gain_group_f F>
-class Group final : public driver::Gain, public driver::IntoDatagramTuple<Group<F>> {
+class GainGroup final : public driver::Gain, public driver::IntoDatagramTuple<GainGroup<F>> {
  public:
   using key_type =
       typename std::invoke_result_t<std::invoke_result_t<F, const driver::geometry::Device&>, const driver::geometry::Transducer&>::value_type;
 
   template <driver::gain G>
-  AUTD3_API explicit Group(F key_map, std::unordered_map<key_type, G> gain_map) : key_map(std::move(key_map)) {
+  AUTD3_API explicit GainGroup(F key_map, std::unordered_map<key_type, G> gain_map) : key_map(std::move(key_map)) {
     for (auto& [k, g] : gain_map) this->gain_map[k] = std::make_shared<std::remove_reference_t<G>>(std::forward<std::remove_reference_t<G>>(g));
   }
-  AUTD3_API explicit Group(F key_map, std::unordered_map<key_type, std::shared_ptr<driver::Gain>> gain_map)
+  AUTD3_API explicit GainGroup(F key_map, std::unordered_map<key_type, std::shared_ptr<driver::Gain>> gain_map)
       : key_map(std::move(key_map)), gain_map(std::move(gain_map)) {}
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
@@ -68,8 +68,5 @@ class Group final : public driver::Gain, public driver::IntoDatagramTuple<Group<
   F key_map;
   std::unordered_map<key_type, std::shared_ptr<driver::Gain>> gain_map;
 };
-
-template <gain_group_f F>
-using GainGroup = Group<F>;
 
 }  // namespace autd3::gain

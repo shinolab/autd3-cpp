@@ -11,7 +11,7 @@ TEST(Gain, Group) {
 
   const auto cx = autd.center().x();
 
-  autd.send(autd3::gain::Group(
+  autd.send(autd3::gain::GainGroup(
       [cx](const auto&) {
         return [cx](const auto& tr) -> std::optional<const char*> {
           if (tr.position().x() < cx) return "uniform";
@@ -41,7 +41,7 @@ TEST(Gain, GroupNullopt) {
 
   const auto cx = autd.center().x();
 
-  autd.send(autd3::gain::Group(
+  autd.send(autd3::gain::GainGroup(
       [cx](const auto&) {
         return [cx](const auto& tr) -> std::optional<const char*> {
           if (tr.position().x() < cx) return "uniform";
@@ -71,10 +71,10 @@ TEST(Gain, GroupUnkownKey) {
   bool caught_err = false;
   try {
     autd.send(
-        autd3::gain::Group([](const auto&) { return [](const auto&) -> std::optional<const char*> { return "null"; }; },
-                           std::unordered_map<const char*, std::shared_ptr<autd3::driver::Gain>>{
-                               {"null", std::make_shared<autd3::gain::Null>()},
-                               {"uniform", std::make_shared<autd3::gain::Uniform>(autd3::driver::Intensity(0x80), autd3::driver::Phase(0x90))}}));
+        autd3::gain::GainGroup([](const auto&) { return [](const auto&) -> std::optional<const char*> { return "null"; }; },
+                               std::unordered_map<const char*, std::shared_ptr<autd3::driver::Gain>>{
+                                   {"null", std::make_shared<autd3::gain::Null>()},
+                                   {"uniform", std::make_shared<autd3::gain::Uniform>(autd3::driver::Intensity(0x80), autd3::driver::Phase(0x90))}}));
   } catch (autd3::AUTDException& e) {
     caught_err = true;
     ASSERT_STREQ("Unknown group key", e.what());
@@ -86,7 +86,7 @@ TEST(Gain, GroupUnkownKey) {
 TEST(Gain, GroupCheckOnlyForEnabled) {
   auto autd = create_controller();
 
-  autd.send(autd3::gain::Group(
+  autd.send(autd3::gain::GainGroup(
       [](const auto& dev) {
         return [&dev](const auto&) -> std::optional<int> {
           if (dev.idx() == 0)
