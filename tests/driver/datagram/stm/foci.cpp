@@ -169,10 +169,9 @@ void test_foci_stm_n() {
   std::array<autd3::driver::ControlPoint, N> points;
   points.fill(autd3::driver::ControlPoint{.point = center, .phase_offset = autd3::driver::Phase::zero()});
   {
-    const auto stm =
-        autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(0)},
-                                           autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(1)}},
-                               1.0f * autd3::driver::Hz);
+    const auto stm = autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(0)},
+                                                        autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(1)}},
+                                            1.0f * autd3::driver::Hz);
     ASSERT_EQ(20000u, stm.sampling_config().divide());
 
     autd.send(stm);
@@ -182,11 +181,10 @@ void test_foci_stm_n() {
   }
 
   {
-    const auto stm =
-        autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(0)},
-                                           autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(1)}},
-                               1.0f * autd3::driver::Hz)
-            .into_nearest();
+    const auto stm = autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(0)},
+                                                        autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(1)}},
+                                            1.0f * autd3::driver::Hz)
+                         .into_nearest();
     ASSERT_EQ(20000u, stm.sampling_config().divide());
 
     autd.send(stm);
@@ -196,10 +194,9 @@ void test_foci_stm_n() {
   }
 
   {
-    const auto stm =
-        autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(0)},
-                                           autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(1)}},
-                               std::chrono::seconds(1));
+    const auto stm = autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(0)},
+                                                        autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(1)}},
+                                            std::chrono::seconds(1));
     ASSERT_EQ(20000u, stm.sampling_config().divide());
 
     autd.send(stm);
@@ -209,11 +206,10 @@ void test_foci_stm_n() {
   }
 
   {
-    const auto stm =
-        autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(0)},
-                                           autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(1)}},
-                               std::chrono::seconds(1))
-            .into_nearest();
+    const auto stm = autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(0)},
+                                                        autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(1)}},
+                                            std::chrono::seconds(1))
+                         .into_nearest();
     ASSERT_EQ(20000u, stm.sampling_config().divide());
 
     autd.send(stm);
@@ -223,10 +219,9 @@ void test_foci_stm_n() {
   }
 
   {
-    const auto stm =
-        autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(0)},
-                                           autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::EmitIntensity(1)}},
-                               autd3::driver::SamplingConfig(1));
+    const auto stm = autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(0)},
+                                                        autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(1)}},
+                                            autd3::driver::SamplingConfig(1));
     ASSERT_EQ(1u, stm.sampling_config().divide());
 
     autd.send(stm);

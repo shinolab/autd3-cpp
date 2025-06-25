@@ -17,6 +17,7 @@ struct SenderOption {
   Duration receive_interval;
   OptionDuration timeout;
   ParallelMode parallel;
+  bool strict;
 };
 
 struct FPGAStateListPtr {
@@ -45,15 +46,7 @@ struct FixedCompletionTime {
   bool strict_mode;
 };
 
-struct GainCachePtr {
-  const void *_0;
-};
-
 struct GroupGainMapPtr {
-  const void *_0;
-};
-
-struct ModulationCachePtr {
   const void *_0;
 };
 
@@ -81,17 +74,13 @@ struct SquareOption {
 
 extern "C" {
 
-void AUTDTracingInit();
-
-ResultStatus AUTDTracingInitWithFile(const char *path);
-
 [[nodiscard]]
 ResultController AUTDControllerOpen(const Point3 *pos,
                                     const Quaternion *rot,
                                     uint16_t len,
                                     LinkPtr link,
                                     SenderOption option,
-                                    SleeperWrap sleeper);
+                                    TimerStrategyWrap timer_strategy);
 
 [[nodiscard]] ResultStatus AUTDControllerClose(ControllerPtr cnt);
 
@@ -111,7 +100,10 @@ void AUTDFirmwareLatest(char *latest);
 
 void AUTDSetDefaultSenderOption(ControllerPtr cnt, SenderOption option);
 
-[[nodiscard]] SenderPtr AUTDSender(ControllerPtr cnt, SenderOption option, SleeperWrap sleeper);
+[[nodiscard]]
+SenderPtr AUTDSender(ControllerPtr cnt,
+                     SenderOption option,
+                     TimerStrategyWrap timer_strategy);
 
 [[nodiscard]] ResultStatus AUTDSenderSend(SenderPtr sender, DatagramPtr d);
 
@@ -122,14 +114,14 @@ void AUTDSetDefaultSenderOption(ControllerPtr cnt, SenderOption option);
 [[nodiscard]] DatagramPtr AUTDDatagramClear();
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramGPIOOutputs(const void* f,
-                                    const void* context,
-                                    GeometryPtr geometry);
-
-[[nodiscard]]
 DatagramPtr AUTDDatagramForceFan(const void* f,
                                  const void* context,
                                  GeometryPtr geometry);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramGPIOOutputs(const void* f,
+                                    const void* context,
+                                    GeometryPtr geometry);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramGroup(const void* f,
@@ -145,11 +137,18 @@ DatagramPtr AUTDDatagramPhaseCorr(const void* f,
                                   GeometryPtr geometry);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramPulseWidthEncoder(const void* f,
-                                          const void* context,
-                                          GeometryPtr geometry);
+DatagramPtr AUTDDatagramPulseWidthEncoder256(const void* f,
+                                             const void* context,
+                                             GeometryPtr geometry);
 
-[[nodiscard]] DatagramPtr AUTDDatagramPulseWidthEncoderDefault();
+[[nodiscard]] DatagramPtr AUTDDatagramPulseWidthEncoder256Default();
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramPulseWidthEncoder512(const void* f,
+                                             const void* context,
+                                             GeometryPtr geometry);
+
+[[nodiscard]] DatagramPtr AUTDDatagramPulseWidthEncoder512Default();
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramReadsFPGAState(const void* f,
@@ -260,6 +259,8 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeSysTimeEq(DcSysTime sys_time);
 
+[[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeSyncDiff();
+
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
 
 [[nodiscard]] LoopBehavior AUTDLoopBehaviorFinite(uint16_t v);
@@ -268,9 +269,13 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] float AUTDPhaseToRad(Phase value);
 
-[[nodiscard]] ResultU16 AUTDPulseWidth(uint16_t value);
+[[nodiscard]] ResultU8 AUTDPulseWidth256(uint8_t value);
 
-[[nodiscard]] ResultU16 AUTDPulseWidthFromDuty(float duty);
+[[nodiscard]] ResultU16 AUTDPulseWidth512(uint16_t value);
+
+[[nodiscard]] ResultU8 AUTDPulseWidth256FromDuty(float duty);
+
+[[nodiscard]] ResultU16 AUTDPulseWidth512FromDuty(float duty);
 
 [[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivide(uint16_t div);
 
@@ -311,12 +316,6 @@ DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
 
 [[nodiscard]] bool AUTDGainBesselIsDefault(BesselOption option);
 
-[[nodiscard]] GainCachePtr AUTDGainCache(GainPtr g);
-
-[[nodiscard]] GainPtr AUTDGainCacheClone(GainCachePtr g);
-
-void AUTDGainCacheFree(GainCachePtr g);
-
 [[nodiscard]] GainPtr AUTDGainCustom(const void* f, const void* context, GeometryPtr geometry);
 
 [[nodiscard]] GainPtr AUTDGainFocus(Point3 pos, FocusOption option);
@@ -344,7 +343,7 @@ GainPtr AUTDGainGroup(GroupGainMapPtr map,
 
 [[nodiscard]] bool AUTDGainPlanelIsDefault(PlaneOption option);
 
-[[nodiscard]] GainPtr AUTDGainUniform(EmitIntensity intensity, Phase phase);
+[[nodiscard]] GainPtr AUTDGainUniform(Intensity intensity, Phase phase);
 
 [[nodiscard]] GeometryPtr AUTDGeometry(ControllerPtr cnt);
 
@@ -372,10 +371,6 @@ void AUTDDeviceSetSoundSpeedFromTemp(GeometryPtr geo,
                                      float m);
 
 Point3 AUTDDeviceCenter(DevicePtr dev);
-
-void AUTDDeviceEnableSet(GeometryPtr geo, uint16_t dev_idx, bool value);
-
-[[nodiscard]] bool AUTDDeviceEnableGet(DevicePtr dev);
 
 [[nodiscard]] float AUTDDeviceWavelength(DevicePtr dev);
 
@@ -483,8 +478,6 @@ void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint16
 
 [[nodiscard]] SamplingConfigWrap AUTDModulationSamplingConfig(ModulationPtr m);
 
-[[nodiscard]] ResultF32 AUTDModulationExpectedRadiationPressure(ModulationPtr m);
-
 [[nodiscard]]
 DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m,
                                                   Segment segment,
@@ -497,12 +490,6 @@ DatagramPtr AUTDModulationIntoDatagramWithLoopBehavior(ModulationPtr m,
                                                        LoopBehavior loop_behavior);
 
 [[nodiscard]] DatagramPtr AUTDModulationIntoDatagram(ModulationPtr m);
-
-[[nodiscard]] ModulationCachePtr AUTDModulationCache(ModulationPtr m);
-
-[[nodiscard]] ModulationPtr AUTDModulationCacheClone(ModulationCachePtr m);
-
-void AUTDModulationCacheFree(ModulationCachePtr m);
 
 [[nodiscard]]
 ModulationPtr AUTDModulationCustom(const uint8_t *ptr,

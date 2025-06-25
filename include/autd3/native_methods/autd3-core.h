@@ -52,15 +52,15 @@ constexpr const Phase Phase_PI = Phase{
 };
 
 /// The intensity of the ultrasound.
-struct EmitIntensity {
+struct Intensity {
   uint8_t _0;
 };
 /// Maximum intensity.
-constexpr const EmitIntensity EmitIntensity_MAX = EmitIntensity{
+constexpr const Intensity Intensity_MAX = Intensity{
   /* ._0 = */ 255
 };
 /// Minimum intensity.
-constexpr const EmitIntensity EmitIntensity_MIN = EmitIntensity{
+constexpr const Intensity Intensity_MIN = Intensity{
   /* ._0 = */ 0
 };
 
@@ -69,12 +69,12 @@ struct Drive {
   /// The phase of the ultrasound.
   Phase phase;
   /// The intensity of the ultrasound.
-  EmitIntensity intensity;
+  Intensity intensity;
 };
-/// A [`Drive`] with a phase of [`Phase::ZERO`] and an intensity of [`EmitIntensity::MIN`].
+/// A [`Drive`] with a phase of [`Phase::ZERO`] and an intensity of [`Intensity::MIN`].
 constexpr const Drive Drive_NULL = Drive{
   /* .phase = */ Phase_ZERO,
-  /* .intensity = */ EmitIntensity_MIN
+  /* .intensity = */ Intensity_MIN
 };
 
 /// The system time of the Distributed Clock

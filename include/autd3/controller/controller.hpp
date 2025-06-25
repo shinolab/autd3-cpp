@@ -5,6 +5,7 @@
 #include <variant>
 #include <vector>
 
+#include "autd3/controller/strategy.hpp"
 #include "autd3/driver/autd3_device.hpp"
 #include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/firmware/fpga/fpga_state.hpp"
@@ -13,21 +14,22 @@
 #include "autd3/driver/link.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
-#include "sleeper.hpp"
 
 namespace autd3::controller {
 
 struct SenderOption {
   std::chrono::nanoseconds send_interval = std::chrono::milliseconds(1);
   std::chrono::nanoseconds receive_interval = std::chrono::milliseconds(1);
-  std::optional<std::chrono::nanoseconds> timeout = std::chrono::milliseconds(200);
+  std::optional<std::chrono::nanoseconds> timeout = std::nullopt;
   native_methods::ParallelMode parallel = native_methods::ParallelMode::Auto;
+  bool strict = true;
 
   operator native_methods::SenderOption() const {
     return native_methods::SenderOption{.send_interval = native_methods::to_duration(send_interval),
                                         .receive_interval = native_methods::to_duration(receive_interval),
                                         .timeout = native_methods::to_option_duration(timeout),
-                                        .parallel = parallel};
+                                        .parallel = parallel,
+                                        .strict = strict};
   }
 
   auto operator<=>(const SenderOption&) const = default;
@@ -86,12 +88,12 @@ class Controller final : public driver::geometry::Geometry {
 
   template <driver::link L>
   AUTD3_API [[nodiscard]] static Controller open(std::vector<driver::AUTD3> devices, L link) {
-    return Controller::open_with_option(std::move(devices), link, SenderOption(), SpinSleeper());
+    return Controller::open_with_option(std::move(devices), link, SenderOption(), FixedSchedule{});
   }
 
   template <driver::link L>
   AUTD3_API [[nodiscard]] static Controller open_with_option(const std::vector<driver::AUTD3>& devices, L link, const SenderOption option,
-                                                             std::variant<StdSleeper, SpinSleeper, WaitableSleeper> sleeper) {
+                                                             std::variant<FixedSchedule, FixedDelay> strategy) {
     std::vector<native_methods::Point3> pos;
     pos.reserve(devices.size());
     std::ranges::transform(devices, std::back_inserter(pos), [&](const auto& d) { return native_methods::Point3{d.pos.x(), d.pos.y(), d.pos.z()}; });
@@ -103,7 +105,7 @@ class Controller final : public driver::geometry::Geometry {
 
     const auto ptr =
         validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(), option,
-                                                    std::visit([](const auto& s) { return native_methods::SleeperWrap(s); }, sleeper)));
+                                                    std::visit([](const auto& s) { return native_methods::TimerStrategyWrap(s); }, strategy)));
     auto geometry = AUTDGeometry(ptr);
     return Controller(geometry, ptr, option);
   }
@@ -150,14 +152,14 @@ class Controller final : public driver::geometry::Geometry {
     return ret;
   }  // LCOV_EXCL_LINE
 
-  AUTD3_API Sender sender(const SenderOption option, std::variant<StdSleeper, SpinSleeper, WaitableSleeper> sleeper) const {
-    return Sender(AUTDSender(_ptr, _default_sender_option, std::visit([](const auto& s) { return native_methods::SleeperWrap(s); }, sleeper)),
+  AUTD3_API Sender sender(const SenderOption option, std::variant<FixedSchedule, FixedDelay> strategy) const {
+    return Sender(AUTDSender(_ptr, _default_sender_option, std::visit([](const auto& s) { return native_methods::TimerStrategyWrap(s); }, strategy)),
                   geometry());
   }
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    sender(_default_sender_option, SpinSleeper()).send(d);
+    sender(_default_sender_option, FixedSchedule{}).send(d);
   }
 
   AUTD3_API [[nodiscard]] SenderOption default_sender_option() const { return _default_sender_option; }

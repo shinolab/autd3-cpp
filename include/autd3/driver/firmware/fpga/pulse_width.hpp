@@ -13,9 +13,9 @@ struct PulseWidth final {
   AUTD3_API explicit constexpr PulseWidth(const uint16_t pulse_width, const _empty) { _pulse_width = pulse_width; }
 
  public:
-  AUTD3_API explicit constexpr PulseWidth(const uint16_t pulse_width) { _pulse_width = validate(native_methods::AUTDPulseWidth(pulse_width)); }
+  AUTD3_API explicit constexpr PulseWidth(const uint16_t pulse_width) { _pulse_width = validate(native_methods::AUTDPulseWidth512(pulse_width)); }
 
-  static PulseWidth from_duty(const float duty) { return PulseWidth(validate(native_methods::AUTDPulseWidthFromDuty(duty)), _empty{}); }
+  static PulseWidth from_duty(const float duty) { return PulseWidth(validate(native_methods::AUTDPulseWidth512FromDuty(duty)), _empty{}); }
 
   AUTD3_API [[nodiscard]] constexpr uint16_t pulse_width() const noexcept { return _pulse_width; }
 

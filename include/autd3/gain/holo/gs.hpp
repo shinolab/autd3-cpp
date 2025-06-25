@@ -14,7 +14,7 @@ namespace autd3::gain::holo {
 struct GSOption {
   size_t repeat = 100;
   EmissionConstraint constraint =
-      EmissionConstraint::Clamp(std::numeric_limits<driver::EmitIntensity>::min(), std::numeric_limits<driver::EmitIntensity>::max());
+      EmissionConstraint::Clamp(std::numeric_limits<driver::Intensity>::min(), std::numeric_limits<driver::Intensity>::max());
 
   operator native_methods::GSOption() const { return native_methods::GSOption{.constraint = constraint, .repeat = static_cast<uint32_t>(repeat)}; }
 };

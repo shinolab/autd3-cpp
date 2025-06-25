@@ -13,7 +13,7 @@ struct ControlPoint {
 template <uint8_t N>
 struct ControlPoints {
   std::array<ControlPoint, N> points = {};
-  EmitIntensity intensity = std::numeric_limits<EmitIntensity>::max();
+  Intensity intensity = std::numeric_limits<Intensity>::max();
 };
 
 }  // namespace autd3::driver

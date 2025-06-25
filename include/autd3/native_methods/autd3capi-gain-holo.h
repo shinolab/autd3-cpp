@@ -14,10 +14,10 @@ enum class EmissionConstraintTag : uint8_t {
 };
 
 union EmissionConstraintValue {
-  EmitIntensity null;
-  EmitIntensity uniform;
+  Intensity null;
+  Intensity uniform;
   float multiply;
-  EmitIntensity clamp[2];
+  Intensity clamp[2];
 };
 
 struct EmissionConstraintWrap {
@@ -66,13 +66,11 @@ extern "C" {
 
 [[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintNormalize();
 
-[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintUniform(EmitIntensity intensity);
+[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintUniform(Intensity intensity);
 
 [[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintMultiply(float v);
 
-[[nodiscard]]
-EmissionConstraintWrap AUTDGainHoloConstraintClamp(EmitIntensity min_v,
-                                                   EmitIntensity max_v);
+[[nodiscard]] EmissionConstraintWrap AUTDGainHoloConstraintClamp(Intensity min_v, Intensity max_v);
 
 [[nodiscard]]
 GainPtr AUTDGainHoloGreedySphere(const Point3 *points,

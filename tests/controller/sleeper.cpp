@@ -1,22 +1,11 @@
 #include <gtest/gtest.h>
 
 #include <autd3/controller/controller.hpp>
-#include <autd3/link/nop.hpp>
-
-#include "utils.hpp"
 
 TEST(Controller, SleeperStd) {
-  {
-    const autd3::native_methods::SleeperWrap wrap = autd3::controller::StdSleeper();
-    ASSERT_EQ(autd3::native_methods::SleeperTag::Std, wrap.tag);
-    ASSERT_EQ(0u, wrap.value);
-  }
-
-  {
-    const autd3::native_methods::SleeperWrap wrap = autd3::controller::StdSleeper{.timer_resolution = 1};
-    ASSERT_EQ(autd3::native_methods::SleeperTag::Std, wrap.tag);
-    ASSERT_EQ(1u, wrap.value);
-  }
+  const autd3::native_methods::SleeperWrap wrap = autd3::controller::StdSleeper();
+  ASSERT_EQ(autd3::native_methods::SleeperTag::Std, wrap.tag);
+  ASSERT_EQ(0u, wrap.value);
 }
 
 TEST(Controller, SleeperSpin) {
@@ -27,7 +16,7 @@ TEST(Controller, SleeperSpin) {
   ASSERT_EQ(autd3::native_methods::SpinStrategyTag::SpinLoopHint, wrap.spin_strategy);
 }
 
-TEST(Controller, SleeperWaitable) {
-  const autd3::native_methods::SleeperWrap wrap = autd3::controller::WaitableSleeper{};
-  ASSERT_EQ(autd3::native_methods::SleeperTag::Waitable, wrap.tag);
+TEST(Controller, SleeperSpinWait) {
+  const autd3::native_methods::SleeperWrap wrap = autd3::controller::SpinWaitSleeper{};
+  ASSERT_EQ(autd3::native_methods::SleeperTag::SpinWait, wrap.tag);
 }

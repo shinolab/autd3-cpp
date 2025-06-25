@@ -10,8 +10,8 @@
 #include "autd3/driver/common/freq.hpp"
 #include "autd3/driver/datagram/clear.hpp"
 #include "autd3/driver/datagram/datagram.hpp"
-#include "autd3/driver/datagram/debug.hpp"
 #include "autd3/driver/datagram/force_fan.hpp"
+#include "autd3/driver/datagram/gpio_out.hpp"
 #include "autd3/driver/datagram/group.hpp"
 #include "autd3/driver/datagram/phase_corr.hpp"
 #include "autd3/driver/datagram/pulse_width_encoder.hpp"
@@ -48,7 +48,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "33.0.0";
+static inline std::string version = "34.0.0";
 
 using autd3::driver::deg;
 using autd3::driver::Freq;
@@ -64,8 +64,8 @@ using driver::geometry::Transducer;
 
 using driver::DcSysTime;
 using driver::Drive;
-using driver::EmitIntensity;
 using driver::GPIOOutputType;
+using driver::Intensity;
 using driver::LoopBehavior;
 using driver::Phase;
 using driver::PulseWidth;
@@ -106,6 +106,7 @@ using gain::Bessel;
 using gain::BesselOption;
 using gain::Focus;
 using gain::FocusOption;
+using gain::GainGroup;
 using gain::Null;
 using gain::Plane;
 using gain::PlaneOption;
@@ -128,9 +129,5 @@ using controller::Controller;
 using controller::SenderOption;
 using controller::SpinSleeper;
 using native_methods::ParallelMode;
-
-#ifndef AUTD3_EXT_TRACING
-inline void tracing_init() { native_methods::AUTDTracingInit(); }
-#endif
 
 }  // namespace autd3

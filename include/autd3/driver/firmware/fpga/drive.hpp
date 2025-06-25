@@ -6,9 +6,9 @@
 namespace autd3::driver {
 struct Drive final {
   Phase phase;
-  EmitIntensity intensity;
+  Intensity intensity;
 
-  AUTD3_API constexpr static Drive null() noexcept { return Drive{Phase::zero(), std::numeric_limits<EmitIntensity>::min()}; }
+  AUTD3_API constexpr static Drive null() noexcept { return Drive{Phase::zero(), std::numeric_limits<Intensity>::min()}; }
 
   auto operator<=>(const Drive&) const = default;  // LCOV_EXCL_LINE
 };

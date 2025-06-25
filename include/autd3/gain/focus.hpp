@@ -13,7 +13,7 @@
 namespace autd3::gain {
 
 struct FocusOption {
-  driver::EmitIntensity intensity = std::numeric_limits<driver::EmitIntensity>::max();
+  driver::Intensity intensity = std::numeric_limits<driver::Intensity>::max();
   driver::Phase phase_offset = driver::Phase(0);
   operator native_methods::FocusOption() const { return native_methods::FocusOption{.intensity = intensity, .phase_offset = phase_offset}; }
 };

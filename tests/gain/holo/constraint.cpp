@@ -13,7 +13,7 @@ TEST(GainHolo, ConstraintUniform) {
       {autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa},
       {autd.center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
   const auto g = autd3::gain::holo::Naive(
-      foci, autd3::gain::holo::NaiveOption{.constraint = autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::EmitIntensity(0x80))},
+      foci, autd3::gain::holo::NaiveOption{.constraint = autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::Intensity(0x80))},
       std::move(backend));
 
   autd.send(g);
@@ -52,7 +52,7 @@ TEST(GainHolo, ConstraintClamp) {
       {autd.center() - autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa}};
   const auto g = autd3::gain::holo::Naive(foci,
                                           autd3::gain::holo::NaiveOption{.constraint = autd3::gain::holo::EmissionConstraint::Clamp(
-                                                                             autd3::driver::EmitIntensity(67), autd3::driver::EmitIntensity(85))},
+                                                                             autd3::driver::Intensity(67), autd3::driver::Intensity(85))},
                                           std::move(backend));
 
   autd.send(g);

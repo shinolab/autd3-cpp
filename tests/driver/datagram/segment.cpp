@@ -27,7 +27,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity._0 == 0 && d.phase._0 == 0; }));
   }
 
-  autd.send(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0x90)));
+  autd.send(autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0x90)));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
@@ -37,7 +37,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity._0 == 0x80 && d.phase._0 == 0x90; }));
   }
 
-  auto g = autd3::gain::Uniform(autd3::driver::EmitIntensity(0x81), autd3::driver::Phase(0x91));
+  auto g = autd3::gain::Uniform(autd3::driver::Intensity(0x81), autd3::driver::Phase(0x91));
   autd.send(autd3::driver::WithSegment(g, Segment::S1, autd3::driver::TransitionMode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
@@ -48,8 +48,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity._0 == 0x81 && d.phase._0 == 0x91; }));
   }
 
-  autd.send(
-      autd3::driver::WithSegment(autd3::gain::Uniform(autd3::driver::EmitIntensity(0x82), autd3::driver::Phase(0x92)), Segment::S0, std::nullopt));
+  autd.send(autd3::driver::WithSegment(autd3::gain::Uniform(autd3::driver::Intensity(0x82), autd3::driver::Phase(0x92)), Segment::S0, std::nullopt));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());

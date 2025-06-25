@@ -6,12 +6,10 @@
 namespace autd3::controller {
 
 struct StdSleeper {
-  std::optional<uint32_t> timer_resolution;
-
   operator native_methods::SleeperWrap() const {
     return native_methods::SleeperWrap{
         .tag = native_methods::SleeperTag::Std,
-        .value = timer_resolution.value_or(0),
+        .value = 0,
         .spin_strategy = native_methods::SpinStrategyTag::SpinLoopHint,
     };
   }
@@ -34,10 +32,10 @@ struct SpinSleeper {
   }
 };
 
-struct WaitableSleeper {
+struct SpinWaitSleeper {
   operator native_methods::SleeperWrap() const {
     return native_methods::SleeperWrap{
-        .tag = native_methods::SleeperTag::Waitable,
+        .tag = native_methods::SleeperTag::SpinWait,
         .value = 0,
         .spin_strategy = native_methods::SpinStrategyTag::SpinLoopHint,
     };

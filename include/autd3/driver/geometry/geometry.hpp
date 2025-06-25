@@ -21,19 +21,7 @@ concept reconfigure_f = requires(F f, const Device& d) {
   { f(d) } -> std::same_as<AUTD3>;
 };
 
-class Geometry {
-  class GeometryView : public std::ranges::view_interface<GeometryView> {
-   public:
-    GeometryView() = default;  // LCOV_EXCL_LINE
-    AUTD3_API explicit GeometryView(const std::vector<Device>& vec) : _begin(vec.cbegin()), _end(vec.cend()) {}
-
-    AUTD3_API [[nodiscard]] auto begin() const { return _begin; }
-    AUTD3_API [[nodiscard]] auto end() const { return _end; }
-
-   private:
-    std::vector<Device>::const_iterator _begin{}, _end{};
-  };
-
+class Geometry : public std::ranges::view_interface<Geometry> {
  public:
   friend class autd3::controller::Sender;
 
@@ -56,17 +44,12 @@ class Geometry {
 
   AUTD3_API [[nodiscard]] Point3 center() const { return AUTDGeometrCenter(_geometry_ptr); }
 
-  AUTD3_API [[nodiscard]] auto devices() const noexcept {
-    return GeometryView(_devices) | std::views::filter([](const auto& dev) { return dev.enable(); });
+  AUTD3_API void set_sound_speed(const float value) {
+    std::ranges::for_each(begin(), end(), [value](const auto& dev) { dev.set_sound_speed(value); });
   }
 
-  AUTD3_API void set_sound_speed(const float value) const {
-    std::ranges::for_each(devices(), [value](const auto& dev) { dev.set_sound_speed(value); });
-  }
-
-  AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f,
-                                           const float m = 28.9647e-3f) const {
-    std::ranges::for_each(devices(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
+  AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f, const float m = 28.9647e-3f) {
+    std::ranges::for_each(begin(), end(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
   }
 
   template <reconfigure_f F>
@@ -90,6 +73,8 @@ class Geometry {
 
   [[nodiscard]] std::vector<Device>::iterator begin() noexcept { return _devices.begin(); }
   [[nodiscard]] std::vector<Device>::iterator end() noexcept { return _devices.end(); }
+  [[nodiscard]] std::vector<Device>::const_iterator begin() const noexcept { return _devices.cbegin(); }
+  [[nodiscard]] std::vector<Device>::const_iterator end() const noexcept { return _devices.cend(); }
   [[nodiscard]] std::vector<Device>::const_iterator cbegin() const noexcept { return _devices.cbegin(); }
   [[nodiscard]] std::vector<Device>::const_iterator cend() const noexcept { return _devices.cend(); }
   [[nodiscard]] const Device& operator[](const size_t i) const { return _devices[i]; }

@@ -9,7 +9,7 @@ TEST(Gain, Bessel) {
 
   autd.send(
       autd3::gain::Bessel{autd.center(), autd3::driver::Vector3::UnitZ(), autd3::driver::pi / 4 * autd3::driver::rad,
-                          autd3::gain::BesselOption{.intensity = autd3::driver::EmitIntensity(0x80), .phase_offset = autd3::driver::Phase::zero()}});
+                          autd3::gain::BesselOption{.intensity = autd3::driver::Intensity(0x80), .phase_offset = autd3::driver::Phase::zero()}});
 
   for (auto& dev : autd) {
     auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S0, 0);

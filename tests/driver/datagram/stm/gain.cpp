@@ -23,8 +23,8 @@ TEST(DriverDatagramSTM, GainSTMSamplingConfig) {
   autd.send(autd3::driver::Silencer::disable());
 
   {
-    const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                   autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
+    const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                   autd3::gain::Uniform(autd3::driver::Intensity(0x00), autd3::driver::Phase(0x00))};
     auto stm = autd3::driver::GainSTM(gains, autd3::driver::SamplingConfig(20000), autd3::driver::GainSTMOption());
     ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
@@ -42,7 +42,7 @@ TEST(DriverDatagramSTM, GainSTMSamplingConfig) {
 
   {
     const std::shared_ptr<autd3::driver::Gain> g1 =
-        std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0));
+        std::make_shared<autd3::gain::Uniform>(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0));
     const std::shared_ptr<autd3::driver::Gain> g2 = std::make_shared<autd3::gain::Null>();
     auto stm = autd3::driver::GainSTM(std::vector{g1, g2}, autd3::driver::SamplingConfig(20000), autd3::driver::GainSTMOption());
     ASSERT_EQ(20000u, stm.sampling_config().divide());
@@ -66,8 +66,8 @@ TEST(DriverDatagramSTM, GainSTMExactFreq) {
   autd.send(autd3::driver::Silencer::disable());
 
   {
-    const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                   autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
+    const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                   autd3::gain::Uniform(autd3::driver::Intensity(0x00), autd3::driver::Phase(0x00))};
     auto stm = autd3::driver::GainSTM(gains, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption());
     ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
@@ -85,7 +85,7 @@ TEST(DriverDatagramSTM, GainSTMExactFreq) {
 
   {
     const std::shared_ptr<autd3::driver::Gain> g1 =
-        std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0));
+        std::make_shared<autd3::gain::Uniform>(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0));
     const std::shared_ptr<autd3::driver::Gain> g2 = std::make_shared<autd3::gain::Null>();
     auto stm = autd3::driver::GainSTM(std::vector{g1, g2}, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption());
     ASSERT_EQ(20000u, stm.sampling_config().divide());
@@ -108,8 +108,8 @@ TEST(DriverDatagramSTM, GainSTMNearestFreq) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                 autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
+  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                 autd3::gain::Uniform(autd3::driver::Intensity(0x00), autd3::driver::Phase(0x00))};
   auto stm = autd3::driver::GainSTM(gains, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption()).into_nearest();
   ASSERT_EQ(20000u, stm.sampling_config().divide());
   autd.send(stm);
@@ -131,8 +131,8 @@ TEST(DriverDatagramSTM, GainSTMExactPeriod) {
   autd.send(autd3::driver::Silencer::disable());
 
   {
-    const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                   autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
+    const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                   autd3::gain::Uniform(autd3::driver::Intensity(0x00), autd3::driver::Phase(0x00))};
     auto stm = autd3::driver::GainSTM(gains, std::chrono::seconds(1), autd3::driver::GainSTMOption());
     ASSERT_EQ(20000u, stm.sampling_config().divide());
     autd.send(stm);
@@ -150,7 +150,7 @@ TEST(DriverDatagramSTM, GainSTMExactPeriod) {
 
   {
     const std::shared_ptr<autd3::driver::Gain> g1 =
-        std::make_shared<autd3::gain::Uniform>(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0));
+        std::make_shared<autd3::gain::Uniform>(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0));
     const std::shared_ptr<autd3::driver::Gain> g2 = std::make_shared<autd3::gain::Null>();
     auto stm = autd3::driver::GainSTM(std::vector{g1, g2}, std::chrono::seconds(1), autd3::driver::GainSTMOption());
     ASSERT_EQ(20000u, stm.sampling_config().divide());
@@ -173,8 +173,8 @@ TEST(DriverDatagramSTM, GainSTMNearestPeriod) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                 autd3::gain::Uniform(autd3::driver::EmitIntensity(0x00), autd3::driver::Phase(0x00))};
+  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                 autd3::gain::Uniform(autd3::driver::Intensity(0x00), autd3::driver::Phase(0x00))};
   auto stm = autd3::driver::GainSTM(gains, std::chrono::seconds(1), autd3::driver::GainSTMOption()).into_nearest();
   ASSERT_EQ(20000u, stm.sampling_config().divide());
   autd.send(stm);
@@ -195,8 +195,8 @@ TEST(DriverDatagramSTM, GainSTMPhaseIntensityFull) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                 autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0))};
+  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                 autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0))};
   auto stm = autd3::driver::GainSTM(gains, autd3::driver::SamplingConfig(1),
                                     autd3::driver::GainSTMOption{
                                         .mode = autd3::native_methods::GainSTMMode::PhaseIntensityFull,
@@ -219,8 +219,8 @@ TEST(DriverDatagramSTM, GainSTMPhaseFull) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                 autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0))};
+  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                 autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0))};
   auto stm = autd3::driver::GainSTM(gains, autd3::driver::SamplingConfig(1),
                                     autd3::driver::GainSTMOption{
                                         .mode = autd3::native_methods::GainSTMMode::PhaseFull,
@@ -243,8 +243,8 @@ TEST(DriverDatagramSTM, GainSTMPhaseHalf) {
 
   autd.send(autd3::driver::Silencer::disable());
 
-  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0)),
-                                 autd3::gain::Uniform(autd3::driver::EmitIntensity(0x80), autd3::driver::Phase(0xF0))};
+  const auto gains = std::vector{autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0)),
+                                 autd3::gain::Uniform(autd3::driver::Intensity(0x80), autd3::driver::Phase(0xF0))};
   auto stm = autd3::driver::GainSTM(gains, autd3::driver::SamplingConfig(1),
                                     autd3::driver::GainSTMOption{
                                         .mode = autd3::native_methods::GainSTMMode::PhaseHalf,

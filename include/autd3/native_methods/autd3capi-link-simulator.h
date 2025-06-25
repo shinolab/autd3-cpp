@@ -8,10 +8,6 @@ namespace autd3::native_methods {
 
 extern "C" {
 
-void AUTDLinkSimulatorTracingInit();
-
-ResultStatus AUTDLinkSimulatorTracingInitWithFile(const char *path);
-
 [[nodiscard]] ResultLink AUTDLinkSimulator(const char *addr);
 
 }  // extern "C"

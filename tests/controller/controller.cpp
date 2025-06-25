@@ -68,7 +68,7 @@ TEST(Controller, ControllerSendTuple) {
     ASSERT_TRUE(std::ranges::all_of(m, [](auto d) { return d == 0xFF; }));
   }
 
-  autd.send((autd3::modulation::Static(0x80), autd3::gain::Uniform{autd3::driver::EmitIntensity(0x81), autd3::driver::Phase(0x82)}));
+  autd.send((autd3::modulation::Static(0x80), autd3::gain::Uniform{autd3::driver::Intensity(0x81), autd3::driver::Phase(0x82)}));
   for (auto& dev : autd) {
     auto drives = autd.link<autd3::link::Audit>().drives(0, autd3::native_methods::Segment::S0, 0);
     ASSERT_TRUE(std::ranges::all_of(drives, [](auto d) { return d.intensity._0 == 0x81 && d.phase._0 == 0x82; }));

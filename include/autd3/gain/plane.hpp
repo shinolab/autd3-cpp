@@ -13,7 +13,7 @@
 namespace autd3::gain {
 
 struct PlaneOption {
-  driver::EmitIntensity intensity = std::numeric_limits<driver::EmitIntensity>::max();
+  driver::Intensity intensity = std::numeric_limits<driver::Intensity>::max();
   driver::Phase phase_offset = driver::Phase(0);
 
   operator native_methods::PlaneOption() const { return native_methods::PlaneOption{.intensity = intensity, .phase_offset = phase_offset}; }

@@ -39,16 +39,6 @@ TEST(DriverGeomtry, DeviceCenter) {
   }
 }
 
-TEST(DriverGeomtry, DeviceEnable) {
-  auto autd = create_controller();
-  for (auto& dev : autd) ASSERT_TRUE(dev.enable());
-
-  autd[0].set_enable(true);
-  autd[1].set_enable(false);
-  ASSERT_TRUE(autd[0].enable());
-  ASSERT_FALSE(autd[1].enable());
-}
-
 TEST(DriverGeomtry, DeviceWavelength) {
   for (auto autd = create_controller(); auto& dev : autd) ASSERT_NEAR(dev.wavelength(), 8.5, 1e-6);
 }

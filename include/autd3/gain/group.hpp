@@ -19,27 +19,27 @@ concept gain_group_f = requires(F f, const driver::geometry::Device& dev, const 
 };
 
 template <gain_group_f F>
-class Group final : public driver::Gain, public driver::IntoDatagramTuple<Group<F>> {
+class GainGroup final : public driver::Gain, public driver::IntoDatagramTuple<GainGroup<F>> {
  public:
   using key_type =
       typename std::invoke_result_t<std::invoke_result_t<F, const driver::geometry::Device&>, const driver::geometry::Transducer&>::value_type;
 
   template <driver::gain G>
-  AUTD3_API explicit Group(F key_map, std::unordered_map<key_type, G> gain_map) : key_map(std::move(key_map)) {
+  AUTD3_API explicit GainGroup(F key_map, std::unordered_map<key_type, G> gain_map) : key_map(std::move(key_map)) {
     for (auto& [k, g] : gain_map) this->gain_map[k] = std::make_shared<std::remove_reference_t<G>>(std::forward<std::remove_reference_t<G>>(g));
   }
-  AUTD3_API explicit Group(F key_map, std::unordered_map<key_type, std::shared_ptr<driver::Gain>> gain_map)
+  AUTD3_API explicit GainGroup(F key_map, std::unordered_map<key_type, std::shared_ptr<driver::Gain>> gain_map)
       : key_map(std::move(key_map)), gain_map(std::move(gain_map)) {}
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry& geometry) const override {
     std::unordered_map<key_type, int32_t> keymap;
 
-    auto view = geometry.devices() | std::views::transform([](const driver::geometry::Device& dev) { return static_cast<uint16_t>(dev.idx()); });
+    auto view = geometry | std::views::transform([](const driver::geometry::Device& dev) { return static_cast<uint16_t>(dev.idx()); });
     const std::vector<uint16_t> device_indices(view.begin(), view.end());
 
     auto map = native_methods::AUTDGainGroupCreateMap(device_indices.data(), static_cast<uint16_t>(device_indices.size()));
     int32_t k = 0;
-    for (const auto& dev : geometry.devices()) {
+    for (const auto& dev : geometry) {
       std::vector<int32_t> m;
       m.reserve(dev.num_transducers());
       std::for_each(dev.cbegin(), dev.cend(), [this, &dev, &m, &keymap, &k](const auto& tr) {

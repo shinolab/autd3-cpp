@@ -18,7 +18,7 @@ struct LMOption {
   size_t k_max = 5;
   std::vector<float> initial;
   EmissionConstraint constraint =
-      EmissionConstraint::Clamp(std::numeric_limits<driver::EmitIntensity>::min(), std::numeric_limits<driver::EmitIntensity>::max());
+      EmissionConstraint::Clamp(std::numeric_limits<driver::Intensity>::min(), std::numeric_limits<driver::Intensity>::max());
 
   operator native_methods::LMOption() const {
     return native_methods::LMOption{

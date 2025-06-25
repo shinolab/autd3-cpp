@@ -18,6 +18,18 @@ enum class GainSTMMode : uint8_t {
   PhaseHalf = 2,
 };
 
+/// The parallel processing mode.
+enum class ParallelMode : uint8_t {
+  /// Automatically select the processing mode. If the number of devices is greater than the parallel threshold of the [`Datagram::option`], the parallel processing is used.
+  ///
+  /// [`Datagram::option`]: autd3_core::datagram::Datagram::option
+  Auto = 0,
+  /// Force to use the parallel processing.
+  On = 1,
+  /// Force to use the serial processing.
+  Off = 2,
+};
+
 /// The option for the [`GainSTM`].
 struct GainSTMOption {
   /// The mode of the STM. The default is [`GainSTMMode::PhaseIntensityFull`].
