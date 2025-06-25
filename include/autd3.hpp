@@ -106,6 +106,7 @@ using gain::Bessel;
 using gain::BesselOption;
 using gain::Focus;
 using gain::FocusOption;
+using gain::GainGroup;
 using gain::Null;
 using gain::Plane;
 using gain::PlaneOption;

@@ -69,4 +69,6 @@ class Group final : public driver::Gain, public driver::IntoDatagramTuple<Group<
   std::unordered_map<key_type, std::shared_ptr<driver::Gain>> gain_map;
 };
 
+using GainGroup = Group;
+
 }  // namespace autd3::gain

@@ -30,7 +30,7 @@ inline void group_by_transducer_test(autd3::Controller& autd) {
   const auto cx = autd.center().x();
 
   autd.send((autd3::Sine(150 * autd3::Hz, autd3::SineOption{}),
-             autd3::gain::Group(
+             autd3::GainGroup(
                  [&cx](const autd3::Device&) {
                    return [&cx](const autd3::Transducer& tr) -> std::optional<const char*> {
                      if (tr.position().x() < cx) return "focus";
