@@ -14,6 +14,7 @@
 #include "autd3/driver/datagram/force_fan.hpp"
 #include "autd3/driver/datagram/gpio_out.hpp"
 #include "autd3/driver/datagram/group.hpp"
+#include "autd3/driver/datagram/output_mask.hpp"
 #include "autd3/driver/datagram/phase_corr.hpp"
 #include "autd3/driver/datagram/pulse_width_encoder.hpp"
 #include "autd3/driver/datagram/reads_fpga_state.hpp"
@@ -92,6 +93,7 @@ using driver::GainSTMOption;
 using driver::GPIOOutputs;
 using driver::GPIOOutputType;
 using driver::Group;
+using driver::OutputMask;
 using driver::PhaseCorrection;
 using driver::PulseWidthEncoder;
 using driver::ReadsFPGAState;
