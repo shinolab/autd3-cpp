@@ -43,7 +43,7 @@ struct ResultFirmwareVersionList {
 struct FixedCompletionTime {
   Duration intensity;
   Duration phase;
-  bool strict_mode;
+  bool strict;
 };
 
 struct GroupGainMapPtr {
@@ -135,6 +135,11 @@ DatagramPtr AUTDDatagramGroup(const void* f,
 DatagramPtr AUTDDatagramPhaseCorr(const void* f,
                                   const void* context,
                                   GeometryPtr geometry);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramOutputMask(const void* f,
+                                   const void* context,
+                                   GeometryPtr geometry);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramPulseWidthEncoder256(const void* f,
@@ -305,6 +310,22 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeNone();
 
+[[nodiscard]] EnvironmentPtr AUTDEnvironment(ControllerPtr cnt);
+
+[[nodiscard]] float AUTDEnvironmentGetSoundSpeed(EnvironmentPtr env);
+
+void AUTDEnvironmentSetSoundSpeed(EnvironmentPtr env, float value);
+
+void AUTDEnvironmentSetSoundSpeedFromTemp(EnvironmentPtr env,
+                                          float temp,
+                                          float k,
+                                          float r,
+                                          float m);
+
+[[nodiscard]] float AUTDEnvironmentWavelength(EnvironmentPtr env);
+
+[[nodiscard]] float AUTDEnvironmentWavenumber(EnvironmentPtr env);
+
 [[nodiscard]]
 DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
                                             Segment segment,
@@ -359,22 +380,7 @@ void AUTDGeometryReconfigure(GeometryPtr geo, const Point3 *pos, const Quaternio
 
 [[nodiscard]] uint32_t AUTDDeviceNumTransducers(DevicePtr dev);
 
-[[nodiscard]] float AUTDDeviceGetSoundSpeed(DevicePtr dev);
-
-void AUTDDeviceSetSoundSpeed(GeometryPtr geo, uint16_t dev_idx, float value);
-
-void AUTDDeviceSetSoundSpeedFromTemp(GeometryPtr geo,
-                                     uint16_t dev_idx,
-                                     float temp,
-                                     float k,
-                                     float r,
-                                     float m);
-
 Point3 AUTDDeviceCenter(DevicePtr dev);
-
-[[nodiscard]] float AUTDDeviceWavelength(DevicePtr dev);
-
-[[nodiscard]] float AUTDDeviceWavenumber(DevicePtr dev);
 
 Quaternion AUTDDeviceRotation(DevicePtr dev);
 
@@ -416,7 +422,7 @@ void AUTDLinkAuditFpgaDeassertThermalSensor(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]] bool AUTDLinkAuditFpgaIsStmGainMode(LinkPtr audit, Segment segment, uint16_t idx);
 
-[[nodiscard]] bool AUTDLinkAuditCpuSilencerStrictMode(LinkPtr audit, uint16_t idx);
+[[nodiscard]] bool AUTDLinkAuditCpuSilencerStrict(LinkPtr audit, uint16_t idx);
 
 [[nodiscard]] uint16_t AUTDLinkAuditFpgaSilencerUpdateRateIntensity(LinkPtr audit, uint16_t idx);
 

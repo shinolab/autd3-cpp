@@ -28,19 +28,6 @@ TEST(DriverGeomtry, GeometryCenter) {
   ASSERT_NEAR_VECTOR3(autd.center(), autd3::driver::Vector3(86.625267028808594f, 66.71319580078125f, 0), 1e-6);
 }
 
-TEST(DriverGeomtry, GeometrySoundSpeed) {
-  auto autd = create_controller();
-  for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 340e3);
-  autd.set_sound_speed(350e3);
-  for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 350e3);
-}
-
-TEST(DriverGeomtry, GeometrySoundSpeedFromTemp) {
-  auto autd = create_controller();
-  autd.set_sound_speed_from_temp(15);
-  for (auto& dev : autd) ASSERT_EQ(dev.sound_speed(), 340.29525e3f);
-}
-
 TEST(DriverGeomtry, GeometryReconfigure) {
   auto autd = create_controller();
   ASSERT_EQ(autd3::driver::Point3(0, 0, 0), autd[0][0].position());

@@ -10,6 +10,7 @@ target_sources(test_autd3 PRIVATE
   pulse_width_encoder.cpp
   phase_corr.cpp
   with_segment.cpp
+  output_mask.cpp
 )
 
 add_subdirectory(stm)

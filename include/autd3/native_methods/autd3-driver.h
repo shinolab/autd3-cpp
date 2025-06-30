@@ -53,7 +53,7 @@ struct FixedCompletionSteps {
   /// [`Modulation`]: autd3_core::modulation::Modulation
   /// [`FociSTM`]: crate::datagram::FociSTM
   /// [`GainSTM`]: crate::datagram::GainSTM
-  bool strict_mode;
+  bool strict;
 };
 
 /// To configure the silencer by the update rate.

@@ -41,15 +41,6 @@ class Device {
 
   AUTD3_API [[nodiscard]] Point3 center() const { return AUTDDeviceCenter(_ptr); }
 
-  AUTD3_API [[nodiscard]] float sound_speed() const { return AUTDDeviceGetSoundSpeed(_ptr); }
-
-  AUTD3_API void set_sound_speed(const float value) const { AUTDDeviceSetSoundSpeed(_geo_ptr, static_cast<uint16_t>(_idx), value); }
-
-  AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f,
-                                           const float m = 28.9647e-3f) const {
-    AUTDDeviceSetSoundSpeedFromTemp(_geo_ptr, static_cast<uint16_t>(_idx), temp, k, r, m);
-  }
-
   AUTD3_API [[nodiscard]] Quaternion rotation() const noexcept { return AUTDDeviceRotation(_ptr); }
 
   AUTD3_API [[nodiscard]] Vector3 x_direction() const { return AUTDDeviceDirectionX(_ptr); }
@@ -57,9 +48,6 @@ class Device {
   AUTD3_API [[nodiscard]] Vector3 y_direction() const { return AUTDDeviceDirectionY(_ptr); }
 
   AUTD3_API [[nodiscard]] Vector3 axial_direction() const { return AUTDDeviceDirectionAxial(_ptr); }
-
-  AUTD3_API [[nodiscard]] float wavelength() const { return AUTDDeviceWavelength(_ptr); }
-  AUTD3_API [[nodiscard]] float wavenumber() const { return AUTDDeviceWavenumber(_ptr); }
 
   AUTD3_API [[nodiscard]] DeviceView transducers() const noexcept { return DeviceView(_transducers); }
 

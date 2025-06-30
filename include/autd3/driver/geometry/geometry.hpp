@@ -44,14 +44,6 @@ class Geometry : public std::ranges::view_interface<Geometry> {
 
   AUTD3_API [[nodiscard]] Point3 center() const { return AUTDGeometrCenter(_geometry_ptr); }
 
-  AUTD3_API void set_sound_speed(const float value) {
-    std::ranges::for_each(begin(), end(), [value](const auto& dev) { dev.set_sound_speed(value); });
-  }
-
-  AUTD3_API void set_sound_speed_from_temp(const float temp, const float k = 1.4f, const float r = 8.31446261815324f, const float m = 28.9647e-3f) {
-    std::ranges::for_each(begin(), end(), [temp, k, r, m](const auto& dev) { dev.set_sound_speed_from_temp(temp, k, r, m); });
-  }
-
   template <reconfigure_f F>
   AUTD3_API void reconfigure(const F& f) {
     std::vector<AUTD3> devices;
