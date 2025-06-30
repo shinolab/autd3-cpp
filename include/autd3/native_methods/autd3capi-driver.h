@@ -232,6 +232,10 @@ struct TimerStrategyWrap {
   SleeperWrap sleep;
 };
 
+struct EnvironmentPtr {
+  const void *_0;
+};
+
 
 
 }  // namespace autd3::native_methods

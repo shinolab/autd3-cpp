@@ -12,21 +12,6 @@ TEST(DriverGeomtry, DeviceIdx) {
   ASSERT_EQ(autd[1].idx(), 1);
 }
 
-TEST(DriverGeomtry, DeviceSoundSpeed) {
-  for (auto autd = create_controller(); auto& dev : autd) {
-    ASSERT_EQ(dev.sound_speed(), 340e3);
-    dev.set_sound_speed(350e3);
-    ASSERT_EQ(dev.sound_speed(), 350e3);
-  }
-}
-
-TEST(DriverGeomtry, DeviceSoundSpeedFromTemp) {
-  for (auto autd = create_controller(); auto& dev : autd) {
-    dev.set_sound_speed_from_temp(15);
-    ASSERT_EQ(dev.sound_speed(), 340.29525e3);
-  }
-}
-
 TEST(DriverGeomtry, DeviceNumTransducers) {
   for (auto autd = create_controller(); auto& dev : autd) {
     ASSERT_EQ(dev.num_transducers(), 249);
@@ -37,14 +22,6 @@ TEST(DriverGeomtry, DeviceCenter) {
   for (auto autd = create_controller(); auto& dev : autd) {
     ASSERT_NEAR_VECTOR3(dev.center(), autd3::driver::Vector3(86.625267028808594f, 66.71319580078125f, 0), 1e-6);
   }
-}
-
-TEST(DriverGeomtry, DeviceWavelength) {
-  for (auto autd = create_controller(); auto& dev : autd) ASSERT_NEAR(dev.wavelength(), 8.5, 1e-6);
-}
-
-TEST(DriverGeomtry, DeviceWavenumber) {
-  for (auto autd = create_controller(); auto& dev : autd) ASSERT_NEAR(dev.wavenumber(), 2 * autd3::driver::pi / 8.5, 1e-6);
 }
 
 TEST(DriverGeomtry, DeviceRotation) {

@@ -13,9 +13,9 @@ namespace autd3::driver {
 struct FixedCompletionSteps {
   uint16_t intensity = 10;
   uint16_t phase = 40;
-  bool strict_mode = true;
+  bool strict = true;
   operator native_methods::FixedCompletionSteps() const {
-    return native_methods::FixedCompletionSteps{.intensity = intensity, .phase = phase, .strict_mode = strict_mode};
+    return native_methods::FixedCompletionSteps{.intensity = intensity, .phase = phase, .strict = strict};
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr() const noexcept { return native_methods::AUTDDatagramSilencerFromCompletionSteps(*this); }
@@ -26,11 +26,11 @@ struct FixedCompletionTime {
 
   std::chrono::nanoseconds intensity = std::chrono::microseconds(250);
   std::chrono::nanoseconds phase = std::chrono::microseconds(1000);
-  bool strict_mode = true;
+  bool strict = true;
 
   operator native_methods::FixedCompletionTime() const {
     return native_methods::FixedCompletionTime{
-        .intensity = native_methods::to_duration(intensity), .phase = native_methods::to_duration(phase), .strict_mode = strict_mode};
+        .intensity = native_methods::to_duration(intensity), .phase = native_methods::to_duration(phase), .strict = strict};
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr() const noexcept { return native_methods::AUTDDatagramSilencerFromCompletionTime(*this); }
