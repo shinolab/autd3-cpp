@@ -132,14 +132,20 @@ DatagramPtr AUTDDatagramGroup(const void* f,
                               uint16_t n);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramPhaseCorr(const void* f,
-                                  const void* context,
-                                  GeometryPtr geometry);
-
-[[nodiscard]]
 DatagramPtr AUTDDatagramOutputMask(const void* f,
                                    const void* context,
                                    GeometryPtr geometry);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramOutputMaskWithSegment(const void* f,
+                                              const void* context,
+                                              GeometryPtr geometry,
+                                              Segment segment);
+
+[[nodiscard]]
+DatagramPtr AUTDDatagramPhaseCorr(const void* f,
+                                  const void* context,
+                                  GeometryPtr geometry);
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramPulseWidthEncoder256(const void* f,
