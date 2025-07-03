@@ -4,15 +4,15 @@
 
 TEST(DriverGeomtry, EnvironmentSoundSpeed) {
   auto autd = create_controller();
-  ASSERT_EQ(autd.environment.sound_speed(), 340e3);
-  autd.environment.set_sound_speed(350e3);
-  ASSERT_EQ(autd.environment.sound_speed(), 350e3);
+  ASSERT_EQ(autd.environment.sound_speed, 340e3);
+  autd.environment.sound_speed = 350e3;
+  ASSERT_EQ(autd.environment.sound_speed, 350e3);
 }
 
 TEST(DriverGeomtry, EnvironmentSoundSpeedFromTemp) {
   auto autd = create_controller();
   autd.environment.set_sound_speed_from_temp(15);
-  ASSERT_EQ(autd.environment.sound_speed(), 340.29525e3);
+  ASSERT_EQ(autd.environment.sound_speed, 340.29525e3);
 }
 
 TEST(DriverGeomtry, EnvironmentWavelength) {

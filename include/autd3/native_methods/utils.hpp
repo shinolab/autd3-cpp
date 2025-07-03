@@ -45,4 +45,22 @@ inline std::optional<std::chrono::nanoseconds> from_option_duration(const Option
   return d.has_value ? std::make_optional(from_duration(d.value)) : std::nullopt;
 }
 
+template <typename T, typename Ctx, class Getter, class Setter>
+struct Property : private Getter, private Setter {
+ public:
+  Property(T value, Ctx ctx) : _value(value), _ctx(ctx) {}
+  ~Property() {}
+
+  operator T() const { return this->get(this->_value, this->_ctx); }
+
+  Property<T, Ctx, Getter, Setter>& operator=(const T& var) {
+    this->set(this->_value, this->_ctx, var);
+    return *this;
+  }
+
+ protected:
+  T _value;
+  Ctx _ctx;
+};
+
 }  // namespace autd3::native_methods
