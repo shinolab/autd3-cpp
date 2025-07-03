@@ -160,8 +160,7 @@ class Controller final : public driver::geometry::Geometry {
   }  // LCOV_EXCL_LINE
 
   AUTD3_API Sender sender(const SenderOption option, std::variant<FixedSchedule, FixedDelay> strategy) const {
-    return Sender(AUTDSender(_ptr, _default_sender_option, std::visit([](const auto& s) { return native_methods::TimerStrategyWrap(s); }, strategy)),
-                  geometry());
+    return Sender(AUTDSender(_ptr, option, std::visit([](const auto& s) { return native_methods::TimerStrategyWrap(s); }, strategy)), geometry());
   }
 
   template <driver::datagram D>
