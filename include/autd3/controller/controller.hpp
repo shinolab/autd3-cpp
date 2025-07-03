@@ -68,7 +68,7 @@ class Controller final : public driver::geometry::Geometry {
   Controller(Controller&& obj) noexcept
       : Geometry(obj._geometry_ptr, std::move(obj._devices)),
         _ptr(obj._ptr),
-        _default_sender_option(obj._default_sender_option),
+        default_sender_option(obj.default_sender_option),
         environment(obj.environment) {
     obj._geometry_ptr._0 = nullptr;
     obj._ptr._0 = nullptr;
@@ -77,7 +77,7 @@ class Controller final : public driver::geometry::Geometry {
     if (this != &obj) {
       this->_geometry_ptr = obj._geometry_ptr;
       this->_devices = std::move(obj._devices);
-      this->_default_sender_option = obj._default_sender_option;
+      this->default_sender_option = obj.default_sender_option;
       this->environment = obj.environment;
       _ptr = obj._ptr;
       obj._geometry_ptr._0 = nullptr;
@@ -165,26 +165,28 @@ class Controller final : public driver::geometry::Geometry {
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    sender(_default_sender_option, FixedSchedule{}).send(d);
+    sender(default_sender_option, FixedSchedule{}).send(d);
   }
 
-  AUTD3_API [[nodiscard]] SenderOption default_sender_option() const { return _default_sender_option; }
-  AUTD3_API void set_default_sender_option(const SenderOption value) {
-    _default_sender_option = value;
-    AUTDSetDefaultSenderOption(_ptr, value);
-  }
+  struct DefaultSenderOptionGetter {
+    static SenderOption get(SenderOption option, native_methods::ControllerPtr) { return option; }
+  };
+  struct DefaultSenderOptionSetter {
+    static void set(SenderOption& option, native_methods::ControllerPtr ptr, const SenderOption& new_option) {
+      option = new_option;
+      AUTDSetDefaultSenderOption(ptr, new_option);
+    }
+  };
 
+  native_methods::Property<SenderOption, native_methods::ControllerPtr, DefaultSenderOptionGetter, DefaultSenderOptionSetter> default_sender_option;
   Environment environment;
 
  private:
   AUTD3_API
   Controller(const native_methods::GeometryPtr geometry, const native_methods::ControllerPtr ptr, SenderOption option)
-      : Geometry(geometry), _ptr(ptr), _default_sender_option(std::move(option)) {
-    environment = Environment(AUTDEnvironment(_ptr));
-  }
+      : Geometry(geometry), _ptr(ptr), default_sender_option(std::move(option), ptr), environment(Environment(AUTDEnvironment(ptr))) {}
 
   native_methods::ControllerPtr _ptr;
-  SenderOption _default_sender_option;
 };
 
 }  // namespace autd3::controller

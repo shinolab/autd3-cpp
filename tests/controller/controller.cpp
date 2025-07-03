@@ -19,8 +19,8 @@ TEST(Controller, ControllerDefaultSenderOption) {
       .parallel = autd3::native_methods::ParallelMode::Off,
   };
 
-  autd.set_default_sender_option(option);
-  ASSERT_EQ(option, autd.default_sender_option());
+  autd.default_sender_option = option;
+  ASSERT_EQ(option, autd.default_sender_option);
 }
 
 TEST(Controller, ControllerClose) {
