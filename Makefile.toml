@@ -60,7 +60,7 @@ mkdir -p build/tests
 [tasks.test-cmake]
 cwd = "./build/tests"
 command = "cmake"
-args = ["../../tests"]
+args = ["../../tests", "${@}"]
 
 [tasks.test-build]
 cwd = "./build/tests"
