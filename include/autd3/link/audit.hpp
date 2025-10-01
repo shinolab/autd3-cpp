@@ -3,6 +3,7 @@
 #include <array>
 #include <chrono>
 
+#include "autd3/driver/firmware/fpga/pulse_width.hpp"
 #include "autd3/native_methods.hpp"
 
 namespace autd3::controller {
@@ -75,8 +76,8 @@ struct Audit final {
     return AUTDLinkAuditFpgaModulationFreqDivide(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] native_methods::LoopBehavior modulation_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
-    return AUTDLinkAuditFpgaModulationLoopBehavior(_ptr, segment, static_cast<uint16_t>(idx));
+  [[nodiscard]] uint16_t modulation_loop_count(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaModulationLoopCount(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
   [[nodiscard]] std::vector<native_methods::Drive> drives(const size_t idx, const native_methods::Segment segment, const int stm_idx) const {
@@ -99,8 +100,8 @@ struct Audit final {
     return AUTDLinkAuditFpgaStmFreqDivide(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] native_methods::LoopBehavior stm_loop_behavior(const size_t idx, const native_methods::Segment segment) const {
-    return AUTDLinkAuditFpgaStmLoopBehavior(_ptr, segment, static_cast<uint16_t>(idx));
+  [[nodiscard]] uint16_t stm_loop_count(const size_t idx, const native_methods::Segment segment) const {
+    return AUTDLinkAuditFpgaStmLoopCount(_ptr, segment, static_cast<uint16_t>(idx));
   }
 
   [[nodiscard]] native_methods::Segment current_stm_segment(const size_t idx) const {
@@ -115,9 +116,10 @@ struct Audit final {
     return AUTDLinkAuditFpgaCurrentModSegment(_ptr, static_cast<uint16_t>(idx));
   }
 
-  [[nodiscard]] std::vector<uint16_t> pulse_width_encoder_table(const size_t idx) const {
-    std::vector<uint16_t> buf(256);
-    AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), buf.data());
+  [[nodiscard]] std::vector<driver::PulseWidth> pulse_width_encoder_table(const size_t idx) const {
+    std::vector<driver::PulseWidth> buf;
+    buf.resize(256, driver::PulseWidth(0));
+    AUTDLinkAuditFpgaPulseWidthEncoderTable(_ptr, static_cast<uint16_t>(idx), reinterpret_cast<uint64_t*>(buf.data()));
     return buf;
   }  // LCOV_EXCL_LINE
 

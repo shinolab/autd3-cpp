@@ -11,6 +11,7 @@ namespace autd3::modulation::audio_file {
 
 struct CsvOption {
   uint8_t delimiter = ',';
+  bool has_headers = false;
 };
 
 struct Csv final : driver::Modulation, driver::IntoDatagramTuple<Csv> {
@@ -19,7 +20,7 @@ struct Csv final : driver::Modulation, driver::IntoDatagramTuple<Csv> {
       : path(std::move(path)), config(sampling_config), option(option) {}
 
   AUTD3_API [[nodiscard]] native_methods::ModulationPtr modulation_ptr() const override {
-    return validate(native_methods::AUTDModulationAudioFileCsv(path.string().c_str(), config, option.delimiter));
+    return validate(native_methods::AUTDModulationAudioFileCsv(path.string().c_str(), config, option.delimiter, option.has_headers));
   }
 
   std::filesystem::path path;

@@ -132,11 +132,6 @@ DatagramPtr AUTDDatagramGroup(const void* f,
                               uint16_t n);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramOutputMask(const void* f,
-                                   const void* context,
-                                   GeometryPtr geometry);
-
-[[nodiscard]]
 DatagramPtr AUTDDatagramOutputMaskWithSegment(const void* f,
                                               const void* context,
                                               GeometryPtr geometry,
@@ -148,18 +143,11 @@ DatagramPtr AUTDDatagramPhaseCorr(const void* f,
                                   GeometryPtr geometry);
 
 [[nodiscard]]
-DatagramPtr AUTDDatagramPulseWidthEncoder256(const void* f,
-                                             const void* context,
-                                             GeometryPtr geometry);
+DatagramPtr AUTDDatagramPulseWidthEncoder(const void* f,
+                                          const void* context,
+                                          GeometryPtr geometry);
 
-[[nodiscard]] DatagramPtr AUTDDatagramPulseWidthEncoder256Default();
-
-[[nodiscard]]
-DatagramPtr AUTDDatagramPulseWidthEncoder512(const void* f,
-                                             const void* context,
-                                             GeometryPtr geometry);
-
-[[nodiscard]] DatagramPtr AUTDDatagramPulseWidthEncoder512Default();
+[[nodiscard]] DatagramPtr AUTDDatagramPulseWidthEncoderDefault();
 
 [[nodiscard]]
 DatagramPtr AUTDDatagramReadsFPGAState(const void* f,
@@ -178,9 +166,7 @@ DatagramPtr AUTDDatagramSwapSegmentFociSTM(Segment segment,
 DatagramPtr AUTDDatagramSwapSegmentGainSTM(Segment segment,
                                            TransitionModeWrap transition_mode);
 
-[[nodiscard]]
-DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment,
-                                        TransitionModeWrap transition_mode);
+[[nodiscard]] DatagramPtr AUTDDatagramSwapSegmentGain(Segment segment);
 
 [[nodiscard]] DatagramPtr AUTDDatagramSilencerFromUpdateRate(FixedUpdateRate config);
 
@@ -211,11 +197,11 @@ DatagramPtr AUTDSTMFociIntoDatagramWithSegment(FociSTMPtr stm,
                                                TransitionModeWrap transition_mode);
 
 [[nodiscard]]
-DatagramPtr AUTDSTMFociIntoDatagramWithLoopBehavior(FociSTMPtr stm,
-                                                    uint8_t n,
-                                                    Segment segment,
-                                                    TransitionModeWrap transition_mode,
-                                                    LoopBehavior loop_behavior);
+DatagramPtr AUTDSTMFociIntoDatagramWithFiniteLoop(FociSTMPtr stm,
+                                                  uint8_t n,
+                                                  Segment segment,
+                                                  TransitionModeWrap transition_mode,
+                                                  uint16_t loop_count);
 
 [[nodiscard]] DatagramPtr AUTDSTMFociIntoDatagram(FociSTMPtr stm, uint8_t n);
 
@@ -231,10 +217,10 @@ DatagramPtr AUTDSTMGainIntoDatagramWithSegment(GainSTMPtr stm,
                                                TransitionModeWrap transition_mode);
 
 [[nodiscard]]
-DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
-                                                    Segment segment,
-                                                    TransitionModeWrap transition_mode,
-                                                    LoopBehavior loop_behavior);
+DatagramPtr AUTDSTMGainIntoDatagramWithFiniteLoop(GainSTMPtr stm,
+                                                  Segment segment,
+                                                  TransitionModeWrap transition_mode,
+                                                  uint16_t loop_count);
 
 [[nodiscard]] DatagramPtr AUTDSTMGainIntoDatagram(GainSTMPtr stm);
 
@@ -272,21 +258,15 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeSyncDiff();
 
-[[nodiscard]] LoopBehavior AUTDLoopBehaviorInfinite();
-
-[[nodiscard]] LoopBehavior AUTDLoopBehaviorFinite(uint16_t v);
-
 [[nodiscard]] uint8_t AUTDPhaseFromRad(float value);
 
 [[nodiscard]] float AUTDPhaseToRad(Phase value);
 
-[[nodiscard]] ResultU8 AUTDPulseWidth256(uint8_t value);
+[[nodiscard]] PulseWidth AUTDPulseWidth(uint32_t value);
 
-[[nodiscard]] ResultU16 AUTDPulseWidth512(uint16_t value);
+[[nodiscard]] ResultPulseWidth AUTDPulseWidthFromDuty(float duty);
 
-[[nodiscard]] ResultU8 AUTDPulseWidth256FromDuty(float duty);
-
-[[nodiscard]] ResultU16 AUTDPulseWidth512FromDuty(float duty);
+[[nodiscard]] ResultU16 AUTDPulseWidthPulseWidth(PulseWidth pulse_width, uint32_t period);
 
 [[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivide(uint16_t div);
 
@@ -314,7 +294,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithLoopBehavior(GainSTMPtr stm,
 
 [[nodiscard]] TransitionModeWrap AUTDTransitionModeImmediate();
 
-[[nodiscard]] TransitionModeWrap AUTDTransitionModeNone();
+[[nodiscard]] TransitionModeWrap AUTDTransitionModeLater();
 
 [[nodiscard]] EnvironmentPtr AUTDEnvironment(ControllerPtr cnt);
 
@@ -378,7 +358,7 @@ GainPtr AUTDGainGroup(GroupGainMapPtr map,
 
 [[nodiscard]] uint32_t AUTDGeometryNumTransducers(GeometryPtr geo);
 
-[[nodiscard]] Point3 AUTDGeometrCenter(GeometryPtr geo);
+[[nodiscard]] Point3 AUTDGeometryCenter(GeometryPtr geo);
 
 void AUTDGeometryReconfigure(GeometryPtr geo, const Point3 *pos, const Quaternion *rot);
 
@@ -452,10 +432,7 @@ void AUTDLinkAuditFpgaDebugValues(LinkPtr audit, uint16_t idx, uint64_t *value);
 
 [[nodiscard]] uint16_t AUTDLinkAuditFpgaSoundSpeed(LinkPtr audit, Segment segment, uint16_t idx);
 
-[[nodiscard]]
-LoopBehavior AUTDLinkAuditFpgaStmLoopBehavior(LinkPtr audit,
-                                              Segment segment,
-                                              uint16_t idx);
+[[nodiscard]] uint16_t AUTDLinkAuditFpgaStmLoopCount(LinkPtr audit, Segment segment, uint16_t idx);
 
 [[nodiscard]]
 uint16_t AUTDLinkAuditFpgaModulationFreqDivide(LinkPtr audit,
@@ -474,9 +451,9 @@ void AUTDLinkAuditFpgaModulationBuffer(LinkPtr audit,
                                        uint32_t size);
 
 [[nodiscard]]
-LoopBehavior AUTDLinkAuditFpgaModulationLoopBehavior(LinkPtr audit,
-                                                     Segment segment,
-                                                     uint16_t idx);
+uint16_t AUTDLinkAuditFpgaModulationLoopCount(LinkPtr audit,
+                                              Segment segment,
+                                              uint16_t idx);
 
 void AUTDLinkAuditFpgaDrivesAt(LinkPtr audit,
                                Segment segment,
@@ -484,7 +461,7 @@ void AUTDLinkAuditFpgaDrivesAt(LinkPtr audit,
                                uint16_t stm_idx,
                                Drive *drive);
 
-void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint16_t *dst);
+void AUTDLinkAuditFpgaPulseWidthEncoderTable(LinkPtr audit, uint16_t idx, uint64_t *dst);
 
 [[nodiscard]] LinkPtr AUTDLinkNop();
 
@@ -496,10 +473,10 @@ DatagramPtr AUTDModulationIntoDatagramWithSegment(ModulationPtr m,
                                                   TransitionModeWrap transition_mode);
 
 [[nodiscard]]
-DatagramPtr AUTDModulationIntoDatagramWithLoopBehavior(ModulationPtr m,
-                                                       Segment segment,
-                                                       TransitionModeWrap transition_mode,
-                                                       LoopBehavior loop_behavior);
+DatagramPtr AUTDModulationIntoDatagramWithFiniteLoop(ModulationPtr m,
+                                                     Segment segment,
+                                                     TransitionModeWrap transition_mode,
+                                                     uint16_t loop_count);
 
 [[nodiscard]] DatagramPtr AUTDModulationIntoDatagram(ModulationPtr m);
 

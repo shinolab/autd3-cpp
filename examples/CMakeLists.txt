@@ -23,26 +23,19 @@ if(AUTD_LOCAL_TEST)
     SOURCE_DIR ${PROJECT_SOURCE_DIR}/..
   )
 elseif(WIN32)
-  if(${CMAKE_SYSTEM_PROCESSOR} MATCHES "AMD64|IA64")
-    FetchContent_Declare(
-      autd3
-      URL https://github.com/shinolab/autd3-cpp/releases/download/v35.0.1/autd3-v35.0.1-win-x64.zip
-    )
-  elseif(${CMAKE_SYSTEM_PROCESSOR} MATCHES "ARM64")
-    FetchContent_Declare(
-      autd3
-      URL https://github.com/shinolab/autd3-cpp/releases/download/v35.0.1/autd3-v35.0.1-win-arm.zip
-    )
-  endif()
+  FetchContent_Declare(
+    autd3
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v36.0.2/autd3-v36.0.2-win-x64.zip
+  )
 elseif(APPLE)
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v35.0.1/autd3-v35.0.1-macos-aarch64.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v36.0.2/autd3-v36.0.2-macos-aarch64.tar.gz
   )
 else()
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v35.0.1/autd3-v35.0.1-linux-x64.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v36.0.2/autd3-v36.0.2-linux-x64.tar.gz
   )
 endif()
 FetchContent_MakeAvailable(autd3)
@@ -61,3 +54,7 @@ target_link_libraries(remote_twincat PRIVATE autd3-example)
 add_executable(simulator simulator.cpp)
 target_link_libraries(simulator PRIVATE autd3::autd3 autd3::modulation::audio_file autd3::gain::holo autd3::link::simulator)
 target_link_libraries(simulator PRIVATE autd3-example)
+
+add_executable(ethercrab ethercrab.cpp)
+target_link_libraries(ethercrab PRIVATE autd3::autd3 autd3::modulation::audio_file autd3::gain::holo autd3::link::ethercrab)
+target_link_libraries(ethercrab PRIVATE autd3-example)

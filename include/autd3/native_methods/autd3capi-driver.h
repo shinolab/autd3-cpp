@@ -66,12 +66,12 @@ enum class TimerStrategyTag : uint8_t {
 };
 
 enum class TransitionModeTag : uint8_t {
-  SyncIdx = 0,
-  SysTime = 1,
-  Gpio = 2,
-  Ext = 3,
-  Immediate = 4,
-  None = 255,
+  Immediate = 0,
+  Ext = 1,
+  SyncIdx = 2,
+  SysTime = 3,
+  Gpio = 4,
+  Later = 255,
 };
 
 struct DatagramPtr {
@@ -203,12 +203,6 @@ struct SleeperWrap {
   SpinStrategyTag spin_strategy;
 };
 
-struct ResultU8 {
-  uint8_t result;
-  uint32_t err_len;
-  const void* err;
-};
-
 struct ResultU16 {
   uint16_t result;
   uint32_t err_len;
@@ -234,6 +228,12 @@ struct TimerStrategyWrap {
 
 struct EnvironmentPtr {
   const void *_0;
+};
+
+struct ResultPulseWidth {
+  PulseWidth result;
+  uint32_t err_len;
+  const void* err;
 };
 
 

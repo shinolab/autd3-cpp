@@ -20,12 +20,11 @@ struct NaiveOption {
 };
 
 struct Naive final : driver::Gain, driver::IntoDatagramTuple<Naive> {
-  AUTD3_API explicit Naive(std::vector<std::pair<driver::Point3, Amplitude>> foci, const NaiveOption option, std::shared_ptr<Backend> backend)
-      : foci(std::move(foci)), option(option), backend(std::move(backend)) {}
+  AUTD3_API explicit Naive(std::vector<std::pair<driver::Point3, Amplitude>> foci, const NaiveOption option)
+      : foci(std::move(foci)), option(option) {}
 
   std::vector<std::pair<driver::Point3, Amplitude>> foci;
   NaiveOption option;
-  std::shared_ptr<Backend> backend;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     std::vector<native_methods::Point3> points;
@@ -35,7 +34,7 @@ struct Naive final : driver::Gain, driver::IntoDatagramTuple<Naive> {
     std::vector<float> amps;
     amps.reserve(foci.size());
     std::ranges::transform(foci, std::back_inserter(amps), [&](const auto& f) { return f.second.pascal(); });
-    return backend->naive(reinterpret_cast<const float*>(points.data()), amps.data(), static_cast<uint32_t>(foci.size()), option);
+    return native_methods::AUTDGainHoloNaiveSphere(points.data(), amps.data(), static_cast<uint32_t>(foci.size()), option);
   }
 };
 

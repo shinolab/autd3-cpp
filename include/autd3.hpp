@@ -23,11 +23,10 @@
 #include "autd3/driver/datagram/stm/foci.hpp"
 #include "autd3/driver/datagram/stm/gain.hpp"
 #include "autd3/driver/datagram/synchronize.hpp"
-#include "autd3/driver/datagram/with_loop_behavior.hpp"
+#include "autd3/driver/datagram/with_finite_loop.hpp"
 #include "autd3/driver/datagram/with_segment.hpp"
 #include "autd3/driver/firmware/fpga/drive.hpp"
 #include "autd3/driver/firmware/fpga/emit_intensity.hpp"
-#include "autd3/driver/firmware/fpga/loop_behavior.hpp"
 #include "autd3/driver/firmware/fpga/phase.hpp"
 #include "autd3/driver/firmware/fpga/pulse_width.hpp"
 #include "autd3/driver/firmware/fpga/sampling_config.hpp"
@@ -50,7 +49,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "35.0.1";
+static inline std::string version = "36.0.2";
 
 using autd3::driver::deg;
 using autd3::driver::Freq;
@@ -68,11 +67,10 @@ using driver::DcSysTime;
 using driver::Drive;
 using driver::GPIOOutputType;
 using driver::Intensity;
-using driver::LoopBehavior;
 using driver::Phase;
 using driver::PulseWidth;
 using driver::SamplingConfig;
-using driver::TransitionMode;
+using namespace driver::transition_mode;
 using native_methods::GainSTMMode;
 using native_methods::GPIOIn;
 using native_methods::GPIOOut;
@@ -100,7 +98,7 @@ using driver::ReadsFPGAState;
 using driver::Silencer;
 using driver::SwapSegment;
 using driver::Synchronize;
-using driver::WithLoopBehavior;
+using driver::WithFiniteLoop;
 using driver::WithSegment;
 
 using native_methods::GainSTMMode;

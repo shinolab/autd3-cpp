@@ -28,10 +28,10 @@ class FociSTMBase : Datagram {
                                                                               const native_methods::TransitionModeWrap transition_mode) const {
     return AUTDSTMFociIntoDatagramWithSegment(raw_ptr(), N, segment, transition_mode);
   }
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_loop_behavior(const geometry::Geometry&, const native_methods::Segment segment,
-                                                                         const native_methods::TransitionModeWrap transition_mode,
-                                                                         const native_methods::LoopBehavior loop_behavior) const {
-    return AUTDSTMFociIntoDatagramWithLoopBehavior(raw_ptr(), N, segment, transition_mode, loop_behavior);
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_finite_loop(const geometry::Geometry&, const native_methods::Segment segment,
+                                                                       const native_methods::TransitionModeWrap transition_mode,
+                                                                       const uint16_t loop_count) const {
+    return AUTDSTMFociIntoDatagramWithFiniteLoop(raw_ptr(), N, segment, transition_mode, loop_count);
   }
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry&) const override { return AUTDSTMFociIntoDatagram(raw_ptr(), N); }
 

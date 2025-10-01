@@ -13,7 +13,8 @@ extern "C" {
 [[nodiscard]]
 ResultModulation AUTDModulationAudioFileCsv(const char *path,
                                             SamplingConfigWrap sampling_config,
-                                            uint8_t delimiter);
+                                            uint8_t delimiter,
+                                            bool has_headers);
 
 }  // extern "C"
 

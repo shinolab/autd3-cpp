@@ -13,12 +13,12 @@ class DcSysTime final {
   AUTD3_API [[nodiscard]] constexpr uint64_t sys_time() const { return _inner.dc_sys_time; }
 
   template <typename Rep, typename Period>
-  AUTD3_API DcSysTime operator+(const std::chrono::duration<Rep, Period> &rhs) {
+  AUTD3_API DcSysTime operator+(const std::chrono::duration<Rep, Period>& rhs) {
     return DcSysTime{native_methods::DcSysTime{_inner.dc_sys_time + std::chrono::duration_cast<std::chrono::nanoseconds>(rhs).count()}};
   }
 
   template <typename Rep, typename Period>
-  AUTD3_API DcSysTime operator-(const std::chrono::duration<Rep, Period> &rhs) {
+  AUTD3_API DcSysTime operator-(const std::chrono::duration<Rep, Period>& rhs) {
     return DcSysTime{native_methods::DcSysTime{_inner.dc_sys_time - std::chrono::duration_cast<std::chrono::nanoseconds>(rhs).count()}};
   }
 

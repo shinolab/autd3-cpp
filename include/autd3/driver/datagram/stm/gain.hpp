@@ -46,10 +46,10 @@ class GainSTMBase : public Datagram {
                                                                               const native_methods::TransitionModeWrap transition_mode) const {
     return AUTDSTMGainIntoDatagramWithSegment(raw_ptr(geometry), segment, transition_mode);
   }
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_loop_behavior(const geometry::Geometry& geometry, const native_methods::Segment segment,
-                                                                         const native_methods::TransitionModeWrap transition_mode,
-                                                                         const native_methods::LoopBehavior loop_behavior) const {
-    return AUTDSTMGainIntoDatagramWithLoopBehavior(raw_ptr(geometry), segment, transition_mode, loop_behavior);
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_finite_loop(const geometry::Geometry& geometry, const native_methods::Segment segment,
+                                                                       const native_methods::TransitionModeWrap transition_mode,
+                                                                       const uint16_t loop_count) const {
+    return AUTDSTMGainIntoDatagramWithFiniteLoop(raw_ptr(geometry), segment, transition_mode, loop_count);
   }
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
     return AUTDSTMGainIntoDatagram(raw_ptr(geometry));

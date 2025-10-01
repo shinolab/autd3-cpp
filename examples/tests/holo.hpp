@@ -22,8 +22,7 @@ inline void holo_test(autd3::Controller& autd) {
   std::cout << "[0]: GS" << std::endl;
   std::cout << "[1]: GSPAT" << std::endl;
   std::cout << "[2]: Naive" << std::endl;
-  std::cout << "[3]: LM" << std::endl;
-  std::cout << "[4]: Greedy" << std::endl;
+  std::cout << "[3]: Greedy" << std::endl;
   std::cout << "[Others]: GS-PAT" << std::endl;
   std::cout << "Choose number: ";
 
@@ -31,9 +30,8 @@ inline void holo_test(autd3::Controller& autd) {
   size_t idx;
   getline(std::cin, in);
   std::stringstream s(in);
-  if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= 5 || is_empty) idx = 1;
+  if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= 4 || is_empty) idx = 1;
 
-  auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   auto amp = 5e3 * autd3::gain::holo::Pa;
   std::vector<std::pair<autd3::Point3, autd3::gain::holo::Amplitude>> foci = {
       {center + autd3::Vector3(30.0, 0.0, 0.0), amp},
@@ -41,18 +39,15 @@ inline void holo_test(autd3::Controller& autd) {
   };
   switch (idx) {
     case 0:
-      autd.send((m, autd3::gain::holo::GS(foci, autd3::gain::holo::GSOption{}, backend)));
+      autd.send((m, autd3::gain::holo::GS(foci, autd3::gain::holo::GSOption{})));
       break;
     case 1:
-      autd.send((m, autd3::gain::holo::GSPAT(foci, autd3::gain::holo::GSPATOption{}, backend)));
+      autd.send((m, autd3::gain::holo::GSPAT(foci, autd3::gain::holo::GSPATOption{})));
       break;
     case 2:
-      autd.send((m, autd3::gain::holo::Naive(foci, autd3::gain::holo::NaiveOption{}, backend)));
+      autd.send((m, autd3::gain::holo::Naive(foci, autd3::gain::holo::NaiveOption{})));
       break;
     case 3:
-      autd.send((m, autd3::gain::holo::LM(foci, autd3::gain::holo::LMOption{}, backend)));
-      break;
-    case 4:
       autd.send((m, autd3::gain::holo::Greedy(foci, autd3::gain::holo::GreedyOption{})));
       break;
     default:

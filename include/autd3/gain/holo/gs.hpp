@@ -19,14 +19,11 @@ struct GSOption {
   operator native_methods::GSOption() const { return native_methods::GSOption{.constraint = constraint, .repeat = static_cast<uint32_t>(repeat)}; }
 };
 
-template <backend B>
-struct GS final : driver::Gain, driver::IntoDatagramTuple<GS<B>> {
-  AUTD3_API explicit GS(std::vector<std::pair<driver::Point3, Amplitude>> foci, const GSOption option, std::shared_ptr<B> backend)
-      : foci(std::move(foci)), option(option), backend(std::move(backend)) {}
+struct GS final : driver::Gain, driver::IntoDatagramTuple<GS> {
+  AUTD3_API explicit GS(std::vector<std::pair<driver::Point3, Amplitude>> foci, const GSOption option) : foci(std::move(foci)), option(option) {}
 
   std::vector<std::pair<driver::Point3, Amplitude>> foci;
   GSOption option;
-  std::shared_ptr<B> backend;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     std::vector<native_methods::Point3> points;
@@ -36,11 +33,8 @@ struct GS final : driver::Gain, driver::IntoDatagramTuple<GS<B>> {
     std::vector<float> amps;
     amps.reserve(foci.size());
     std::ranges::transform(foci, std::back_inserter(amps), [&](const auto& f) { return f.second.pascal(); });
-    return backend->gs(reinterpret_cast<const float*>(points.data()), amps.data(), static_cast<uint32_t>(foci.size()), option);
+    return native_methods::AUTDGainHoloGSSphere(points.data(), amps.data(), static_cast<uint32_t>(foci.size()), option);
   }
 };
-
-template <backend B>
-GS(std::vector<std::pair<driver::Point3, Amplitude>> foci, GSOption option, std::shared_ptr<B> backend) -> GS<B>;
 
 }  // namespace autd3::gain::holo

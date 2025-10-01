@@ -99,4 +99,30 @@ constexpr const Angle Angle_ZERO = Angle{
   /* .radian = */ 0.0
 };
 
+struct PulseWidthInner {
+  enum class Tag {
+    Duty,
+    Raw,
+  };
+
+  struct Duty_Body {
+    float _0;
+  };
+
+  struct Raw_Body {
+    uint32_t _0;
+  };
+
+  Tag tag;
+  union {
+    Duty_Body duty;
+    Raw_Body raw;
+  };
+};
+
+/// The pulse width.
+struct PulseWidth {
+  PulseWidthInner inner;
+};
+
 }  // namespace autd3::native_methods
