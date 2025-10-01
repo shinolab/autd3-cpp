@@ -12,8 +12,10 @@
 namespace autd3::driver {
 
 struct OutputMask final : Datagram, IntoDatagramTuple<OutputMask> {
-  AUTD3_API explicit OutputMask(std::function<std::function<bool(const geometry::Transducer&)>(const geometry::Device&)> f)
-      : f(std::move(f)), _mtx(std::make_unique<std::shared_mutex>()) {
+ private:
+  AUTD3_API explicit OutputMask(std::function<std::function<bool(const geometry::Transducer&)>(const geometry::Device&)> f,
+                                const native_methods::Segment segment)
+      : f(std::move(f)), _mtx(std::make_unique<std::shared_mutex>()), _segment(segment) {
     _f_native = +[](const void* context, const native_methods::GeometryPtr geometry_ptr, const uint16_t dev_idx, const uint8_t tr_idx) -> bool {
       auto* self = static_cast<OutputMask*>(const_cast<void*>(context));
       bool contains;
@@ -34,14 +36,17 @@ struct OutputMask final : Datagram, IntoDatagramTuple<OutputMask> {
     };
   }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
-    return AUTDDatagramOutputMask(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
+ public:
+  AUTD3_API explicit OutputMask(std::function<std::function<bool(const geometry::Transducer&)>(const geometry::Device&)> f)
+      : OutputMask(std::move(f), native_methods::Segment::S0) {}
+
+  AUTD3_API static OutputMask with_segment(std::function<std::function<bool(const geometry::Transducer&)>(const geometry::Device&)> f,
+                                           const native_methods::Segment segment) {
+    return OutputMask(std::move(f), segment);
   }
 
-  AUTD3_API [[nodiscard]] native_methods::DatagramPtr with_segment_transition(const geometry::Geometry& geometry,
-                                                                              const native_methods::Segment segment,
-                                                                              native_methods::TransitionModeWrap) const {
-    return AUTDDatagramOutputMaskWithSegment(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr(), segment);
+  AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
+    return AUTDDatagramOutputMaskWithSegment(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr(), _segment);
   }
 
   std::function<std::function<bool(const geometry::Transducer&)>(const geometry::Device&)> f;
@@ -50,6 +55,7 @@ struct OutputMask final : Datagram, IntoDatagramTuple<OutputMask> {
   using native_f = bool (*)(const void*, native_methods::GeometryPtr, uint16_t, uint8_t);
 
   native_f _f_native = nullptr;
+  native_methods::Segment _segment = native_methods::Segment::S0;
   std::unique_ptr<std::shared_mutex> _mtx;
   std::unordered_map<uint16_t, std::function<bool(const geometry::Transducer&)>> _cache;
 };

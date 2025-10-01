@@ -4,9 +4,8 @@
 #include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/datagram/silencer.hpp>
 #include <autd3/driver/datagram/stm/gain.hpp>
-#include <autd3/driver/datagram/with_loop_behavior.hpp>
+#include <autd3/driver/datagram/with_finite_loop.hpp>
 #include <autd3/driver/datagram/with_segment.hpp>
-#include <autd3/driver/firmware/fpga/loop_behavior.hpp>
 #include <autd3/driver/firmware/fpga/sampling_config.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <autd3/gain/null.hpp>
@@ -283,7 +282,7 @@ TEST(DriverDatagramSTM, GainSTMSegment) {
     ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::WithSegment(stm, Segment::S1, autd3::driver::TransitionMode::Immediate()));
+  autd.send(autd3::driver::WithSegment(stm, Segment::S1, autd3::driver::transition_mode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
@@ -291,7 +290,7 @@ TEST(DriverDatagramSTM, GainSTMSegment) {
     ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::WithSegment(stm, Segment::S0, std::nullopt));
+  autd.send(autd3::driver::WithSegment(stm, Segment::S0, autd3::driver::transition_mode::Later()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
@@ -299,7 +298,7 @@ TEST(DriverDatagramSTM, GainSTMSegment) {
     ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::SwapSegment::GainSTM(Segment::S0, autd3::driver::TransitionMode::Immediate()));
+  autd.send(autd3::driver::SwapSegment::GainSTM(Segment::S0, autd3::driver::transition_mode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
@@ -311,8 +310,8 @@ TEST(DriverDatagramSTM, GainSTMSegment) {
 TEST(DriverDatagramSTM, GainSTMLoopBehavior) {
   auto autd = create_controller();
 
-  autd.send(autd3::driver::WithLoopBehavior(
-      autd3::driver::GainSTM(std::vector{autd3::gain::Null(), autd3::gain::Null()}, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption{}),
-      autd3::driver::LoopBehavior::ONCE(), Segment::S1, autd3::driver::TransitionMode::SyncIdx()));
-  for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_behavior(dev.idx(), Segment::S1).rep);
+  autd.send(autd3::driver::WithFiniteLoop(
+      autd3::driver::GainSTM(std::vector{autd3::gain::Null(), autd3::gain::Null()}, 1.0f * autd3::driver::Hz, autd3::driver::GainSTMOption{}), 1,
+      Segment::S1, autd3::driver::transition_mode::SyncIdx()));
+  for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_count(dev.idx(), Segment::S1));
 }

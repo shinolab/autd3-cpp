@@ -4,9 +4,8 @@
 #include <autd3/driver/datagram/segment.hpp>
 #include <autd3/driver/datagram/silencer.hpp>
 #include <autd3/driver/datagram/stm/foci.hpp>
-#include <autd3/driver/datagram/with_loop_behavior.hpp>
+#include <autd3/driver/datagram/with_finite_loop.hpp>
 #include <autd3/driver/datagram/with_segment.hpp>
-#include <autd3/driver/firmware/fpga/loop_behavior.hpp>
 #include <autd3/driver/firmware/fpga/sampling_config.hpp>
 #include <autd3/driver/firmware/fpga/transition_mode.hpp>
 #include <ranges>
@@ -122,7 +121,7 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
     ASSERT_EQ(Segment::S0, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::WithSegment(stm, Segment::S1, autd3::driver::TransitionMode::Immediate()));
+  autd.send(autd3::driver::WithSegment(stm, Segment::S1, autd3::driver::transition_mode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
@@ -130,7 +129,7 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
     ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::WithSegment(stm, Segment::S0, std::nullopt));
+  autd.send(autd3::driver::WithSegment(stm, Segment::S0, autd3::driver::transition_mode::Later()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
@@ -138,7 +137,7 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
     ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::SwapSegment::FociSTM(Segment::S0, autd3::driver::TransitionMode::Immediate()));
+  autd.send(autd3::driver::SwapSegment::FociSTM(Segment::S0, autd3::driver::transition_mode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
@@ -153,9 +152,9 @@ TEST(DriverDatagramSTM, FociSTMLoopBehavior) {
   const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
   const std::vector foci = {center, center};
 
-  autd.send(autd3::driver::WithLoopBehavior(autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz), autd3::driver::LoopBehavior::ONCE(), Segment::S1,
-                                            autd3::driver::TransitionMode::SyncIdx()));
-  for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_behavior(dev.idx(), Segment::S1).rep);
+  autd.send(autd3::driver::WithFiniteLoop(autd3::driver::FociSTM(foci, 1.0f * autd3::driver::Hz), 1, Segment::S1,
+                                          autd3::driver::transition_mode::SyncIdx()));
+  for (auto& dev : autd) ASSERT_EQ(0, autd.link<autd3::link::Audit>().stm_loop_count(dev.idx(), Segment::S1));
 }
 
 template <size_t N>

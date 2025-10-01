@@ -15,9 +15,9 @@ concept datagram_s =
       { t.with_segment_transition(geometry, segment, transition_mode) } -> std::same_as<native_methods::DatagramPtr>;
     };
 
-template <datagram_s P>
-struct WithSegment final : Datagram, IntoDatagramTuple<WithSegment<P>> {
-  AUTD3_API explicit WithSegment(P inner, const native_methods::Segment segment, const std::optional<TransitionMode>& transition_mode)
+template <datagram_s P, infinite_transition_mode_v T>
+struct WithSegment final : Datagram, IntoDatagramTuple<WithSegment<P, T>> {
+  AUTD3_API explicit WithSegment(P inner, const native_methods::Segment segment, const T transition_mode)
       : inner(std::move(inner)), segment(segment), transition_mode(transition_mode) {}
   ~WithSegment() override = default;                         // LCOV_EXCL_LINE
   WithSegment(const WithSegment& v) noexcept = default;      // LCOV_EXCL_LINE
@@ -26,13 +26,12 @@ struct WithSegment final : Datagram, IntoDatagramTuple<WithSegment<P>> {
   WithSegment& operator=(WithSegment&& obj) = default;       // LCOV_EXCL_LINE
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
-    const auto transition = transition_mode.has_value() ? transition_mode.value() : native_methods::AUTDTransitionModeNone();
-    return inner.with_segment_transition(geometry, segment, transition);
+    return inner.with_segment_transition(geometry, segment, transition_mode.inner());
   }
 
   P inner;
   native_methods::Segment segment;
-  std::optional<TransitionMode> transition_mode;
+  T transition_mode;
 };
 
 }  // namespace autd3::driver

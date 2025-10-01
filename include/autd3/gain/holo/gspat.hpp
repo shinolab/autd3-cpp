@@ -21,14 +21,12 @@ struct GSPATOption {
   }
 };
 
-template <backend B>
-struct GSPAT final : driver::Gain, driver::IntoDatagramTuple<GSPAT<B>> {
-  AUTD3_API explicit GSPAT(std::vector<std::pair<driver::Point3, Amplitude>> foci, const GSPATOption option, std::shared_ptr<B> backend)
-      : foci(std::move(foci)), option(option), backend(std::move(backend)) {}
+struct GSPAT final : driver::Gain, driver::IntoDatagramTuple<GSPAT> {
+  AUTD3_API explicit GSPAT(std::vector<std::pair<driver::Point3, Amplitude>> foci, const GSPATOption option)
+      : foci(std::move(foci)), option(option) {}
 
   std::vector<std::pair<driver::Point3, Amplitude>> foci;
   GSPATOption option;
-  std::shared_ptr<B> backend;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
     std::vector<native_methods::Point3> points;
@@ -38,11 +36,8 @@ struct GSPAT final : driver::Gain, driver::IntoDatagramTuple<GSPAT<B>> {
     std::vector<float> amps;
     amps.reserve(foci.size());
     std::ranges::transform(foci, std::back_inserter(amps), [&](const auto& f) { return f.second.pascal(); });
-    return backend->gspat(reinterpret_cast<const float*>(points.data()), amps.data(), static_cast<uint32_t>(foci.size()), option);
+    return native_methods::AUTDGainHoloGSPATSphere(points.data(), amps.data(), static_cast<uint32_t>(foci.size()), option);
   }
 };
-
-template <backend B>
-GSPAT(std::vector<std::pair<driver::Point3, Amplitude>> foci, GSPATOption option, std::shared_ptr<B> backend) -> GSPAT<B>;
 
 }  // namespace autd3::gain::holo

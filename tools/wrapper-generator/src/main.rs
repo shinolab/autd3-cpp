@@ -71,6 +71,8 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "ResultDuration".to_string(),
             "TimerStrategyWrap".to_string(),
             "EnvironmentPtr".to_string(),
+            "PulseWidth".to_string(),
+            "ResultPulseWidth".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]

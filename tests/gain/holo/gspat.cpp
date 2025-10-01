@@ -9,13 +9,11 @@
 TEST(GainHolo, GSPAT) {
   auto autd = create_controller();
 
-  auto backend = std::make_shared<autd3::gain::holo::NalgebraBackend>();
   const std::vector foci{std::make_pair(autd.center() + autd3::driver::Vector3(30, 0, 150), 5e3 * autd3::gain::holo::Pa),
                          std::make_pair(autd.center() + autd3::driver::Vector3(-30, 0, 150), 5e3 * autd3::gain::holo::Pa)};
   const auto g = autd3::gain::holo::GSPAT(
       foci,
-      autd3::gain::holo::GSPATOption{.repeat = 100, .constraint = autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::Intensity(0x80))},
-      backend);
+      autd3::gain::holo::GSPATOption{.repeat = 100, .constraint = autd3::gain::holo::EmissionConstraint::Uniform(autd3::driver::Intensity(0x80))});
 
   autd.send(g);
 

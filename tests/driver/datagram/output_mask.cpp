@@ -28,7 +28,7 @@ TEST(DriverDatagram, OutputMask) {
   }
 
   autd.send(autd3::driver::WithSegment(autd3::gain::Uniform{autd3::driver::Intensity(0x80), autd3::driver::Phase(0x81)},
-                                       autd3::native_methods::Segment::S1, autd3::driver::TransitionMode::Immediate()));
+                                       autd3::native_methods::Segment::S1, autd3::driver::transition_mode::Immediate()));
   for (const auto& dev : autd) {
     auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S1, 0);
     for (const auto& tr : dev) {
@@ -37,8 +37,8 @@ TEST(DriverDatagram, OutputMask) {
     }
   }
 
-  autd.send(autd3::driver::WithSegment(autd3::driver::OutputMask([&](const auto& dev) { return [&](const auto& tr) { return false; }; }),
-                                       autd3::native_methods::Segment::S1, std::nullopt));
+  autd.send(autd3::driver::OutputMask::with_segment([&](const auto& dev) { return [&](const auto& tr) { return false; }; },
+                                                    autd3::native_methods::Segment::S1));
   for (const auto& dev : autd) {
     auto drives = autd.link<autd3::link::Audit>().drives(dev.idx(), autd3::native_methods::Segment::S1, 0);
     for (const auto& tr : dev) {

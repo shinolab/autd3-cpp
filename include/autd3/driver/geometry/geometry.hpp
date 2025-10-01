@@ -42,7 +42,7 @@ class Geometry : public std::ranges::view_interface<Geometry> {
 
   AUTD3_API [[nodiscard]] size_t num_transducers() const { return AUTDGeometryNumTransducers(_geometry_ptr); }
 
-  AUTD3_API [[nodiscard]] Point3 center() const { return AUTDGeometrCenter(_geometry_ptr); }
+  AUTD3_API [[nodiscard]] Point3 center() const { return AUTDGeometryCenter(_geometry_ptr); }
 
   template <reconfigure_f F>
   AUTD3_API void reconfigure(const F& f) {

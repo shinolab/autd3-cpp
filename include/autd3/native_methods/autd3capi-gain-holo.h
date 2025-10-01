@@ -30,10 +30,6 @@ struct GreedyOption {
   uint8_t phase_quantization_levels;
 };
 
-struct BackendPtr {
-  const void *_0;
-};
-
 struct GSOption {
   EmissionConstraintWrap constraint;
   uint32_t repeat;
@@ -42,16 +38,6 @@ struct GSOption {
 struct GSPATOption {
   EmissionConstraintWrap constraint;
   uint32_t repeat;
-};
-
-struct LMOption {
-  EmissionConstraintWrap constraint;
-  float eps_1;
-  float eps_2;
-  float tau;
-  uint32_t k_max;
-  const float *initial;
-  uint32_t initial_len;
 };
 
 struct NaiveOption {
@@ -87,15 +73,13 @@ GainPtr AUTDGainHoloGreedyT4010A1(const Point3 *points,
 [[nodiscard]] bool AUTDGainGreedyIsDefault(GreedyOption option);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloGSSphere(BackendPtr backend,
-                             const Point3 *points,
+GainPtr AUTDGainHoloGSSphere(const Point3 *points,
                              const float *amps,
                              uint32_t size,
                              GSOption option);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
-                              const Point3 *points,
+GainPtr AUTDGainHoloGST4010A1(const Point3 *points,
                               const float *amps,
                               uint32_t size,
                               GSOption option);
@@ -103,15 +87,13 @@ GainPtr AUTDGainHoloGST4010A1(BackendPtr backend,
 [[nodiscard]] bool AUTDGainGSIsDefault(GSOption option);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloGSPATSphere(BackendPtr backend,
-                                const Point3 *points,
+GainPtr AUTDGainHoloGSPATSphere(const Point3 *points,
                                 const float *amps,
                                 uint32_t size,
                                 GSPATOption option);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
-                                 const Point3 *points,
+GainPtr AUTDGainHoloGSPATT4010A1(const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
                                  GSPATOption option);
@@ -119,44 +101,18 @@ GainPtr AUTDGainHoloGSPATT4010A1(BackendPtr backend,
 [[nodiscard]] bool AUTDGainGSPATIsDefault(GSPATOption option);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloLMSphere(BackendPtr backend,
-                             const Point3 *points,
-                             const float *amps,
-                             uint32_t size,
-                             LMOption option);
-
-[[nodiscard]]
-GainPtr AUTDGainHoloLMT4010A1(BackendPtr backend,
-                              const Point3 *points,
-                              const float *amps,
-                              uint32_t size,
-                              LMOption option);
-
-[[nodiscard]] bool AUTDGainLMIsDefault(LMOption option);
-
-[[nodiscard]]
-GainPtr AUTDGainHoloNaiveSphere(BackendPtr backend,
-                                const Point3 *points,
+GainPtr AUTDGainHoloNaiveSphere(const Point3 *points,
                                 const float *amps,
                                 uint32_t size,
                                 NaiveOption option);
 
 [[nodiscard]]
-GainPtr AUTDGainHoloNaiveT4010A1(BackendPtr backend,
-                                 const Point3 *points,
+GainPtr AUTDGainHoloNaiveT4010A1(const Point3 *points,
                                  const float *amps,
                                  uint32_t size,
                                  NaiveOption option);
 
 [[nodiscard]] bool AUTDGainNaiveIsDefault(NaiveOption option);
-
-[[nodiscard]] BackendPtr AUTDNalgebraBackendSphere();
-
-[[nodiscard]] BackendPtr AUTDNalgebraBackendT4010A1();
-
-void AUTDDeleteNalgebraBackendSphere(BackendPtr backend);
-
-void AUTDDeleteNalgebraBackendT4010A1(BackendPtr backend);
 
 }  // extern "C"
 
