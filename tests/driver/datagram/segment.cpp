@@ -64,7 +64,7 @@ TEST(DriverDatagram, SwapSegmentGain) {
     }
   }
 
-  autd.send(autd3::driver::SwapSegment::Gain(Segment::S0));
+  autd.send(autd3::driver::SwapSegmentGain(Segment::S0));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_stm_segment());
@@ -111,7 +111,7 @@ TEST(DriverDatagram, SwapSegmentModulation) {
     ASSERT_TRUE(std::ranges::all_of(autd.link<autd3::link::Audit>().modulation(dev.idx(), Segment::S1), [](auto d) { return d == 0x81; }));
   }
 
-  autd.send(autd3::driver::SwapSegment::Modulation(Segment::S0, autd3::driver::transition_mode::SyncIdx()));
+  autd.send(autd3::driver::SwapSegmentModulation(Segment::S0, autd3::driver::transition_mode::SyncIdx()));
   for (auto& dev : autd) {
     ASSERT_EQ(0, autd.link<autd3::link::Audit>().modulation_loop_count(dev.idx(), Segment::S0));
   }

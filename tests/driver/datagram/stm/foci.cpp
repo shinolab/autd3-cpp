@@ -137,7 +137,7 @@ TEST(DriverDatagramSTM, FociSTMSegment) {
     ASSERT_EQ(Segment::S1, autd.link<autd3::link::Audit>().current_stm_segment(dev.idx()));
   }
 
-  autd.send(autd3::driver::SwapSegment::FociSTM(Segment::S0, autd3::driver::transition_mode::Immediate()));
+  autd.send(autd3::driver::SwapSegmentFociSTM(Segment::S0, autd3::driver::transition_mode::Immediate()));
   infos = autd.fpga_state();
   for (auto& dev : autd) {
     ASSERT_EQ(std::nullopt, infos[dev.idx()].value().current_gain_segment());
