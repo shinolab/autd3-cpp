@@ -70,11 +70,19 @@ using driver::Intensity;
 using driver::Phase;
 using driver::PulseWidth;
 using driver::SamplingConfig;
-using namespace driver::transition_mode;
 using native_methods::GainSTMMode;
 using native_methods::GPIOIn;
 using native_methods::GPIOOut;
 using native_methods::Segment;
+
+namespace transition_mode {
+using driver::transition_mode::Ext;
+using driver::transition_mode::GPIO;
+using driver::transition_mode::Immediate;
+using driver::transition_mode::Later;
+using driver::transition_mode::SyncIdx;
+using driver::transition_mode::SysTime;
+}  // namespace transition_mode
 
 using driver::Clear;
 using driver::ControlPoint;
