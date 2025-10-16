@@ -4,7 +4,7 @@ if(${CMAKE_SOURCE_DIR} STREQUAL ${CMAKE_BINARY_DIR})
   message(FATAL_ERROR "In-source builds not allowed. Please make a new directory (called a build directory) and run CMake from there. You may need to remove CMakeCache.txt. ")
 endif()
 
-project(autd3 VERSION 36.0.2)
+project(autd3 VERSION 37.0.0)
 
 message(STATUS "Build AUTD3: ${PROJECT_VERSION}")
 
@@ -96,21 +96,6 @@ if(WIN32)
 endif()
 add_library(autd3::gain::holo ALIAS autd3_gain_holo)
 
-add_library(autd3_modulation_audio_file INTERFACE)
-target_link_libraries(autd3_modulation_audio_file INTERFACE autd3::common)
-autd_target_link_libraries(autd3_modulation_audio_file autd3capi_modulation_audio_file)
-if(WIN32)
-  add_custom_target(autd3capi_modulation_audio_file)
-  add_custom_command(TARGET autd3capi_modulation_audio_file POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_modulation_audio_file.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
-    VERBATIM
-  )
-  set_property(TARGET autd3capi_modulation_audio_file PROPERTY FOLDER "autd3capi") 
-  add_dependencies(autd3_modulation_audio_file autd3capi_modulation_audio_file)
-endif()
-add_library(autd3::modulation::audio_file ALIAS autd3_modulation_audio_file)
-
 add_library(autd3_link_twincat INTERFACE)
 target_link_libraries(autd3_link_twincat INTERFACE autd3::common)
 autd_target_link_libraries(autd3_link_twincat autd3capi_link_twincat)
@@ -158,19 +143,3 @@ if(WIN32)
   add_dependencies(autd3_link_remote autd3capi_link_remote)
 endif()
 add_library(autd3::link::remote ALIAS autd3_link_remote)
-
-add_library(autd3_link_ethercrab INTERFACE)
-target_link_libraries(autd3_link_ethercrab INTERFACE autd3::common)
-autd_target_link_libraries(autd3_link_ethercrab autd3capi_link_ethercrab)
-if(WIN32)
-  target_link_libraries(autd3_link_ethercrab INTERFACE ws2_32)
-  add_custom_target(autd3capi_link_ethercrab)
-  add_custom_command(TARGET autd3capi_link_ethercrab POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_ethercrab.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
-    VERBATIM
-  )
-  set_property(TARGET autd3capi_link_ethercrab PROPERTY FOLDER "autd3capi") 
-  add_dependencies(autd3_link_ethercrab autd3capi_link_ethercrab)
-endif()
-add_library(autd3::link::ethercrab ALIAS autd3_link_ethercrab)

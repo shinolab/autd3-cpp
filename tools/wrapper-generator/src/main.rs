@@ -32,11 +32,10 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "SamplingConfig".to_string(),
             "DatagramPtr".to_string(),
             "GainPtr".to_string(),
+            "ResultStatus".to_string(),
             "ResultGain".to_string(),
             "ResultModulation".to_string(),
             "ResultSamplingConfig".to_string(),
-            "SpinStrategyTag".to_string(),
-            "ResultStatus".to_string(),
             "ControllerPtr".to_string(),
             "TransitionModeWrap".to_string(),
             "TransducerPtr".to_string(),
@@ -59,9 +58,8 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "FocusOption".to_string(),
             "BesselOption".to_string(),
             "ResultLink".to_string(),
-            "ParallelMode".to_string(),
+            "SleeperTag".to_string(),
             "GainSTMOption".to_string(),
-            "SleeperWrap".to_string(),
             "Angle".to_string(),
             "FixedCompletionSteps".to_string(),
             "FixedUpdateRate".to_string(),
@@ -69,11 +67,9 @@ pub fn gen_c<P1: AsRef<Path>, P2: AsRef<Path>>(
             "ResultU16".to_string(),
             "ResultF32".to_string(),
             "ResultDuration".to_string(),
-            "TimerStrategyWrap".to_string(),
             "EnvironmentPtr".to_string(),
             "PulseWidth".to_string(),
             "ResultPulseWidth".to_string(),
-            "Status".to_string(),
         ],
         exclude: vec!["ConstPtr".to_string()],
         rename: vec![("ConstPtr".to_string(), "const void*".to_string())]
@@ -128,7 +124,7 @@ fn main() -> Result<()> {
             continue;
         };
         match crate_name.as_ref() {
-            "autd3-core" | "autd3-driver" | "autd3" | "autd3-link-ethercrab" => {
+            "autd3-core" | "autd3-driver" | "autd3" => {
                 gen_c(
                     &crate_path,
                     "../../include/autd3/native_methods",

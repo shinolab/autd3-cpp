@@ -21,16 +21,12 @@ struct Point3 {
 };
 
 struct Quaternion {
-  float x;
-  float y;
-  float z;
   float w;
+  float i;
+  float j;
+  float k;
 
-  operator driver::Quaternion() const { return {w, x, y, z}; }
-};
-
-struct LoopBehavior {
-  uint16_t rep;
+  operator driver::Quaternion() const { return {w, i, j, k}; }
 };
 
 }  // namespace autd3::native_methods

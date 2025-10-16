@@ -77,7 +77,7 @@ TEST(DriverDatagram, DebugOutputIdx) {
     ASSERT_EQ(value, autd.link<autd3::link::Audit>().debug_values(dev.idx()));
   }
 
-  const auto sys_time = autd3::driver::DcSysTime::now();
+  const auto sys_time = autd3::driver::DcSysTime(10000);
   autd.send(autd3::driver::GPIOOutputs(
       [sys_time](const autd3::driver::geometry::Device&, const autd3::native_methods::GPIOOut gpio) -> std::optional<autd3::driver::GPIOOutputType> {
         switch (gpio) {

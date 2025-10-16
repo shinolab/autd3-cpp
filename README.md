@@ -8,7 +8,7 @@
 
 ## LICENSE
 
-* See [LICENSE](./LICENSE) and [ThirdPartyNotice](./ThirdPartyNotice.txt) for more information.
+MIT
 
 # Author
 

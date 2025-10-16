@@ -16,7 +16,6 @@ TEST(Controller, ControllerDefaultSenderOption) {
       .send_interval = std::chrono::milliseconds(2),
       .receive_interval = std::chrono::milliseconds(3),
       .timeout = std::chrono::milliseconds(4),
-      .parallel = autd3::native_methods::ParallelMode::Off,
   };
 
   autd.default_sender_option = option;
