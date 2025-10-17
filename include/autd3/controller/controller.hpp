@@ -104,7 +104,7 @@ class Controller final : public driver::geometry::Geometry {
     std::vector<native_methods::Quaternion> rot;
     rot.reserve(devices.size());
     std::ranges::transform(devices, std::back_inserter(rot),
-                           [&](const auto& d) { return native_methods::Quaternion{d.rot.x(), d.rot.y(), d.rot.z(), d.rot.w()}; });
+                           [&](const auto& d) { return native_methods::Quaternion{d.rot.w(), d.rot.x(), d.rot.y(), d.rot.z()}; });
 
     const auto ptr = validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(),
                                                                  option, native_methods::SleeperTag::Std));
