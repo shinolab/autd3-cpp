@@ -3,8 +3,6 @@
 #include <string>
 
 #include "autd3/controller/controller.hpp"
-#include "autd3/controller/sleeper.hpp"
-#include "autd3/controller/strategy.hpp"
 #include "autd3/def.hpp"
 #include "autd3/driver/autd3_device.hpp"
 #include "autd3/driver/common/angle.hpp"
@@ -49,7 +47,7 @@ namespace autd3 {
 
 constexpr float pi = driver::pi;
 
-static inline std::string version = "36.0.2";
+static inline std::string version = "37.0.0-alpha.3";
 
 using autd3::driver::deg;
 using autd3::driver::Freq;
@@ -138,9 +136,6 @@ using driver::Quaternion;
 using driver::Vector3;
 
 using controller::Controller;
-using controller::FixedSchedule;
 using controller::SenderOption;
-using controller::SpinSleeper;
-using native_methods::ParallelMode;
 
 }  // namespace autd3

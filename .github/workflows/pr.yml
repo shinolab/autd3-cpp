@@ -42,9 +42,6 @@ jobs:
       - uses: ./.github/actions/setup-build
       - run: cargo make build
       - run: cargo make test
-        if: ${{ matrix.os != 'windows-latest' }}
-      - run: cargo make test -DBUILD_LINK_ETHERCRAB_TEST=OFF
-        if: ${{ matrix.os == 'windows-latest' }}
 
   all-tests-passed:
     if: ${{ always() }}

@@ -7,5 +7,3 @@ target_sources(test_autd3 PRIVATE
   radiation_pressure.cpp
   fir.cpp
 )
-
-add_subdirectory(audio_file)

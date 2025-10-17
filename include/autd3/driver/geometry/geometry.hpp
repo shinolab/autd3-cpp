@@ -57,7 +57,7 @@ class Geometry : public std::ranges::view_interface<Geometry> {
     std::vector<native_methods::Quaternion> rot;
     rot.reserve(devices.size());
     std::ranges::transform(devices, std::back_inserter(rot),
-                           [&](const auto& d) { return native_methods::Quaternion{d.rot.x(), d.rot.y(), d.rot.z(), d.rot.w()}; });
+                           [&](const auto& d) { return native_methods::Quaternion{d.rot.w(), d.rot.x(), d.rot.y(), d.rot.z()}; });
 
     native_methods::AUTDGeometryReconfigure(_geometry_ptr, pos.data(), rot.data());
     for (size_t i = 0; i < _devices.size(); i++) _devices[i] = Device(static_cast<uint16_t>(i), _geometry_ptr);

@@ -16,8 +16,6 @@ struct SenderOption {
   Duration send_interval;
   Duration receive_interval;
   OptionDuration timeout;
-  ParallelMode parallel;
-  bool strict;
 };
 
 struct FPGAStateListPtr {
@@ -80,7 +78,7 @@ ResultController AUTDControllerOpen(const Point3 *pos,
                                     uint16_t len,
                                     LinkPtr link,
                                     SenderOption option,
-                                    TimerStrategyWrap timer_strategy);
+                                    SleeperTag sleeper);
 
 [[nodiscard]] ResultStatus AUTDControllerClose(ControllerPtr cnt);
 
@@ -100,14 +98,9 @@ void AUTDFirmwareLatest(char *latest);
 
 void AUTDSetDefaultSenderOption(ControllerPtr cnt, SenderOption option);
 
-[[nodiscard]]
-SenderPtr AUTDSender(ControllerPtr cnt,
-                     SenderOption option,
-                     TimerStrategyWrap timer_strategy);
+[[nodiscard]] SenderPtr AUTDSender(ControllerPtr cnt, SenderOption option, SleeperTag sleeper);
 
 [[nodiscard]] ResultStatus AUTDSenderSend(SenderPtr sender, DatagramPtr d);
-
-[[nodiscard]] uint32_t AUTDSpinSleepDefaultAccuracy();
 
 [[nodiscard]] bool AUTDSenderOptionIsDefault(SenderOption option);
 
@@ -228,7 +221,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithFiniteLoop(GainSTMPtr stm,
 
 [[nodiscard]] DatagramPtr AUTDDatagramTuple(DatagramPtr d1, DatagramPtr d2);
 
-[[nodiscard]] DcSysTime AUTDDcSysTimeNow();
+[[nodiscard]] DcSysTime AUTDDcSysTimeNew(uint64_t sys_time);
 
 [[nodiscard]] GPIOOutputTypeWrap AUTDGPIOOutputTypeNone();
 
@@ -266,7 +259,7 @@ DatagramPtr AUTDSTMGainIntoDatagramWithFiniteLoop(GainSTMPtr stm,
 
 [[nodiscard]] ResultPulseWidth AUTDPulseWidthFromDuty(float duty);
 
-[[nodiscard]] ResultU16 AUTDPulseWidthPulseWidth(PulseWidth pulse_width, uint32_t period);
+[[nodiscard]] ResultU16 AUTDPulseWidthPulseWidth(PulseWidth pulse_width);
 
 [[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivide(uint16_t div);
 

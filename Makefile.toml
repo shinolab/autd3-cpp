@@ -168,7 +168,7 @@ with Path("include/autd3.hpp").open() as f:
     content = f.read()
     version = re.search(r"static inline std::string version = \"(.*)\";", content).group(1).split(".")
     version = (
-        ".".join(version[:4]) if version[2].endswith("rc") else ".".join(version[:3])
+        ".".join(version[:4]) if version[2].endswith("alpha") or version[2].endswith("rc") else ".".join(version[:3])
     )
 
 if not should_update_lib(version):
@@ -178,20 +178,17 @@ base_url = f"https://github.com/shinolab/autd3-capi/releases/download/v{version}
 
 if platform.system() == "Windows":
     download_and_extract(
-        f"{base_url}/autd3-v{version}-win-x64.zip",
-        "src/native/windows/x64",
+        f"{base_url}/autd3-capi-v{version}-win-x64.zip",
         "tests",
     )
 elif platform.system() == "Darwin":
     download_and_extract(
-        f"{base_url}/autd3-v{version}-macos-aarch64.tar.gz",
-        "src/native/osx/aarch64",
+        f"{base_url}/autd3-capi-v{version}-macos-aarch64.tar.gz",
         "tests",
     )
 else:
     download_and_extract(
-        f"{base_url}/autd3-v{version}-linux-x64.tar.gz",
-        "src/native/linux/x64",
+        f"{base_url}/autd3-capi-v{version}-linux-x64.tar.gz",
         "tests",
     )
 

@@ -51,18 +51,7 @@ enum class SamplingConfigTag : uint8_t {
 
 enum class SleeperTag : uint8_t {
   Std = 0,
-  Spin = 1,
   SpinWait = 4,
-};
-
-enum class SpinStrategyTag : uint8_t {
-  YieldThread = 0,
-  SpinLoopHint = 1,
-};
-
-enum class TimerStrategyTag : uint8_t {
-  FixedSchedule = 0,
-  FixedDelay = 1,
 };
 
 enum class TransitionModeTag : uint8_t {
@@ -80,6 +69,12 @@ struct DatagramPtr {
 
 struct GainPtr {
   const void *_0;
+};
+
+struct ResultStatus {
+  AUTDStatus result;
+  uint32_t err_len;
+  const void* err;
 };
 
 struct ResultGain {
@@ -111,12 +106,6 @@ struct SamplingConfigWrap {
 
 struct ResultSamplingConfig {
   SamplingConfigWrap result;
-  uint32_t err_len;
-  const void* err;
-};
-
-struct ResultStatus {
-  AUTDStatus result;
   uint32_t err_len;
   const void* err;
 };
@@ -197,12 +186,6 @@ struct ResultLink {
   const void* err;
 };
 
-struct SleeperWrap {
-  SleeperTag tag;
-  uint32_t value;
-  SpinStrategyTag spin_strategy;
-};
-
 struct ResultU16 {
   uint16_t result;
   uint32_t err_len;
@@ -219,11 +202,6 @@ struct ResultDuration {
   Duration result;
   uint32_t err_len;
   const void* err;
-};
-
-struct TimerStrategyWrap {
-  TimerStrategyTag tag;
-  SleeperWrap sleep;
 };
 
 struct EnvironmentPtr {

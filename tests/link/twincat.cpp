@@ -14,16 +14,3 @@ TEST(Link, TwinCAT) {
   (void)link;
 #endif
 }
-
-TEST(Link, RemoteTwinCAT) {
-  auto link = autd3::link::RemoteTwinCAT("xxx.xxx.xxx.xxx.xxx.xxx",
-                                         autd3::link::RemoteTwinCATOption{.server_ip = "127.0.0.1", .client_ams_net_id = "xxx.xxx.xxx.xxx.xxx.xxx"});
-
-#ifdef RUN_LINK_REMOTE_TWINCAT
-  auto autd = autd3::controller::Controller::open({autd3::driver::AUTD3{}}, std::move(link));
-
-  autd.close();
-#else
-  (void)link;
-#endif
-}

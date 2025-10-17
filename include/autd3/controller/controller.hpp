@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "autd3/controller/environment.hpp"
-#include "autd3/controller/strategy.hpp"
 #include "autd3/driver/autd3_device.hpp"
 #include "autd3/driver/datagram/datagram.hpp"
 #include "autd3/driver/firmware/fpga/fpga_state.hpp"
@@ -22,15 +21,13 @@ struct SenderOption {
   std::chrono::nanoseconds send_interval = std::chrono::milliseconds(1);
   std::chrono::nanoseconds receive_interval = std::chrono::milliseconds(1);
   std::optional<std::chrono::nanoseconds> timeout = std::nullopt;
-  native_methods::ParallelMode parallel = native_methods::ParallelMode::Auto;
-  bool strict = true;
 
   operator native_methods::SenderOption() const {
-    return native_methods::SenderOption{.send_interval = native_methods::to_duration(send_interval),
-                                        .receive_interval = native_methods::to_duration(receive_interval),
-                                        .timeout = native_methods::to_option_duration(timeout),
-                                        .parallel = parallel,
-                                        .strict = strict};
+    return native_methods::SenderOption{
+        .send_interval = native_methods::to_duration(send_interval),
+        .receive_interval = native_methods::to_duration(receive_interval),
+        .timeout = native_methods::to_option_duration(timeout),
+    };
   }
 
   auto operator<=>(const SenderOption&) const = default;
@@ -95,12 +92,11 @@ class Controller final : public driver::geometry::Geometry {
 
   template <driver::link L>
   AUTD3_API [[nodiscard]] static Controller open(std::vector<driver::AUTD3> devices, L link) {
-    return Controller::open_with_option(std::move(devices), link, SenderOption(), FixedSchedule{});
+    return Controller::open_with_option(std::move(devices), link, SenderOption());
   }
 
   template <driver::link L>
-  AUTD3_API [[nodiscard]] static Controller open_with_option(const std::vector<driver::AUTD3>& devices, L link, const SenderOption option,
-                                                             std::variant<FixedSchedule, FixedDelay> strategy) {
+  AUTD3_API [[nodiscard]] static Controller open_with_option(const std::vector<driver::AUTD3>& devices, L link, const SenderOption option) {
     std::vector<native_methods::Point3> pos;
     pos.reserve(devices.size());
     std::ranges::transform(devices, std::back_inserter(pos), [&](const auto& d) { return native_methods::Point3{d.pos.x(), d.pos.y(), d.pos.z()}; });
@@ -108,11 +104,10 @@ class Controller final : public driver::geometry::Geometry {
     std::vector<native_methods::Quaternion> rot;
     rot.reserve(devices.size());
     std::ranges::transform(devices, std::back_inserter(rot),
-                           [&](const auto& d) { return native_methods::Quaternion{d.rot.x(), d.rot.y(), d.rot.z(), d.rot.w()}; });
+                           [&](const auto& d) { return native_methods::Quaternion{d.rot.w(), d.rot.x(), d.rot.y(), d.rot.z()}; });
 
-    const auto ptr =
-        validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(), option,
-                                                    std::visit([](const auto& s) { return native_methods::TimerStrategyWrap(s); }, strategy)));
+    const auto ptr = validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(),
+                                                                 option, native_methods::SleeperTag::Std));
     auto geometry = AUTDGeometry(ptr);
     return Controller(geometry, ptr, option);
   }
@@ -159,13 +154,11 @@ class Controller final : public driver::geometry::Geometry {
     return ret;
   }  // LCOV_EXCL_LINE
 
-  AUTD3_API Sender sender(const SenderOption option, std::variant<FixedSchedule, FixedDelay> strategy) const {
-    return Sender(AUTDSender(_ptr, option, std::visit([](const auto& s) { return native_methods::TimerStrategyWrap(s); }, strategy)), geometry());
-  }
+  AUTD3_API Sender sender(const SenderOption option) const { return Sender(AUTDSender(_ptr, option, native_methods::SleeperTag::Std), geometry()); }
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
-    sender(default_sender_option, FixedSchedule{}).send(d);
+    sender(default_sender_option).send(d);
   }
 
   struct DefaultSenderOptionGetter {

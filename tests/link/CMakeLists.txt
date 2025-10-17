@@ -5,9 +5,3 @@ target_sources(test_autd3 PRIVATE
   remote.cpp
   twincat.cpp
 )
-
-if(BUILD_LINK_ETHERCRAB_TEST)
-  target_sources(test_autd3 PRIVATE
-    ethercrab.cpp
-  )
-endif()

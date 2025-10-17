@@ -10,11 +10,6 @@ extern "C" {
 
 [[nodiscard]] ResultLink AUTDLinkTwinCAT();
 
-[[nodiscard]]
-ResultLink AUTDLinkRemoteTwinCAT(const char *server_ams_net_id,
-                                 const char *server_ip,
-                                 const char *client_ams_net_id);
-
 }  // extern "C"
 
 }  // namespace autd3::native_methods

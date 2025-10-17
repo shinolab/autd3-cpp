@@ -9,7 +9,7 @@ TEST(DriverFirmwareFPGA, TransitionModeSyncIdx) {
 }
 
 TEST(DriverFirmwareFPGA, TransitionModeSysTime) {
-  const auto now = autd3::driver::DcSysTime::now();
+  const auto now = autd3::driver::DcSysTime(1000);
   const autd3::native_methods::TransitionModeWrap wrap = autd3::driver::transition_mode::SysTime(now).inner();
   ASSERT_EQ(wrap.tag, autd3::native_methods::TransitionModeTag::SysTime);
   ASSERT_EQ(wrap.value.sys_time.dc_sys_time, now.sys_time());
