@@ -77,8 +77,7 @@ ResultController AUTDControllerOpen(const Point3 *pos,
                                     const Quaternion *rot,
                                     uint16_t len,
                                     LinkPtr link,
-                                    SenderOption option,
-                                    SleeperTag sleeper);
+                                    SenderOption option);
 
 [[nodiscard]] ResultStatus AUTDControllerClose(ControllerPtr cnt);
 
@@ -98,7 +97,7 @@ void AUTDFirmwareLatest(char *latest);
 
 void AUTDSetDefaultSenderOption(ControllerPtr cnt, SenderOption option);
 
-[[nodiscard]] SenderPtr AUTDSender(ControllerPtr cnt, SenderOption option, SleeperTag sleeper);
+[[nodiscard]] SenderPtr AUTDSender(ControllerPtr cnt, SenderOption option);
 
 [[nodiscard]] ResultStatus AUTDSenderSend(SenderPtr sender, DatagramPtr d);
 

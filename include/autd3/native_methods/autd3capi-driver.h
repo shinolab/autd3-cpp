@@ -49,11 +49,6 @@ enum class SamplingConfigTag : uint8_t {
   PeriodNearest = 4,
 };
 
-enum class SleeperTag : uint8_t {
-  Std = 0,
-  SpinWait = 4,
-};
-
 enum class TransitionModeTag : uint8_t {
   Immediate = 0,
   Ext = 1,
