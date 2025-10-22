@@ -6,9 +6,13 @@
 
 namespace autd3::native_methods {
 
+struct RemoteOption {
+  OptionDuration timeout;
+};
+
 extern "C" {
 
-[[nodiscard]] ResultLink AUTDLinkRemote(const char *addr);
+[[nodiscard]] ResultLink AUTDLinkRemote(const char *addr, RemoteOption option);
 
 }  // extern "C"
 

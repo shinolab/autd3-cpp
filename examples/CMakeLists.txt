@@ -25,17 +25,17 @@ if(AUTD_LOCAL_TEST)
 elseif(WIN32)
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v37.0.0-alpha.3/autd3-v37.0.0-alpha.3-win-x64.zip
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v37.0.0/autd3-v37.0.0-win-x64.zip
   )
 elseif(APPLE)
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v37.0.0-alpha.3/autd3-v37.0.0-alpha.3-macos-aarch64.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v37.0.0/autd3-v37.0.0-macos-aarch64.tar.gz
   )
 else()
   FetchContent_Declare(
     autd3
-    URL https://github.com/shinolab/autd3-cpp/releases/download/v37.0.0-alpha.3/autd3-v37.0.0-alpha.3-linux-x64.tar.gz
+    URL https://github.com/shinolab/autd3-cpp/releases/download/v37.0.0/autd3-v37.0.0-linux-x64.tar.gz
   )
 endif()
 FetchContent_MakeAvailable(autd3)
@@ -46,7 +46,3 @@ target_compile_definitions(autd3-example INTERFACE AUTD3_RESOURCE_PATH="${PROJEC
 add_executable(twincat twincat.cpp)
 target_link_libraries(twincat PRIVATE autd3::autd3 autd3::gain::holo autd3::link::twincat)
 target_link_libraries(twincat PRIVATE autd3-example)
-
-add_executable(simulator simulator.cpp)
-target_link_libraries(simulator PRIVATE autd3::autd3 autd3::gain::holo autd3::link::simulator)
-target_link_libraries(simulator PRIVATE autd3-example)

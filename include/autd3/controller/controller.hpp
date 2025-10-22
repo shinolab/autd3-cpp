@@ -106,8 +106,8 @@ class Controller final : public driver::geometry::Geometry {
     std::ranges::transform(devices, std::back_inserter(rot),
                            [&](const auto& d) { return native_methods::Quaternion{d.rot.w(), d.rot.x(), d.rot.y(), d.rot.z()}; });
 
-    const auto ptr = validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(),
-                                                                 option, native_methods::SleeperTag::Std));
+    const auto ptr =
+        validate(native_methods::AUTDControllerOpen(pos.data(), rot.data(), static_cast<uint16_t>(devices.size()), link.resolve(), option));
     auto geometry = AUTDGeometry(ptr);
     return Controller(geometry, ptr, option);
   }
@@ -154,7 +154,7 @@ class Controller final : public driver::geometry::Geometry {
     return ret;
   }  // LCOV_EXCL_LINE
 
-  AUTD3_API Sender sender(const SenderOption option) const { return Sender(AUTDSender(_ptr, option, native_methods::SleeperTag::Std), geometry()); }
+  AUTD3_API Sender sender(const SenderOption option) const { return Sender(AUTDSender(_ptr, option), geometry()); }
 
   template <driver::datagram D>
   AUTD3_API void send(const D& d) {
