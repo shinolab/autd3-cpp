@@ -46,7 +46,3 @@ target_compile_definitions(autd3-example INTERFACE AUTD3_RESOURCE_PATH="${PROJEC
 add_executable(twincat twincat.cpp)
 target_link_libraries(twincat PRIVATE autd3::autd3 autd3::gain::holo autd3::link::twincat)
 target_link_libraries(twincat PRIVATE autd3-example)
-
-add_executable(simulator simulator.cpp)
-target_link_libraries(simulator PRIVATE autd3::autd3 autd3::gain::holo autd3::link::simulator)
-target_link_libraries(simulator PRIVATE autd3-example)

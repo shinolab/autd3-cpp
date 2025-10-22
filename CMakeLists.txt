@@ -112,22 +112,6 @@ if(WIN32)
 endif()
 add_library(autd3::link::twincat ALIAS autd3_link_twincat)
 
-add_library(autd3_link_simulator INTERFACE)
-target_link_libraries(autd3_link_simulator INTERFACE autd3::common)
-autd_target_link_libraries(autd3_link_simulator autd3capi_link_simulator)
-if(WIN32)
-  target_link_libraries(autd3_link_simulator INTERFACE ws2_32)
-  add_custom_target(autd3capi_link_simulator)
-  add_custom_command(TARGET autd3capi_link_simulator POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_simulator.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
-    VERBATIM
-  )
-  set_property(TARGET autd3capi_link_simulator PROPERTY FOLDER "autd3capi") 
-  add_dependencies(autd3_link_simulator autd3capi_link_simulator)
-endif()
-add_library(autd3::link::simulator ALIAS autd3_link_simulator)
-
 add_library(autd3_link_remote INTERFACE)
 target_link_libraries(autd3_link_remote INTERFACE autd3::common)
 autd_target_link_libraries(autd3_link_remote autd3capi_link_remote)
