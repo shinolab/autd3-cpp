@@ -52,6 +52,8 @@ constexpr const Phase Phase_PI = Phase{
 };
 
 /// The intensity of the ultrasound.
+///
+/// The arithmetic operations of [`Intensity`] are saturated.
 struct Intensity {
   uint8_t _0;
 };
