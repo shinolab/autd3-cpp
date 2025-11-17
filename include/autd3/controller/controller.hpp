@@ -18,14 +18,14 @@
 namespace autd3::controller {
 
 struct SenderOption {
-  std::chrono::nanoseconds send_interval = std::chrono::milliseconds(1);
-  std::chrono::nanoseconds receive_interval = std::chrono::milliseconds(1);
+  std::optional<std::chrono::nanoseconds> send_interval = std::chrono::milliseconds(1);
+  std::optional<std::chrono::nanoseconds> receive_interval = std::chrono::milliseconds(1);
   std::optional<std::chrono::nanoseconds> timeout = std::nullopt;
 
   operator native_methods::SenderOption() const {
     return native_methods::SenderOption{
-        .send_interval = native_methods::to_duration(send_interval),
-        .receive_interval = native_methods::to_duration(receive_interval),
+        .send_interval = native_methods::to_option_duration(send_interval),
+        .receive_interval = native_methods::to_option_duration(receive_interval),
         .timeout = native_methods::to_option_duration(timeout),
     };
   }

@@ -203,12 +203,6 @@ struct EnvironmentPtr {
   const void *_0;
 };
 
-struct ResultPulseWidth {
-  PulseWidth result;
-  uint32_t err_len;
-  const void* err;
-};
-
 
 
 }  // namespace autd3::native_methods

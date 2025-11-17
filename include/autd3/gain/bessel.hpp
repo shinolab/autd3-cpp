@@ -21,8 +21,8 @@ struct BesselOption {
 };
 
 struct Bessel final : driver::Gain, driver::IntoDatagramTuple<Bessel> {
-  AUTD3_API explicit Bessel(driver::Point3 pos, driver::Vector3 dir, const driver::Angle theta, const BesselOption option)
-      : pos(std::move(pos)), dir(std::move(dir)), theta(theta), option(option) {}
+  AUTD3_API explicit Bessel(driver::Point3 apex, driver::Vector3 dir, const driver::Angle theta, const BesselOption option)
+      : apex(std::move(apex)), dir(std::move(dir)), theta(theta), option(option) {}
   Bessel() = delete;
   Bessel(const Bessel& obj) = default;             // LCOV_EXCL_LINE
   Bessel& operator=(const Bessel& obj) = default;  // LCOV_EXCL_LINE
@@ -30,13 +30,13 @@ struct Bessel final : driver::Gain, driver::IntoDatagramTuple<Bessel> {
   Bessel& operator=(Bessel&& obj) = default;       // LCOV_EXCL_LINE
   ~Bessel() override = default;                    // LCOV_EXCL_LINE
 
-  driver::Point3 pos;
+  driver::Point3 apex;
   driver::Vector3 dir;
   driver::Angle theta;
   BesselOption option;
 
   AUTD3_API [[nodiscard]] native_methods::GainPtr gain_ptr(const driver::geometry::Geometry&) const override {
-    return AUTDGainBessel(native_methods::Point3{pos.x(), pos.y(), pos.z()}, native_methods::Vector3{dir.x(), dir.y(), dir.z()}, theta, option);
+    return AUTDGainBessel(native_methods::Point3{apex.x(), apex.y(), apex.z()}, native_methods::Vector3{dir.x(), dir.y(), dir.z()}, theta, option);
   }
 };
 

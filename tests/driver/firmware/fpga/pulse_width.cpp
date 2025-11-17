@@ -18,7 +18,4 @@ TEST(DriverFirmwareFPGA, PulseWidthFromDuty) {
     const auto pw = autd3::driver::PulseWidth::from_duty(static_cast<float>(i) / 512.0f);
     ASSERT_EQ(i, pw.pulse_width());
   }
-
-  ASSERT_THROW(autd3::driver::PulseWidth::from_duty(-1.0f), autd3::AUTDException);
-  ASSERT_THROW(autd3::driver::PulseWidth::from_duty(1.0f), autd3::AUTDException);
 }
