@@ -112,7 +112,7 @@ struct PulseWidthInner {
   };
 
   struct Raw_Body {
-    uint32_t _0;
+    uint16_t _0;
   };
 
   Tag tag;

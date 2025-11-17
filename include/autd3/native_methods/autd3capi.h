@@ -13,8 +13,8 @@ struct ResultController {
 };
 
 struct SenderOption {
-  Duration send_interval;
-  Duration receive_interval;
+  OptionDuration send_interval;
+  OptionDuration receive_interval;
   OptionDuration timeout;
 };
 
@@ -254,13 +254,13 @@ DatagramPtr AUTDSTMGainIntoDatagramWithFiniteLoop(GainSTMPtr stm,
 
 [[nodiscard]] float AUTDPhaseToRad(Phase value);
 
-[[nodiscard]] PulseWidth AUTDPulseWidth(uint32_t value);
+[[nodiscard]] PulseWidth AUTDPulseWidth(uint16_t value);
 
-[[nodiscard]] ResultPulseWidth AUTDPulseWidthFromDuty(float duty);
+[[nodiscard]] PulseWidth AUTDPulseWidthFromDuty(float duty);
 
 [[nodiscard]] ResultU16 AUTDPulseWidthPulseWidth(PulseWidth pulse_width);
 
-[[nodiscard]] ResultSamplingConfig AUTDSamplingConfigFromDivide(uint16_t div);
+[[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromDivide(uint16_t div);
 
 [[nodiscard]] SamplingConfigWrap AUTDSamplingConfigFromFreq(float f);
 
@@ -311,7 +311,7 @@ DatagramPtr AUTDGainIntoDatagramWithSegment(GainPtr gain,
 
 [[nodiscard]] DatagramPtr AUTDGainIntoDatagram(GainPtr gain);
 
-[[nodiscard]] GainPtr AUTDGainBessel(Point3 pos, Vector3 dir, Angle theta, BesselOption option);
+[[nodiscard]] GainPtr AUTDGainBessel(Point3 apex, Vector3 dir, Angle theta, BesselOption option);
 
 [[nodiscard]] bool AUTDGainBesselIsDefault(BesselOption option);
 
@@ -436,11 +436,7 @@ uint16_t AUTDLinkAuditFpgaModulationCycle(LinkPtr audit,
                                           Segment segment,
                                           uint16_t idx);
 
-void AUTDLinkAuditFpgaModulationBuffer(LinkPtr audit,
-                                       Segment segment,
-                                       uint16_t idx,
-                                       uint8_t *data,
-                                       uint32_t size);
+void AUTDLinkAuditFpgaModulationBuffer(LinkPtr audit, Segment segment, uint16_t idx, uint8_t *data);
 
 [[nodiscard]]
 uint16_t AUTDLinkAuditFpgaModulationLoopCount(LinkPtr audit,

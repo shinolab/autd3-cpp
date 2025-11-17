@@ -68,7 +68,7 @@ struct Audit final {
   [[nodiscard]] std::vector<uint8_t> modulation(const size_t idx, const native_methods::Segment segment) const {
     const auto n = AUTDLinkAuditFpgaModulationCycle(_ptr, segment, static_cast<uint16_t>(idx));
     std::vector<uint8_t> buf(n);
-    AUTDLinkAuditFpgaModulationBuffer(_ptr, segment, static_cast<uint16_t>(idx), buf.data(), n);
+    AUTDLinkAuditFpgaModulationBuffer(_ptr, segment, static_cast<uint16_t>(idx), buf.data());
     return buf;
   }  // LCOV_EXCL_LINE
 
