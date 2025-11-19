@@ -56,8 +56,8 @@ add_test(NAME test_autd3 COMMAND test_autd3)
 include(GoogleTest)
 gtest_discover_tests(test_autd3)
 
-if(WIN32)
-  target_link_options(test_autd3 PRIVATE /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib)
+if(MSVC)
+    target_link_options(test_autd3 PRIVATE /NODEFAULTLIB:libcmt.lib /NODEFAULTLIB:libcmtd.lib /NODEFAULTLIB:msvcrtd.lib)
 endif()
 
 if(COVERAGE)
