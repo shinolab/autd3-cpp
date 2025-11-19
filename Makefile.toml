@@ -60,7 +60,7 @@ mkdir -p build/tests
 [tasks.test-cmake]
 cwd = "./build/tests"
 command = "cmake"
-args = ["../../tests", "${@}"]
+args = ["../../tests", "-G", "Ninja"]
 
 [tasks.test-build]
 cwd = "./build/tests"
@@ -73,7 +73,7 @@ linux_alias = "test-run-nix"
 mac_alias = "test-run-nix"
 
 [tasks.test-run-windows]
-cwd = "./build/tests/Release"
+cwd = "./build/tests"
 script_runner = "@shell"
 script = '''
 ./test_autd3.exe

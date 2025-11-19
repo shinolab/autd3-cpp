@@ -70,8 +70,7 @@ if(WIN32)
   set_property(GLOBAL PROPERTY USE_FOLDERS ON)
   add_custom_target(autd3capi)
   add_custom_command(TARGET autd3capi POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi.dll" ${CMAKE_BINARY_DIR}
     VERBATIM
   )
   set_property(TARGET autd3capi PROPERTY FOLDER "autd3capi") 
@@ -87,8 +86,7 @@ autd_target_link_libraries(autd3_gain_holo autd3capi_gain_holo)
 if(WIN32)
   add_custom_target(autd3capi_gain_holo)
   add_custom_command(TARGET autd3capi_gain_holo POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_gain_holo.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_gain_holo.dll" ${CMAKE_BINARY_DIR}
     VERBATIM
   )
   set_property(TARGET autd3capi_gain_holo PROPERTY FOLDER "autd3capi") 
@@ -103,8 +101,7 @@ if(WIN32)
   target_link_libraries(autd3_link_twincat INTERFACE ws2_32)
   add_custom_target(autd3capi_link_twincat)
   add_custom_command(TARGET autd3capi_link_twincat POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_twincat.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_twincat.dll" ${CMAKE_BINARY_DIR}
     VERBATIM
   )
   set_property(TARGET autd3capi_link_twincat PROPERTY FOLDER "autd3capi") 
@@ -119,8 +116,7 @@ if(WIN32)
   target_link_libraries(autd3_link_remote INTERFACE ws2_32)
   add_custom_target(autd3capi_link_remote)
   add_custom_command(TARGET autd3capi_link_remote POST_BUILD
-    COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/$<CONFIG>
-    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_remote.dll" ${CMAKE_BINARY_DIR}/$<CONFIG>
+    COMMAND ${CMAKE_COMMAND} -E copy_if_different "${PROJECT_SOURCE_DIR}/bin/autd3capi_link_remote.dll" ${CMAKE_BINARY_DIR}
     VERBATIM
   )
   set_property(TARGET autd3capi_link_remote PROPERTY FOLDER "autd3capi") 
