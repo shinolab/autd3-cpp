@@ -36,7 +36,7 @@ struct PulseWidthEncoder final : Datagram, IntoDatagramTuple<PulseWidthEncoder> 
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
-    return _f.has_value() ? AUTDDatagramPulseWidthEncoder(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr())
+    return _f.has_value() ? AUTDDatagramPulseWidthEncoder(reinterpret_cast<const void*>(_f_native), this, geometry.ptr())
                           : native_methods::AUTDDatagramPulseWidthEncoderDefault();
   }
 

@@ -35,7 +35,7 @@ struct PhaseCorrection final : Datagram, IntoDatagramTuple<PhaseCorrection> {
   }
 
   AUTD3_API [[nodiscard]] native_methods::DatagramPtr ptr(const geometry::Geometry& geometry) const override {
-    return AUTDDatagramPhaseCorr(reinterpret_cast<const void*>(_f_native), static_cast<const void*>(this), geometry.ptr());
+    return AUTDDatagramPhaseCorr(reinterpret_cast<const void*>(_f_native), this, geometry.ptr());
   }
 
   std::function<std::function<Phase(const geometry::Transducer&)>(const geometry::Device&)> f;

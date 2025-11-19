@@ -1,7 +1,5 @@
 #pragma once
 
-#include <optional>
-
 #include "autd3/driver/firmware/fpga/transition_mode.hpp"
 #include "autd3/driver/geometry/geometry.hpp"
 #include "autd3/native_methods.hpp"

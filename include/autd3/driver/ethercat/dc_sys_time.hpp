@@ -8,7 +8,7 @@ namespace autd3::driver {
 
 class DcSysTime final {
  public:
-  AUTD3_API DcSysTime(const uint64_t sys_time) : DcSysTime(native_methods::AUTDDcSysTimeNew(sys_time)) {}
+  AUTD3_API explicit DcSysTime(const uint64_t sys_time) : DcSysTime(native_methods::AUTDDcSysTimeNew(sys_time)) {}
 
   AUTD3_API [[nodiscard]] constexpr uint64_t sys_time() const { return _inner.dc_sys_time; }
 

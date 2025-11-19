@@ -9,10 +9,10 @@
 namespace autd3::driver {
 
 struct SamplingConfig final {
-  static SamplingConfig freq_4k() noexcept { return SamplingConfig(10); }
-  static SamplingConfig freq_40k() noexcept { return SamplingConfig(1); }
+  AUTD3_API static const SamplingConfig FREQ_4K;
+  AUTD3_API static const SamplingConfig FREQ_40K;
 
-  SamplingConfig into_nearest() noexcept { return SamplingConfig(native_methods::AUTDSamplingConfigIntoNearest(_inner)); }
+  SamplingConfig into_nearest() const noexcept { return SamplingConfig(native_methods::AUTDSamplingConfigIntoNearest(_inner)); }
 
   operator native_methods::SamplingConfigWrap() const { return _inner; }
 
@@ -32,6 +32,9 @@ struct SamplingConfig final {
  private:
   native_methods::SamplingConfigWrap _inner;
 };
+
+inline const SamplingConfig SamplingConfig::FREQ_4K = SamplingConfig(10);
+inline const SamplingConfig SamplingConfig::FREQ_40K = SamplingConfig(1);
 
 template <class C>
 concept sampling_config = std::is_convertible_v<C, SamplingConfig>;

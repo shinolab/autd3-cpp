@@ -13,12 +13,12 @@ class TransitionMode {
 
 class InfiniteTransitionMode : TransitionMode {
  public:
-  virtual ~InfiniteTransitionMode() = default;
+  ~InfiniteTransitionMode() override = default;
 };
 
 class FiniteTransitionMode : TransitionMode {
  public:
-  virtual ~FiniteTransitionMode() = default;
+  ~FiniteTransitionMode() override = default;
 };
 
 template <class T>
@@ -66,7 +66,7 @@ struct SyncIdx final : FiniteTransitionMode {
 };
 
 struct SysTime final : FiniteTransitionMode {
-  AUTD3_API SysTime(const DcSysTime sys_time) : _sys_time(sys_time) {}
+  AUTD3_API explicit SysTime(const DcSysTime sys_time) : _sys_time(sys_time) {}
   ~SysTime() override = default;                     // LCOV_EXCL_LINE
   SysTime(const SysTime& v) noexcept = default;      // LCOV_EXCL_LINE
   SysTime& operator=(const SysTime& obj) = default;  // LCOV_EXCL_LINE

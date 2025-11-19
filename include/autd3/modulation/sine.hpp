@@ -15,7 +15,7 @@ struct SineOption {
   uint8_t offset = 0x80;
   driver::Angle phase = 0.0 * driver::rad;
   bool clamp = false;
-  driver::SamplingConfig sampling_config = driver::SamplingConfig::freq_4k();
+  driver::SamplingConfig sampling_config = driver::SamplingConfig::FREQ_4K;
 
   operator native_methods::SineOption() const {
     return native_methods::SineOption{
@@ -28,7 +28,7 @@ struct Sine {};
 
 template <>
 struct Sine<driver::Freq<uint32_t>> final : driver::Modulation, driver::IntoDatagramTuple<Sine<driver::Freq<uint32_t>>> {
-  AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq, const SineOption option) : freq(freq), option(option) {}
+  AUTD3_API explicit Sine(const driver::Freq<uint32_t> freq, SineOption option) : freq(freq), option(std::move(option)) {}
 
   driver::Freq<uint32_t> freq;
   SineOption option;
@@ -50,12 +50,12 @@ struct Sine<Nearest> final : driver::Modulation, driver::IntoDatagramTuple<Sine<
   }
 
  private:
-  AUTD3_API explicit Sine(const driver::Freq<float> freq, const SineOption option) : freq(freq), option(option) {}
+  AUTD3_API explicit Sine(const driver::Freq<float> freq, SineOption option) : freq(freq), option(std::move(option)) {}
 };
 
 template <>
 struct Sine<driver::Freq<float>> final : driver::Modulation, driver::IntoDatagramTuple<Sine<driver::Freq<float>>> {
-  AUTD3_API explicit Sine(const driver::Freq<float> freq, const SineOption option) : freq(freq), option(option) {}
+  AUTD3_API explicit Sine(const driver::Freq<float> freq, SineOption option) : freq(freq), option(std::move(option)) {}
 
   driver::Freq<float> freq;
   SineOption option;
