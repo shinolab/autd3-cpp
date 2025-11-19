@@ -14,7 +14,7 @@ struct PulseWidth final {
 
   static PulseWidth from_duty(const float duty) { return PulseWidth(native_methods::AUTDPulseWidthFromDuty(duty)); }
 
-  AUTD3_API [[nodiscard]] constexpr uint16_t pulse_width() const { return validate(native_methods::AUTDPulseWidthPulseWidth(_inner)); }
+  AUTD3_API [[nodiscard]] uint16_t pulse_width() const { return validate(native_methods::AUTDPulseWidthPulseWidth(_inner)); }
 
   operator native_methods::PulseWidth() const noexcept { return _inner; }
 
