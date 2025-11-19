@@ -1,7 +1,6 @@
 #pragma once
 
 #include <array>
-#include <chrono>
 
 #include "autd3/driver/firmware/fpga/pulse_width.hpp"
 #include "autd3/native_methods.hpp"
@@ -83,8 +82,7 @@ struct Audit final {
   [[nodiscard]] std::vector<native_methods::Drive> drives(const size_t idx, const native_methods::Segment segment, const int stm_idx) const {
     const auto n = AUTDLinkAuditCpuNumTransducers(_ptr, static_cast<uint16_t>(idx));
     std::vector<native_methods::Drive> drives(n);
-    AUTDLinkAuditFpgaDrivesAt(_ptr, segment, static_cast<uint16_t>(idx), static_cast<uint16_t>(stm_idx),
-                              reinterpret_cast<native_methods::Drive*>(drives.data()));
+    AUTDLinkAuditFpgaDrivesAt(_ptr, segment, static_cast<uint16_t>(idx), static_cast<uint16_t>(stm_idx), drives.data());
     return drives;
   }  // LCOV_EXCL_LINE
 

@@ -33,7 +33,7 @@ class Freq<int> {
 };
 
 template <class T>
-inline std::ostream& operator<<(std::ostream& os, const Freq<T>& obj) {
+std::ostream& operator<<(std::ostream& os, const Freq<T>& obj) {
   os << obj.hz() << " Hz";
   return os;
 }
@@ -52,7 +52,7 @@ class UnitkHz {
   }
 };
 
-constexpr UnitHz Hz = UnitHz{};
-constexpr UnitkHz kHz = UnitkHz{};
+constexpr auto Hz = UnitHz{};
+constexpr auto kHz = UnitkHz{};
 
 }  // namespace autd3::driver

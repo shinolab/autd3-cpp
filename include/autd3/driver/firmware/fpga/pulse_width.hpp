@@ -1,7 +1,5 @@
 #pragma once
 
-#include <stdexcept>
-
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 

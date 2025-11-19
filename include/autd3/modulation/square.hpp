@@ -13,7 +13,7 @@ struct SquareOption {
   uint8_t low = 0x00;
   uint8_t high = 0xFF;
   float duty = 0.5;
-  driver::SamplingConfig sampling_config = driver::SamplingConfig::freq_4k();
+  driver::SamplingConfig sampling_config = driver::SamplingConfig::FREQ_4K;
 
   operator native_methods::SquareOption() const {
     return native_methods::SquareOption{.low = low, .high = high, .duty = duty, .sampling_config_div = sampling_config.divide()};
@@ -25,7 +25,7 @@ struct Square {};
 
 template <>
 struct Square<driver::Freq<uint32_t>> final : driver::Modulation, driver::IntoDatagramTuple<Square<driver::Freq<uint32_t>>> {
-  AUTD3_API explicit Square(const driver::Freq<uint32_t> freq, const SquareOption option) : freq(freq), option(option) {}
+  AUTD3_API explicit Square(const driver::Freq<uint32_t> freq, SquareOption option) : freq(freq), option(std::move(option)) {}
 
   driver::Freq<uint32_t> freq;
   SquareOption option;
@@ -47,12 +47,12 @@ struct Square<Nearest> final : driver::Modulation, driver::IntoDatagramTuple<Squ
   }
 
  private:
-  AUTD3_API explicit Square(const driver::Freq<float> freq, const SquareOption option) : freq(freq), option(option) {}
+  AUTD3_API explicit Square(const driver::Freq<float> freq, SquareOption option) : freq(freq), option(std::move(option)) {}
 };
 
 template <>
 struct Square<driver::Freq<float>> final : driver::Modulation, driver::IntoDatagramTuple<Square<driver::Freq<float>>> {
-  AUTD3_API explicit Square(const driver::Freq<float> freq, const SquareOption option) : freq(freq), option(option) {}
+  AUTD3_API explicit Square(const driver::Freq<float> freq, SquareOption option) : freq(freq), option(std::move(option)) {}
 
   driver::Freq<float> freq;
   SquareOption option;

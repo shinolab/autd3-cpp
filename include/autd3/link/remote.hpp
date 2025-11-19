@@ -22,9 +22,7 @@ struct Remote final {
   std::string ip;
   RemoteOption option;
 
-  [[nodiscard]] native_methods::LinkPtr resolve() const {
-    return validate(native_methods::AUTDLinkRemote(ip.c_str(), static_cast<native_methods::RemoteOption>(option)));
-  }
+  [[nodiscard]] native_methods::LinkPtr resolve() const { return validate(native_methods::AUTDLinkRemote(ip.c_str(), option)); }
 };
 
 }  // namespace autd3::link

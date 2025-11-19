@@ -49,13 +49,12 @@ class FociSTM {};
 template <>
 class FociSTM<1, SamplingConfig> final : public FociSTMBase<1>, public IntoDatagramTuple<FociSTM<1, SamplingConfig>> {
  public:
-  AUTD3_API explicit FociSTM(std::vector<ControlPoints<1>> foci_, const SamplingConfig config) : FociSTMBase(std::move(foci_)), config(config) {}
-  AUTD3_API explicit FociSTM(const std::vector<ControlPoint>& foci_, const SamplingConfig config_) : FociSTMBase(), config(config_) {
-    this->foci.reserve(foci_.size());
-    for (const auto& f : foci_)
-      this->foci.emplace_back(ControlPoints<1>{.points = std::array{f}, .intensity = std::numeric_limits<Intensity>::max()});
+  AUTD3_API explicit FociSTM(std::vector<ControlPoints<1>> foci, const SamplingConfig config) : FociSTMBase(std::move(foci)), config(config) {}
+  AUTD3_API explicit FociSTM(const std::vector<ControlPoint>& foci, const SamplingConfig config) : config(config) {
+    this->foci.reserve(foci.size());
+    for (const auto& f : foci) this->foci.emplace_back(ControlPoints<1>{.points = std::array{f}, .intensity = std::numeric_limits<Intensity>::max()});
   }
-  AUTD3_API explicit FociSTM(const std::vector<Point3>& foci_, const SamplingConfig config_) : FociSTMBase(), config(config_) {
+  AUTD3_API explicit FociSTM(const std::vector<Point3>& foci_, const SamplingConfig config_) : config(config_) {
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
       this->foci.emplace_back(
@@ -93,13 +92,13 @@ class FociSTM<N, NearestFreq> final : public FociSTMBase<N>, public IntoDatagram
 template <>
 class FociSTM<1, Freq<float>> final : public FociSTMBase<1>, public IntoDatagramTuple<FociSTM<1, Freq<float>>> {
  public:
-  AUTD3_API explicit FociSTM(std::vector<ControlPoints<1>> foci_, const Freq<float> config_) : FociSTMBase<1>(std::move(foci_)), config(config_) {}
-  AUTD3_API explicit FociSTM(const std::vector<ControlPoint>& foci_, const Freq<float> config_) : FociSTMBase<1>(), config(config_) {
+  AUTD3_API explicit FociSTM(std::vector<ControlPoints<1>> foci_, const Freq<float> config_) : FociSTMBase(std::move(foci_)), config(config_) {}
+  AUTD3_API explicit FociSTM(const std::vector<ControlPoint>& foci_, const Freq<float> config_) : config(config_) {
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
       this->foci.emplace_back(ControlPoints<1>{.points = std::array{f}, .intensity = std::numeric_limits<Intensity>::max()});
   }
-  AUTD3_API explicit FociSTM(const std::vector<Point3>& foci_, const Freq<float> config_) : FociSTMBase<1>(), config(config_) {
+  AUTD3_API explicit FociSTM(const std::vector<Point3>& foci_, const Freq<float> config_) : config(config_) {
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
       this->foci.emplace_back(
@@ -146,14 +145,14 @@ class FociSTM<1, std::chrono::nanoseconds> final : public FociSTMBase<1>, public
  public:
   template <typename Rep, typename P>
   AUTD3_API explicit FociSTM(std::vector<ControlPoints<1>> foci, const std::chrono::duration<Rep, P> config)
-      : FociSTMBase<1>(std::move(foci)), config(config) {}
+      : FociSTMBase(std::move(foci)), config(config) {}
   template <typename Rep, typename P>
-  AUTD3_API explicit FociSTM(const std::vector<ControlPoint>& foci, const std::chrono::duration<Rep, P> config) : FociSTMBase<1>(), config(config) {
+  AUTD3_API explicit FociSTM(const std::vector<ControlPoint>& foci, const std::chrono::duration<Rep, P> config) : config(config) {
     this->foci.reserve(foci.size());
     for (const auto& f : foci) this->foci.emplace_back(ControlPoints<1>{.points = std::array{f}, .intensity = std::numeric_limits<Intensity>::max()});
   }
   template <typename Rep, typename P>
-  AUTD3_API explicit FociSTM(const std::vector<Point3>& foci, const std::chrono::duration<Rep, P> config) : FociSTMBase<1>(), config(config) {
+  AUTD3_API explicit FociSTM(const std::vector<Point3>& foci, const std::chrono::duration<Rep, P> config) : config(config) {
     this->foci.reserve(foci.size());
     for (const auto& f : foci)
       this->foci.emplace_back(

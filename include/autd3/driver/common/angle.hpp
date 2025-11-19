@@ -15,8 +15,8 @@ class UnitDegree {
   friend Angle operator*(float l, const UnitDegree&);
 };
 
-constexpr UnitRad rad = UnitRad{};
-constexpr UnitDegree deg = UnitDegree{};
+constexpr auto rad = UnitRad{};
+constexpr auto deg = UnitDegree{};
 
 class Angle {
  public:

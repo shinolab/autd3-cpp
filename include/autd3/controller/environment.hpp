@@ -1,13 +1,12 @@
 #pragma once
 
-#include "autd3/def.hpp"
 #include "autd3/native_methods.hpp"
 #include "autd3/native_methods/utils.hpp"
 
 namespace autd3 {
 class Environment {
  public:
-  AUTD3_API explicit Environment(const native_methods::EnvironmentPtr ptr) : _ptr(ptr), sound_speed(0.f, ptr) {}
+  AUTD3_API explicit Environment(const native_methods::EnvironmentPtr ptr) : sound_speed(0.f, ptr), _ptr(ptr) {}
 
   ~Environment() = default;                                  // LCOV_EXCL_LINE
   Environment(const Environment& v) noexcept = default;      // LCOV_EXCL_LINE
@@ -16,10 +15,10 @@ class Environment {
   Environment& operator=(Environment&& obj) = default;       // LCOV_EXCL_LINE
 
   struct SoundSpeedGetter {
-    static float get(const float&, native_methods::EnvironmentPtr ptr) { return AUTDEnvironmentGetSoundSpeed(ptr); }
+    static float get(const float&, const native_methods::EnvironmentPtr ptr) { return AUTDEnvironmentGetSoundSpeed(ptr); }
   };
   struct SoundSpeedSetter {
-    static void set(float&, native_methods::EnvironmentPtr ptr, const float& value) { AUTDEnvironmentSetSoundSpeed(ptr, value); }
+    static void set(float&, const native_methods::EnvironmentPtr ptr, const float& value) { AUTDEnvironmentSetSoundSpeed(ptr, value); }
   };
 
   native_methods::Property<float, native_methods::EnvironmentPtr, SoundSpeedGetter, SoundSpeedSetter> sound_speed;

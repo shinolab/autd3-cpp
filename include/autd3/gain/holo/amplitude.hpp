@@ -16,8 +16,8 @@ class UnitSPL {
   friend Amplitude operator*(float l, const UnitSPL&);
 };
 
-constexpr UnitPascal Pa = UnitPascal{};
-constexpr UnitSPL dB = UnitSPL{};
+constexpr auto Pa = UnitPascal{};
+constexpr auto dB = UnitSPL{};
 
 class Amplitude {
  public:
