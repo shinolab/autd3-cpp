@@ -29,19 +29,16 @@ inline void run(autd3::Controller& autd) {
                                                   std::pair(F{flag_test}, "Flag test"),
                                                   std::pair(F{custom}, "Custom Gain test"),
                                                   std::pair(F{group_by_transducer_test}, "Group (by Transducer) test")};
-
   if (autd.num_devices() >= 2) tests.emplace_back(F{group_by_device_test}, "Group (by Device) test");
 
   const auto firm_infos = autd.firmware_version();
   std::cout << "======== AUTD3 firmware information ========" << std::endl;
-  std::copy(firm_infos.begin(), firm_infos.end(), std::ostream_iterator<autd3::FirmwareVersion>(std::cout, "\n"));
+  for (auto&& firm : autd.firmware_version()) std::cout << firm << std::endl;
   std::cout << "============================================" << std::endl;
 
   while (true) {
-    size_t i = 0;
-    std::transform(tests.begin(), tests.end(), std::ostream_iterator<std::string>(std::cout, "\n"),
-                   [&i](const auto& test) { return "[" + std::to_string(i++) + "]: " + test.second; });
-    std::cout << "[Others]: finish." << std::endl;
+    for (auto&& [i, test] : tests | std::views::enumerate) std::cout << std::format("[{}]: {}", i, test.second) << std::endl;
+    std::cout << "[Others]: Finish" << std::endl;
 
     std::cout << "Choose number: ";
     std::string in;
@@ -55,8 +52,8 @@ inline void run(autd3::Controller& autd) {
     std::cout << "press any key to finish..." << std::endl;
     std::cin.ignore();
 
-    std::cout << "finish." << std::endl;
-    autd.send((autd3::gain::Null(), autd3::Silencer()));
+    autd.send(autd3::Silencer());
+    autd.send((autd3::Static(), autd3::Null()));
   }
 
   autd.close();

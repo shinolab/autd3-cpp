@@ -7,7 +7,7 @@ namespace autd3::driver {
 
 struct ControlPoint {
   Point3 point;
-  Phase phase_offset = Phase::zero();
+  Phase phase_offset = Phase::ZERO;
 };
 
 template <uint8_t N>

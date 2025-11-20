@@ -5,12 +5,14 @@
 
 namespace autd3::driver {
 struct Drive final {
+  AUTD3_API static const Drive Null;
+
   Phase phase;
   Intensity intensity;
 
-  AUTD3_API constexpr static Drive null() noexcept { return Drive{Phase::zero(), std::numeric_limits<Intensity>::min()}; }
-
   auto operator<=>(const Drive&) const = default;  // LCOV_EXCL_LINE
 };
+
+inline const Drive Drive::Null = Drive{Phase::ZERO, std::numeric_limits<Intensity>::min()};
 
 }  // namespace autd3::driver

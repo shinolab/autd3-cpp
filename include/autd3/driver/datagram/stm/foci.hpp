@@ -58,7 +58,7 @@ class FociSTM<1, SamplingConfig> final : public FociSTMBase<1>, public IntoDatag
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
       this->foci.emplace_back(
-          ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::zero()}}, .intensity = std::numeric_limits<Intensity>::max()});
+          ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::ZERO}}, .intensity = std::numeric_limits<Intensity>::max()});
   }
 
   SamplingConfig config;
@@ -102,7 +102,7 @@ class FociSTM<1, Freq<float>> final : public FociSTMBase<1>, public IntoDatagram
     this->foci.reserve(foci_.size());
     for (const auto& f : foci_)
       this->foci.emplace_back(
-          ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::zero()}}, .intensity = std::numeric_limits<Intensity>::max()});
+          ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::ZERO}}, .intensity = std::numeric_limits<Intensity>::max()});
   }
 
   AUTD3_API FociSTM<1, NearestFreq> into_nearest() && { return FociSTM<1, NearestFreq>(std::move(this->foci), config); }
@@ -156,7 +156,7 @@ class FociSTM<1, std::chrono::nanoseconds> final : public FociSTMBase<1>, public
     this->foci.reserve(foci.size());
     for (const auto& f : foci)
       this->foci.emplace_back(
-          ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::zero()}}, .intensity = std::numeric_limits<Intensity>::max()});
+          ControlPoints<1>{.points = {ControlPoint{.point = f, .phase_offset = Phase::ZERO}}, .intensity = std::numeric_limits<Intensity>::max()});
   }
 
   AUTD3_API FociSTM<1, NearestPeriod> into_nearest() && { return FociSTM<1, NearestPeriod>(std::move(this->foci), config); }

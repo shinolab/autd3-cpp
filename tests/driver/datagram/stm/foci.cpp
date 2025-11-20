@@ -20,7 +20,7 @@ TEST(DriverDatagramSTM, FocusSTMSampling) {
   autd.send(autd3::driver::Silencer::disable());
 
   const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
-  const autd3::driver::ControlPoint point{.point = center, .phase_offset = autd3::driver::Phase::zero()};
+  const autd3::driver::ControlPoint point{.point = center, .phase_offset = autd3::driver::Phase::ZERO};
   const std::vector foci_point3 = {center, center};
   const std::vector foci_control_point = {point, point};
 
@@ -166,7 +166,7 @@ void test_foci_stm_n() {
   const autd3::driver::Point3 center = autd.center() + autd3::driver::Vector3(0, 0, 150);
 
   std::array<autd3::driver::ControlPoint, N> points;
-  points.fill(autd3::driver::ControlPoint{.point = center, .phase_offset = autd3::driver::Phase::zero()});
+  points.fill(autd3::driver::ControlPoint{.point = center, .phase_offset = autd3::driver::Phase::ZERO});
   {
     const auto stm = autd3::driver::FociSTM(std::vector{autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(0)},
                                                         autd3::driver::ControlPoints<N>{.points = points, .intensity = autd3::driver::Intensity(1)}},

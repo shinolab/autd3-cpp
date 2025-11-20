@@ -12,7 +12,7 @@ TEST(Gain, Coustom) {
     return [&](const autd3::driver::geometry::Transducer& tr) {
       if (dev.idx() == 0 && tr.idx() == 0) return autd3::driver::Drive{autd3::driver::Phase(0x90), autd3::driver::Intensity(0x80)};
       if (dev.idx() == 1 && tr.idx() == 248) return autd3::driver::Drive{autd3::driver::Phase(0x91), autd3::driver::Intensity(0x81)};
-      return autd3::driver::Drive::null();
+      return autd3::driver::Drive::Null;
     };
   }));
 
