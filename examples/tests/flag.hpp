@@ -25,11 +25,13 @@ inline void flag_test(autd3::Controller& autd) {
   while (!fin) {
     const auto states = autd.fpga_state();
     std::cout << prompts[prompts_idx++ / 1000 % prompts.size()] << " FPGA Status...\n";
-    std::ranges::for_each(std::ranges::views::iota(states.size()), [&states](const size_t i) {
-      std::cout << "[" << i << "]: " << (states[i].has_value() ? std::to_string(states[i].value().is_thermal_assert()) : "-") << std::endl;
-    });
-    std::cout << "\033[" << states.size() + 1 << "A";
+    for (auto&& [i, state] : states | std::ranges::views::enumerate)
+      std::cout << std::format("\x1b[0K[{}]: Thermal sensor assert = {}", i,
+                               state.has_value() ? std::to_string(state.value().is_thermal_assert()) : "-")
+                << std::endl;
+    std::cout << std::format("\x1b[{}A", states.size() + 1);
   }
+  std::cout << "\x1b[1F\x1b[0J" << std::endl;
 
   if (fin_signal.joinable()) fin_signal.join();
 

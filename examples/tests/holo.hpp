@@ -13,12 +13,6 @@
 inline void holo_test(autd3::Controller& autd) {
   autd.send(autd3::Silencer());
 
-  autd3::Sine m(150 * autd3::Hz, autd3::SineOption{});
-
-  const autd3::Point3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
-
-  std::cout << "Select Optimization Method (default is GSPAT)" << std::endl;
-
   std::cout << "[0]: GS" << std::endl;
   std::cout << "[1]: GSPAT" << std::endl;
   std::cout << "[2]: Naive" << std::endl;
@@ -32,6 +26,9 @@ inline void holo_test(autd3::Controller& autd) {
   std::stringstream s(in);
   if (const auto is_empty = in == "\n"; !(s >> idx) || idx >= 4 || is_empty) idx = 1;
 
+  autd3::Sine m(150 * autd3::Hz, autd3::SineOption{});
+
+  const autd3::Point3 center = autd.center() + autd3::Vector3(0.0, 0.0, 150.0);
   auto amp = 5e3 * autd3::gain::holo::Pa;
   std::vector<std::pair<autd3::Point3, autd3::gain::holo::Amplitude>> foci = {
       {center + autd3::Vector3(30.0, 0.0, 0.0), amp},

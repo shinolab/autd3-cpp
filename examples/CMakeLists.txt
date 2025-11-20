@@ -6,7 +6,7 @@ endif()
 
 project(autd3-examples)
 
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
@@ -40,9 +40,8 @@ else()
 endif()
 FetchContent_MakeAvailable(autd3)
 
-add_library(autd3-example INTERFACE)
-target_compile_definitions(autd3-example INTERFACE AUTD3_RESOURCE_PATH="${PROJECT_SOURCE_DIR}/resources")
-
 add_executable(twincat twincat.cpp)
 target_link_libraries(twincat PRIVATE autd3::autd3 autd3::gain::holo autd3::link::twincat)
-target_link_libraries(twincat PRIVATE autd3-example)
+
+add_executable(nop nop.cpp)
+target_link_libraries(nop PRIVATE autd3::autd3 autd3::gain::holo)

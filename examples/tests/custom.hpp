@@ -12,7 +12,7 @@ inline void custom(autd3::Controller& autd) {
                    return autd3::Drive{.phase = autd3::Phase(0), .intensity = std::numeric_limits<autd3::Intensity>::max()};
                  if (dev.idx() == 0 && tr.idx() == 248)
                    return autd3::Drive{.phase = autd3::Phase(0), .intensity = std::numeric_limits<autd3::Intensity>::max()};
-                 return autd3::Drive::null();
+                 return autd3::Drive::Null;
                };
              })));
 }

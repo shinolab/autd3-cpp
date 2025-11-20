@@ -6,6 +6,9 @@
 namespace autd3::driver {
 
 struct Phase final {
+  AUTD3_API static const Phase ZERO;
+  AUTD3_API static const Phase PI;
+
   AUTD3_API explicit constexpr Phase(const uint8_t value) : _value(value) {}
   AUTD3_API explicit Phase(const Angle value) : _value(native_methods::AUTDPhaseFromRad(value.radian())) {}
 
@@ -17,11 +20,11 @@ struct Phase final {
 
   operator native_methods::Phase() const { return native_methods::Phase{_value}; }
 
-  static constexpr Phase zero() noexcept { return Phase(0x00); }
-  static constexpr Phase pi() noexcept { return Phase(0x80); }
-
  private:
   uint8_t _value;
 };
+
+inline const Phase Phase::ZERO = Phase(0x00);
+inline const Phase Phase::PI = Phase(0x80);
 
 }  // namespace autd3::driver
