@@ -19,7 +19,7 @@ jobs:
       - run: |
           sudo apt update && sudo apt -y install lcov
           cargo make cov
-      - uses: codecov/codecov-action@v5
+      - uses: codecov/codecov-action@v6
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
           files: build/tests/CMakeFiles/test_autd3.dir/coverage.info
